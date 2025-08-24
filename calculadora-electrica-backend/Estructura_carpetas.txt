@@ -1,0 +1,56 @@
+├── src/
+│   ├── common/                    # Recursos compartidos (utilidades, decoradores, etc.)
+│   │   ├── decorators/            # Decoradores personalizados
+│   │   ├── dtos/                  # DTOs (Data Transfer Objects) reutilizables
+│   │   ├── filters/               # Filtros de excepciones globales
+│   │   ├── guards/                # Guards personalizados
+│   │   ├── interceptors/           # Interceptors personalizados
+│   │   ├── interfaces/            # Interfaces y tipos compartidos
+│   │   ├── pipes/                 # Pipes personalizados
+│   │   └── utils/                 # Funciones utilitarias (e.g., helpers, formatters)
+│   │
+│   ├── config/                    # Configuraciones (entorno, base de datos, etc.)
+│   │   ├── database.config.ts     # Configuración de la base de datos
+│   │   ├── env.config.ts          # Carga de variables de entorno
+│   │   └── index.ts               # Exporta todas las configuraciones
+│   │
+│   ├── modules/                   # Módulos de negocio (funcionalidades específicas)
+│   │   ├── auth/                  # Módulo de autenticación
+│   │   │   ├── controllers/       # Controladores (manejo de rutas HTTP)
+│   │   │   ├── services/          # Lógica de negocio
+│   │   │   ├── entities/          # Entidades ORM (e.g., TypeORM)
+│   │   │   ├── repositories/      # Repositorios para acceso a datos
+│   │   │   ├── dtos/              # DTOs específicos del módulo
+│   │   │   ├── interfaces/        # Interfaces específicas del módulo
+│   │   │   ├── auth.module.ts     # Definición del módulo
+│   │   │   └── auth.constants.ts  # Constantes del módulo
+│   │   ├── users/                 # Módulo de usuarios (similar estructura)
+│   │   ├── products/              # Módulo de productos (similar estructura)
+│   │   └── ...                    # Otros módulos según el proyecto
+│   │
+│   ├── database/                  # Configuración y migraciones de la base de datos
+│   │   ├── migrations/            # Migraciones de la base de datos
+│   │   ├── seeds/                 # Scripts para datos iniciales
+│   │   └── index.ts               # Exporta configuraciones de la DB
+│   │
+│   ├── app.module.ts              # Módulo raíz de la aplicación
+│   ├── main.ts                    # Punto de entrada (bootstrap)
+│   └── constants.ts               # Constantes globales
+│
+├── test/                          # Pruebas unitarias y e2e
+│   ├── unit/                      # Pruebas unitarias
+│   ├── e2e/                       # Pruebas end-to-end
+│   └── jest.config.js             # Configuración de Jest
+│
+├── scripts/                       # Scripts de automatización (e.g., seeding, build)
+│
+├── docs/                          # Documentación del proyecto (e.g., API, arquitectura)
+│
+├── .env                           # Variables de entorno (no versionado)
+├── .env.example                   # Ejemplo de variables de entorno
+├── .gitignore                     # Archivos y carpetas ignorados por Git
+├── nest-cli.json                  # Configuración del CLI de NestJS
+├── package.json                   # Dependencias y scripts
+├── tsconfig.json                  # Configuración de TypeScript
+├── README.md                      # Documentación inicial
+└── docker-compose.yml             # Configuración de Docker (opcional)

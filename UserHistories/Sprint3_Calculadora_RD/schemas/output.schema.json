@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Calculadora Electrica RD - Output",
+  "type": "object",
+  "required": [
+    "ambientes",
+    "totales"
+  ],
+  "properties": {
+    "ambientes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "nombre": {
+            "type": "string"
+          },
+          "area_m2": {
+            "type": "number"
+          },
+          "carga_va": {
+            "type": "number"
+          },
+          "fp": {
+            "type": "number"
+          },
+          "observaciones": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "totales": {
+      "type": "object",
+      "properties": {
+        "carga_total_va": {
+          "type": "number"
+        },
+        "carga_diversificada_va": {
+          "type": "number"
+        },
+        "corriente_total_a": {
+          "type": "number"
+        },
+        "tension_v": {
+          "type": "number"
+        },
+        "phases": {
+          "type": "integer"
+        }
+      }
+    },
+    "circuits": {
+      "type": "array"
+    },
+    "feeder": {
+      "type": "object"
+    },
+    "grounding": {
+      "type": "object"
+    }
+  }
+}

@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reporte de Cálculo Eléctrico</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            line-height: 1.6;
+        }
+        .header {
+            text-align: center;
+            border-bottom: 3px solid #2c3e50;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: #2c3e50;
+            margin: 0;
+            font-size: 28px;
+        }
+        .header .subtitle {
+            color: #7f8c8d;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        .project-info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .project-info h3 {
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+        }
+        .info-label {
+            font-weight: bold;
+            color: #34495e;
+        }
+        .section {
+            margin-bottom: 25px;
+        }
+        .section h2 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #3498db;
+            color: white;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .summary-box {
+            background: #e8f4fd;
+            border: 1px solid #3498db;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .summary-box h3 {
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+        }
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+        }
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+        }
+        .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            text-align: center;
+            font-size: 12px;
+            color: #7f8c8d;
+        }
+        .status-ok { color: #27ae60; font-weight: bold; }
+        .status-warning { color: #f39c12; font-weight: bold; }
+        .status-error { color: #e74c3c; font-weight: bold; }
+        .page-break {
+            page-break-before: always;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Reporte de Cálculo Eléctrico</h1>
+        <div class="subtitle">
+            Calculadora Eléctrica RD - Sistema de Dimensionamiento Automático
+        </div>
+    </div>
+
+    <div class="project-info">
+        <h3>Información del Proyecto</h3>
+        <div class="info-grid">
+            <div class="info-item">
+                <span class="info-label">Fecha de Cálculo:</span>
+                <span>{{calculationDate}}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Versión de Normas:</span>
+                <span>{{normsVersion}}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Tipo de Instalación:</span>
+                <span>{{installationType}}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Sistema Eléctrico:</span>
+                <span>{{electricalSystem}}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Resumen Ejecutivo</h2>
+        <div class="summary-box">
+            <h3>Datos Principales</h3>
+            <div class="summary-grid">
+                <div class="summary-item">
+                    <span>Corriente Total:</span>
+                    <span>{{totalCurrent}} A</span>
+                </div>
+                <div class="summary-item">
+                    <span>Carga Total:</span>
+                    <span>{{totalLoad}} VA</span>
+                </div>
+                <div class="summary-item">
+                    <span>Número de Circuitos:</span>
+                    <span>{{circuitCount}}</span>
+                </div>
+                <div class="summary-item">
+                    <span>Estado General:</span>
+                    <span class="status-{{generalStatus}}">{{generalStatus}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Cuadro de Cargas por Ambiente</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Ambiente</th>
+                    <th>Área (m²)</th>
+                    <th>Carga Iluminación (VA)</th>
+                    <th>Carga Tomas (VA)</th>
+                    <th>Carga Especial (VA)</th>
+                    <th>Total Ambiente (VA)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each roomLoads}}
+                <tr>
+                    <td>{{name}}</td>
+                    <td>{{area}}</td>
+                    <td>{{lightingLoad}}</td>
+                    <td>{{outletLoad}}</td>
+                    <td>{{specialLoad}}</td>
+                    <td><strong>{{totalLoad}}</strong></td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>Análisis de Demanda y Diversificación</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Categoría</th>
+                    <th>Carga Bruta (VA)</th>
+                    <th>Factor de Demanda</th>
+                    <th>Carga Diversificada (VA)</th>
+                    <th>Porcentaje</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each demandAnalysis}}
+                <tr>
+                    <td>{{category}}</td>
+                    <td>{{grossLoad}}</td>
+                    <td>{{demandFactor}}</td>
+                    <td>{{diversifiedLoad}}</td>
+                    <td>{{percentage}}%</td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>Circuitos Ramales</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Circuito</th>
+                    <th>Nombre</th>
+                    <th>Corriente (A)</th>
+                    <th>Carga (VA)</th>
+                    <th>Conductor</th>
+                    <th>Breaker</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each circuits}}
+                <tr>
+                    <td>{{id}}</td>
+                    <td>{{name}}</td>
+                    <td>{{current}}</td>
+                    <td>{{load}}</td>
+                    <td>{{conductor}}</td>
+                    <td>{{breaker}}</td>
+                    <td class="status-{{status}}">{{status}}</td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>Análisis de Caída de Tensión</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Circuito</th>
+                    <th>Longitud (m)</th>
+                    <th>Caída Ramal (%)</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each voltageDropAnalysis}}
+                <tr>
+                    <td>{{circuitId}}</td>
+                    <td>{{length}}</td>
+                    <td>{{voltageDrop}}</td>
+                    <td class="status-{{status}}">{{status}}</td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+        
+        <div class="summary-box">
+            <h3>Alimentador Principal</h3>
+            <div class="summary-grid">
+                <div class="summary-item">
+                    <span>Material:</span>
+                    <span>{{feederMaterial}}</span>
+                </div>
+                <div class="summary-item">
+                    <span>Sección:</span>
+                    <span>{{feederSection}} mm²</span>
+                </div>
+                <div class="summary-item">
+                    <span>Longitud:</span>
+                    <span>{{feederLength}} m</span>
+                </div>
+                <div class="summary-item">
+                    <span>Caída Total:</span>
+                    <span>{{totalVoltageDrop}}%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Sistema de Puesta a Tierra</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Componente</th>
+                    <th>Tipo</th>
+                    <th>Sección (mm²)</th>
+                    <th>Calibre AWG</th>
+                    <th>Material</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Conductor de Protección</td>
+                    <td>EGC</td>
+                    <td>{{egcSection}}</td>
+                    <td>{{egcAwg}}</td>
+                    <td>{{egcMaterial}}</td>
+                </tr>
+                <tr>
+                    <td>Conductor de Tierra</td>
+                    <td>GEC</td>
+                    <td>{{gecSection}}</td>
+                    <td>{{gecAwg}}</td>
+                    <td>{{gecMaterial}}</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div class="summary-box">
+            <h3>Configuración del Sistema</h3>
+            <div class="summary-grid">
+                <div class="summary-item">
+                    <span>Tipo de Sistema:</span>
+                    <span>{{groundingSystemType}}</span>
+                </div>
+                <div class="summary-item">
+                    <span>Número de Electrodos:</span>
+                    <span>{{electrodeCount}}</span>
+                </div>
+                <div class="summary-item">
+                    <span>Resistencia Máxima:</span>
+                    <span>{{maxResistance}} Ω</span>
+                </div>
+                <div class="summary-item">
+                    <span>Estado:</span>
+                    <span class="status-{{groundingStatus}}">{{groundingStatus}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Observaciones y Recomendaciones</h2>
+        <ul>
+            {{#each observations}}
+            <li>{{this}}</li>
+            {{/each}}
+        </ul>
+    </div>
+
+    <div class="footer">
+        <p>Reporte generado automáticamente por Calculadora Eléctrica RD</p>
+        <p>Versión del sistema: {{systemVersion}} | Hash de normas: {{normsHash}}</p>
+        <p>Este reporte cumple con las normas eléctricas vigentes en República Dominicana</p>
+    </div>
+</body>
+</html>

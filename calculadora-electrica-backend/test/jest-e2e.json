@@ -1,0 +1,51 @@
+{
+  "moduleFileExtensions": ["js", "json", "ts"],
+  "rootDir": ".",
+  "testEnvironment": "node",
+  "testRegex": ".e2e-spec.ts$",
+  "transform": {
+    "^.+\\.(t|j)s$": "ts-jest"
+  },
+  "setupFilesAfterEnv": ["<rootDir>/e2e/jest-e2e.setup.ts"],
+  "moduleNameMapper": {
+    "^src/(.*)$": "<rootDir>/../src/$1"
+  },
+  "testTimeout": 30000,
+  "globals": {
+    "NODE_ENV": "test"
+  },
+  "verbose": true,
+  "collectCoverageFrom": [
+    "src/**/*.ts",
+    "!src/**/*.dto.ts",
+    "!src/**/*.entity.ts",
+    "!src/**/*.interface.ts",
+    "!src/**/*.enum.ts",
+    "!src/**/*.decorator.ts",
+    "!src/**/*.guard.ts",
+    "!src/**/*.strategy.ts",
+    "!src/**/*.interceptor.ts",
+    "!src/**/*.filter.ts",
+    "!src/**/*.pipe.ts",
+    "!src/**/*.middleware.ts",
+    "!src/**/*.module.ts",
+    "!src/**/*.controller.ts",
+    "!src/**/*.service.ts",
+    "!src/**/*.repository.ts",
+    "!src/**/*.entity.ts",
+    "!src/**/*.dto.ts",
+    "!src/**/*.interface.ts",
+    "!src/**/*.enum.ts",
+    "!src/**/*.decorator.ts",
+    "!src/**/*.guard.ts",
+    "!src/**/*.strategy.ts",
+    "!src/**/*.interceptor.ts",
+    "!src/**/*.filter.ts",
+    "!src/**/*.pipe.ts",
+    "!src/**/*.middleware.ts",
+    "!src/**/*.module.ts",
+    "!src/**/*.controller.ts",
+    "!src/**/*.service.ts",
+    "!src/**/*.repository.ts"
+  ]
+}

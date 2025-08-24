@@ -1,0 +1,30 @@
+[
+    {
+        "id": "550e8400-e29b-41d4-a716-446655440000",
+        "nombre": "Residencial",
+        "descripcion": "Viviendas familiares, incluyendo casas y apartamentos",
+        "activo": true,
+        "creadoPor": "SEED"
+    },
+    {
+        "id": "6ba7b810-9dad-11d1-80b4-00c04fd430c8",
+        "nombre": "Oficinas",
+        "descripcion": "Espacios para trabajo administrativo, profesional o corporativo",
+        "activo": true,
+        "creadoPor": "SEED"
+    },
+    {
+        "id": "7d9c3e20-4e5f-11e2-beb8-0800200c9a66",
+        "nombre": "Local Comercial",
+        "descripcion": "Espacios para ventas, servicios o actividades comerciales",
+        "activo": true,
+        "creadoPor": "SEED"
+    },
+    {
+        "id": "8e7d4f30-5f60-12f3-8ec9-0900211d8b77",
+        "nombre": "Otros",
+        "descripcion": "Espacios funcionales no residenciales ni comerciales, como gimnasios o talleres",
+        "activo": true,
+        "creadoPor": "SEED"
+    }
+]

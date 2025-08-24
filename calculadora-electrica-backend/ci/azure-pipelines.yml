@@ -1,0 +1,116 @@
+trigger:
+  - main
+  - develop
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  NODE_VERSION: '20.x'
+  NPM_VERSION: 'latest'
+
+stages:
+  - stage: Build
+    displayName: 'Build and Test'
+    jobs:
+      - job: BuildAndTest
+        displayName: 'Build and Test Job'
+        steps:
+          - task: NodeTool@0
+            displayName: 'Use Node.js $(NODE_VERSION)'
+            inputs:
+              versionSpec: $(NODE_VERSION)
+
+          - script: |
+              npm --version
+              node --version
+            displayName: 'Display Node.js and npm versions'
+
+          - script: npm ci
+            displayName: 'Install dependencies'
+
+          - script: npm run lint
+            displayName: 'Run ESLint'
+
+          - script: npm run build
+            displayName: 'Build application'
+
+          - script: npm test
+            displayName: 'Run unit tests'
+            env:
+              CI: true
+
+          - script: npm run test:e2e
+            displayName: 'Run e2e tests'
+            env:
+              CI: true
+
+          - task: PublishTestResults@2
+            displayName: 'Publish test results'
+            inputs:
+              testResultsFormat: 'JUnit'
+              testResultsFiles: '**/junit.xml'
+              mergeTestResults: true
+              testRunTitle: 'Electridom API Tests'
+            condition: succeededOrFailed()
+
+          - task: PublishCodeCoverageResults@2
+            displayName: 'Publish code coverage'
+            inputs:
+              summaryFileLocation: '**/cobertura-coverage.xml'
+              pathToSources: 'src/'
+            condition: succeededOrFailed()
+
+          - script: |
+              mkdir -p $(Build.ArtifactStagingDirectory)/dist
+              cp -r dist/* $(Build.ArtifactStagingDirectory)/dist/
+            displayName: 'Copy build artifacts'
+
+          - script: |
+              cp package*.json Dockerfile docker-compose.yml $(Build.ArtifactStagingDirectory)/
+            displayName: 'Copy package files'
+
+          - script: |
+              echo "##vso[task.setvariable variable=artifactName]electridom-api-build"
+            displayName: 'Set artifact name'
+
+  - stage: Deploy
+    displayName: 'Deploy to Development'
+    dependsOn: Build
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/develop'))
+    jobs:
+      - deployment: DeployToDev
+        displayName: 'Deploy to Development Environment'
+        environment: 'development'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - download: current
+                  artifact: 'electridom-api-build'
+
+                - script: |
+                    echo "Deploying to development environment..."
+                    # Add deployment steps here
+                    # Example: docker-compose up -d
+                  displayName: 'Deploy application'
+
+  - stage: DeployProd
+    displayName: 'Deploy to Production'
+    dependsOn: Build
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+    jobs:
+      - deployment: DeployToProd
+        displayName: 'Deploy to Production Environment'
+        environment: 'production'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - download: current
+                  artifact: 'electridom-api-build'
+
+                - script: |
+                    echo "Deploying to production environment..."
+                    # Add production deployment steps here
+                  displayName: 'Deploy to production'

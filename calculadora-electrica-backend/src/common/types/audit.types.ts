@@ -1,0 +1,23 @@
+export enum AuditAction {
+  LOGIN_SUCCESS = 'LOGIN_SUCCESS',
+  LOGIN_FAILED = 'LOGIN_FAILED',
+  LOGOUT = 'LOGOUT',
+  PASSWORD_CHANGE = 'PASSWORD_CHANGE',
+  PASSWORD_RESET = 'PASSWORD_RESET',
+  ROLE_CHANGE = 'ROLE_CHANGE',
+  PERMISSION_CHANGE = 'PERMISSION_CHANGE',
+  SESSION_REVOKE = 'SESSION_REVOKE',
+  ACCOUNT_LOCKED = 'ACCOUNT_LOCKED',
+  ACCOUNT_UNLOCKED = 'ACCOUNT_UNLOCKED',
+  RATE_LIMIT_EXCEEDED = 'RATE_LIMIT_EXCEEDED',
+  SUSPICIOUS_ACTIVITY = 'SUSPICIOUS_ACTIVITY',
+}
+
+export interface AuditLogData {
+  userId?: string;
+  action: AuditAction;
+  ip?: string;
+  userAgent?: string;
+  detail?: Record<string, any>;
+  traceId?: string;
+}
