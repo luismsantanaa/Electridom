@@ -1,0 +1,73 @@
+name: Status Check
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  quick-status:
+    name: Quick Status Check
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+
+      - name: Check Backend Dependencies
+        working-directory: calculadora-electrica-backend
+        run: |
+          echo "Checking Backend dependencies..."
+          npm ci --only=production
+          echo "Backend dependencies OK"
+
+      - name: Check Frontend Dependencies
+        working-directory: calculadora-electrica-frontend
+        run: |
+          echo "Checking Frontend dependencies..."
+          npm ci --only=production
+          echo "Frontend dependencies OK"
+
+      - name: Quick Backend Lint Check
+        working-directory: calculadora-electrica-backend
+        run: |
+          echo "Running Backend lint check..."
+          npm ci
+          npm run lint --silent
+          echo "Backend lint OK"
+
+      - name: Quick Frontend Lint Check
+        working-directory: calculadora-electrica-frontend
+        run: |
+          echo "Running Frontend lint check..."
+          npm ci
+          npm run lint --silent
+          echo "Frontend lint OK"
+
+      - name: Check Build Capability
+        working-directory: calculadora-electrica-backend
+        run: |
+          echo "Checking Backend build capability..."
+          npm run build --silent
+          echo "Backend build OK"
+
+      - name: Check Frontend Build Capability
+        working-directory: calculadora-electrica-frontend
+        run: |
+          echo "Checking Frontend build capability..."
+          npm run build --silent
+          echo "Frontend build OK"
+
+      - name: Project Status Summary
+        run: |
+          echo "✅ Project Status Summary:"
+          echo "📁 Monorepo Structure: OK"
+          echo "🔧 Backend (NestJS): Dependencies OK, Lint OK, Build OK"
+          echo "🎨 Frontend (Angular): Dependencies OK, Lint OK, Build OK"
+          echo "🚀 Ready for full CI/CD pipeline"

@@ -1,0 +1,81 @@
+version: 2
+updates:
+  # Backend Dependencies
+  - package-ecosystem: 'npm'
+    directory: '/calculadora-electrica-backend'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+      time: '09:00'
+    open-pull-requests-limit: 10
+    assignees:
+      - 'your-username'
+    commit-message:
+      prefix: 'chore(backend)'
+      include: 'scope'
+    labels:
+      - 'dependencies'
+      - 'backend'
+    ignore:
+      # Ignore major version updates for critical packages
+      - dependency-name: '@nestjs/*'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'typescript'
+        update-types: ['version-update:semver-major']
+
+  # Frontend Dependencies
+  - package-ecosystem: 'npm'
+    directory: '/calculadora-electrica-frontend'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+      time: '09:00'
+    open-pull-requests-limit: 10
+    assignees:
+      - 'your-username'
+    commit-message:
+      prefix: 'chore(frontend)'
+      include: 'scope'
+    labels:
+      - 'dependencies'
+      - 'frontend'
+    ignore:
+      # Ignore major version updates for critical packages
+      - dependency-name: '@angular/*'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'typescript'
+        update-types: ['version-update:semver-major']
+
+  # GitHub Actions
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+      time: '09:00'
+    open-pull-requests-limit: 5
+    assignees:
+      - 'your-username'
+    commit-message:
+      prefix: 'chore(ci)'
+      include: 'scope'
+    labels:
+      - 'dependencies'
+      - 'ci/cd'
+
+  # Docker Dependencies
+  - package-ecosystem: 'docker'
+    directory: '/calculadora-electrica-backend'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+      time: '09:00'
+    open-pull-requests-limit: 5
+    assignees:
+      - 'your-username'
+    commit-message:
+      prefix: 'chore(docker)'
+      include: 'scope'
+    labels:
+      - 'dependencies'
+      - 'docker'

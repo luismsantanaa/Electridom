@@ -1,0 +1,291 @@
+name: CI/CD Pipeline - Monorepo
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+env:
+  NODE_ENV: test
+  TEST_DB_HOST: localhost
+  TEST_DB_PORT: 3306
+  TEST_DB_USERNAME: electridom_test
+  TEST_DB_PASSWORD: electridom_test
+  TEST_DB_NAME: electridom_test
+  TEST_PORT: 3001
+  TEST_JWT_SECRET: test-secret-key-for-ci
+  TEST_JWT_EXPIRES_IN: 1h
+  TEST_THROTTLE_TTL: 60
+  TEST_THROTTLE_LIMIT: 10
+
+jobs:
+  # Backend Jobs
+  backend-test:
+    name: Backend Test (Node ${{ matrix.node-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+    
+    services:
+      mariadb:
+        image: mariadb:10.6
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: electridom_test
+          MYSQL_USER: electridom_test
+          MYSQL_PASSWORD: electridom_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd "mysqladmin ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+          cache-dependency-path: calculadora-electrica-backend/package-lock.json
+
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            calculadora-electrica-backend/node_modules
+            ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('calculadora-electrica-backend/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        working-directory: calculadora-electrica-backend
+        run: npm ci
+
+      - name: Setup test environment
+        working-directory: calculadora-electrica-backend
+        run: |
+          cp env.example .env.test
+          echo "NODE_ENV=test" >> .env.test
+          echo "TEST_DB_HOST=localhost" >> .env.test
+          echo "TEST_DB_PORT=3306" >> .env.test
+          echo "TEST_DB_USERNAME=electridom_test" >> .env.test
+          echo "TEST_DB_PASSWORD=electridom_test" >> .env.test
+          echo "TEST_DB_NAME=electridom_test" >> .env.test
+          echo "TEST_PORT=3001" >> .env.test
+          echo "TEST_JWT_SECRET=test-secret-key-for-ci" >> .env.test
+          echo "TEST_JWT_EXPIRES_IN=1h" >> .env.test
+          echo "TEST_THROTTLE_TTL=60" >> .env.test
+          echo "TEST_THROTTLE_LIMIT=10" >> .env.test
+
+      - name: Setup test database
+        working-directory: calculadora-electrica-backend
+        run: npm run setup:test-db-complete
+
+      - name: Run linting
+        working-directory: calculadora-electrica-backend
+        run: npm run lint
+
+      - name: Run unit tests with coverage
+        working-directory: calculadora-electrica-backend
+        run: npm run test:unit:coverage
+
+      - name: Run E2E tests
+        working-directory: calculadora-electrica-backend
+        run: npm run test:e2e
+
+      - name: Build application
+        working-directory: calculadora-electrica-backend
+        run: npm run build
+
+      - name: Upload coverage reports
+        uses: codecov/codecov-action@v3
+        with:
+          file: calculadora-electrica-backend/coverage/lcov.info
+          flags: backend
+          name: backend-coverage
+
+      - name: Check coverage threshold
+        working-directory: calculadora-electrica-backend
+        run: |
+          COVERAGE=$(npm run test:unit:coverage 2>&1 | grep -o 'All files[^%]*' | grep -o '[0-9.]*%' | head -1 | sed 's/%//')
+          if (( $(echo "$COVERAGE < 40" | bc -l) )); then
+            echo "Coverage $COVERAGE% is below threshold of 40%"
+            exit 1
+          fi
+          echo "Coverage $COVERAGE% meets threshold"
+
+  backend-quick-check:
+    name: Backend Quick Check
+    runs-on: ubuntu-latest
+    needs: backend-test
+    if: github.event_name == 'pull_request'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: 'npm'
+          cache-dependency-path: calculadora-electrica-backend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: calculadora-electrica-backend
+        run: npm ci
+
+      - name: Run linting only
+        working-directory: calculadora-electrica-backend
+        run: npm run lint
+
+  # Frontend Jobs
+  frontend-test:
+    name: Frontend Test (Node ${{ matrix.node-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+          cache-dependency-path: calculadora-electrica-frontend/package-lock.json
+
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            calculadora-electrica-frontend/node_modules
+            ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('calculadora-electrica-frontend/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        working-directory: calculadora-electrica-frontend
+        run: npm ci
+
+      - name: Run linting
+        working-directory: calculadora-electrica-frontend
+        run: npm run lint
+
+      - name: Run unit tests
+        working-directory: calculadora-electrica-frontend
+        run: npm run test -- --watch=false --browsers=ChromeHeadless
+
+      - name: Build application
+        working-directory: calculadora-electrica-frontend
+        run: npm run build
+
+  frontend-quick-check:
+    name: Frontend Quick Check
+    runs-on: ubuntu-latest
+    needs: frontend-test
+    if: github.event_name == 'pull_request'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: 'npm'
+          cache-dependency-path: calculadora-electrica-frontend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: calculadora-electrica-frontend
+        run: npm ci
+
+      - name: Run linting only
+        working-directory: calculadora-electrica-frontend
+        run: npm run lint
+
+  # Build and Deploy Job
+  build-and-deploy:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+    needs: [backend-test, frontend-test]
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+
+      - name: Build Backend
+        working-directory: calculadora-electrica-backend
+        run: |
+          npm ci
+          npm run build
+
+      - name: Build Frontend
+        working-directory: calculadora-electrica-frontend
+        run: |
+          npm ci
+          npm run build
+
+      - name: Create deployment artifacts
+        run: |
+          mkdir -p artifacts
+          cp -r calculadora-electrica-backend/dist artifacts/backend
+          cp -r calculadora-electrica-frontend/dist artifacts/frontend
+          cp calculadora-electrica-backend/package*.json artifacts/backend/
+          cp calculadora-electrica-frontend/package*.json artifacts/frontend/
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: deployment-artifacts
+          path: artifacts/
+          retention-days: 30
+
+  # Security and Quality Checks
+  security-check:
+    name: Security Check
+    runs-on: ubuntu-latest
+    needs: [backend-test, frontend-test]
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+
+      - name: Run npm audit
+        working-directory: calculadora-electrica-backend
+        run: npm audit --audit-level=moderate
+
+      - name: Run npm audit
+        working-directory: calculadora-electrica-frontend
+        run: npm audit --audit-level=moderate
+
+      - name: Check for secrets in code
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: .
+          base: HEAD~1
+          head: HEAD
