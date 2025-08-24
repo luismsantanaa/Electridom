@@ -1,4 +1,4 @@
-import {
+﻿import {
   Injectable,
   NotFoundException,
   ConflictException,
@@ -44,23 +44,23 @@ export class ProjectsAppService {
   }
 
   /**
-   * Crea un nuevo proyecto y opcionalmente su primera versión
+   * Crea un nuevo project y opcionalmente su primera versión
    */
   async createProject(
     dto: CreateProjectRequestDto,
   ): Promise<ProjectSummaryDto> {
-    // Validar que no exista un proyecto con el mismo nombre
+    // Validar que no exista un project con el mismo name
     const existingProject = await this.projectRepository.findOne({
       where: { name: dto.projectName },
     });
 
     if (existingProject) {
       throw new ConflictException(
-        `Ya existe un proyecto con el nombre "${dto.projectName}"`,
+        `Ya existe un project con el name "${dto.projectName}"`,
       );
     }
 
-    // Crear el proyecto
+    // Crear el project
     const project = this.projectRepository.create({
       name: dto.projectName,
       description: dto.description,
@@ -84,8 +84,8 @@ export class ProjectsAppService {
       const version = await this.createVersionInternal(
         savedProject[0].id,
         {
-          superficies: dto.superficies,
-          consumos: dto.consumos,
+          surfaces: dto.surfaces,
+          consumptions: dto.consumptions,
           opciones: dto.opciones,
         },
         null, // No hay versión anterior
@@ -111,24 +111,24 @@ export class ProjectsAppService {
   }
 
   /**
-   * Crea una nueva versión de un proyecto existente
+   * Crea una nueva versión de un project existente
    */
   async createVersion(
     projectId: string,
     dto: CreateVersionRequestDto,
   ): Promise<ProjectVersionDetailDto> {
-    // Verificar que el proyecto existe y no esté archivado
+    // Verificar que el project existe y no esté archivado
     const project = await this.projectRepository.findOne({
       where: { id: projectId },
     });
 
     if (!project) {
-      throw new NotFoundException(`Proyecto con ID ${projectId} no encontrado`);
+      throw new NotFoundException(`project con ID ${projectId} no encontrado`);
     }
 
     if (project.status === 'ARCHIVED') {
       throw new BadRequestException(
-        'No se pueden crear versiones en proyectos archivados',
+        'No se pueden crear versiones en projects archivados',
       );
     }
 
@@ -143,7 +143,7 @@ export class ProjectsAppService {
     // Verificar límite de versiones
     if (newVersionNumber > this.maxVersionsPerProject) {
       throw new BadRequestException(
-        `Se ha alcanzado el límite máximo de ${this.maxVersionsPerProject} versiones por proyecto`,
+        `Se ha alcanzado el límite máximo de ${this.maxVersionsPerProject} versiones por project`,
       );
     }
 
@@ -158,7 +158,7 @@ export class ProjectsAppService {
   }
 
   /**
-   * Obtiene un proyecto con su última versión
+   * Obtiene un project con su última versión
    */
   async getProject(
     projectId: string,
@@ -169,7 +169,7 @@ export class ProjectsAppService {
     });
 
     if (!project || (!includeArchived && project.status === 'ARCHIVED')) {
-      throw new NotFoundException(`Proyecto con ID ${projectId} no encontrado`);
+      throw new NotFoundException(`project con ID ${projectId} no encontrado`);
     }
 
     // Obtener la última versión
@@ -197,7 +197,7 @@ export class ProjectsAppService {
   }
 
   /**
-   * Obtiene una versión específica de un proyecto
+   * Obtiene una versión específica de un project
    */
   async getVersion(
     projectId: string,
@@ -208,7 +208,7 @@ export class ProjectsAppService {
     });
 
     if (!project) {
-      throw new NotFoundException(`Proyecto con ID ${projectId} no encontrado`);
+      throw new NotFoundException(`project con ID ${projectId} no encontrado`);
     }
 
     const version = await this.projectVersionRepository.findOne({
@@ -217,7 +217,7 @@ export class ProjectsAppService {
 
     if (!version) {
       throw new NotFoundException(
-        `Versión con ID ${versionId} no encontrada en el proyecto ${projectId}`,
+        `Versión con ID ${versionId} no encontrada en el project ${projectId}`,
       );
     }
 
@@ -225,7 +225,7 @@ export class ProjectsAppService {
   }
 
   /**
-   * Lista proyectos con paginación y filtros
+   * Lista projects con paginación y filtros
    */
   async listProjects(
     page = 1,
@@ -300,7 +300,7 @@ export class ProjectsAppService {
   }
 
   /**
-   * Actualiza el estado de un proyecto
+   * Actualiza el estado de un project
    */
   async updateProjectStatus(
     projectId: string,
@@ -311,7 +311,7 @@ export class ProjectsAppService {
     });
 
     if (!project) {
-      throw new NotFoundException(`Proyecto con ID ${projectId} no encontrado`);
+      throw new NotFoundException(`project con ID ${projectId} no encontrado`);
     }
 
     project.status = dto.status;
@@ -321,7 +321,7 @@ export class ProjectsAppService {
   }
 
   /**
-   * Exporta un proyecto completo con todas sus versiones
+   * Exporta un project completo con todas sus versiones
    */
   async exportProject(projectId: string): Promise<ProjectExportDto> {
     const project = await this.projectRepository.findOne({
@@ -330,10 +330,10 @@ export class ProjectsAppService {
     });
 
     if (!project) {
-      throw new NotFoundException(`Proyecto con ID ${projectId} no encontrado`);
+      throw new NotFoundException(`project con ID ${projectId} no encontrado`);
     }
 
-    // Obtener resumen del proyecto
+    // Obtener resumen del project
     const projectSummary = await this.getProject(projectId, true);
 
     // Obtener detalles de todas las versiones
@@ -359,12 +359,12 @@ export class ProjectsAppService {
   ): Promise<ProjectVersion> {
     // Ejecutar cálculo usando el servicio de HU-001
     const calculationResult = await this.calculationAppService.preview({
-      superficies: dto.superficies,
-      consumos: dto.consumos,
+      surfaces: dto.surfaces,
+      consumptions: dto.consumptions,
       opciones: dto.opciones,
     });
 
-    // Generar firma de reglas basada en el RuleSet usado
+    // Generar firma de rules basada en el RuleSet usado
     let currentRulesSignature: string;
     let warnings = [...(calculationResult.warnings || [])];
 
@@ -376,22 +376,22 @@ export class ProjectsAppService {
         );
       warnings.push(`Usando RuleSet específico: ${dto.opciones.ruleSetId}`);
     } else if (dto.opciones?.effectiveDate) {
-      // Usar firma de las reglas activas para la fecha
+      // Usar firma de las rules activas para la fecha
       currentRulesSignature =
         await this.ruleSignatureService.getActiveRulesSignature(
           dto.opciones.effectiveDate,
         );
       warnings.push(
-        `Usando reglas activas para fecha: ${dto.opciones.effectiveDate}`,
+        `Usando rules activas para fecha: ${dto.opciones.effectiveDate}`,
       );
     } else {
-      // Usar firma legacy (reglas por defecto)
+      // Usar firma legacy (rules por defecto)
       currentRulesSignature =
         await this.ruleSignatureService.getCurrentSignature();
-      warnings.push('Usando reglas legacy (por defecto)');
+      warnings.push('Usando rules legacy (por defecto)');
     }
 
-    // Verificar si las reglas cambiaron
+    // Verificar si las rules cambiaron
     let rulesChangedFromPrevious = false;
 
     if (previousVersion) {
@@ -401,7 +401,7 @@ export class ProjectsAppService {
       );
 
       if (rulesChangedFromPrevious) {
-        warnings.push('Reglas cambiaron respecto a la versión anterior');
+        warnings.push('rules cambiaron respecto a la versión anterior');
       }
     }
 
@@ -423,8 +423,8 @@ export class ProjectsAppService {
       const version = queryRunner.manager.create(ProjectVersion, {
         project: { id: projectId },
         versionNumber,
-        inputSuperficies: dto.superficies,
-        inputConsumos: dto.consumos,
+        inputSuperficies: dto.surfaces,
+        inputConsumos: dto.consumptions,
         inputOpciones: dto.opciones,
         outputCargasPorAmbiente: calculationResult.cargasPorAmbiente,
         outputTotales: calculationResult.totales,
@@ -462,8 +462,8 @@ export class ProjectsAppService {
       versionNumber: version.versionNumber,
       createdAt: version.creationDate.toISOString(),
       input: {
-        superficies: version.inputSuperficies,
-        consumos: version.inputConsumos,
+        surfaces: version.inputSuperficies,
+        consumptions: version.inputConsumos,
         opciones: version.inputOpciones,
       },
       output: {
@@ -479,3 +479,4 @@ export class ProjectsAppService {
     };
   }
 }
+

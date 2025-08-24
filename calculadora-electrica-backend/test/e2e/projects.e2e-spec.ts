@@ -1,4 +1,4 @@
-import { Test, TestingModule } from '@nestjs/testing';
+﻿import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
@@ -82,7 +82,7 @@ describe('Projects E2E Tests', () => {
     });
     await ruleSetRepository.save(defaultRuleSet);
 
-    // Crear reglas con el RuleSet
+    // Crear rules con el RuleSet
     for (const ruleData of normRulesSeed) {
       const rule = normRuleRepository.create({
         ...ruleData,
@@ -91,12 +91,12 @@ describe('Projects E2E Tests', () => {
       await normRuleRepository.save(rule);
     }
 
-    // Crear usuario de prueba
+    // Crear user de prueba
     const testUser = userRepository.create({
       username: userFixtures.testUser.username,
       email: userFixtures.testUser.email,
       password: userFixtures.testUser.password,
-      nombre: userFixtures.testUser.firstName,
+      name: userFixtures.testUser.firstName,
       apellido: userFixtures.testUser.lastName,
       role: UserRole.CLIENTE,
       estado: UserStatus.ACTIVO,
@@ -104,7 +104,7 @@ describe('Projects E2E Tests', () => {
     await testUser.hashPassword();
     await userRepository.save(testUser);
 
-    // Autenticar usuario para obtener token
+    // Autenticar user para obtener token
     const loginResponse = await request(app.getHttpServer())
       .post('/v1/auth/login')
       .send(authFixtures.loginData)
@@ -250,7 +250,7 @@ describe('Projects E2E Tests', () => {
 
   describe('GET /v1/projects', () => {
     beforeEach(async () => {
-      // Crear proyectos de prueba
+      // Crear projects de prueba
       await request(app.getHttpServer())
         .post('/v1/projects')
         .set('Authorization', `Bearer ${authToken}`)
@@ -348,7 +348,7 @@ describe('Projects E2E Tests', () => {
 
   describe('POST /v1/projects/:projectId/versions', () => {
     beforeEach(async () => {
-      // Crear proyecto de prueba
+      // Crear project de prueba
       const createResponse = await request(app.getHttpServer())
         .post('/v1/projects')
         .set('Authorization', `Bearer ${authToken}`)
@@ -413,7 +413,7 @@ describe('Projects E2E Tests', () => {
 
   describe('GET /v1/projects/:projectId/versions/:versionId', () => {
     beforeEach(async () => {
-      // Crear proyecto y versión de prueba
+      // Crear project y versión de prueba
       const createResponse = await request(app.getHttpServer())
         .post('/v1/projects')
         .set('Authorization', `Bearer ${authToken}`)
@@ -480,7 +480,7 @@ describe('Projects E2E Tests', () => {
 
   describe('PATCH /v1/projects/:projectId', () => {
     beforeEach(async () => {
-      // Crear proyecto de prueba
+      // Crear project de prueba
       const createResponse = await request(app.getHttpServer())
         .post('/v1/projects')
         .set('Authorization', `Bearer ${authToken}`)
@@ -568,7 +568,7 @@ describe('Projects E2E Tests', () => {
 
   describe('GET /v1/projects/:projectId/export', () => {
     beforeEach(async () => {
-      // Crear proyecto de prueba
+      // Crear project de prueba
       const createResponse = await request(app.getHttpServer())
         .post('/v1/projects')
         .set('Authorization', `Bearer ${authToken}`)
@@ -636,3 +636,4 @@ describe('Projects E2E Tests', () => {
     coverageReporter.printReport();
   });
 });
+

@@ -1,4 +1,4 @@
-import { NestFactory } from '@nestjs/core';
+﻿import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
@@ -75,18 +75,18 @@ async function bootstrap() {
     .setVersion(swaggerVersion)
     .addTag(
       'Cálculos Eléctricos',
-      'Cálculos de instalaciones eléctricas residenciales',
+      'Cálculos de installations eléctricas residenciales',
     )
-    .addTag('proyectos', 'Gestión de proyectos eléctricos')
-    .addTag('superficies', 'Medición de ambientes y superficies')
+    .addTag('projects', 'Gestión de projects eléctricos')
+    .addTag('surfaces', 'Medición de environments y surfaces')
     .addTag('potencia', 'Cálculos de potencia demandada')
-    .addTag('circuitos', 'Distribución de circuitos eléctricos')
-    .addTag('conductores', 'Selección de conductores y cables')
+    .addTag('circuits', 'Distribución de circuits eléctricos')
+    .addTag('conductors', 'Selección de conductors y cables')
     .addTag('protecciones', 'Protecciones termomagnéticas')
     .addTag('materiales', 'Lista de materiales y costos')
     .addTag('reportes', 'Generación de reportes PDF/Excel')
     .addTag('utilidades', 'Herramientas y cálculos auxiliares')
-    .addTag('usuarios', 'Gestión de usuarios y autenticación')
+    .addTag('users', 'Gestión de users y autenticación')
     .addServer('http://localhost:3000')
     .addServer('https://api.calculadoraelectricrd.com')
     .addBearerAuth()
@@ -136,3 +136,4 @@ bootstrap().catch((error) => {
   console.error('Error starting application:', error);
   process.exit(1);
 });
+

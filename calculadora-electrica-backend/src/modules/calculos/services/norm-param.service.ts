@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+﻿import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { NormConst } from '../entities/norm-const.entity';
@@ -14,7 +14,7 @@ export class NormParamService {
   ) {}
 
   /**
-   * Obtener valor de parámetro normativo
+   * Obtener value de parámetro normativo
    */
   async getParam(key: string): Promise<string> {
     // Verificar cache primero
@@ -40,7 +40,7 @@ export class NormParamService {
   }
 
   /**
-   * Obtener valor de parámetro normativo como número
+   * Obtener value de parámetro normativo como número
    */
   async getParamAsNumber(key: string): Promise<number> {
     const value = await this.getParam(key);
@@ -54,7 +54,7 @@ export class NormParamService {
   }
 
   /**
-   * Obtener valor de parámetro normativo como entero
+   * Obtener value de parámetro normativo como entero
    */
   async getParamAsInteger(key: string): Promise<number> {
     const value = await this.getParam(key);
@@ -101,3 +101,4 @@ export class NormParamService {
     return this.normConstRepository.find({ order: { key: 'ASC' } });
   }
 }
+

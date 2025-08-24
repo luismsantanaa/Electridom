@@ -1,15 +1,16 @@
-import { Injectable } from '@nestjs/common';
+﻿import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class CalculosService {
   calcularSimultaneidadPorCircuito(
-    carga: number,
+    load: number,
     coeficienteCarga: number,
     coeficienteSimultaneidad: number,
   ): number {
-    const subTotalWatts = carga * coeficienteCarga;
+    const subTotalWatts = load * coeficienteCarga;
     const subTotalWattsSimultaneidad = subTotalWatts * coeficienteSimultaneidad;
 
     return subTotalWattsSimultaneidad;
   }
 }
+

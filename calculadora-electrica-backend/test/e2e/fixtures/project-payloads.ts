@@ -1,70 +1,70 @@
-import { calculationFixtures } from './calculation-payloads';
+﻿import { calculationFixtures } from './calculation-payloads';
 
 export const projectFixtures = {
-  // Proyectos válidos
+  // projects válidos
   valid: {
     minimal: {
-      projectName: 'Proyecto Test Mínimo',
-      description: 'Proyecto de prueba con datos mínimos',
-      superficies: [{ ambiente: 'Sala', areaM2: 18.5 }],
-      consumos: [{ nombre: 'Televisor', ambiente: 'Sala', watts: 120 }],
+      projectName: 'project Test Mínimo',
+      description: 'project de prueba con datos mínimos',
+      surfaces: [{ environment: 'Sala', areaM2: 18.5 }],
+      consumptions: [{ name: 'Televisor', environment: 'Sala', watts: 120 }],
       opciones: { tensionV: 120, monofasico: true },
       computeNow: true,
     },
     complete: {
       projectName: 'Residencia Completa',
-      description: 'Proyecto residencial completo con múltiples ambientes',
-      superficies: [
-        { ambiente: 'Sala', areaM2: 25.0 },
-        { ambiente: 'Cocina', areaM2: 15.0 },
-        { ambiente: 'Dormitorio 1', areaM2: 12.0 },
-        { ambiente: 'Dormitorio 2', areaM2: 10.0 },
-        { ambiente: 'Baño', areaM2: 6.0 },
+      description: 'project residencial completo con múltiples environments',
+      surfaces: [
+        { environment: 'Sala', areaM2: 25.0 },
+        { environment: 'Cocina', areaM2: 15.0 },
+        { environment: 'Dormitorio 1', areaM2: 12.0 },
+        { environment: 'Dormitorio 2', areaM2: 10.0 },
+        { environment: 'Baño', areaM2: 6.0 },
       ],
-      consumos: [
-        { nombre: 'Televisor', ambiente: 'Sala', watts: 120 },
-        { nombre: 'Lámpara', ambiente: 'Sala', watts: 60 },
-        { nombre: 'Refrigerador', ambiente: 'Cocina', watts: 800 },
-        { nombre: 'Microondas', ambiente: 'Cocina', watts: 1200 },
-        { nombre: 'Lámpara', ambiente: 'Dormitorio 1', watts: 60 },
-        { nombre: 'Ventilador', ambiente: 'Dormitorio 1', watts: 80 },
-        { nombre: 'Lámpara', ambiente: 'Dormitorio 2', watts: 60 },
-        { nombre: 'Secador', ambiente: 'Baño', watts: 1500 },
+      consumptions: [
+        { name: 'Televisor', environment: 'Sala', watts: 120 },
+        { name: 'Lámpara', environment: 'Sala', watts: 60 },
+        { name: 'Refrigerador', environment: 'Cocina', watts: 800 },
+        { name: 'Microondas', environment: 'Cocina', watts: 1200 },
+        { name: 'Lámpara', environment: 'Dormitorio 1', watts: 60 },
+        { name: 'Ventilador', environment: 'Dormitorio 1', watts: 80 },
+        { name: 'Lámpara', environment: 'Dormitorio 2', watts: 60 },
+        { name: 'Secador', environment: 'Baño', watts: 1500 },
       ],
       opciones: { tensionV: 120, monofasico: true },
       computeNow: true,
     },
     withoutCalculation: {
-      projectName: 'Proyecto Sin Cálculo',
-      description: 'Proyecto creado sin cálculo inicial',
-      superficies: [],
-      consumos: [],
+      projectName: 'project Sin Cálculo',
+      description: 'project creado sin cálculo inicial',
+      surfaces: [],
+      consumptions: [],
       computeNow: false,
     },
   },
 
-  // Proyectos inválidos
+  // projects inválidos
   invalid: {
     emptyName: {
       projectName: '',
-      description: 'Proyecto con nombre vacío',
-      superficies: [{ ambiente: 'Sala', areaM2: 18.5 }],
-      consumos: [{ nombre: 'Televisor', ambiente: 'Sala', watts: 120 }],
+      description: 'project con name vacío',
+      surfaces: [{ environment: 'Sala', areaM2: 18.5 }],
+      consumptions: [{ name: 'Televisor', environment: 'Sala', watts: 120 }],
       opciones: { tensionV: 120, monofasico: true },
       computeNow: true,
     },
     missingName: {
-      description: 'Proyecto sin nombre',
-      superficies: [{ ambiente: 'Sala', areaM2: 18.5 }],
-      consumos: [{ nombre: 'Televisor', ambiente: 'Sala', watts: 120 }],
+      description: 'project sin name',
+      surfaces: [{ environment: 'Sala', areaM2: 18.5 }],
+      consumptions: [{ name: 'Televisor', environment: 'Sala', watts: 120 }],
       opciones: { tensionV: 120, monofasico: true },
       computeNow: true,
     },
     invalidCalculationData: {
-      projectName: 'Proyecto Datos Inválidos',
-      description: 'Proyecto con datos de cálculo inválidos',
-      superficies: [{ ambiente: 'Sala', areaM2: -10 }], // Área negativa
-      consumos: [{ nombre: 'Televisor', ambiente: 'Sala', watts: -100 }], // Watts negativos
+      projectName: 'project Datos Inválidos',
+      description: 'project con datos de cálculo inválidos',
+      surfaces: [{ environment: 'Sala', areaM2: -10 }], // Área negativa
+      consumptions: [{ name: 'Televisor', environment: 'Sala', watts: -100 }], // Watts negativos
       opciones: { tensionV: 120, monofasico: true },
       computeNow: true,
     },
@@ -73,64 +73,64 @@ export const projectFixtures = {
   // Datos para versiones
   versions: {
     version1: {
-      superficies: [
-        { ambiente: 'Sala', areaM2: 20.0 },
-        { ambiente: 'Cocina', areaM2: 12.0 },
+      surfaces: [
+        { environment: 'Sala', areaM2: 20.0 },
+        { environment: 'Cocina', areaM2: 12.0 },
       ],
-      consumos: [
-        { nombre: 'Televisor', ambiente: 'Sala', watts: 120 },
-        { nombre: 'Refrigerador', ambiente: 'Cocina', watts: 800 },
+      consumptions: [
+        { name: 'Televisor', environment: 'Sala', watts: 120 },
+        { name: 'Refrigerador', environment: 'Cocina', watts: 800 },
       ],
       opciones: { tensionV: 120, monofasico: true },
     },
     version2: {
-      superficies: [
-        { ambiente: 'Sala', areaM2: 20.0 },
-        { ambiente: 'Cocina', areaM2: 12.0 },
-        { ambiente: 'Dormitorio', areaM2: 15.0 }, // Nuevo ambiente
+      surfaces: [
+        { environment: 'Sala', areaM2: 20.0 },
+        { environment: 'Cocina', areaM2: 12.0 },
+        { environment: 'Dormitorio', areaM2: 15.0 }, // Nuevo environment
       ],
-      consumos: [
-        { nombre: 'Televisor', ambiente: 'Sala', watts: 120 },
-        { nombre: 'Refrigerador', ambiente: 'Cocina', watts: 800 },
-        { nombre: 'Lámpara', ambiente: 'Dormitorio', watts: 60 }, // Nuevo consumo
+      consumptions: [
+        { name: 'Televisor', environment: 'Sala', watts: 120 },
+        { name: 'Refrigerador', environment: 'Cocina', watts: 800 },
+        { name: 'Lámpara', environment: 'Dormitorio', watts: 60 }, // Nuevo consumption
       ],
       opciones: { tensionV: 120, monofasico: true },
     },
     version3: {
-      superficies: [
-        { ambiente: 'Sala', areaM2: 22.0 }, // Área modificada
-        { ambiente: 'Cocina', areaM2: 12.0 },
-        { ambiente: 'Dormitorio', areaM2: 15.0 },
+      surfaces: [
+        { environment: 'Sala', areaM2: 22.0 }, // Área modificada
+        { environment: 'Cocina', areaM2: 12.0 },
+        { environment: 'Dormitorio', areaM2: 15.0 },
       ],
-      consumos: [
-        { nombre: 'Televisor', ambiente: 'Sala', watts: 150 }, // Watts modificados
-        { nombre: 'Refrigerador', ambiente: 'Cocina', watts: 800 },
-        { nombre: 'Lámpara', ambiente: 'Dormitorio', watts: 60 },
+      consumptions: [
+        { name: 'Televisor', environment: 'Sala', watts: 150 }, // Watts modificados
+        { name: 'Refrigerador', environment: 'Cocina', watts: 800 },
+        { name: 'Lámpara', environment: 'Dormitorio', watts: 60 },
       ],
       opciones: { tensionV: 120, monofasico: true },
     },
   },
 
-  // Datos para actualización de proyectos
+  // Datos para actualización de projects
   updates: {
     nameOnly: {
-      projectName: 'Proyecto Actualizado',
+      projectName: 'project Actualizado',
     },
     descriptionOnly: {
-      description: 'Descripción actualizada del proyecto',
+      description: 'Descripción actualizada del project',
     },
     statusOnly: {
       status: 'ARCHIVED',
     },
     complete: {
-      projectName: 'Proyecto Completamente Actualizado',
+      projectName: 'project Completamente Actualizado',
       description: 'Descripción completamente actualizada',
       status: 'ACTIVE',
     },
   },
 };
 
-// Datos de usuario para tests
+// Datos de user para tests
 export const userFixtures = {
   testUser: {
     username: 'testuser',
@@ -159,3 +159,4 @@ export const authFixtures = {
     password: 'AdminPassword123!',
   },
 };
+

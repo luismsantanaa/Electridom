@@ -1,4 +1,4 @@
-import {
+﻿import {
   Controller,
   Get,
   Post,
@@ -27,27 +27,27 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
-  @ApiOperation({ summary: 'Obtener todos los usuarios' })
+  @ApiOperation({ summary: 'Obtener todos los users' })
   @ApiResponse({
     status: 200,
-    description: 'Lista de usuarios obtenida exitosamente',
+    description: 'Lista de users obtenida exitosamente',
   })
   findAll(): Promise<User[]> {
     return this.usersService.findAll();
   }
 
   @Get(':id')
-  @ApiOperation({ summary: 'Obtener un usuario por ID' })
-  @ApiResponse({ status: 200, description: 'Usuario encontrado' })
-  @ApiResponse({ status: 404, description: 'Usuario no encontrado' })
+  @ApiOperation({ summary: 'Obtener un user por ID' })
+  @ApiResponse({ status: 200, description: 'user encontrado' })
+  @ApiResponse({ status: 404, description: 'user no encontrado' })
   findOne(@Param('id') id: string): Promise<User> {
     return this.usersService.findById(id);
   }
 
   @Patch(':id')
-  @ApiOperation({ summary: 'Actualizar un usuario' })
-  @ApiResponse({ status: 200, description: 'Usuario actualizado exitosamente' })
-  @ApiResponse({ status: 404, description: 'Usuario no encontrado' })
+  @ApiOperation({ summary: 'Actualizar un user' })
+  @ApiResponse({ status: 200, description: 'user actualizado exitosamente' })
+  @ApiResponse({ status: 404, description: 'user no encontrado' })
   update(
     @Param('id') id: string,
     @Body() updateUserDto: Partial<User>,
@@ -56,20 +56,20 @@ export class UsersController {
   }
 
   @Delete(':id')
-  @ApiOperation({ summary: 'Eliminar un usuario' })
-  @ApiResponse({ status: 200, description: 'Usuario eliminado exitosamente' })
-  @ApiResponse({ status: 404, description: 'Usuario no encontrado' })
+  @ApiOperation({ summary: 'Eliminar un user' })
+  @ApiResponse({ status: 200, description: 'user eliminado exitosamente' })
+  @ApiResponse({ status: 404, description: 'user no encontrado' })
   remove(@Param('id') id: string): Promise<void> {
     return this.usersService.remove(id);
   }
 
   @Post('reset-password')
-  @ApiOperation({ summary: 'Recuperar contraseña de usuario' })
+  @ApiOperation({ summary: 'Recuperar contraseña de user' })
   @ApiResponse({
     status: 200,
     description: 'Contraseña actualizada exitosamente',
   })
-  @ApiResponse({ status: 404, description: 'Usuario no encontrado' })
+  @ApiResponse({ status: 404, description: 'user no encontrado' })
   resetPassword(
     @Body() resetPasswordDto: ResetPasswordDto,
   ): Promise<{ message: string }> {
@@ -79,3 +79,4 @@ export class UsersController {
     );
   }
 }
+

@@ -1,29 +1,29 @@
-describe('Calculations Validation Tests', () => {
+﻿describe('Calculations Validation Tests', () => {
   describe('Payload Structure Validation', () => {
     it('should validate correct payload structure', () => {
       const validPayload = {
-        superficies: [{ ambiente: 'Sala', areaM2: 18.5 }],
-        consumos: [{ nombre: 'Televisor', ambiente: 'Sala', watts: 120 }],
+        surfaces: [{ environment: 'Sala', areaM2: 18.5 }],
+        consumptions: [{ name: 'Televisor', environment: 'Sala', watts: 120 }],
         opciones: { tensionV: 120, monofasico: true },
       };
 
       // Verificar que el payload tiene la estructura correcta
-      expect(validPayload).toHaveProperty('superficies');
-      expect(validPayload).toHaveProperty('consumos');
+      expect(validPayload).toHaveProperty('surfaces');
+      expect(validPayload).toHaveProperty('consumptions');
       expect(validPayload).toHaveProperty('opciones');
-      expect(Array.isArray(validPayload.superficies)).toBe(true);
-      expect(Array.isArray(validPayload.consumos)).toBe(true);
-      expect(validPayload.superficies.length).toBeGreaterThan(0);
+      expect(Array.isArray(validPayload.surfaces)).toBe(true);
+      expect(Array.isArray(validPayload.consumptions)).toBe(true);
+      expect(validPayload.surfaces.length).toBeGreaterThan(0);
     });
 
-    it('should detect empty superficies', () => {
+    it('should detect empty surfaces', () => {
       const invalidPayload = {
-        superficies: [],
-        consumos: [{ nombre: 'Test', ambiente: 'Sala', watts: 100 }],
+        surfaces: [],
+        consumptions: [{ name: 'Test', environment: 'Sala', watts: 100 }],
         opciones: { tensionV: 120, monofasico: true },
       };
 
-      expect(invalidPayload.superficies.length).toBe(0);
+      expect(invalidPayload.surfaces.length).toBe(0);
     });
 
     it('should validate area values', () => {
@@ -44,31 +44,31 @@ describe('Calculations Validation Tests', () => {
 
     it('should detect duplicate environments', () => {
       const payloadWithDuplicates = {
-        superficies: [
-          { ambiente: 'Sala', areaM2: 10 },
-          { ambiente: 'Sala', areaM2: 15 },
+        surfaces: [
+          { environment: 'Sala', areaM2: 10 },
+          { environment: 'Sala', areaM2: 15 },
         ],
-        consumos: [{ nombre: 'Test', ambiente: 'Sala', watts: 100 }],
+        consumptions: [{ name: 'Test', environment: 'Sala', watts: 100 }],
         opciones: { tensionV: 120, monofasico: true },
       };
 
-      const ambientes = payloadWithDuplicates.superficies.map(
-        (s) => s.ambiente,
+      const environments = payloadWithDuplicates.surfaces.map(
+        (s) => s.environment,
       );
-      const uniqueAmbientes = [...new Set(ambientes)];
+      const uniqueAmbientes = [...new Set(environments)];
 
-      expect(ambientes.length).toBeGreaterThan(uniqueAmbientes.length);
+      expect(environments.length).toBeGreaterThan(uniqueAmbientes.length);
     });
 
     it('should detect consumption in non-existent environment', () => {
       const payload = {
-        superficies: [{ ambiente: 'Sala', areaM2: 10 }],
-        consumos: [{ nombre: 'Test', ambiente: 'Cocina', watts: 100 }],
+        surfaces: [{ environment: 'Sala', areaM2: 10 }],
+        consumptions: [{ name: 'Test', environment: 'Cocina', watts: 100 }],
         opciones: { tensionV: 120, monofasico: true },
       };
 
-      const ambientesDisponibles = payload.superficies.map((s) => s.ambiente);
-      const consumoAmbiente = payload.consumos[0].ambiente;
+      const ambientesDisponibles = payload.surfaces.map((s) => s.environment);
+      const consumoAmbiente = payload.consumptions[0].environment;
 
       expect(ambientesDisponibles).not.toContain(consumoAmbiente);
     });
@@ -126,3 +126,4 @@ describe('Calculations Validation Tests', () => {
     });
   });
 });
+

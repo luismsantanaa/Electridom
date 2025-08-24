@@ -1,26 +1,26 @@
-import { IsString, IsNotEmpty, MaxLength, IsOptional, IsBoolean, ValidateNested, IsArray } from 'class-validator';
+﻿import { IsString, IsNotEmpty, MaxLength, IsOptional, IsBoolean, ValidateNested, IsArray } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 
 // DTOs base reutilizables
-export class SuperficieDto {
-  @ApiProperty({ example: 'Sala', description: 'Nombre del ambiente' })
+export class SurfaceDto {
+  @ApiProperty({ example: 'Sala', description: 'name del environment' })
   @IsString() @IsNotEmpty() 
-  ambiente: string;
+  environment: string;
 
   @ApiProperty({ example: 18.5, description: 'Área en metros cuadrados' })
   @IsNotEmpty() 
   areaM2: number;
 }
 
-export class ConsumoDto {
-  @ApiProperty({ example: 'Televisor', description: 'Nombre del artefacto' })
+export class ConsumptionDto {
+  @ApiProperty({ example: 'Televisor', description: 'name del artefacto' })
   @IsString() @IsNotEmpty() 
-  nombre: string;
+  name: string;
 
-  @ApiProperty({ example: 'Sala', description: 'Ambiente donde se ubica' })
+  @ApiProperty({ example: 'Sala', description: 'environment donde se ubica' })
   @IsString() @IsNotEmpty() 
-  ambiente: string;
+  environment: string;
 
   @ApiProperty({ example: 120, description: 'Potencia en watts' })
   @IsNotEmpty() 
@@ -45,7 +45,7 @@ export class OpcionesDto {
   ruleSetId?: string;
 
   @ApiProperty({
-    description: 'Fecha efectiva para resolver reglas activas (ISO 8601)',
+    description: 'Fecha efectiva para resolver rules activas (ISO 8601)',
     example: '2025-09-10T00:00:00Z',
     required: false,
   })
@@ -53,11 +53,11 @@ export class OpcionesDto {
   effectiveDate?: string;
 }
 
-// DTO base para crear proyecto
+// DTO base para crear project
 export class CreateProjectBaseDto {
   @ApiProperty({ 
     example: 'Residencia García', 
-    description: 'Nombre del proyecto',
+    description: 'name del project',
     maxLength: 120 
   })
   @IsString() @IsNotEmpty() @MaxLength(120) 
@@ -65,7 +65,7 @@ export class CreateProjectBaseDto {
 
   @ApiProperty({ 
     example: 'Unifamiliar 2 plantas', 
-    description: 'Descripción del proyecto',
+    description: 'Descripción del project',
     required: false,
     maxLength: 500 
   })
@@ -73,23 +73,23 @@ export class CreateProjectBaseDto {
   description?: string;
 }
 
-// DTO para crear proyecto con datos de cálculo
+// DTO para crear project con datos de cálculo
 export class CreateProjectRequestDto extends CreateProjectBaseDto {
   @ApiProperty({ 
-    type: [SuperficieDto],
-    example: [{ ambiente: 'Sala', areaM2: 18.5 }],
-    description: 'Lista de superficies por ambiente'
+    type: [SurfaceDto],
+    example: [{ environment: 'Sala', areaM2: 18.5 }],
+    description: 'Lista de surfaces por environment'
   })
-  @IsArray() @ValidateNested({ each: true }) @Type(() => SuperficieDto) 
-  superficies: SuperficieDto[];
+  @IsArray() @ValidateNested({ each: true }) @Type(() => SurfaceDto) 
+  surfaces: SurfaceDto[];
 
   @ApiProperty({ 
-    type: [ConsumoDto],
-    example: [{ nombre: 'Televisor', ambiente: 'Sala', watts: 120 }],
-    description: 'Lista de consumos por ambiente'
+    type: [ConsumptionDto],
+    example: [{ name: 'Televisor', environment: 'Sala', watts: 120 }],
+    description: 'Lista de consumptions por environment'
   })
-  @IsArray() @ValidateNested({ each: true }) @Type(() => ConsumoDto) 
-  consumos: ConsumoDto[];
+  @IsArray() @ValidateNested({ each: true }) @Type(() => ConsumptionDto) 
+  consumptions: ConsumptionDto[];
 
   @ApiProperty({ 
     type: OpcionesDto,
@@ -113,20 +113,20 @@ export class CreateProjectRequestDto extends CreateProjectBaseDto {
 // DTO para crear nueva versión
 export class CreateVersionRequestDto {
   @ApiProperty({ 
-    type: [SuperficieDto],
-    example: [{ ambiente: 'Sala', areaM2: 18.5 }],
-    description: 'Lista de superficies por ambiente'
+    type: [SurfaceDto],
+    example: [{ environment: 'Sala', areaM2: 18.5 }],
+    description: 'Lista de surfaces por environment'
   })
-  @IsArray() @ValidateNested({ each: true }) @Type(() => SuperficieDto) 
-  superficies: SuperficieDto[];
+  @IsArray() @ValidateNested({ each: true }) @Type(() => SurfaceDto) 
+  surfaces: SurfaceDto[];
 
   @ApiProperty({ 
-    type: [ConsumoDto],
-    example: [{ nombre: 'Televisor', ambiente: 'Sala', watts: 120 }],
-    description: 'Lista de consumos por ambiente'
+    type: [ConsumptionDto],
+    example: [{ name: 'Televisor', environment: 'Sala', watts: 120 }],
+    description: 'Lista de consumptions por environment'
   })
-  @IsArray() @ValidateNested({ each: true }) @Type(() => ConsumoDto) 
-  consumos: ConsumoDto[];
+  @IsArray() @ValidateNested({ each: true }) @Type(() => ConsumptionDto) 
+  consumptions: ConsumptionDto[];
 
   @ApiProperty({ 
     type: OpcionesDto,
@@ -138,7 +138,7 @@ export class CreateVersionRequestDto {
   opciones?: OpcionesDto;
 
   @ApiProperty({ 
-    example: 'Ajuste de consumos cocina', 
+    example: 'Ajuste de consumptions cocina', 
     description: 'Nota opcional para la versión',
     required: false,
     maxLength: 240
@@ -147,13 +147,14 @@ export class CreateVersionRequestDto {
   note?: string;
 }
 
-// DTO para actualizar estado del proyecto
+// DTO para actualizar estado del project
 export class UpdateProjectStatusDto {
   @ApiProperty({ 
     enum: ['ACTIVE', 'ARCHIVED'],
     example: 'ARCHIVED',
-    description: 'Nuevo estado del proyecto'
+    description: 'Nuevo estado del project'
   })
   @IsString() @IsNotEmpty() 
   status: 'ACTIVE' | 'ARCHIVED';
 }
+

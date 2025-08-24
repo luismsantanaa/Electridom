@@ -1,4 +1,4 @@
-import { Test, TestingModule } from '@nestjs/testing';
+﻿import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
@@ -66,7 +66,7 @@ describe('Calculations E2E Tests', () => {
     });
     await ruleSetRepository.save(defaultRuleSet);
 
-    // Crear reglas con el RuleSet
+    // Crear rules con el RuleSet
     for (const ruleData of normRulesSeed) {
       const rule = normRuleRepository.create({
         ...ruleData,
@@ -111,14 +111,14 @@ describe('Calculations E2E Tests', () => {
           expect(Array.isArray(res.body.warnings)).toBe(true);
           expect(typeof res.body.traceId).toBe('string');
 
-          // Validar valores lógicos
+          // Validar values lógicos
           expect(res.body.cargasPorAmbiente).toHaveLength(1);
           expect(res.body.totales.totalConectadaVA).toBeGreaterThan(0);
           expect(res.body.totales.demandaEstimadaVA).toBeGreaterThan(0);
         });
     });
 
-    it('should return 400 for empty superficies', () => {
+    it('should return 400 for empty surfaces', () => {
       return request(app.getHttpServer())
         .post('/v1/calculations/preview')
         .send(calculationFixtures.invalid.emptySuperficies)
@@ -178,8 +178,8 @@ describe('Calculations E2E Tests', () => {
     it('should handle factorUso in consumptions correctly', () => {
       const payloadWithFactorUso = {
         ...calculationFixtures.minimal,
-        consumos: [
-          { nombre: 'TV', ambiente: 'Sala', watts: 120, factorUso: 0.8 },
+        consumptions: [
+          { name: 'TV', environment: 'Sala', watts: 120, factorUso: 0.8 },
         ],
       };
 
@@ -188,7 +188,7 @@ describe('Calculations E2E Tests', () => {
         .send(payloadWithFactorUso)
         .expect(200)
         .expect((res) => {
-          const sala = res.body.cargasPorAmbiente.find(c => c.ambiente === 'Sala');
+          const sala = res.body.cargasPorAmbiente.find(c => c.environment === 'Sala');
           expect(sala.tomasVA).toBe(96); // 120 * 0.8
         });
     });
@@ -206,3 +206,4 @@ describe('Calculations E2E Tests', () => {
     });
   });
 });
+

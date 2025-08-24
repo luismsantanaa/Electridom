@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+﻿import { Injectable, Logger } from '@nestjs/common';
 import * as argon2 from 'argon2';
 import * as bcrypt from 'bcryptjs';
 
@@ -50,7 +50,7 @@ export class HashService {
 
   /**
    * Verifica una contraseña contra un hash
-   * Detecta automáticamente el tipo de hash (bcrypt vs Argon2id)
+   * Detecta automáticamente el type de hash (bcrypt vs Argon2id)
    */
   async verifyPassword(password: string, hash: string): Promise<HashResult> {
     const startTime = Date.now();
@@ -86,7 +86,7 @@ export class HashService {
   }
 
   /**
-   * Detecta el tipo de hash basado en su formato
+   * Detecta el type de hash basado en su formato
    */
   private detectHashType(hash: string): HashType {
     // Argon2id hashes empiezan con $argon2id$
@@ -106,7 +106,7 @@ export class HashService {
 
   /**
    * Migra un hash de bcrypt a Argon2id
-   * Usado cuando el usuario hace login con contraseña válida en bcrypt
+   * Usado cuando el user hace login con contraseña válida en bcrypt
    */
   async migrateFromBcrypt(
     password: string,
@@ -155,3 +155,4 @@ export class HashService {
     };
   }
 }
+

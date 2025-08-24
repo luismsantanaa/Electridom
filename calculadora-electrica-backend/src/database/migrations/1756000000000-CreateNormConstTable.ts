@@ -1,4 +1,4 @@
-import { MigrationInterface, QueryRunner, Table } from 'typeorm';
+﻿import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
 export class CreateNormConstTable1756000000000 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
@@ -17,7 +17,7 @@ export class CreateNormConstTable1756000000000 implements MigrationInterface {
             name: 'value',
             type: 'varchar',
             length: '255',
-            comment: 'Valor del parámetro',
+            comment: 'value del parámetro',
           },
           {
             name: 'unit',
@@ -75,3 +75,4 @@ export class CreateNormConstTable1756000000000 implements MigrationInterface {
     await queryRunner.dropTable('norm_const');
   }
 }
+

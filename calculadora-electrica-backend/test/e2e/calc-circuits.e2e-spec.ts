@@ -1,4 +1,4 @@
-import { Test, TestingModule } from '@nestjs/testing';
+﻿import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../../src/app.module';
@@ -71,7 +71,7 @@ describe('CalcCircuitsController (e2e)', () => {
         poles: 1,
         curve: 'C',
         useCase: 'iluminacion',
-        notes: 'Breaker para iluminación',
+        notes: 'breaker para iluminación',
         usrCreate: 'TEST',
         usrUpdate: 'TEST',
         active: true,
@@ -81,7 +81,7 @@ describe('CalcCircuitsController (e2e)', () => {
         poles: 1,
         curve: 'C',
         useCase: 'tomas generales',
-        notes: 'Breaker para tomas',
+        notes: 'breaker para tomas',
         usrCreate: 'TEST',
         usrUpdate: 'TEST',
         active: true,
@@ -91,7 +91,7 @@ describe('CalcCircuitsController (e2e)', () => {
         poles: 2,
         curve: 'C',
         useCase: 'electrodomestico',
-        notes: 'Breaker para electrodomésticos',
+        notes: 'breaker para electrodomésticos',
         usrCreate: 'TEST',
         usrUpdate: 'TEST',
         active: true,
@@ -107,43 +107,43 @@ describe('CalcCircuitsController (e2e)', () => {
     const validRequest = {
       cargas_diversificadas: [
         {
-          categoria: 'lighting_general',
+          category: 'lighting_general',
           carga_diversificada_va: 1453.5,
-          factor_demanda: 1.0,
-          descripcion: 'Iluminación general de todos los ambientes',
-          ambiente: 'General',
+          demand_factor: 1.0,
+          description: 'Iluminación general de todos los environments',
+          environment: 'General',
         },
         {
-          categoria: 'tomas_generales',
+          category: 'tomas_generales',
           carga_diversificada_va: 800.0,
-          factor_demanda: 1.0,
-          descripcion: 'Tomacorrientes generales',
-          ambiente: 'General',
+          demand_factor: 1.0,
+          description: 'Tomacorrientes generales',
+          environment: 'General',
         },
         {
-          categoria: 'electrodomesticos',
+          category: 'electrodomesticos',
           carga_diversificada_va: 1252.65,
-          factor_demanda: 0.85,
-          descripcion: 'Nevera, microondas, lavadora, TV',
-          ambiente: 'Cocina/Lavandería',
+          demand_factor: 0.85,
+          description: 'Nevera, microondas, lavadora, TV',
+          environment: 'Cocina/Lavandería',
         },
         {
-          categoria: 'climatizacion',
+          category: 'climatizacion',
           carga_diversificada_va: 1222.2,
-          factor_demanda: 1.0,
-          descripcion: 'Aires acondicionados',
-          ambiente: 'Habitaciones',
+          demand_factor: 1.0,
+          description: 'Aires acondicionados',
+          environment: 'Habitaciones',
         },
       ],
-      sistema: {
-        tension_v: 120,
+      system: {
+        voltage_v: 120,
         phases: 1,
         system_type: 1,
         frequency: 60,
       },
       observaciones: [
-        'Cargas diversificadas desde CE-02',
-        'Sistema residencial monofásico',
+        'loads diversificadas desde CE-02',
+        'system residencial monofásico',
       ],
       configuraciones: {
         max_utilizacion_circuito: 0.8,
@@ -165,14 +165,14 @@ describe('CalcCircuitsController (e2e)', () => {
 
           expect(res.body.circuitos_ramales).toHaveLength(4);
 
-          // Verificar que cada circuito tenga los componentes necesarios
-          res.body.circuitos_ramales.forEach((circuito: any) => {
-            expect(circuito).toHaveProperty('id_circuito');
-            expect(circuito).toHaveProperty('nombre');
-            expect(circuito).toHaveProperty('cargas');
-            expect(circuito).toHaveProperty('breaker');
-            expect(circuito).toHaveProperty('conductor');
-            expect(circuito).toHaveProperty('utilizacion_pct');
+          // Verificar que cada circuit tenga los componentes necesarios
+          res.body.circuitos_ramales.forEach((circuit: any) => {
+            expect(circuit).toHaveProperty('id_circuito');
+            expect(circuit).toHaveProperty('name');
+            expect(circuit).toHaveProperty('loads');
+            expect(circuit).toHaveProperty('breaker');
+            expect(circuit).toHaveProperty('conductor');
+            expect(circuit).toHaveProperty('utilizacion_pct');
           });
         });
     });
@@ -183,24 +183,24 @@ describe('CalcCircuitsController (e2e)', () => {
         .send(validRequest)
         .expect(200)
         .expect((res) => {
-          const circuitos = res.body.circuitos_ramales;
+          const circuits = res.body.circuitos_ramales;
 
           // Verificar que los breakers seleccionados sean apropiados
-          circuitos.forEach((circuito: any) => {
-            expect(circuito.breaker.amp).toBeGreaterThan(0);
-            expect(circuito.breaker.poles).toBeLessThanOrEqual(
-              validRequest.sistema.phases,
+          circuits.forEach((circuit: any) => {
+            expect(circuit.breaker.amp).toBeGreaterThan(0);
+            expect(circuit.breaker.poles).toBeLessThanOrEqual(
+              validRequest.system.phases,
             );
-            expect(circuito.breaker.curve).toBeDefined();
-            expect(circuito.breaker.use_case).toBeDefined();
+            expect(circuit.breaker.curve).toBeDefined();
+            expect(circuit.breaker.use_case).toBeDefined();
           });
 
-          // Verificar que los conductores seleccionados sean apropiados
-          circuitos.forEach((circuito: any) => {
-            expect(circuito.conductor.calibre_awg).toBeGreaterThan(0);
-            expect(circuito.conductor.ampacity).toBeGreaterThan(0);
-            expect(circuito.conductor.material).toBeDefined();
-            expect(circuito.conductor.insulation).toBeDefined();
+          // Verificar que los conductors seleccionados sean apropiados
+          circuits.forEach((circuit: any) => {
+            expect(circuit.conductor.calibre_awg).toBeGreaterThan(0);
+            expect(circuit.conductor.ampacity).toBeGreaterThan(0);
+            expect(circuit.conductor.material).toBeDefined();
+            expect(circuit.conductor.insulation).toBeDefined();
           });
         });
     });
@@ -211,17 +211,17 @@ describe('CalcCircuitsController (e2e)', () => {
         .send(validRequest)
         .expect(200)
         .expect((res) => {
-          const circuitos = res.body.circuitos_ramales;
+          const circuits = res.body.circuitos_ramales;
 
-          circuitos.forEach((circuito: any) => {
-            expect(circuito.utilizacion_pct).toBeGreaterThan(0);
-            expect(circuito.utilizacion_pct).toBeLessThanOrEqual(100);
+          circuits.forEach((circuit: any) => {
+            expect(circuit.utilizacion_pct).toBeGreaterThan(0);
+            expect(circuit.utilizacion_pct).toBeLessThanOrEqual(100);
 
             // Verificar que la utilización sea consistente
-            const corrienteCalculada = circuito.corriente_total_a;
-            const breakerAmp = circuito.breaker.amp;
+            const corrienteCalculada = circuit.corriente_total_a;
+            const breakerAmp = circuit.breaker.amp;
             const utilizacionEsperada = (corrienteCalculada / breakerAmp) * 100;
-            expect(circuito.utilizacion_pct).toBeCloseTo(
+            expect(circuit.utilizacion_pct).toBeCloseTo(
               utilizacionEsperada,
               1,
             );
@@ -234,11 +234,11 @@ describe('CalcCircuitsController (e2e)', () => {
         ...validRequest,
         cargas_diversificadas: [
           {
-            categoria: 'climatizacion',
+            category: 'climatizacion',
             carga_diversificada_va: 2400,
-            factor_demanda: 1.0,
-            descripcion: 'Aire acondicionado',
-            ambiente: 'Habitación',
+            demand_factor: 1.0,
+            description: 'Aire acondicionado',
+            environment: 'Habitación',
           },
         ],
       };
@@ -290,8 +290,8 @@ describe('CalcCircuitsController (e2e)', () => {
     it('should handle three-phase system', () => {
       const threePhaseRequest = {
         ...validRequest,
-        sistema: {
-          tension_v: 208,
+        system: {
+          voltage_v: 208,
           phases: 3,
           system_type: 3,
           frequency: 60,
@@ -303,7 +303,7 @@ describe('CalcCircuitsController (e2e)', () => {
         .send(threePhaseRequest)
         .expect(200)
         .expect((res) => {
-          expect(res.body.circuitos_ramales[0].tension_v).toBe(208);
+          expect(res.body.circuitos_ramales[0].voltage_v).toBe(208);
           expect(res.body.circuitos_ramales[0].phases).toBe(3);
         });
     });
@@ -312,12 +312,12 @@ describe('CalcCircuitsController (e2e)', () => {
       const invalidRequest = {
         cargas_diversificadas: [
           {
-            categoria: 'lighting_general',
+            category: 'lighting_general',
             // falta carga_diversificada_va
           },
         ],
-        sistema: {
-          tension_v: 120,
+        system: {
+          voltage_v: 120,
           phases: 1,
           system_type: 1,
         },
@@ -334,11 +334,11 @@ describe('CalcCircuitsController (e2e)', () => {
         ...validRequest,
         cargas_diversificadas: [
           {
-            categoria: 'lighting_general',
+            category: 'lighting_general',
             carga_diversificada_va: -100,
-            factor_demanda: 1.0,
-            descripcion: 'Carga negativa',
-            ambiente: 'Test',
+            demand_factor: 1.0,
+            description: 'load negativa',
+            environment: 'Test',
           },
         ],
       };
@@ -375,9 +375,9 @@ describe('CalcCircuitsController (e2e)', () => {
           expect(Array.isArray(res.body.observaciones_generales)).toBe(true);
           expect(res.body.observaciones_generales.length).toBeGreaterThan(0);
 
-          // Verificar que contenga información sobre circuitos
+          // Verificar que contenga información sobre circuits
           const observationsText = res.body.observaciones_generales.join(' ');
-          expect(observationsText).toContain('circuitos ramales generados');
+          expect(observationsText).toContain('circuits ramales generados');
           expect(observationsText).toContain('Utilización promedio');
         });
     });
@@ -387,11 +387,11 @@ describe('CalcCircuitsController (e2e)', () => {
         ...validRequest,
         cargas_diversificadas: [
           {
-            categoria: 'lighting_general',
-            carga_diversificada_va: 2500, // Alta carga
-            factor_demanda: 1.0,
-            descripcion: 'Iluminación intensiva',
-            ambiente: 'Oficina',
+            category: 'lighting_general',
+            carga_diversificada_va: 2500, // Alta load
+            demand_factor: 1.0,
+            description: 'Iluminación intensiva',
+            environment: 'Oficina',
           },
         ],
       };
@@ -407,3 +407,4 @@ describe('CalcCircuitsController (e2e)', () => {
     });
   });
 });
+

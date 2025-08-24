@@ -1,4 +1,4 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+﻿import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class ReportMetadataDto {
   @ApiProperty({ description: 'Hash MD5 del archivo PDF' })
@@ -10,31 +10,31 @@ export class ReportMetadataDto {
   @ApiProperty({ description: 'Fecha de generación del reporte' })
   calculationDate: string;
 
-  @ApiProperty({ description: 'Versión de normas utilizadas' })
+  @ApiProperty({ description: 'Versión de norms utilizadas' })
   normsVersion: string;
 
-  @ApiProperty({ description: 'Hash de las semillas de normas' })
+  @ApiProperty({ description: 'Hash de las semillas de norms' })
   normsHash: string;
 
-  @ApiProperty({ description: 'Versión del sistema' })
+  @ApiProperty({ description: 'Versión del system' })
   systemVersion: string;
 
-  @ApiProperty({ description: 'Tipo de instalación' })
+  @ApiProperty({ description: 'type de instalación' })
   installationType: string;
 
-  @ApiProperty({ description: 'Sistema eléctrico' })
+  @ApiProperty({ description: 'system eléctrico' })
   electricalSystem: string;
 
-  @ApiProperty({ description: 'Corriente total del sistema' })
+  @ApiProperty({ description: 'Corriente total del system' })
   totalCurrent: number;
 
-  @ApiProperty({ description: 'Carga total del sistema' })
+  @ApiProperty({ description: 'load total del system' })
   totalLoad: number;
 
-  @ApiProperty({ description: 'Número de circuitos' })
+  @ApiProperty({ description: 'Número de circuits' })
   circuitCount: number;
 
-  @ApiProperty({ description: 'Estado general del sistema' })
+  @ApiProperty({ description: 'Estado general del system' })
   generalStatus: string;
 
   @ApiProperty({ description: 'Observaciones del reporte' })
@@ -66,3 +66,4 @@ export class CalcReportResponseDto {
   })
   message?: string;
 }
+

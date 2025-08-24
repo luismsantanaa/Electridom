@@ -1,4 +1,4 @@
-import { Test, TestingModule } from '@nestjs/testing';
+﻿import { Test, TestingModule } from '@nestjs/testing';
 import { CalcEngineService } from './calc-engine.service';
 import { NormParamService } from './norm-param.service';
 import { MetricsService } from '../../metrics/metrics.service';
@@ -53,24 +53,24 @@ describe('CalcEngineService', () => {
       jest.clearAllMocks();
     });
 
-    it('debería calcular cargas por ambiente correctamente', async () => {
+    it('debería calcular loads por environment correctamente', async () => {
       const request: CalcRoomsRequestDto = {
-        superficies: [
-          { nombre: 'Sala', area_m2: 18 },
-          { nombre: 'Cocina', area_m2: 12 },
+        surfaces: [
+          { name: 'Sala', area_m2: 18 },
+          { name: 'Cocina', area_m2: 12 },
         ],
-        consumos: [
+        consumptions: [
           {
-            nombre: 'TV',
-            ambiente: 'Sala',
-            potencia_w: 140,
-            tipo: 'electrodomestico',
+            name: 'TV',
+            environment: 'Sala',
+            power_w: 140,
+            type: 'electrodomestico',
           },
           {
-            nombre: 'Nevera',
-            ambiente: 'Cocina',
-            potencia_w: 200,
-            tipo: 'electrodomestico',
+            name: 'Nevera',
+            environment: 'Cocina',
+            power_w: 200,
+            type: 'electrodomestico',
             fp: 0.95,
           },
         ],
@@ -78,52 +78,52 @@ describe('CalcEngineService', () => {
 
       const result = await service.calcByRoom(request);
 
-      expect(result.ambientes).toHaveLength(2);
-      expect(result.ambientes[0].nombre).toBe('Sala');
-      expect(result.ambientes[0].carga_va).toBeCloseTo(736.96, 1); // 18 * 32.3 + 140/0.9 = 581.4 + 155.56
-      expect(result.ambientes[1].nombre).toBe('Cocina');
-      expect(result.ambientes[1].carga_va).toBeCloseTo(598.13, 1); // 12 * 32.3 + 200/0.95 = 387.6 + 210.53
+      expect(result.environments).toHaveLength(2);
+      expect(result.environments[0].name).toBe('Sala');
+      expect(result.environments[0].carga_va).toBeCloseTo(736.96, 1); // 18 * 32.3 + 140/0.9 = 581.4 + 155.56
+      expect(result.environments[1].name).toBe('Cocina');
+      expect(result.environments[1].carga_va).toBeCloseTo(598.13, 1); // 12 * 32.3 + 200/0.95 = 387.6 + 210.53
     });
 
-    it('debería manejar configuración de sistema por defecto', async () => {
+    it('debería manejar configuración de system por defecto', async () => {
       const request: CalcRoomsRequestDto = {
-        superficies: [{ nombre: 'Sala', area_m2: 10 }],
-        consumos: [],
+        surfaces: [{ name: 'Sala', area_m2: 10 }],
+        consumptions: [],
       };
 
       const result = await service.calcByRoom(request);
 
-      expect(result.totales.tension_v).toBe(120);
+      expect(result.totales.voltage_v).toBe(120);
       expect(result.totales.phases).toBe(1);
     });
 
-    it('debería manejar configuración de sistema personalizada', async () => {
+    it('debería manejar configuración de system personalizada', async () => {
       const request: CalcRoomsRequestDto = {
         system: { voltage: 240, phases: 3, frequency: 50 },
-        superficies: [{ nombre: 'Sala', area_m2: 10 }],
-        consumos: [],
+        surfaces: [{ name: 'Sala', area_m2: 10 }],
+        consumptions: [],
       };
 
       const result = await service.calcByRoom(request);
 
-      expect(result.totales.tension_v).toBe(240);
+      expect(result.totales.voltage_v).toBe(240);
       expect(result.totales.phases).toBe(3);
     });
 
     it('debería calcular factor de potencia efectivo correctamente', async () => {
       const request: CalcRoomsRequestDto = {
-        superficies: [{ nombre: 'Sala', area_m2: 10 }],
-        consumos: [
+        surfaces: [{ name: 'Sala', area_m2: 10 }],
+        consumptions: [
           {
-            nombre: 'Carga 1',
-            ambiente: 'Sala',
-            potencia_w: 1000,
+            name: 'load 1',
+            environment: 'Sala',
+            power_w: 1000,
             fp: 0.8,
           },
           {
-            nombre: 'Carga 2',
-            ambiente: 'Sala',
-            potencia_w: 500,
+            name: 'load 2',
+            environment: 'Sala',
+            power_w: 500,
             fp: 0.9,
           },
         ],
@@ -131,71 +131,71 @@ describe('CalcEngineService', () => {
 
       const result = await service.calcByRoom(request);
 
-      const sala = result.ambientes[0];
+      const sala = result.environments[0];
       expect(sala.carga_va).toBeCloseTo(2128.56, 1); // 10*32.3 + 1000/0.8 + 500/0.9 = 323 + 1250 + 555.56
       expect(sala.fp).toBeCloseTo(0.7, 2); // (1000+500)/2128.56
     });
 
-    it('debería manejar consumos sin factor de potencia especificado', async () => {
+    it('debería manejar consumptions sin factor de potencia especificado', async () => {
       const request: CalcRoomsRequestDto = {
-        superficies: [{ nombre: 'Sala', area_m2: 10 }],
-        consumos: [
+        surfaces: [{ name: 'Sala', area_m2: 10 }],
+        consumptions: [
           {
-            nombre: 'Carga',
-            ambiente: 'Sala',
-            potencia_w: 100,
-            tipo: 'electrodomestico',
+            name: 'load',
+            environment: 'Sala',
+            power_w: 100,
+            type: 'electrodomestico',
           },
         ],
       };
 
       const result = await service.calcByRoom(request);
 
-      expect(result.ambientes[0].carga_va).toBeCloseTo(434.11, 1); // 10*32.3 + 100/0.9 = 323 + 111.11
+      expect(result.environments[0].carga_va).toBeCloseTo(434.11, 1); // 10*32.3 + 100/0.9 = 323 + 111.11
     });
 
-    it('debería manejar ambientes sin consumos', async () => {
+    it('debería manejar environments sin consumptions', async () => {
       const request: CalcRoomsRequestDto = {
-        superficies: [{ nombre: 'Sala', area_m2: 15 }],
-        consumos: [],
+        surfaces: [{ name: 'Sala', area_m2: 15 }],
+        consumptions: [],
       };
 
       const result = await service.calcByRoom(request);
 
-      expect(result.ambientes[0].carga_va).toBeCloseTo(484.5, 1); // 15 * 32.3
-      expect(result.ambientes[0].observaciones).toContain(
-        'Solo carga base de iluminación',
+      expect(result.environments[0].carga_va).toBeCloseTo(484.5, 1); // 15 * 32.3
+      expect(result.environments[0].observaciones).toContain(
+        'Solo load base de iluminación',
       );
     });
 
-    it('debería ignorar consumos de ambientes no definidos', async () => {
+    it('debería ignorar consumptions de environments no definidos', async () => {
       const request: CalcRoomsRequestDto = {
-        superficies: [{ nombre: 'Sala', area_m2: 10 }],
-        consumos: [
+        surfaces: [{ name: 'Sala', area_m2: 10 }],
+        consumptions: [
           {
-            nombre: 'Carga',
-            ambiente: 'AmbienteInexistente',
-            potencia_w: 100,
+            name: 'load',
+            environment: 'AmbienteInexistente',
+            power_w: 100,
           },
         ],
       };
 
       const result = await service.calcByRoom(request);
 
-      expect(result.ambientes[0].carga_va).toBeCloseTo(323, 1); // Solo iluminación
+      expect(result.environments[0].carga_va).toBeCloseTo(323, 1); // Solo iluminación
     });
 
     it('debería calcular totales correctamente', async () => {
       const request: CalcRoomsRequestDto = {
-        superficies: [
-          { nombre: 'Sala', area_m2: 10 },
-          { nombre: 'Cocina', area_m2: 8 },
+        surfaces: [
+          { name: 'Sala', area_m2: 10 },
+          { name: 'Cocina', area_m2: 8 },
         ],
-        consumos: [
+        consumptions: [
           {
-            nombre: 'Carga',
-            ambiente: 'Sala',
-            potencia_w: 100,
+            name: 'load',
+            environment: 'Sala',
+            power_w: 100,
             fp: 0.9,
           },
         ],
@@ -210,8 +210,8 @@ describe('CalcEngineService', () => {
 
     it('debería registrar métricas correctamente', async () => {
       const request: CalcRoomsRequestDto = {
-        superficies: [{ nombre: 'Sala', area_m2: 10 }],
-        consumos: [],
+        surfaces: [{ name: 'Sala', area_m2: 10 }],
+        consumptions: [],
       };
 
       await service.calcByRoom(request);
@@ -240,8 +240,8 @@ describe('CalcEngineService', () => {
       );
 
       const request: CalcRoomsRequestDto = {
-        superficies: [{ nombre: 'Sala', area_m2: 10 }],
-        consumos: [],
+        surfaces: [{ name: 'Sala', area_m2: 10 }],
+        consumptions: [],
       };
 
       await expect(service.calcByRoom(request)).rejects.toThrow(
@@ -251,12 +251,12 @@ describe('CalcEngineService', () => {
 
     it('debería redondear resultados a 2 decimales', async () => {
       const request: CalcRoomsRequestDto = {
-        superficies: [{ nombre: 'Sala', area_m2: 10 }],
-        consumos: [
+        surfaces: [{ name: 'Sala', area_m2: 10 }],
+        consumptions: [
           {
-            nombre: 'Carga',
-            ambiente: 'Sala',
-            potencia_w: 100.123,
+            name: 'load',
+            environment: 'Sala',
+            power_w: 100.123,
             fp: 0.9,
           },
         ],
@@ -274,12 +274,12 @@ describe('CalcEngineService', () => {
 
     it('debería manejar factor de potencia mínimo', async () => {
       const request: CalcRoomsRequestDto = {
-        superficies: [{ nombre: 'Sala', area_m2: 10 }],
-        consumos: [
+        surfaces: [{ name: 'Sala', area_m2: 10 }],
+        consumptions: [
           {
-            nombre: 'Carga',
-            ambiente: 'Sala',
-            potencia_w: 100,
+            name: 'load',
+            environment: 'Sala',
+            power_w: 100,
             fp: 0.05, // Muy bajo
           },
         ],
@@ -287,17 +287,17 @@ describe('CalcEngineService', () => {
 
       const result = await service.calcByRoom(request);
 
-      expect(result.ambientes[0].fp).toBeGreaterThanOrEqual(0.1);
+      expect(result.environments[0].fp).toBeGreaterThanOrEqual(0.1);
     });
 
     it('debería manejar factor de potencia máximo', async () => {
       const request: CalcRoomsRequestDto = {
-        superficies: [{ nombre: 'Sala', area_m2: 10 }],
-        consumos: [
+        surfaces: [{ name: 'Sala', area_m2: 10 }],
+        consumptions: [
           {
-            nombre: 'Carga',
-            ambiente: 'Sala',
-            potencia_w: 100,
+            name: 'load',
+            environment: 'Sala',
+            power_w: 100,
             fp: 1.5, // Muy alto
           },
         ],
@@ -305,17 +305,17 @@ describe('CalcEngineService', () => {
 
       const result = await service.calcByRoom(request);
 
-      expect(result.ambientes[0].fp).toBeLessThanOrEqual(1.0);
+      expect(result.environments[0].fp).toBeLessThanOrEqual(1.0);
     });
 
     it('debería generar observaciones correctas', async () => {
       const request: CalcRoomsRequestDto = {
-        superficies: [{ nombre: 'Sala', area_m2: 10 }],
-        consumos: [
+        surfaces: [{ name: 'Sala', area_m2: 10 }],
+        consumptions: [
           {
-            nombre: 'Carga',
-            ambiente: 'Sala',
-            potencia_w: 100,
+            name: 'load',
+            environment: 'Sala',
+            power_w: 100,
             fp: 0.9,
           },
         ],
@@ -323,32 +323,32 @@ describe('CalcEngineService', () => {
 
       const result = await service.calcByRoom(request);
 
-      expect(result.ambientes[0].observaciones).toContain('Iluminación base:');
-      expect(result.ambientes[0].observaciones).toContain(
-        'Consumos definidos:',
+      expect(result.environments[0].observaciones).toContain('Iluminación base:');
+      expect(result.environments[0].observaciones).toContain(
+        'consumptions definidos:',
       );
     });
 
-    it('debería manejar múltiples consumos por ambiente', async () => {
+    it('debería manejar múltiples consumptions por environment', async () => {
       const request: CalcRoomsRequestDto = {
-        superficies: [{ nombre: 'Sala', area_m2: 10 }],
-        consumos: [
+        surfaces: [{ name: 'Sala', area_m2: 10 }],
+        consumptions: [
           {
-            nombre: 'Carga 1',
-            ambiente: 'Sala',
-            potencia_w: 100,
+            name: 'load 1',
+            environment: 'Sala',
+            power_w: 100,
             fp: 0.9,
           },
           {
-            nombre: 'Carga 2',
-            ambiente: 'Sala',
-            potencia_w: 200,
+            name: 'load 2',
+            environment: 'Sala',
+            power_w: 200,
             fp: 0.8,
           },
           {
-            nombre: 'Carga 3',
-            ambiente: 'Sala',
-            potencia_w: 150,
+            name: 'load 3',
+            environment: 'Sala',
+            power_w: 150,
             fp: 0.95,
           },
         ],
@@ -357,18 +357,19 @@ describe('CalcEngineService', () => {
       const result = await service.calcByRoom(request);
 
       const cargaEsperada = 10 * 32.3 + 100 / 0.9 + 200 / 0.8 + 150 / 0.95;
-      expect(result.ambientes[0].carga_va).toBeCloseTo(cargaEsperada, 1);
+      expect(result.environments[0].carga_va).toBeCloseTo(cargaEsperada, 1);
     });
 
     it('debería manejar área mínima', async () => {
       const request: CalcRoomsRequestDto = {
-        superficies: [{ nombre: 'Sala', area_m2: 0.1 }],
-        consumos: [],
+        surfaces: [{ name: 'Sala', area_m2: 0.1 }],
+        consumptions: [],
       };
 
       const result = await service.calcByRoom(request);
 
-      expect(result.ambientes[0].carga_va).toBeCloseTo(3.23, 2); // 0.1 * 32.3
+      expect(result.environments[0].carga_va).toBeCloseTo(3.23, 2); // 0.1 * 32.3
     });
   });
 });
+

@@ -1,6 +1,6 @@
-/**
+﻿/**
  * Constantes eléctricas para República Dominicana
- * Sistema bifásico 110V/220V a 60Hz
+ * system bifásico 110V/220V a 60Hz
  * Cumple normativas R.I.E., NEC 2020 y CNE
  */
 export const CONSTANTES_ELECTRICAS = {
@@ -17,17 +17,17 @@ export const CONSTANTES_ELECTRICAS = {
   FACTOR_SIMULTANEIDAD_ILUMINACION: 0.66, // Iluminación
   FACTOR_SIMULTANEIDAD_AIRES: 1.0, // Aires acondicionados
 
-  // Potencias estándar por circuito (Watts)
+  // Potencias estándar por circuit (Watts)
   POTENCIA_TUG: 2000, // Tomacorrientes generales
   POTENCIA_TUE: 3000, // Tomacorrientes especiales (cocina)
   POTENCIA_ILUMINACION_POR_BOCA: 150, // Watts por boca de iluminación
 
-  // Cargas mínimas por área según R.I.E. (W/m²)
+  // loads mínimas por área según R.I.E. (W/m²)
   CARGA_MINIMA_RESIDENCIAL: 32, // W/m²
   CARGA_MINIMA_COMERCIAL: 50, // W/m²
   CARGA_MINIMA_INDUSTRIAL: 40, // W/m²
 
-  // Cargas específicas por tipo de ambiente
+  // loads específicas por type de environment
   CARGAS_POR_AMBIENTE: {
     DORMITORIO: 10, // W/m²
     SALA_ESTAR: 15, // W/m²
@@ -81,26 +81,26 @@ export const CONSTANTES_ELECTRICAS = {
       corrienteMaxima: 40,
       uso: 'Aires y equipos grandes',
     },
-    6: { seccionMm2: 13.3, corrienteMaxima: 55, uso: 'Alimentadores' },
+    6: { seccionMm2: 13.3, corrienteMaxima: 55, uso: 'feeders' },
     4: {
       seccionMm2: 21.15,
       corrienteMaxima: 70,
-      uso: 'Alimentadores principales',
+      uso: 'feeders principales',
     },
     2: { seccionMm2: 33.62, corrienteMaxima: 95, uso: 'Acometidas' },
   },
 
-  // Breakers estándar disponibles (Amperios)
+  // breakers estándar disponibles (Amperios)
   BREAKERS_ESTANDAR: [
     15, 20, 25, 30, 40, 50, 60, 70, 80, 90, 100, 125, 150, 200, 225, 250, 300,
     400, 500, 600, 800, 1000,
   ],
 
-  // Tipos de protección requeridos por circuito
+  // Tipos de protección requeridos por circuit
   PROTECCIONES_REQUERIDAS: {
     TUG: 'AFCI', // AFCI para tomacorrientes en dormitorios y salas
     TUE: 'GFCI', // GFCI para cocinas, baños, exteriores
-    IUG: 'TERMOMAGNETICO', // Breaker estándar para iluminación
+    IUG: 'TERMOMAGNETICO', // breaker estándar para iluminación
     IUE: 'TERMOMAGNETICO',
     CA: 'BIPOLAR', // Bipolar para aires de 220V
     CE: 'BIPOLAR', // Según voltaje del equipo
@@ -139,14 +139,14 @@ export const CONSTANTES_ELECTRICAS = {
     TABLERO_24_CIRCUITOS: 120,
   },
 
-  // Códigos de circuitos estándar
+  // Códigos de circuits estándar
   CODIGOS_CIRCUITOS: {
-    TUG: 'CTG', // Circuito Tomacorriente General
-    TUE: 'CTE', // Circuito Tomacorriente Especial
-    IUG: 'CIL', // Circuito Iluminación
-    IUE: 'CIE', // Circuito Iluminación Especial
-    CA: 'CAA', // Circuito Aire Acondicionado
-    CE: 'CEE', // Circuito Equipo Especial
+    TUG: 'CTG', // circuit Tomacorriente General
+    TUE: 'CTE', // circuit Tomacorriente Especial
+    IUG: 'CIL', // circuit Iluminación
+    IUE: 'CIE', // circuit Iluminación Especial
+    CA: 'CAA', // circuit Aire Acondicionado
+    CE: 'CEE', // circuit Equipo Especial
   },
 };
 
@@ -169,7 +169,7 @@ export class CalculosElectricos {
   }
 
   /**
-   * Calcula la caída de tensión en un circuito
+   * Calcula la caída de tensión en un circuit
    */
   static calcularCaidaTension(
     corriente: number,
@@ -217,7 +217,7 @@ export class CalculosElectricos {
   }
 
   /**
-   * Calcula la carga de iluminación mínima para un ambiente
+   * Calcula la load de iluminación mínima para un environment
    */
   static calcularCargaIluminacion(
     tipoAmbiente: TipoAmbiente,
@@ -240,3 +240,4 @@ export class CalculosElectricos {
     return Math.max(1, Math.ceil(area / 6) * factor);
   }
 }
+

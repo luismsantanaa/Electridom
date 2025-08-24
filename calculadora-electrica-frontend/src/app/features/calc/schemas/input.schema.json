@@ -1,10 +1,10 @@
-{
+﻿{
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "title": "Calculadora Electrica RD - Input",
     "type": "object",
     "required": [
-        "superficies",
-        "consumos"
+        "surfaces",
+        "consumptions"
     ],
     "properties": {
         "system": {
@@ -28,16 +28,16 @@
                 }
             }
         },
-        "superficies": {
+        "surfaces": {
             "type": "array",
             "items": {
                 "type": "object",
                 "required": [
-                    "nombre",
+                    "name",
                     "area_m2"
                 ],
                 "properties": {
-                    "nombre": {
+                    "name": {
                         "type": "string",
                         "minLength": 1
                     },
@@ -48,23 +48,23 @@
                 }
             }
         },
-        "consumos": {
+        "consumptions": {
             "type": "array",
             "items": {
                 "type": "object",
                 "required": [
-                    "nombre",
-                    "ambiente",
-                    "potencia_w"
+                    "name",
+                    "environment",
+                    "power_w"
                 ],
                 "properties": {
-                    "nombre": {
+                    "name": {
                         "type": "string"
                     },
-                    "ambiente": {
+                    "environment": {
                         "type": "string"
                     },
-                    "potencia_w": {
+                    "power_w": {
                         "type": "number",
                         "minimum": 1
                     },
@@ -73,7 +73,7 @@
                         "minimum": 0.1,
                         "maximum": 1.0
                     },
-                    "tipo": {
+                    "type": {
                         "type": "string",
                         "enum": [
                             "iluminacion",
@@ -89,3 +89,4 @@
         }
     }
 }
+

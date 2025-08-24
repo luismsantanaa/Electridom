@@ -1,4 +1,4 @@
-import { Test, TestingModule } from '@nestjs/testing';
+﻿import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { GroundingService } from './grounding.service';
@@ -19,7 +19,7 @@ describe('GroundingService', () => {
       mainBreakerAmp: 100,
       egcMm2: 10,
       gecMm2: 16,
-      notes: 'TODO_RIE: Breaker hasta 100A - EGC 10mm², GEC 16mm²',
+      notes: 'TODO_RIE: breaker hasta 100A - EGC 10mm², GEC 16mm²',
       active: true,
     },
     {
@@ -27,7 +27,7 @@ describe('GroundingService', () => {
       mainBreakerAmp: 200,
       egcMm2: 25,
       gecMm2: 35,
-      notes: 'TODO_RIE: Breaker hasta 200A - EGC 25mm², GEC 35mm²',
+      notes: 'TODO_RIE: breaker hasta 200A - EGC 25mm², GEC 35mm²',
       active: true,
     },
     {
@@ -35,7 +35,7 @@ describe('GroundingService', () => {
       mainBreakerAmp: 400,
       egcMm2: 50,
       gecMm2: 70,
-      notes: 'TODO_RIE: Breaker hasta 400A - EGC 50mm², GEC 70mm²',
+      notes: 'TODO_RIE: breaker hasta 400A - EGC 50mm², GEC 70mm²',
       active: true,
     },
     {
@@ -43,7 +43,7 @@ describe('GroundingService', () => {
       mainBreakerAmp: 600,
       egcMm2: 95,
       gecMm2: 120,
-      notes: 'TODO_RIE: Breaker hasta 600A - EGC 95mm², GEC 120mm²',
+      notes: 'TODO_RIE: breaker hasta 600A - EGC 95mm², GEC 120mm²',
       active: true,
     },
     {
@@ -51,7 +51,7 @@ describe('GroundingService', () => {
       mainBreakerAmp: 2000,
       egcMm2: 240,
       gecMm2: 300,
-      notes: 'TODO_RIE: Breaker hasta 2000A - EGC 240mm², GEC 300mm²',
+      notes: 'TODO_RIE: breaker hasta 2000A - EGC 240mm², GEC 300mm²',
       active: true,
     },
   ];
@@ -96,19 +96,19 @@ describe('GroundingService', () => {
 
   describe('size', () => {
     const baseRequest: CalcGroundingRequestDto = {
-      sistema: {
-        tension_v: 120,
+      system: {
+        voltage_v: 120,
         phases: 1,
         corriente_total_a: 61.8,
         carga_total_va: 7416,
       },
-      alimentador: {
-        corriente_a: 61.8,
-        seccion_mm2: 10,
+      feeder: {
+        current_a: 61.8,
+        section_mm2: 10,
         material: 'Cu',
-        longitud_m: 50,
+        length_m: 50,
       },
-      parametros: {
+      parameters: {
         main_breaker_amp: 100,
         tipo_instalacion: 'residencial',
         tipo_sistema_tierra: 'TN-S',
@@ -120,11 +120,11 @@ describe('GroundingService', () => {
     it('should size grounding system for residential installation', async () => {
       const result = await service.size(baseRequest);
 
-      expect(result.conductor_proteccion.tipo).toBe('EGC');
-      expect(result.conductor_proteccion.seccion_mm2).toBe(10);
+      expect(result.conductor_proteccion.type).toBe('EGC');
+      expect(result.conductor_proteccion.section_mm2).toBe(10);
       expect(result.conductor_proteccion.calibre_awg).toBe('8');
-      expect(result.conductor_tierra.tipo).toBe('GEC');
-      expect(result.conductor_tierra.seccion_mm2).toBe(16);
+      expect(result.conductor_tierra.type).toBe('GEC');
+      expect(result.conductor_tierra.section_mm2).toBe(16);
       expect(result.conductor_tierra.calibre_awg).toBe('6');
       expect(result.sistema_tierra.tipo_sistema).toBe('TN-S');
       expect(result.sistema_tierra.resistencia_maxima_ohm).toBe(25);
@@ -137,8 +137,8 @@ describe('GroundingService', () => {
     it('should size grounding system for commercial installation', async () => {
       const request = {
         ...baseRequest,
-        parametros: {
-          ...baseRequest.parametros,
+        parameters: {
+          ...baseRequest.parameters,
           main_breaker_amp: 200,
           tipo_instalacion: 'comercial',
           tipo_sistema_tierra: 'TN-C-S',
@@ -147,8 +147,8 @@ describe('GroundingService', () => {
 
       const result = await service.size(request);
 
-      expect(result.conductor_proteccion.seccion_mm2).toBe(25);
-      expect(result.conductor_tierra.seccion_mm2).toBe(35);
+      expect(result.conductor_proteccion.section_mm2).toBe(25);
+      expect(result.conductor_tierra.section_mm2).toBe(35);
       expect(result.sistema_tierra.tipo_sistema).toBe('TN-C-S');
       expect(result.sistema_tierra.resistencia_maxima_ohm).toBe(5);
       expect(result.sistema_tierra.numero_electrodos).toBe(1);
@@ -158,8 +158,8 @@ describe('GroundingService', () => {
     it('should size grounding system for industrial installation', async () => {
       const request = {
         ...baseRequest,
-        parametros: {
-          ...baseRequest.parametros,
+        parameters: {
+          ...baseRequest.parameters,
           main_breaker_amp: 600,
           tipo_instalacion: 'industrial',
           tipo_sistema_tierra: 'TT',
@@ -168,8 +168,8 @@ describe('GroundingService', () => {
 
       const result = await service.size(request);
 
-      expect(result.conductor_proteccion.seccion_mm2).toBe(95);
-      expect(result.conductor_tierra.seccion_mm2).toBe(120);
+      expect(result.conductor_proteccion.section_mm2).toBe(95);
+      expect(result.conductor_tierra.section_mm2).toBe(120);
       expect(result.sistema_tierra.tipo_sistema).toBe('TT');
       expect(result.sistema_tierra.resistencia_maxima_ohm).toBe(1);
       expect(result.sistema_tierra.numero_electrodos).toBe(3);
@@ -180,26 +180,26 @@ describe('GroundingService', () => {
     it('should handle breaker amperage not in rules table', async () => {
       const request = {
         ...baseRequest,
-        parametros: {
-          ...baseRequest.parametros,
+        parameters: {
+          ...baseRequest.parameters,
           main_breaker_amp: 75, // Not in mock rules
         },
       };
 
       const result = await service.size(request);
 
-      expect(result.conductor_proteccion.seccion_mm2).toBe(10);
-      expect(result.conductor_tierra.seccion_mm2).toBe(16);
+      expect(result.conductor_proteccion.section_mm2).toBe(10);
+      expect(result.conductor_tierra.section_mm2).toBe(16);
       expect(result.conductor_proteccion.observaciones).toContain(
-        'Conductor de protección para breaker de 75A',
+        'conductor de protección para breaker de 75A',
       );
     });
 
     it('should handle TT system with multiple electrodes', async () => {
       const request = {
         ...baseRequest,
-        parametros: {
-          ...baseRequest.parametros,
+        parameters: {
+          ...baseRequest.parameters,
           tipo_sistema_tierra: 'TT',
         },
       };
@@ -214,8 +214,8 @@ describe('GroundingService', () => {
     it('should handle IT system with industrial installation', async () => {
       const request = {
         ...baseRequest,
-        parametros: {
-          ...baseRequest.parametros,
+        parameters: {
+          ...baseRequest.parameters,
           tipo_instalacion: 'industrial',
           tipo_sistema_tierra: 'IT',
         },
@@ -232,12 +232,12 @@ describe('GroundingService', () => {
       const result = await service.size(baseRequest);
 
       expect(result.observaciones_generales).toContain(
-        'Sistema de puesta a tierra para breaker de 100A',
+        'system de puesta a tierra para breaker de 100A',
       );
       expect(result.observaciones_generales).toContain('EGC: 10mm² (8)');
       expect(result.observaciones_generales).toContain('GEC: 16mm² (6)');
       expect(result.observaciones_generales).toContain(
-        'Sistema TN-S con 1 electrodo(s)',
+        'system TN-S con 1 electrodo(s)',
       );
       expect(result.observaciones_generales).toContain(
         'Resistencia máxima: 25Ω',
@@ -260,16 +260,16 @@ describe('GroundingService', () => {
     it('should handle high amperage breakers', async () => {
       const request = {
         ...baseRequest,
-        parametros: {
-          ...baseRequest.parametros,
+        parameters: {
+          ...baseRequest.parameters,
           main_breaker_amp: 2000,
         },
       };
 
       const result = await service.size(request);
 
-      expect(result.conductor_proteccion.seccion_mm2).toBe(240);
-      expect(result.conductor_tierra.seccion_mm2).toBe(300);
+      expect(result.conductor_proteccion.section_mm2).toBe(240);
+      expect(result.conductor_tierra.section_mm2).toBe(300);
       expect(result.conductor_proteccion.calibre_awg).toBe('400');
       expect(result.conductor_tierra.calibre_awg).toBe('500');
     });
@@ -277,8 +277,8 @@ describe('GroundingService', () => {
     it('should validate input parameters', async () => {
       const invalidRequest = {
         ...baseRequest,
-        parametros: {
-          ...baseRequest.parametros,
+        parameters: {
+          ...baseRequest.parameters,
           main_breaker_amp: -50, // Invalid negative value
         },
       };
@@ -290,3 +290,4 @@ describe('GroundingService', () => {
     });
   });
 });
+

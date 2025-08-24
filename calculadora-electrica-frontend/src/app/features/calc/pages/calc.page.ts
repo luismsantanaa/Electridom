@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+﻿import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -14,7 +14,7 @@ import { CommonModule } from '@angular/common';
               <div class="col-xl-4">
                 <div class="page-title-content">
                   <h3>Calculadora Eléctrica RD</h3>
-                  <p class="mb-2">Cálculo de cargas eléctricas residenciales, comerciales e industriales</p>
+                  <p class="mb-2">Cálculo de loads eléctricas residenciales, comerciales e industriales</p>
                 </div>
               </div>
             </div>
@@ -33,8 +33,8 @@ import { CommonModule } from '@angular/common';
               <div class="alert alert-info">
                 <strong>Funcionalidades en desarrollo:</strong>
                 <ul>
-                  <li>Formulario de ambientes y superficies</li>
-                  <li>Formulario de consumos eléctricos</li>
+                  <li>Formulario de environments y surfaces</li>
+                  <li>Formulario de consumptions eléctricos</li>
                   <li>Cálculos automáticos</li>
                   <li>Generación de reportes</li>
                 </ul>
@@ -57,3 +57,4 @@ import { CommonModule } from '@angular/common';
 export class CalcPage {
   constructor() {}
 }
+

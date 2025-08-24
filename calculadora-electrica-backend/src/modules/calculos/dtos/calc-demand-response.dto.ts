@@ -1,16 +1,16 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+﻿import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CargaDiversificadaDto {
-  @ApiProperty({ description: 'Categoría de carga' })
-  categoria: string;
+  @ApiProperty({ description: 'Categoría de load' })
+  category: string;
 
-  @ApiProperty({ description: 'Carga original en VA' })
+  @ApiProperty({ description: 'load original en VA' })
   carga_original_va: number;
 
   @ApiProperty({ description: 'Factor de demanda aplicado' })
-  factor_demanda: number;
+  demand_factor: number;
 
-  @ApiProperty({ description: 'Carga diversificada en VA' })
+  @ApiProperty({ description: 'load diversificada en VA' })
   carga_diversificada_va: number;
 
   @ApiPropertyOptional({ description: 'Rango aplicado (min-max VA)' })
@@ -21,10 +21,10 @@ export class CargaDiversificadaDto {
 }
 
 export class TotalesDiversificadosDto {
-  @ApiProperty({ description: 'Carga total original en VA' })
+  @ApiProperty({ description: 'load total original en VA' })
   carga_total_original_va: number;
 
-  @ApiProperty({ description: 'Carga total diversificada en VA' })
+  @ApiProperty({ description: 'load total diversificada en VA' })
   carga_total_diversificada_va: number;
 
   @ApiProperty({ description: 'Factor de diversificación efectivo' })
@@ -33,14 +33,14 @@ export class TotalesDiversificadosDto {
   @ApiProperty({ description: 'Corriente total diversificada en amperios' })
   corriente_total_diversificada_a: number;
 
-  @ApiProperty({ description: 'Ahorro de carga en VA' })
+  @ApiProperty({ description: 'Ahorro de load en VA' })
   ahorro_carga_va: number;
 
   @ApiProperty({ description: 'Porcentaje de ahorro' })
   porcentaje_ahorro: number;
 
-  @ApiProperty({ description: 'Tensión del sistema en voltios' })
-  tension_v: number;
+  @ApiProperty({ description: 'Tensión del system en voltios' })
+  voltage_v: number;
 
   @ApiProperty({ description: 'Número de fases' })
   phases: number;
@@ -49,7 +49,7 @@ export class TotalesDiversificadosDto {
 export class CalcDemandResponseDto {
   @ApiProperty({
     type: [CargaDiversificadaDto],
-    description: 'Cargas diversificadas por categoría',
+    description: 'loads diversificadas por categoría',
   })
   cargas_diversificadas: CargaDiversificadaDto[];
 
@@ -69,3 +69,4 @@ export class CalcDemandResponseDto {
     duracion_calculo_ms: number;
   };
 }
+

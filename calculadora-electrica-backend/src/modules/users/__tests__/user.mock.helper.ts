@@ -1,4 +1,4 @@
-import { User, UserRole, UserStatus } from '../entities/user.entity';
+﻿import { User, UserRole, UserStatus } from '../entities/user.entity';
 
 /**
  * Helper para crear mocks de User correctos y reutilizables
@@ -18,7 +18,7 @@ export const createMockUser = (overrides: Partial<User> = {}): User => {
     username: 'testuser',
     email: 'test@example.com',
     password: 'hashedPassword',
-    nombre: 'Test',
+    name: 'Test',
     apellido: 'User',
     role: UserRole.CLIENTE,
     estado: UserStatus.ACTIVO,
@@ -43,7 +43,7 @@ export const createMockUser = (overrides: Partial<User> = {}): User => {
       id: '1',
       username: 'testuser',
       email: 'test@example.com',
-      nombre: 'Test',
+      name: 'Test',
       apellido: 'User',
       role: UserRole.CLIENTE,
       estado: UserStatus.ACTIVO,
@@ -93,3 +93,4 @@ export const createMockUserWithBcryptPassword = (
     ...overrides,
   });
 };
+

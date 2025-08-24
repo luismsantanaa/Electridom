@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, Index } from 'typeorm';
+﻿import { Entity, Column, PrimaryGeneratedColumn, Index } from 'typeorm';
 import { BaseAuditEntity } from '../../../common/entities/base-audit.entity';
 
 @Entity('breaker_curve')
@@ -13,7 +13,7 @@ export class BreakerCurve extends BaseAuditEntity {
     type: 'decimal',
     precision: 8,
     scale: 2,
-    comment: 'Capacidad nominal del breaker en amperios',
+    comment: 'capacity nominal del breaker en amperios',
   })
   amp: number;
 
@@ -45,3 +45,4 @@ export class BreakerCurve extends BaseAuditEntity {
   })
   notes?: string;
 }
+

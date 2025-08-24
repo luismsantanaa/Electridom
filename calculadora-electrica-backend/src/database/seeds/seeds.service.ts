@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
+﻿import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { TipoInstalacion } from '../../modules/tipos-instalaciones/entities/tipo-instalacion.entity';
-import { TipoAmbiente } from '../../modules/tipos-ambientes/entities/tipo-ambiente.entity';
-import { TipoArtefacto } from '../../modules/tipos-artefactos/entities/tipo-artefacto.entity';
+import { TipoInstalacion } from '../../modules/tipos-instalaciones/entities/type-installation.entity';
+import { TipoAmbiente } from '../../modules/tipos-ambientes/entities/type-environment.entity';
+import { TipoArtefacto } from '../../modules/tipos-artefactos/entities/type-artifact.entity';
 import { NormConst } from '../../modules/calculos/entities/norm-const.entity';
 import { DemandFactor } from '../../modules/calculos/entities/demand-factor.entity';
 import { Ampacity } from '../../modules/calculos/entities/ampacity.entity';
@@ -15,23 +15,23 @@ import * as path from 'path';
 
 interface TipoInstalacionSeed {
   id: number;
-  nombre: string;
-  descripcion: string;
+  name: string;
+  description: string;
   activo: boolean;
 }
 
 interface TipoAmbienteSeed {
   id: number;
-  nombre: string;
-  descripcion: string;
+  name: string;
+  description: string;
   activo: boolean;
   tipoInstalacion_Id: number;
 }
 
 interface TipoArtefactoSeed {
   id: number;
-  Nombre: string;
-  descripcion?: string;
+  name: string;
+  description?: string;
   activo: boolean;
   EspacioId: number;
   Potencia: number;
@@ -57,15 +57,15 @@ function getSeedFilePath(filename: string): string {
 }
 
 const tiposInstalaciones = JSON.parse(
-  fs.readFileSync(getSeedFilePath('TiposInstalacion.json'), 'utf-8'),
+  fs.readFileSync(getSeedFilePath('InstallationTypes.json'), 'utf-8'),
 ) as TipoInstalacionSeed[];
 
 const tiposAmbientes = JSON.parse(
-  fs.readFileSync(getSeedFilePath('TiposAmbientes.json'), 'utf-8'),
+  fs.readFileSync(getSeedFilePath('EnvironmentTypes.json'), 'utf-8'),
 ) as TipoAmbienteSeed[];
 
 const tiposArtefactos = JSON.parse(
-  fs.readFileSync(getSeedFilePath('TiposArtefactos.json'), 'utf-8'),
+  fs.readFileSync(getSeedFilePath('ArtifactTypes.json'), 'utf-8'),
 ) as TipoArtefactoSeed[];
 
 @Injectable()
@@ -158,39 +158,39 @@ export class SeedsService {
   }
 
   private async seedTiposInstalaciones(): Promise<void> {
-    const instalaciones = tiposInstalaciones.map((instalacion) => ({
-      id: instalacion.id.toString(),
-      nombre: instalacion.nombre,
-      descripcion: instalacion.descripcion,
-      activo: instalacion.activo,
+    const installations = tiposInstalaciones.map((installation) => ({
+      id: installation.id.toString(),
+      name: installation.name,
+      description: installation.description,
+      activo: installation.activo,
       creadoPor: 'SEED',
       actualizadoPor: 'SEED',
     }));
 
-    await this.tipoInstalacionRepository.save(instalaciones);
-    console.log('Tipos de instalaciones sembrados correctamente');
+    await this.tipoInstalacionRepository.save(installations);
+    console.log('Tipos de installations sembrados correctamente');
   }
 
   private async seedTiposAmbientes(): Promise<void> {
-    const ambientes = tiposAmbientes.map((ambiente) => ({
-      id: ambiente.id.toString(),
-      nombre: ambiente.nombre,
-      descripcion: ambiente.descripcion,
-      activo: ambiente.activo,
-      tipoInstalacion: { id: ambiente.tipoInstalacion_Id.toString() },
+    const environments = tiposAmbientes.map((environment) => ({
+      id: environment.id.toString(),
+      name: environment.name,
+      description: environment.description,
+      activo: environment.activo,
+      tipoInstalacion: { id: environment.tipoInstalacion_Id.toString() },
       creadoPor: 'SEED',
       actualizadoPor: 'SEED',
     }));
 
-    await this.tipoAmbienteRepository.save(ambientes);
-    console.log('Tipos de ambientes sembrados correctamente');
+    await this.tipoAmbienteRepository.save(environments);
+    console.log('Tipos de environments sembrados correctamente');
   }
 
   private async seedTiposArtefactos(): Promise<void> {
     const artefactos = tiposArtefactos.map((artefacto) => ({
       id: artefacto.id.toString(),
-      nombre: artefacto.Nombre,
-      descripcion: artefacto.descripcion || '',
+      name: artefacto.name,
+      description: artefacto.description || '',
       activo: artefacto.activo,
       potencia: artefacto.Potencia,
       voltaje: 120, // Voltaje estándar en RD
@@ -209,7 +209,7 @@ export class SeedsService {
         key: 'lighting_va_per_m2',
         value: '32.3',
         unit: 'VA/m2',
-        notes: 'TODO_RIE: valor base; origen NEC 3VA/ft2 aprox.',
+        notes: 'TODO_RIE: value base; origen NEC 3VA/ft2 aprox.',
         creadoPor: 'SEED',
         actualizadoPor: 'SEED',
       },
@@ -306,7 +306,7 @@ export class SeedsService {
         rangeMin: 0,
         rangeMax: 999999,
         factor: 1.0,
-        notes: 'TODO_RIE: Factor base para cargas especiales',
+        notes: 'TODO_RIE: Factor base para loads especiales',
         usrCreate: 'SEED',
         usrUpdate: 'SEED',
         active: true,
@@ -387,7 +387,7 @@ export class SeedsService {
         poles: 1,
         curve: 'C',
         useCase: 'iluminacion',
-        notes: 'TODO_RIE: Breaker estándar para iluminación',
+        notes: 'TODO_RIE: breaker estándar para iluminación',
         usrCreate: 'SEED',
         usrUpdate: 'SEED',
         active: true,
@@ -397,7 +397,7 @@ export class SeedsService {
         poles: 1,
         curve: 'C',
         useCase: 'tomas generales',
-        notes: 'TODO_RIE: Breaker estándar para tomas',
+        notes: 'TODO_RIE: breaker estándar para tomas',
         usrCreate: 'SEED',
         usrUpdate: 'SEED',
         active: true,
@@ -407,7 +407,7 @@ export class SeedsService {
         poles: 2,
         curve: 'C',
         useCase: 'electrodomestico',
-        notes: 'TODO_RIE: Breaker para electrodomésticos 240V',
+        notes: 'TODO_RIE: breaker para electrodomésticos 240V',
         usrCreate: 'SEED',
         usrUpdate: 'SEED',
         active: true,
@@ -417,7 +417,7 @@ export class SeedsService {
         poles: 2,
         curve: 'C',
         useCase: 'climatizacion',
-        notes: 'TODO_RIE: Breaker para aires acondicionados',
+        notes: 'TODO_RIE: breaker para aires acondicionados',
         usrCreate: 'SEED',
         usrUpdate: 'SEED',
         active: true,
@@ -427,7 +427,7 @@ export class SeedsService {
         poles: 1,
         curve: 'C',
         useCase: 'tomas generales',
-        notes: 'TODO_RIE: Breaker para cargas mayores',
+        notes: 'TODO_RIE: breaker para loads mayores',
         usrCreate: 'SEED',
         usrUpdate: 'SEED',
         active: true,
@@ -435,7 +435,7 @@ export class SeedsService {
     ];
 
     await this.breakerCurveRepository.save(breakerCurves);
-    console.log('Breaker curves sembrados correctamente');
+    console.log('breaker curves sembrados correctamente');
   }
 
   private async seedResistivity(): Promise<void> {
@@ -445,7 +445,7 @@ export class SeedsService {
         material: 'Cu',
         seccionMm2: 2.5,
         ohmKm: 7.41,
-        notes: 'Cable de cobre 2.5mm² - Resistividad estándar',
+        notes: 'Cable de cobre 2.5mm² - resistivity estándar',
         usrCreate: 'SEED',
         usrUpdate: 'SEED',
         active: true,
@@ -454,7 +454,7 @@ export class SeedsService {
         material: 'Cu',
         seccionMm2: 4,
         ohmKm: 4.61,
-        notes: 'Cable de cobre 4mm² - Resistividad estándar',
+        notes: 'Cable de cobre 4mm² - resistivity estándar',
         usrCreate: 'SEED',
         usrUpdate: 'SEED',
         active: true,
@@ -463,7 +463,7 @@ export class SeedsService {
         material: 'Cu',
         seccionMm2: 6,
         ohmKm: 3.08,
-        notes: 'Cable de cobre 6mm² - Resistividad estándar',
+        notes: 'Cable de cobre 6mm² - resistivity estándar',
         usrCreate: 'SEED',
         usrUpdate: 'SEED',
         active: true,
@@ -472,7 +472,7 @@ export class SeedsService {
         material: 'Cu',
         seccionMm2: 10,
         ohmKm: 1.83,
-        notes: 'Cable de cobre 10mm² - Resistividad estándar',
+        notes: 'Cable de cobre 10mm² - resistivity estándar',
         usrCreate: 'SEED',
         usrUpdate: 'SEED',
         active: true,
@@ -481,7 +481,7 @@ export class SeedsService {
         material: 'Cu',
         seccionMm2: 16,
         ohmKm: 1.15,
-        notes: 'Cable de cobre 16mm² - Resistividad estándar',
+        notes: 'Cable de cobre 16mm² - resistivity estándar',
         usrCreate: 'SEED',
         usrUpdate: 'SEED',
         active: true,
@@ -490,7 +490,7 @@ export class SeedsService {
         material: 'Cu',
         seccionMm2: 25,
         ohmKm: 0.727,
-        notes: 'Cable de cobre 25mm² - Resistividad estándar',
+        notes: 'Cable de cobre 25mm² - resistivity estándar',
         usrCreate: 'SEED',
         usrUpdate: 'SEED',
         active: true,
@@ -499,7 +499,7 @@ export class SeedsService {
         material: 'Cu',
         seccionMm2: 35,
         ohmKm: 0.524,
-        notes: 'Cable de cobre 35mm² - Resistividad estándar',
+        notes: 'Cable de cobre 35mm² - resistivity estándar',
         usrCreate: 'SEED',
         usrUpdate: 'SEED',
         active: true,
@@ -508,7 +508,7 @@ export class SeedsService {
         material: 'Cu',
         seccionMm2: 50,
         ohmKm: 0.387,
-        notes: 'Cable de cobre 50mm² - Resistividad estándar',
+        notes: 'Cable de cobre 50mm² - resistivity estándar',
         usrCreate: 'SEED',
         usrUpdate: 'SEED',
         active: true,
@@ -517,7 +517,7 @@ export class SeedsService {
         material: 'Cu',
         seccionMm2: 70,
         ohmKm: 0.268,
-        notes: 'Cable de cobre 70mm² - Resistividad estándar',
+        notes: 'Cable de cobre 70mm² - resistivity estándar',
         usrCreate: 'SEED',
         usrUpdate: 'SEED',
         active: true,
@@ -526,7 +526,7 @@ export class SeedsService {
         material: 'Cu',
         seccionMm2: 95,
         ohmKm: 0.193,
-        notes: 'Cable de cobre 95mm² - Resistividad estándar',
+        notes: 'Cable de cobre 95mm² - resistivity estándar',
         usrCreate: 'SEED',
         usrUpdate: 'SEED',
         active: true,
@@ -535,7 +535,7 @@ export class SeedsService {
         material: 'Cu',
         seccionMm2: 120,
         ohmKm: 0.153,
-        notes: 'Cable de cobre 120mm² - Resistividad estándar',
+        notes: 'Cable de cobre 120mm² - resistivity estándar',
         usrCreate: 'SEED',
         usrUpdate: 'SEED',
         active: true,
@@ -544,7 +544,7 @@ export class SeedsService {
         material: 'Cu',
         seccionMm2: 150,
         ohmKm: 0.124,
-        notes: 'Cable de cobre 150mm² - Resistividad estándar',
+        notes: 'Cable de cobre 150mm² - resistivity estándar',
         usrCreate: 'SEED',
         usrUpdate: 'SEED',
         active: true,
@@ -553,7 +553,7 @@ export class SeedsService {
         material: 'Cu',
         seccionMm2: 185,
         ohmKm: 0.0991,
-        notes: 'Cable de cobre 185mm² - Resistividad estándar',
+        notes: 'Cable de cobre 185mm² - resistivity estándar',
         usrCreate: 'SEED',
         usrUpdate: 'SEED',
         active: true,
@@ -562,7 +562,7 @@ export class SeedsService {
         material: 'Cu',
         seccionMm2: 240,
         ohmKm: 0.0754,
-        notes: 'Cable de cobre 240mm² - Resistividad estándar',
+        notes: 'Cable de cobre 240mm² - resistivity estándar',
         usrCreate: 'SEED',
         usrUpdate: 'SEED',
         active: true,
@@ -571,7 +571,7 @@ export class SeedsService {
         material: 'Cu',
         seccionMm2: 300,
         ohmKm: 0.0601,
-        notes: 'Cable de cobre 300mm² - Resistividad estándar',
+        notes: 'Cable de cobre 300mm² - resistivity estándar',
         usrCreate: 'SEED',
         usrUpdate: 'SEED',
         active: true,
@@ -580,7 +580,7 @@ export class SeedsService {
         material: 'Cu',
         seccionMm2: 400,
         ohmKm: 0.047,
-        notes: 'Cable de cobre 400mm² - Resistividad estándar',
+        notes: 'Cable de cobre 400mm² - resistivity estándar',
         usrCreate: 'SEED',
         usrUpdate: 'SEED',
         active: true,
@@ -589,7 +589,7 @@ export class SeedsService {
         material: 'Cu',
         seccionMm2: 500,
         ohmKm: 0.0366,
-        notes: 'Cable de cobre 500mm² - Resistividad estándar',
+        notes: 'Cable de cobre 500mm² - resistivity estándar',
         usrCreate: 'SEED',
         usrUpdate: 'SEED',
         active: true,
@@ -598,7 +598,7 @@ export class SeedsService {
         material: 'Cu',
         seccionMm2: 630,
         ohmKm: 0.0283,
-        notes: 'Cable de cobre 630mm² - Resistividad estándar',
+        notes: 'Cable de cobre 630mm² - resistivity estándar',
         usrCreate: 'SEED',
         usrUpdate: 'SEED',
         active: true,
@@ -608,7 +608,7 @@ export class SeedsService {
         material: 'Al',
         seccionMm2: 6,
         ohmKm: 4.84,
-        notes: 'Cable de aluminio 6mm² - Resistividad estándar',
+        notes: 'Cable de aluminio 6mm² - resistivity estándar',
         usrCreate: 'SEED',
         usrUpdate: 'SEED',
         active: true,
@@ -617,7 +617,7 @@ export class SeedsService {
         material: 'Al',
         seccionMm2: 10,
         ohmKm: 2.9,
-        notes: 'Cable de aluminio 10mm² - Resistividad estándar',
+        notes: 'Cable de aluminio 10mm² - resistivity estándar',
         usrCreate: 'SEED',
         usrUpdate: 'SEED',
         active: true,
@@ -626,7 +626,7 @@ export class SeedsService {
         material: 'Al',
         seccionMm2: 16,
         ohmKm: 1.91,
-        notes: 'Cable de aluminio 16mm² - Resistividad estándar',
+        notes: 'Cable de aluminio 16mm² - resistivity estándar',
         usrCreate: 'SEED',
         usrUpdate: 'SEED',
         active: true,
@@ -635,7 +635,7 @@ export class SeedsService {
         material: 'Al',
         seccionMm2: 25,
         ohmKm: 1.2,
-        notes: 'Cable de aluminio 25mm² - Resistividad estándar',
+        notes: 'Cable de aluminio 25mm² - resistivity estándar',
         usrCreate: 'SEED',
         usrUpdate: 'SEED',
         active: true,
@@ -644,7 +644,7 @@ export class SeedsService {
         material: 'Al',
         seccionMm2: 35,
         ohmKm: 0.868,
-        notes: 'Cable de aluminio 35mm² - Resistividad estándar',
+        notes: 'Cable de aluminio 35mm² - resistivity estándar',
         usrCreate: 'SEED',
         usrUpdate: 'SEED',
         active: true,
@@ -653,7 +653,7 @@ export class SeedsService {
         material: 'Al',
         seccionMm2: 50,
         ohmKm: 0.641,
-        notes: 'Cable de aluminio 50mm² - Resistividad estándar',
+        notes: 'Cable de aluminio 50mm² - resistivity estándar',
         usrCreate: 'SEED',
         usrUpdate: 'SEED',
         active: true,
@@ -662,7 +662,7 @@ export class SeedsService {
         material: 'Al',
         seccionMm2: 70,
         ohmKm: 0.443,
-        notes: 'Cable de aluminio 70mm² - Resistividad estándar',
+        notes: 'Cable de aluminio 70mm² - resistivity estándar',
         usrCreate: 'SEED',
         usrUpdate: 'SEED',
         active: true,
@@ -671,7 +671,7 @@ export class SeedsService {
         material: 'Al',
         seccionMm2: 95,
         ohmKm: 0.32,
-        notes: 'Cable de aluminio 95mm² - Resistividad estándar',
+        notes: 'Cable de aluminio 95mm² - resistivity estándar',
         usrCreate: 'SEED',
         usrUpdate: 'SEED',
         active: true,
@@ -680,7 +680,7 @@ export class SeedsService {
         material: 'Al',
         seccionMm2: 120,
         ohmKm: 0.253,
-        notes: 'Cable de aluminio 120mm² - Resistividad estándar',
+        notes: 'Cable de aluminio 120mm² - resistivity estándar',
         usrCreate: 'SEED',
         usrUpdate: 'SEED',
         active: true,
@@ -689,7 +689,7 @@ export class SeedsService {
         material: 'Al',
         seccionMm2: 150,
         ohmKm: 0.206,
-        notes: 'Cable de aluminio 150mm² - Resistividad estándar',
+        notes: 'Cable de aluminio 150mm² - resistivity estándar',
         usrCreate: 'SEED',
         usrUpdate: 'SEED',
         active: true,
@@ -698,7 +698,7 @@ export class SeedsService {
         material: 'Al',
         seccionMm2: 185,
         ohmKm: 0.164,
-        notes: 'Cable de aluminio 185mm² - Resistividad estándar',
+        notes: 'Cable de aluminio 185mm² - resistivity estándar',
         usrCreate: 'SEED',
         usrUpdate: 'SEED',
         active: true,
@@ -707,7 +707,7 @@ export class SeedsService {
         material: 'Al',
         seccionMm2: 240,
         ohmKm: 0.125,
-        notes: 'Cable de aluminio 240mm² - Resistividad estándar',
+        notes: 'Cable de aluminio 240mm² - resistivity estándar',
         usrCreate: 'SEED',
         usrUpdate: 'SEED',
         active: true,
@@ -716,7 +716,7 @@ export class SeedsService {
         material: 'Al',
         seccionMm2: 300,
         ohmKm: 0.1,
-        notes: 'Cable de aluminio 300mm² - Resistividad estándar',
+        notes: 'Cable de aluminio 300mm² - resistivity estándar',
         usrCreate: 'SEED',
         usrUpdate: 'SEED',
         active: true,
@@ -725,7 +725,7 @@ export class SeedsService {
         material: 'Al',
         seccionMm2: 400,
         ohmKm: 0.0778,
-        notes: 'Cable de aluminio 400mm² - Resistividad estándar',
+        notes: 'Cable de aluminio 400mm² - resistivity estándar',
         usrCreate: 'SEED',
         usrUpdate: 'SEED',
         active: true,
@@ -734,7 +734,7 @@ export class SeedsService {
         material: 'Al',
         seccionMm2: 500,
         ohmKm: 0.0607,
-        notes: 'Cable de aluminio 500mm² - Resistividad estándar',
+        notes: 'Cable de aluminio 500mm² - resistivity estándar',
         usrCreate: 'SEED',
         usrUpdate: 'SEED',
         active: true,
@@ -743,7 +743,7 @@ export class SeedsService {
         material: 'Al',
         seccionMm2: 630,
         ohmKm: 0.0469,
-        notes: 'Cable de aluminio 630mm² - Resistividad estándar',
+        notes: 'Cable de aluminio 630mm² - resistivity estándar',
         usrCreate: 'SEED',
         usrUpdate: 'SEED',
         active: true,
@@ -756,201 +756,201 @@ export class SeedsService {
 
   private async seedGroundingRules(): Promise<void> {
     const groundingRulesData = [
-      // Reglas básicas según NEC 250.66 y prácticas estándar
+      // rules básicas según NEC 250.66 y prácticas estándar
       {
         mainBreakerAmp: 60,
         egcMm2: 6,
         gecMm2: 10,
-        notes: 'TODO_RIE: Breaker hasta 60A - EGC 6mm², GEC 10mm²',
+        notes: 'TODO_RIE: breaker hasta 60A - EGC 6mm², GEC 10mm²',
         usrCreate: 'SEED',
       },
       {
         mainBreakerAmp: 100,
         egcMm2: 10,
         gecMm2: 16,
-        notes: 'TODO_RIE: Breaker hasta 100A - EGC 10mm², GEC 16mm²',
+        notes: 'TODO_RIE: breaker hasta 100A - EGC 10mm², GEC 16mm²',
         usrCreate: 'SEED',
       },
       {
         mainBreakerAmp: 125,
         egcMm2: 16,
         gecMm2: 25,
-        notes: 'TODO_RIE: Breaker hasta 125A - EGC 16mm², GEC 25mm²',
+        notes: 'TODO_RIE: breaker hasta 125A - EGC 16mm², GEC 25mm²',
         usrCreate: 'SEED',
       },
       {
         mainBreakerAmp: 150,
         egcMm2: 16,
         gecMm2: 25,
-        notes: 'TODO_RIE: Breaker hasta 150A - EGC 16mm², GEC 25mm²',
+        notes: 'TODO_RIE: breaker hasta 150A - EGC 16mm², GEC 25mm²',
         usrCreate: 'SEED',
       },
       {
         mainBreakerAmp: 200,
         egcMm2: 25,
         gecMm2: 35,
-        notes: 'TODO_RIE: Breaker hasta 200A - EGC 25mm², GEC 35mm²',
+        notes: 'TODO_RIE: breaker hasta 200A - EGC 25mm², GEC 35mm²',
         usrCreate: 'SEED',
       },
       {
         mainBreakerAmp: 225,
         egcMm2: 25,
         gecMm2: 35,
-        notes: 'TODO_RIE: Breaker hasta 225A - EGC 25mm², GEC 35mm²',
+        notes: 'TODO_RIE: breaker hasta 225A - EGC 25mm², GEC 35mm²',
         usrCreate: 'SEED',
       },
       {
         mainBreakerAmp: 250,
         egcMm2: 35,
         gecMm2: 50,
-        notes: 'TODO_RIE: Breaker hasta 250A - EGC 35mm², GEC 50mm²',
+        notes: 'TODO_RIE: breaker hasta 250A - EGC 35mm², GEC 50mm²',
         usrCreate: 'SEED',
       },
       {
         mainBreakerAmp: 300,
         egcMm2: 35,
         gecMm2: 50,
-        notes: 'TODO_RIE: Breaker hasta 300A - EGC 35mm², GEC 50mm²',
+        notes: 'TODO_RIE: breaker hasta 300A - EGC 35mm², GEC 50mm²',
         usrCreate: 'SEED',
       },
       {
         mainBreakerAmp: 350,
         egcMm2: 50,
         gecMm2: 70,
-        notes: 'TODO_RIE: Breaker hasta 350A - EGC 50mm², GEC 70mm²',
+        notes: 'TODO_RIE: breaker hasta 350A - EGC 50mm², GEC 70mm²',
         usrCreate: 'SEED',
       },
       {
         mainBreakerAmp: 400,
         egcMm2: 50,
         gecMm2: 70,
-        notes: 'TODO_RIE: Breaker hasta 400A - EGC 50mm², GEC 70mm²',
+        notes: 'TODO_RIE: breaker hasta 400A - EGC 50mm², GEC 70mm²',
         usrCreate: 'SEED',
       },
       {
         mainBreakerAmp: 450,
         egcMm2: 70,
         gecMm2: 95,
-        notes: 'TODO_RIE: Breaker hasta 450A - EGC 70mm², GEC 95mm²',
+        notes: 'TODO_RIE: breaker hasta 450A - EGC 70mm², GEC 95mm²',
         usrCreate: 'SEED',
       },
       {
         mainBreakerAmp: 500,
         egcMm2: 70,
         gecMm2: 95,
-        notes: 'TODO_RIE: Breaker hasta 500A - EGC 70mm², GEC 95mm²',
+        notes: 'TODO_RIE: breaker hasta 500A - EGC 70mm², GEC 95mm²',
         usrCreate: 'SEED',
       },
       {
         mainBreakerAmp: 600,
         egcMm2: 95,
         gecMm2: 120,
-        notes: 'TODO_RIE: Breaker hasta 600A - EGC 95mm², GEC 120mm²',
+        notes: 'TODO_RIE: breaker hasta 600A - EGC 95mm², GEC 120mm²',
         usrCreate: 'SEED',
       },
       {
         mainBreakerAmp: 700,
         egcMm2: 95,
         gecMm2: 120,
-        notes: 'TODO_RIE: Breaker hasta 700A - EGC 95mm², GEC 120mm²',
+        notes: 'TODO_RIE: breaker hasta 700A - EGC 95mm², GEC 120mm²',
         usrCreate: 'SEED',
       },
       {
         mainBreakerAmp: 800,
         egcMm2: 120,
         gecMm2: 150,
-        notes: 'TODO_RIE: Breaker hasta 800A - EGC 120mm², GEC 150mm²',
+        notes: 'TODO_RIE: breaker hasta 800A - EGC 120mm², GEC 150mm²',
         usrCreate: 'SEED',
       },
       {
         mainBreakerAmp: 900,
         egcMm2: 120,
         gecMm2: 150,
-        notes: 'TODO_RIE: Breaker hasta 900A - EGC 120mm², GEC 150mm²',
+        notes: 'TODO_RIE: breaker hasta 900A - EGC 120mm², GEC 150mm²',
         usrCreate: 'SEED',
       },
       {
         mainBreakerAmp: 1000,
         egcMm2: 150,
         gecMm2: 185,
-        notes: 'TODO_RIE: Breaker hasta 1000A - EGC 150mm², GEC 185mm²',
+        notes: 'TODO_RIE: breaker hasta 1000A - EGC 150mm², GEC 185mm²',
         usrCreate: 'SEED',
       },
       {
         mainBreakerAmp: 1200,
         egcMm2: 150,
         gecMm2: 185,
-        notes: 'TODO_RIE: Breaker hasta 1200A - EGC 150mm², GEC 185mm²',
+        notes: 'TODO_RIE: breaker hasta 1200A - EGC 150mm², GEC 185mm²',
         usrCreate: 'SEED',
       },
       {
         mainBreakerAmp: 1400,
         egcMm2: 185,
         gecMm2: 240,
-        notes: 'TODO_RIE: Breaker hasta 1400A - EGC 185mm², GEC 240mm²',
+        notes: 'TODO_RIE: breaker hasta 1400A - EGC 185mm², GEC 240mm²',
         usrCreate: 'SEED',
       },
       {
         mainBreakerAmp: 1600,
         egcMm2: 185,
         gecMm2: 240,
-        notes: 'TODO_RIE: Breaker hasta 1600A - EGC 185mm², GEC 240mm²',
+        notes: 'TODO_RIE: breaker hasta 1600A - EGC 185mm², GEC 240mm²',
         usrCreate: 'SEED',
       },
       {
         mainBreakerAmp: 1800,
         egcMm2: 240,
         gecMm2: 300,
-        notes: 'TODO_RIE: Breaker hasta 1800A - EGC 240mm², GEC 300mm²',
+        notes: 'TODO_RIE: breaker hasta 1800A - EGC 240mm², GEC 300mm²',
         usrCreate: 'SEED',
       },
       {
         mainBreakerAmp: 2000,
         egcMm2: 240,
         gecMm2: 300,
-        notes: 'TODO_RIE: Breaker hasta 2000A - EGC 240mm², GEC 300mm²',
+        notes: 'TODO_RIE: breaker hasta 2000A - EGC 240mm², GEC 300mm²',
         usrCreate: 'SEED',
       },
       {
         mainBreakerAmp: 2500,
         egcMm2: 300,
         gecMm2: 400,
-        notes: 'TODO_RIE: Breaker hasta 2500A - EGC 300mm², GEC 400mm²',
+        notes: 'TODO_RIE: breaker hasta 2500A - EGC 300mm², GEC 400mm²',
         usrCreate: 'SEED',
       },
       {
         mainBreakerAmp: 3000,
         egcMm2: 300,
         gecMm2: 400,
-        notes: 'TODO_RIE: Breaker hasta 3000A - EGC 300mm², GEC 400mm²',
+        notes: 'TODO_RIE: breaker hasta 3000A - EGC 300mm², GEC 400mm²',
         usrCreate: 'SEED',
       },
       {
         mainBreakerAmp: 3500,
         egcMm2: 400,
         gecMm2: 500,
-        notes: 'TODO_RIE: Breaker hasta 3500A - EGC 400mm², GEC 500mm²',
+        notes: 'TODO_RIE: breaker hasta 3500A - EGC 400mm², GEC 500mm²',
         usrCreate: 'SEED',
       },
       {
         mainBreakerAmp: 4000,
         egcMm2: 400,
         gecMm2: 500,
-        notes: 'TODO_RIE: Breaker hasta 4000A - EGC 400mm², GEC 500mm²',
+        notes: 'TODO_RIE: breaker hasta 4000A - EGC 400mm², GEC 500mm²',
         usrCreate: 'SEED',
       },
       {
         mainBreakerAmp: 4500,
         egcMm2: 500,
         gecMm2: 630,
-        notes: 'TODO_RIE: Breaker hasta 4500A - EGC 500mm², GEC 630mm²',
+        notes: 'TODO_RIE: breaker hasta 4500A - EGC 500mm², GEC 630mm²',
         usrCreate: 'SEED',
       },
       {
         mainBreakerAmp: 5000,
         egcMm2: 500,
         gecMm2: 630,
-        notes: 'TODO_RIE: Breaker hasta 5000A - EGC 500mm², GEC 630mm²',
+        notes: 'TODO_RIE: breaker hasta 5000A - EGC 500mm², GEC 630mm²',
         usrCreate: 'SEED',
       },
     ];
@@ -967,7 +967,7 @@ export class SeedsService {
     });
 
     await this.groundingRulesRepository.save(entities);
-    console.log(`✅ ${entities.length} reglas de puesta a tierra insertadas`);
+    console.log(`✅ ${entities.length} rules de puesta a tierra insertadas`);
   }
 
   async onModuleInit() {
@@ -975,30 +975,30 @@ export class SeedsService {
       console.log('Iniciando seeds...');
 
       // Convertir IDs numéricos a strings para tipos_instalaciones
-      const tiposInstalacionesFormateados = tiposInstalaciones.map((tipo) => ({
-        ...tipo,
-        id: tipo.id.toString(),
+      const tiposInstalacionesFormateados = tiposInstalaciones.map((type) => ({
+        ...type,
+        id: type.id.toString(),
       }));
       await this.tipoInstalacionRepository.save(tiposInstalacionesFormateados);
       console.log('Seeds de tipos_instalaciones completados.');
 
       // Convertir IDs numéricos a strings para tipos_ambientes
-      const tiposAmbientesFormateados = tiposAmbientes.map((tipo) => ({
-        ...tipo,
-        id: tipo.id.toString(),
-        tipoInstalacion: { id: tipo.tipoInstalacion_Id.toString() },
+      const tiposAmbientesFormateados = tiposAmbientes.map((type) => ({
+        ...type,
+        id: type.id.toString(),
+        tipoInstalacion: { id: type.tipoInstalacion_Id.toString() },
       }));
       await this.tipoAmbienteRepository.save(tiposAmbientesFormateados);
       console.log('Seeds de tipos_ambientes completados.');
 
       // Convertir IDs numéricos a strings para tipos_artefactos
-      const tiposArtefactosFormateados = tiposArtefactos.map((tipo) => ({
-        ...tipo,
-        id: tipo.id.toString(),
-        nombre: tipo.Nombre,
-        potencia: tipo.Potencia,
+      const tiposArtefactosFormateados = tiposArtefactos.map((type) => ({
+        ...type,
+        id: type.id.toString(),
+        name: type.name,
+        potencia: type.Potencia,
         voltaje: 120, // Voltaje estándar en RD
-        tipoAmbiente: { id: tipo.EspacioId.toString() },
+        tipoAmbiente: { id: type.EspacioId.toString() },
       }));
       await this.tipoArtefactoRepository.save(tiposArtefactosFormateados);
       console.log('Seeds de tipos_artefactos completados.');

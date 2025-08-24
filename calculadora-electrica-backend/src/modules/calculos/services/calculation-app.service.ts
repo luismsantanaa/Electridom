@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+﻿import { Injectable, Logger } from '@nestjs/common';
 import { CalculationDomainService } from './calculation-domain.service';
 import { PreviewRequestDto } from '../dtos/preview.request.dto';
 import { PreviewResponseDto } from '../dtos/preview.response.dto';
@@ -13,8 +13,8 @@ export class CalculationAppService {
 
   async preview(request: PreviewRequestDto): Promise<PreviewResponseDto> {
     this.logger.log('Iniciando cálculo de preview', {
-      ambientes: request.superficies.length,
-      consumos: request.consumos.length,
+      environments: request.surfaces.length,
+      consumptions: request.consumptions.length,
     });
 
     const warnings: string[] = [];
@@ -28,7 +28,7 @@ export class CalculationAppService {
       this.logger.log('Cálculo de preview completado', {
         totalConectadaVA: result.totales.totalConectadaVA,
         demandaEstimadaVA: result.totales.demandaEstimadaVA,
-        circuitos: result.propuestaCircuitos.length,
+        circuits: result.propuestaCircuitos.length,
         warnings: warnings.length,
       });
 
@@ -39,3 +39,4 @@ export class CalculationAppService {
     }
   }
 }
+

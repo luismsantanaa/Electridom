@@ -1,4 +1,4 @@
-import { Test, TestingModule } from '@nestjs/testing';
+﻿import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../../src/app.module';
@@ -23,18 +23,18 @@ describe('CalcReportController (e2e)', () => {
     it('should generate report with complete data', () => {
       const requestData = {
         roomsData: {
-          ambientes: [
+          environments: [
             {
-              nombre: 'Habitación Principal',
+              name: 'Habitación Principal',
               area_m2: 15,
               tipo_ambiente: 'dormitorio',
               artefactos: [
-                { tipo: 'lámpara', cantidad: 2, potencia_va: 60 },
-                { tipo: 'tomacorriente', cantidad: 4, potencia_va: 180 },
+                { type: 'lámpara', cantidad: 2, potencia_va: 60 },
+                { type: 'tomacorriente', cantidad: 4, potencia_va: 180 },
               ],
             },
           ],
-          parametros: {
+          parameters: {
             tipo_instalacion: 'residencial',
             tension_nominal_v: 120,
             phases: 1,
@@ -43,15 +43,15 @@ describe('CalcReportController (e2e)', () => {
         demandData: {
           cargas_por_categoria: [
             {
-              categoria: 'iluminacion_general',
+              category: 'iluminacion_general',
               carga_bruta_va: 1200,
             },
             {
-              categoria: 'tomas_generales',
+              category: 'tomas_generales',
               carga_bruta_va: 2400,
             },
           ],
-          parametros: {
+          parameters: {
             tipo_instalacion: 'residencial',
           },
         },
@@ -59,13 +59,13 @@ describe('CalcReportController (e2e)', () => {
           circuitos_individuales: [
             {
               id_circuito: 'CIRC-001',
-              nombre: 'Iluminación Habitación 1',
-              corriente_a: 8.5,
+              name: 'Iluminación Habitación 1',
+              current_a: 8.5,
               carga_va: 1020,
-              longitud_m: 15,
+              length_m: 15,
             },
           ],
-          parametros: {
+          parameters: {
             material_conductor: 'Cu',
             tipo_instalacion: 'residencial',
           },
@@ -74,19 +74,19 @@ describe('CalcReportController (e2e)', () => {
           circuitos_ramales: [
             {
               id_circuito: 'CIRC-001',
-              nombre: 'Iluminación Habitación 1',
+              name: 'Iluminación Habitación 1',
               corriente_total_a: 8.5,
               carga_total_va: 1020,
-              longitud_m: 15,
+              length_m: 15,
             },
           ],
-          sistema: {
-            tension_v: 120,
+          system: {
+            voltage_v: 120,
             phases: 1,
             corriente_total_a: 8.5,
             carga_total_va: 1020,
           },
-          parametros: {
+          parameters: {
             longitud_alimentador_m: 50,
             material_conductor: 'Cu',
             max_caida_ramal_pct: 3,
@@ -94,19 +94,19 @@ describe('CalcReportController (e2e)', () => {
           },
         },
         groundingData: {
-          sistema: {
-            tension_v: 120,
+          system: {
+            voltage_v: 120,
             phases: 1,
             corriente_total_a: 8.5,
             carga_total_va: 1020,
           },
-          alimentador: {
-            corriente_a: 8.5,
-            seccion_mm2: 10,
+          feeder: {
+            current_a: 8.5,
+            section_mm2: 10,
             material: 'Cu',
-            longitud_m: 50,
+            length_m: 50,
           },
-          parametros: {
+          parameters: {
             main_breaker_amp: 100,
             tipo_instalacion: 'residencial',
             tipo_sistema_tierra: 'TN-S',
@@ -256,18 +256,18 @@ describe('CalcReportController (e2e)', () => {
     it('should handle partial data with only rooms', () => {
       const requestData = {
         roomsData: {
-          ambientes: [
+          environments: [
             {
-              nombre: 'Sala de Estar',
+              name: 'Sala de Estar',
               area_m2: 20,
               tipo_ambiente: 'sala',
               artefactos: [
-                { tipo: 'lámpara', cantidad: 3, potencia_va: 60 },
-                { tipo: 'tomacorriente', cantidad: 6, potencia_va: 180 },
+                { type: 'lámpara', cantidad: 3, potencia_va: 60 },
+                { type: 'tomacorriente', cantidad: 6, potencia_va: 180 },
               ],
             },
           ],
-          parametros: {
+          parameters: {
             tipo_instalacion: 'residencial',
             tension_nominal_v: 120,
             phases: 1,
@@ -296,11 +296,11 @@ describe('CalcReportController (e2e)', () => {
         demandData: {
           cargas_por_categoria: [
             {
-              categoria: 'iluminacion_general',
+              category: 'iluminacion_general',
               carga_bruta_va: 1500,
             },
           ],
-          parametros: {
+          parameters: {
             tipo_instalacion: 'comercial',
           },
         },
@@ -328,13 +328,13 @@ describe('CalcReportController (e2e)', () => {
           circuitos_individuales: [
             {
               id_circuito: 'CIRC-001',
-              nombre: 'Circuito de Prueba',
-              corriente_a: 10,
+              name: 'circuit de Prueba',
+              current_a: 10,
               carga_va: 1200,
-              longitud_m: 20,
+              length_m: 20,
             },
           ],
-          parametros: {
+          parameters: {
             material_conductor: 'Cu',
             tipo_instalacion: 'industrial',
           },
@@ -363,19 +363,19 @@ describe('CalcReportController (e2e)', () => {
           circuitos_ramales: [
             {
               id_circuito: 'CIRC-001',
-              nombre: 'Alimentador Principal',
+              name: 'feeder Principal',
               corriente_total_a: 15,
               carga_total_va: 1800,
-              longitud_m: 30,
+              length_m: 30,
             },
           ],
-          sistema: {
-            tension_v: 120,
+          system: {
+            voltage_v: 120,
             phases: 1,
             corriente_total_a: 15,
             carga_total_va: 1800,
           },
-          parametros: {
+          parameters: {
             longitud_alimentador_m: 40,
             material_conductor: 'Cu',
             max_caida_ramal_pct: 3,
@@ -403,19 +403,19 @@ describe('CalcReportController (e2e)', () => {
     it('should handle partial data with only grounding', () => {
       const requestData = {
         groundingData: {
-          sistema: {
-            tension_v: 120,
+          system: {
+            voltage_v: 120,
             phases: 1,
             corriente_total_a: 20,
             carga_total_va: 2400,
           },
-          alimentador: {
-            corriente_a: 20,
-            seccion_mm2: 16,
+          feeder: {
+            current_a: 20,
+            section_mm2: 16,
             material: 'Cu',
-            longitud_m: 25,
+            length_m: 25,
           },
-          parametros: {
+          parameters: {
             main_breaker_amp: 150,
             tipo_instalacion: 'comercial',
             tipo_sistema_tierra: 'TN-S',
@@ -520,3 +520,4 @@ describe('CalcReportController (e2e)', () => {
     });
   });
 });
+

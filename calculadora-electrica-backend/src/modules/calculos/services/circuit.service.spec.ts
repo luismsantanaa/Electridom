@@ -1,4 +1,4 @@
-import { Test, TestingModule } from '@nestjs/testing';
+﻿import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CircuitService } from './circuit.service';
@@ -123,7 +123,7 @@ describe('CircuitService', () => {
         poles: 1,
         curve: 'C',
         useCase: 'iluminacion',
-        notes: 'Breaker para iluminación',
+        notes: 'breaker para iluminación',
         active: true,
         usrCreate: 'SEED',
         usrUpdate: 'SEED',
@@ -136,7 +136,7 @@ describe('CircuitService', () => {
         poles: 1,
         curve: 'C',
         useCase: 'tomas generales',
-        notes: 'Breaker para tomas',
+        notes: 'breaker para tomas',
         active: true,
         usrCreate: 'SEED',
         usrUpdate: 'SEED',
@@ -149,7 +149,7 @@ describe('CircuitService', () => {
         poles: 2,
         curve: 'C',
         useCase: 'electrodomestico',
-        notes: 'Breaker para electrodomésticos',
+        notes: 'breaker para electrodomésticos',
         active: true,
         usrCreate: 'SEED',
         usrUpdate: 'SEED',
@@ -161,22 +161,22 @@ describe('CircuitService', () => {
     const baseRequest: CalcCircuitsRequestDto = {
       cargas_diversificadas: [
         {
-          categoria: 'lighting_general',
+          category: 'lighting_general',
           carga_diversificada_va: 1000,
-          factor_demanda: 1.0,
-          descripcion: 'Iluminación general',
-          ambiente: 'Sala',
+          demand_factor: 1.0,
+          description: 'Iluminación general',
+          environment: 'Sala',
         },
         {
-          categoria: 'electrodomesticos',
+          category: 'electrodomesticos',
           carga_diversificada_va: 2000,
-          factor_demanda: 0.85,
-          descripcion: 'Electrodomésticos',
-          ambiente: 'Cocina',
+          demand_factor: 0.85,
+          description: 'Electrodomésticos',
+          environment: 'Cocina',
         },
       ],
-      sistema: {
-        tension_v: 120,
+      system: {
+        voltage_v: 120,
         phases: 1,
         system_type: 1,
         frequency: 60,
@@ -194,8 +194,8 @@ describe('CircuitService', () => {
       const result = await service.groupIntoCircuits(baseRequest);
 
       expect(result.circuitos_ramales).toHaveLength(2);
-      expect(result.circuitos_ramales[0].nombre).toContain('lighting_general');
-      expect(result.circuitos_ramales[1].nombre).toContain('electrodomesticos');
+      expect(result.circuitos_ramales[0].name).toContain('lighting_general');
+      expect(result.circuitos_ramales[1].name).toContain('electrodomesticos');
     });
 
     it('should select appropriate breakers and conductors', async () => {
@@ -221,11 +221,11 @@ describe('CircuitService', () => {
         ...baseRequest,
         cargas_diversificadas: [
           {
-            categoria: 'climatizacion',
+            category: 'climatizacion',
             carga_diversificada_va: 2400,
-            factor_demanda: 1.0,
-            descripcion: 'Aire acondicionado',
-            ambiente: 'Habitación',
+            demand_factor: 1.0,
+            description: 'Aire acondicionado',
+            environment: 'Habitación',
           },
         ],
       };
@@ -261,11 +261,11 @@ describe('CircuitService', () => {
         ...baseRequest,
         cargas_diversificadas: [
           {
-            categoria: 'lighting_general',
-            carga_diversificada_va: 2000, // Alta carga
-            factor_demanda: 1.0,
-            descripcion: 'Iluminación intensiva',
-            ambiente: 'Oficina',
+            category: 'lighting_general',
+            carga_diversificada_va: 2000, // Alta load
+            demand_factor: 1.0,
+            description: 'Iluminación intensiva',
+            environment: 'Oficina',
           },
         ],
       };
@@ -279,8 +279,8 @@ describe('CircuitService', () => {
     it('should handle three-phase system', async () => {
       const threePhaseRequest = {
         ...baseRequest,
-        sistema: {
-          tension_v: 208,
+        system: {
+          voltage_v: 208,
           phases: 3,
           system_type: 3,
           frequency: 60,
@@ -289,7 +289,7 @@ describe('CircuitService', () => {
 
       const result = await service.groupIntoCircuits(threePhaseRequest);
 
-      expect(result.circuitos_ramales[0].tension_v).toBe(208);
+      expect(result.circuitos_ramales[0].voltage_v).toBe(208);
       expect(result.circuitos_ramales[0].phases).toBe(3);
     });
 
@@ -298,18 +298,18 @@ describe('CircuitService', () => {
         ...baseRequest,
         cargas_diversificadas: [
           {
-            categoria: 'lighting_general',
+            category: 'lighting_general',
             carga_diversificada_va: 500,
-            factor_demanda: 1.0,
-            descripcion: 'Iluminación 1',
-            ambiente: 'Sala',
+            demand_factor: 1.0,
+            description: 'Iluminación 1',
+            environment: 'Sala',
           },
           {
-            categoria: 'lighting_general',
+            category: 'lighting_general',
             carga_diversificada_va: 300,
-            factor_demanda: 1.0,
-            descripcion: 'Iluminación 2',
-            ambiente: 'Cocina',
+            demand_factor: 1.0,
+            description: 'Iluminación 2',
+            environment: 'Cocina',
           },
         ],
       };
@@ -317,7 +317,7 @@ describe('CircuitService', () => {
       const result = await service.groupIntoCircuits(multipleLoadsRequest);
 
       expect(result.circuitos_ramales).toHaveLength(1);
-      expect(result.circuitos_ramales[0].cargas).toHaveLength(2);
+      expect(result.circuitos_ramales[0].loads).toHaveLength(2);
     });
 
     it('should handle loads that exceed circuit capacity', async () => {
@@ -325,11 +325,11 @@ describe('CircuitService', () => {
         ...baseRequest,
         cargas_diversificadas: [
           {
-            categoria: 'lighting_general',
-            carga_diversificada_va: 3000, // Muy alta carga
-            factor_demanda: 1.0,
-            descripcion: 'Iluminación muy intensiva',
-            ambiente: 'Gimnasio',
+            category: 'lighting_general',
+            carga_diversificada_va: 3000, // Muy alta load
+            demand_factor: 1.0,
+            description: 'Iluminación muy intensiva',
+            environment: 'Gimnasio',
           },
         ],
       };
@@ -387,7 +387,7 @@ describe('CircuitService', () => {
       const result = await service.groupIntoCircuits(baseRequest);
 
       expect(result.circuitos_ramales).toHaveLength(2);
-      // Debería usar el valor por defecto de 0.8
+      // Debería usar el value por defecto de 0.8
     });
 
     it('should calculate conductor selection correctly', async () => {
@@ -408,3 +408,4 @@ describe('CircuitService', () => {
     });
   });
 });
+

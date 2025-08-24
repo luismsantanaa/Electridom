@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, Index } from 'typeorm';
+﻿import { Entity, Column, PrimaryGeneratedColumn, Index } from 'typeorm';
 import { BaseAuditEntity } from '../../../common/entities/base-audit.entity';
 
 @Entity('resistivity')
@@ -11,12 +11,12 @@ export class Resistivity extends BaseAuditEntity {
   @Column({
     type: 'varchar',
     length: 10,
-    comment: 'Material del conductor (Cu, Al)',
+    comment: 'material del conductor (Cu, Al)',
   })
   material: string;
 
   @Column({
-    name: 'seccion_mm2',
+    name: 'section_mm2',
     type: 'decimal',
     precision: 8,
     scale: 3,
@@ -36,7 +36,8 @@ export class Resistivity extends BaseAuditEntity {
   @Column({
     type: 'text',
     nullable: true,
-    comment: 'Notas y observaciones de la resistividad',
+    comment: 'Notas y observaciones de la resistivity',
   })
   notes?: string;
 }
+

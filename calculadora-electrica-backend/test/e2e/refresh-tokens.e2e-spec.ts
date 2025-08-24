@@ -1,4 +1,4 @@
-import { Test, TestingModule } from '@nestjs/testing';
+﻿import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../../src/app.module';
@@ -25,11 +25,11 @@ describe('Refresh Tokens E2E Tests (Story 2)', () => {
   });
 
   beforeEach(async () => {
-    // Limpiar sesiones antes de cada test
+    // Limpiar sessions antes de cada test
     try {
       await dataSource.query('DELETE FROM sessions');
     } catch (error) {
-      console.log('No se pudo limpiar sesiones:', error.message);
+      console.log('No se pudo limpiar sessions:', error.message);
     }
   });
 
@@ -336,8 +336,8 @@ describe('Refresh Tokens E2E Tests (Story 2)', () => {
     });
   });
 
-  describe('Gestión de sesiones', () => {
-    it('debe permitir obtener sesiones activas del usuario', async () => {
+  describe('Gestión de sessions', () => {
+    it('debe permitir obtener sessions activas del user', async () => {
       try {
         // Login inicial
         const loginResponse = await request(app.getHttpServer())
@@ -356,7 +356,7 @@ describe('Refresh Tokens E2E Tests (Story 2)', () => {
 
         const { access_token } = loginResponse.body.data;
 
-        // Obtener sesiones del usuario
+        // Obtener sessions del user
         const sessionsResponse = await request(app.getHttpServer())
           .get('/api/auth/sessions')
           .set('Authorization', `Bearer ${access_token}`)
@@ -369,7 +369,7 @@ describe('Refresh Tokens E2E Tests (Story 2)', () => {
         expect(sessionsResponse.body[0]).toHaveProperty('ip');
         expect(sessionsResponse.body[0]).toHaveProperty('status');
       } catch (error) {
-        console.log('❌ Error en test de gestión de sesiones:', error.message);
+        console.log('❌ Error en test de gestión de sessions:', error.message);
         throw error;
       }
     });
@@ -393,7 +393,7 @@ describe('Refresh Tokens E2E Tests (Story 2)', () => {
 
         const { access_token } = loginResponse.body.data;
 
-        // Obtener sesiones
+        // Obtener sessions
         const sessionsResponse = await request(app.getHttpServer())
           .get('/api/auth/sessions')
           .set('Authorization', `Bearer ${access_token}`);
@@ -412,3 +412,4 @@ describe('Refresh Tokens E2E Tests (Story 2)', () => {
     });
   });
 });
+

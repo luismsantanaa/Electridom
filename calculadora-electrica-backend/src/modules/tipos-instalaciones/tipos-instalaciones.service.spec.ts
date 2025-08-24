@@ -1,9 +1,9 @@
-import { Test, TestingModule } from '@nestjs/testing';
+﻿import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { TiposInstalacionesService } from './tipos-instalaciones.service';
-import { TipoInstalacion } from './entities/tipo-instalacion.entity';
-import { CreateTipoInstalacionDto } from './dtos/create-tipo-instalacion.dto';
-import { UpdateTipoInstalacionDto } from './dtos/update-tipo-instalacion.dto';
+import { TiposInstalacionesService } from './tipos-installations.service';
+import { TipoInstalacion } from './entities/type-installation.entity';
+import { CreateTipoInstalacionDto } from './dtos/create-type-installation.dto';
+import { UpdateTipoInstalacionDto } from './dtos/update-type-installation.dto';
 import { NotFoundException } from '@nestjs/common';
 import { PaginateQuery, paginate } from 'nestjs-paginate';
 import { ActivoSpecification } from './specifications/activo.specification';
@@ -50,17 +50,17 @@ describe('TiposInstalacionesService', () => {
   });
 
   describe('create', () => {
-    it('should create a new tipo instalacion', async () => {
+    it('should create a new type installation', async () => {
       const createDto: CreateTipoInstalacionDto = {
         id: '1',
-        nombre: 'Test Instalacion',
-        descripcion: 'Test Description',
+        name: 'Test installation',
+        description: 'Test Description',
       };
 
       const expectedTipoInstalacion = {
         id: '1',
-        nombre: 'Test Instalacion',
-        descripcion: 'Test Description',
+        name: 'Test installation',
+        description: 'Test Description',
         active: true,
         usrCreate: 'testUser',
         creationDate: expect.any(Date),
@@ -82,18 +82,18 @@ describe('TiposInstalacionesService', () => {
   });
 
   describe('findAll', () => {
-    it('should return all active tipos instalacion', async () => {
+    it('should return all active tipos installation', async () => {
       const expectedTipoInstalaciones = [
         {
           id: '1',
-          nombre: 'Test Instalacion 1',
-          descripcion: 'Test Description 1',
+          name: 'Test installation 1',
+          description: 'Test Description 1',
           active: true,
         },
         {
           id: '2',
-          nombre: 'Test Instalacion 2',
-          descripcion: 'Test Description 2',
+          name: 'Test installation 2',
+          description: 'Test Description 2',
           active: true,
         },
       ];
@@ -105,8 +105,8 @@ describe('TiposInstalacionesService', () => {
           totalItems: expectedTipoInstalaciones.length,
           currentPage: 1,
           totalPages: 1,
-          sortBy: [['nombre', 'ASC']],
-          searchBy: ['nombre'],
+          sortBy: [['name', 'ASC']],
+          searchBy: ['name'],
           search: '',
           select: [],
         },
@@ -124,13 +124,13 @@ describe('TiposInstalacionesService', () => {
       const query: PaginateQuery = {
         page: 1,
         limit: 10,
-        path: '/tipos-instalaciones',
+        path: '/tipos-installations',
       };
       const mockData = [
         {
           id: '1',
-          nombre: 'Test Instalacion',
-          descripcion: 'Test Description',
+          name: 'Test installation',
+          description: 'Test Description',
           activo: true,
         },
       ];
@@ -139,8 +139,8 @@ describe('TiposInstalacionesService', () => {
         totalItems: 1,
         currentPage: 1,
         totalPages: 1,
-        sortBy: [['nombre', 'ASC']],
-        searchBy: ['nombre'],
+        sortBy: [['name', 'ASC']],
+        searchBy: ['name'],
         search: '',
         select: [],
       };
@@ -164,14 +164,14 @@ describe('TiposInstalacionesService', () => {
       const query: PaginateQuery = {
         page: 1,
         limit: 10,
-        path: '/tipos-instalaciones',
+        path: '/tipos-installations',
       };
       const specification = new ActivoSpecification(true);
 
       const mockData = [
         {
           id: '1',
-          nombre: 'Test Instalacion',
+          name: 'Test installation',
           activo: true,
         },
       ];
@@ -180,8 +180,8 @@ describe('TiposInstalacionesService', () => {
         totalItems: 1,
         currentPage: 1,
         totalPages: 1,
-        sortBy: [['nombre', 'ASC']],
-        searchBy: ['nombre'],
+        sortBy: [['name', 'ASC']],
+        searchBy: ['name'],
         search: '',
         select: [],
       };
@@ -200,12 +200,12 @@ describe('TiposInstalacionesService', () => {
   });
 
   describe('findOne', () => {
-    it('should return a tipo instalacion by id', async () => {
+    it('should return a type installation by id', async () => {
       const id = '1';
       const expectedTipoInstalacion = {
         id: '1',
-        nombre: 'Test Instalacion',
-        descripcion: 'Test Description',
+        name: 'Test installation',
+        description: 'Test Description',
         active: true,
       };
 
@@ -219,7 +219,7 @@ describe('TiposInstalacionesService', () => {
       });
     });
 
-    it('should throw NotFoundException when tipo instalacion not found', async () => {
+    it('should throw NotFoundException when type installation not found', async () => {
       const id = '1';
       mockRepository.findOne.mockResolvedValue(null);
 
@@ -228,17 +228,17 @@ describe('TiposInstalacionesService', () => {
   });
 
   describe('update', () => {
-    it('should update a tipo instalacion', async () => {
+    it('should update a type installation', async () => {
       const id = '1';
       const updateDto: UpdateTipoInstalacionDto = {
-        nombre: 'Updated Instalacion',
-        descripcion: 'Updated Description',
+        name: 'Updated installation',
+        description: 'Updated Description',
       };
 
       const existingTipoInstalacion = {
         id: '1',
-        nombre: 'Test Instalacion',
-        descripcion: 'Test Description',
+        name: 'Test installation',
+        description: 'Test Description',
         active: true,
       };
 
@@ -262,29 +262,30 @@ describe('TiposInstalacionesService', () => {
   });
 
   describe('remove', () => {
-    it('should soft delete a tipo instalacion', async () => {
+    it('should soft delete a type installation', async () => {
       const id = '1';
-      const usuario = 'testUser';
+      const user = 'testUser';
 
       const existingTipoInstalacion = {
         id: '1',
-        nombre: 'Test Instalacion',
-        descripcion: 'Test Description',
+        name: 'Test installation',
+        description: 'Test Description',
         active: true,
       };
 
       const deletedTipoInstalacion = {
         ...existingTipoInstalacion,
         active: false,
-        usrUpdate: usuario,
+        usrUpdate: user,
       };
 
       mockRepository.findOne.mockResolvedValue(existingTipoInstalacion);
       mockRepository.save.mockResolvedValue(deletedTipoInstalacion);
 
-      await service.remove(id, usuario);
+      await service.remove(id, user);
 
       expect(mockRepository.save).toHaveBeenCalledWith(deletedTipoInstalacion);
     });
   });
 });
+

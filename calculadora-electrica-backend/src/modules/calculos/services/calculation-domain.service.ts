@@ -1,16 +1,16 @@
-import { Injectable } from '@nestjs/common';
+﻿import { Injectable } from '@nestjs/common';
 import { RuleProviderService } from '../../rules/rule-provider.service';
 import { PreviewRequestDto } from '../dtos/preview.request.dto';
 import { PreviewResponseDto } from '../dtos/preview.response.dto';
 
 interface AmbienteData {
-  nombre: string;
+  name: string;
   areaM2: number;
-  consumos: Array<{ nombre: string; watts: number; factorUso?: number }>;
+  consumptions: Array<{ name: string; watts: number; factorUso?: number }>;
 }
 
 interface CargaCalculada {
-  ambiente: string;
+  environment: string;
   iluminacionVA: number;
   tomasVA: number;
   cargasFijasVA: number;
@@ -18,7 +18,7 @@ interface CargaCalculada {
 }
 
 interface CircuitoPropuesto {
-  tipo: 'ILU' | 'TOM';
+  type: 'ILU' | 'TOM';
   cargaAsignadaVA: number;
   ambientesIncluidos: string[];
   breakerSugerido: string;
@@ -39,16 +39,16 @@ export class CalculationDomainService {
     };
 
     // Normalizar y validar datos de entrada
-    const ambientesNormalizados = this.normalizarAmbientes(request.superficies);
-    this.validarConsumos(request.consumos, ambientesNormalizados);
+    const ambientesNormalizados = this.normalizarAmbientes(request.surfaces);
+    this.validarConsumos(request.consumptions, ambientesNormalizados);
 
-    // Agrupar datos por ambiente
+    // Agrupar datos por environment
     const datosPorAmbiente = this.agruparDatosPorAmbiente(
       ambientesNormalizados,
-      request.consumos,
+      request.consumptions,
     );
 
-    // Calcular cargas por ambiente
+    // Calcular loads por environment
     const cargasPorAmbiente = await this.calcularCargasPorAmbiente(
       datosPorAmbiente,
       warnings,
@@ -62,7 +62,7 @@ export class CalculationDomainService {
       ruleSetOptions,
     );
 
-    // Generar propuesta de circuitos
+    // Generar propuesta de circuits
     const propuestaCircuitos = await this.generarPropuestaCircuitos(
       cargasPorAmbiente,
       warnings,
@@ -79,52 +79,52 @@ export class CalculationDomainService {
   }
 
   // Métodos de validación y normalización
-  private normalizarAmbientes(superficies: any[]): Map<string, number> {
-    const ambientes = new Map<string, number>();
+  private normalizarAmbientes(surfaces: any[]): Map<string, number> {
+    const environments = new Map<string, number>();
 
-    for (const superficie of superficies) {
-      const nombreNormalizado = superficie.ambiente.trim().toLowerCase();
+    for (const surface of surfaces) {
+      const nombreNormalizado = surface.environment.trim().toLowerCase();
 
-      if (ambientes.has(nombreNormalizado)) {
-        throw new Error(`El ambiente '${superficie.ambiente}' está duplicado`);
+      if (environments.has(nombreNormalizado)) {
+        throw new Error(`El environment '${surface.environment}' está duplicado`);
       }
 
-      ambientes.set(nombreNormalizado, superficie.areaM2);
+      environments.set(nombreNormalizado, surface.areaM2);
     }
 
-    return ambientes;
+    return environments;
   }
 
   private validarConsumos(
-    consumos: any[],
-    ambientes: Map<string, number>,
+    consumptions: any[],
+    environments: Map<string, number>,
   ): void {
-    for (const consumo of consumos) {
-      const ambienteNormalizado = consumo.ambiente.trim().toLowerCase();
-      if (!ambientes.has(ambienteNormalizado)) {
+    for (const consumption of consumptions) {
+      const ambienteNormalizado = consumption.environment.trim().toLowerCase();
+      if (!environments.has(ambienteNormalizado)) {
         throw new Error(
-          `El consumo '${consumo.nombre}' referencia un ambiente inexistente: '${consumo.ambiente}'`,
+          `El consumption '${consumption.name}' referencia un environment inexistente: '${consumption.environment}'`,
         );
       }
     }
   }
 
   private agruparDatosPorAmbiente(
-    ambientes: Map<string, number>,
-    consumos: any[],
+    environments: Map<string, number>,
+    consumptions: any[],
   ): AmbienteData[] {
     const datosPorAmbiente: AmbienteData[] = [];
 
-    for (const [nombreAmbiente, area] of ambientes) {
-      const consumosDelAmbiente = consumos.filter(
-        (consumo) => consumo.ambiente.trim().toLowerCase() === nombreAmbiente,
+    for (const [nombreAmbiente, area] of environments) {
+      const consumosDelAmbiente = consumptions.filter(
+        (consumption) => consumption.environment.trim().toLowerCase() === nombreAmbiente,
       );
 
       datosPorAmbiente.push({
-        nombre: nombreAmbiente,
+        name: nombreAmbiente,
         areaM2: area,
-        consumos: consumosDelAmbiente.map((c) => ({
-          nombre: c.nombre,
+        consumptions: consumosDelAmbiente.map((c) => ({
+          name: c.name,
           watts: c.watts,
           factorUso: c.factorUso || 1,
         })),
@@ -134,7 +134,7 @@ export class CalculationDomainService {
     return datosPorAmbiente;
   }
 
-  // Métodos de cálculo de cargas
+  // Métodos de cálculo de loads
   private async calcularCargasPorAmbiente(
     datosPorAmbiente: AmbienteData[],
     warnings: string[],
@@ -149,12 +149,12 @@ export class CalculationDomainService {
         ruleSetOptions,
       );
 
-      const tomasVA = this.calcularTomas(datos.consumos);
+      const tomasVA = this.calcularTomas(datos.consumptions);
 
       const cargasFijasVA = 0; // Por ahora no implementado
 
       cargasPorAmbiente.push({
-        ambiente: datos.nombre,
+        environment: datos.name,
         iluminacionVA,
         tomasVA,
         cargasFijasVA,
@@ -179,8 +179,8 @@ export class CalculationDomainService {
     return areaM2 * luzVAPorM2;
   }
 
-  private calcularTomas(consumos: Array<{ watts: number }>): number {
-    return consumos.reduce((total, consumo) => total + consumo.watts, 0);
+  private calcularTomas(consumptions: Array<{ watts: number }>): number {
+    return consumptions.reduce((total, consumption) => total + consumption.watts, 0);
   }
 
   // Métodos de cálculo de totales
@@ -190,7 +190,7 @@ export class CalculationDomainService {
     ruleSetOptions: any,
   ): Promise<{ totalConectadaVA: number; demandaEstimadaVA: number }> {
     const totalConectadaVA = cargasPorAmbiente.reduce(
-      (total, carga) => total + carga.totalVA,
+      (total, load) => total + load.totalVA,
       0,
     );
 
@@ -223,16 +223,16 @@ export class CalculationDomainService {
 
     let demandaEstimada = 0;
 
-    for (const carga of cargasPorAmbiente) {
+    for (const load of cargasPorAmbiente) {
       demandaEstimada +=
-        carga.iluminacionVA * factorDemandaLuz +
-        carga.tomasVA * factorDemandaToma;
+        load.iluminacionVA * factorDemandaLuz +
+        load.tomasVA * factorDemandaToma;
     }
 
     return demandaEstimada;
   }
 
-  // Métodos de generación de circuitos
+  // Métodos de generación de circuits
   private async generarPropuestaCircuitos(
     cargasPorAmbiente: CargaCalculada[],
     warnings: string[],
@@ -248,40 +248,41 @@ export class CalculationDomainService {
       { fallback: 1800, warnings, ...ruleSetOptions },
     );
 
-    const circuitos: CircuitoPropuesto[] = [];
+    const circuits: CircuitoPropuesto[] = [];
 
-    // Circuito de iluminación
+    // circuit de iluminación
     const totalIluminacion = cargasPorAmbiente.reduce(
-      (total, carga) => total + carga.iluminacionVA,
+      (total, load) => total + load.iluminacionVA,
       0,
     );
 
     if (totalIluminacion > 0) {
-      circuitos.push({
-        tipo: 'ILU',
+      circuits.push({
+        type: 'ILU',
         cargaAsignadaVA: totalIluminacion,
-        ambientesIncluidos: cargasPorAmbiente.map((c) => c.ambiente),
+        ambientesIncluidos: cargasPorAmbiente.map((c) => c.environment),
         breakerSugerido: '15A // TODO validar RIE RD',
         calibreSugerido: 'AWG 14 // TODO validar RIE RD',
       });
     }
 
-    // Circuito de tomacorrientes
+    // circuit de tomacorrientes
     const totalTomas = cargasPorAmbiente.reduce(
-      (total, carga) => total + carga.tomasVA,
+      (total, load) => total + load.tomasVA,
       0,
     );
 
     if (totalTomas > 0) {
-      circuitos.push({
-        tipo: 'TOM',
+      circuits.push({
+        type: 'TOM',
         cargaAsignadaVA: totalTomas,
-        ambientesIncluidos: cargasPorAmbiente.map((c) => c.ambiente),
+        ambientesIncluidos: cargasPorAmbiente.map((c) => c.environment),
         breakerSugerido: '20A // TODO validar RIE RD',
         calibreSugerido: 'AWG 12 // TODO validar RIE RD',
       });
     }
 
-    return circuitos;
+    return circuits;
   }
 }
+

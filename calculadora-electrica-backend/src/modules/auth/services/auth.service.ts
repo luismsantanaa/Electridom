@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException, Logger } from '@nestjs/common';
+﻿import { Injectable, UnauthorizedException, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { JwtRs256Service } from '../../jwks/services/jwt-rs256.service';
 import { UsersService } from '../../users/users.service';
@@ -16,7 +16,7 @@ type UserResponse = Pick<
   | 'id'
   | 'username'
   | 'email'
-  | 'nombre'
+  | 'name'
   | 'apellido'
   | 'role'
   | 'estado'
@@ -105,7 +105,7 @@ export class AuthService {
       id: user.id,
       username: user.username,
       email: user.email,
-      nombre: user.nombre,
+      name: user.name,
       apellido: user.apellido,
       role: user.role,
       estado: user.estado,
@@ -134,7 +134,7 @@ export class AuthService {
     // Crear sesión en la base de datos
     const fullUser = await this.usersService.findById(user.id);
     if (!fullUser) {
-      throw new UnauthorizedException('Usuario no encontrado');
+      throw new UnauthorizedException('user no encontrado');
     }
 
     const { refreshToken } = await this.sessionService.createSession(
@@ -151,7 +151,7 @@ export class AuthService {
         id: user.id,
         email: user.email,
         username: user.username,
-        nombre: user.nombre,
+        name: user.name,
         apellido: user.apellido,
         role: user.role,
       },
@@ -171,10 +171,10 @@ export class AuthService {
       this.logger.warn(`User agent mismatch for session ${session.id}`);
     }
 
-    // Obtener usuario
+    // Obtener user
     const user = await this.usersService.findById(session.userId);
     if (!user || !user.active || user.estado !== UserStatus.ACTIVO) {
-      throw new UnauthorizedException('Usuario no válido');
+      throw new UnauthorizedException('user no válido');
     }
 
     // Generar nuevos tokens
@@ -250,7 +250,7 @@ export class AuthService {
   }
 
   async revokeSession(sessionId: string, userId: string): Promise<void> {
-    // Verificar que la sesión pertenece al usuario
+    // Verificar que la sesión pertenece al user
     const sessions = await this.sessionService.getUserSessions(userId);
     const session = sessions.find((s) => s.id === sessionId);
 
@@ -284,7 +284,7 @@ export class AuthService {
       id: user.id,
       username: user.username,
       email: user.email,
-      nombre: user.nombre,
+      name: user.name,
       apellido: user.apellido,
       role: user.role,
       estado: user.estado,
@@ -297,3 +297,4 @@ export class AuthService {
     };
   }
 }
+

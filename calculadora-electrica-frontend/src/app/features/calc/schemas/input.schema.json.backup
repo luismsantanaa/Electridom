@@ -1,0 +1,91 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "Calculadora Electrica RD - Input",
+    "type": "object",
+    "required": [
+        "superficies",
+        "consumos"
+    ],
+    "properties": {
+        "system": {
+            "type": "object",
+            "properties": {
+                "voltage": {
+                    "type": "number",
+                    "default": 120
+                },
+                "phases": {
+                    "type": "integer",
+                    "enum": [
+                        1,
+                        3
+                    ],
+                    "default": 1
+                },
+                "frequency": {
+                    "type": "number",
+                    "default": 60
+                }
+            }
+        },
+        "superficies": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "nombre",
+                    "area_m2"
+                ],
+                "properties": {
+                    "nombre": {
+                        "type": "string",
+                        "minLength": 1
+                    },
+                    "area_m2": {
+                        "type": "number",
+                        "minimum": 0.1
+                    }
+                }
+            }
+        },
+        "consumos": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "nombre",
+                    "ambiente",
+                    "potencia_w"
+                ],
+                "properties": {
+                    "nombre": {
+                        "type": "string"
+                    },
+                    "ambiente": {
+                        "type": "string"
+                    },
+                    "potencia_w": {
+                        "type": "number",
+                        "minimum": 1
+                    },
+                    "fp": {
+                        "type": "number",
+                        "minimum": 0.1,
+                        "maximum": 1.0
+                    },
+                    "tipo": {
+                        "type": "string",
+                        "enum": [
+                            "iluminacion",
+                            "toma_general",
+                            "electrodomestico",
+                            "climatizacion",
+                            "especial"
+                        ],
+                        "default": "electrodomestico"
+                    }
+                }
+            }
+        }
+    }
+}

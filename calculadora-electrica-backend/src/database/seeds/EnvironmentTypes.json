@@ -1,0 +1,26 @@
+[
+    {
+        "id": "a1b2c3d4-e5f6-41d4-a716-446655440001",
+        "tipoInstalacion_Id": "550e8400-e29b-41d4-a716-446655440000",
+        "name": "Sala",
+        "activo": true,
+        "creadoPor": "SEED",
+        "actualizadoPor": "SEED"
+    },
+    {
+        "id": "47ededa5-d3c3-4307-88df-b17a48080995",
+        "tipoInstalacion_Id": "550e8400-e29b-41d4-a716-446655440000",
+        "name": "Comedor",
+        "activo": true,
+        "creadoPor": "SEED",
+        "actualizadoPor": "SEED"
+    },
+    {
+        "id": "2fec1d81-41d4-42a4-9a4f-388a71aaebf4",
+        "tipoInstalacion_Id": "550e8400-e29b-41d4-a716-446655440000",
+        "name": "Cocina",
+        "activo": true,
+        "creadoPor": "SEED",
+        "actualizadoPor": "SEED"
+    }
+]

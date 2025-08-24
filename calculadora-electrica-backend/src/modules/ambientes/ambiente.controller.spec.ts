@@ -1,15 +1,15 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { AmbienteController } from './ambiente.controller';
-import { AmbienteService } from './ambiente.service';
-import { CreateAmbienteDto } from './dto/create-ambiente.dto';
-import { UpdateAmbienteDto } from './dto/update-ambiente.dto';
+﻿import { Test, TestingModule } from '@nestjs/testing';
+import { EnvironmentController } from './environment.controller';
+import { EnvironmentService } from './environment.service';
+import { CreateAmbienteDto } from './dto/create-environment.dto';
+import { UpdateAmbienteDto } from './dto/update-environment.dto';
 import { PaginateQuery } from 'nestjs-paginate';
 import { tipoSuperficieEnum } from '../../common/dtos/enums';
 import { User, UserRole, UserStatus } from '../users/entities/user.entity';
 import { createMockUser } from '../users/__tests__/user.mock.helper';
 
-describe('AmbienteController', () => {
-  let controller: AmbienteController;
+describe('EnvironmentController', () => {
+  let controller: EnvironmentController;
 
   const mockService = {
     create: jest.fn(),
@@ -25,16 +25,16 @@ describe('AmbienteController', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [AmbienteController],
+      controllers: [EnvironmentController],
       providers: [
         {
-          provide: AmbienteService,
+          provide: EnvironmentService,
           useValue: mockService,
         },
       ],
     }).compile();
 
-    controller = module.get<AmbienteController>(AmbienteController);
+    controller = module.get<EnvironmentController>(EnvironmentController);
   });
 
   it('should be defined', () => {
@@ -42,9 +42,9 @@ describe('AmbienteController', () => {
   });
 
   describe('create', () => {
-    it('should create a new ambiente', async () => {
+    it('should create a new environment', async () => {
       const createDto: CreateAmbienteDto = {
-        nombre: 'Test Ambiente',
+        name: 'Test environment',
         tipoAmbienteId: '1',
         tipoSuperficie: tipoSuperficieEnum.RECTANGULAR,
         proyectoId: '1',
@@ -73,7 +73,7 @@ describe('AmbienteController', () => {
       const query: PaginateQuery = {
         page: 1,
         limit: 10,
-        path: '/ambientes',
+        path: '/environments',
       };
       const mockResult = {
         success: true,
@@ -81,7 +81,7 @@ describe('AmbienteController', () => {
         data: [
           {
             id: '1',
-            nombre: 'Test Ambiente',
+            name: 'Test environment',
             activo: true,
           },
         ],
@@ -91,8 +91,8 @@ describe('AmbienteController', () => {
           totalItems: 1,
           currentPage: 1,
           totalPages: 1,
-          sortBy: [['nombre', 'ASC']],
-          searchBy: ['nombre'],
+          sortBy: [['name', 'ASC']],
+          searchBy: ['name'],
           search: '',
           select: [],
         },
@@ -111,11 +111,11 @@ describe('AmbienteController', () => {
   });
 
   describe('findOne', () => {
-    it('should return an ambiente by id', async () => {
+    it('should return an environment by id', async () => {
       const id = '1';
       const expectedResult = {
         id,
-        nombre: 'Test Ambiente',
+        name: 'Test environment',
         activo: true,
       };
 
@@ -129,10 +129,10 @@ describe('AmbienteController', () => {
   });
 
   describe('update', () => {
-    it('should update an ambiente', async () => {
+    it('should update an environment', async () => {
       const id = '1';
       const updateDto: UpdateAmbienteDto = {
-        nombre: 'Updated Ambiente',
+        name: 'Updated environment',
       };
       const expectedResult = {
         id,
@@ -155,7 +155,7 @@ describe('AmbienteController', () => {
   });
 
   describe('remove', () => {
-    it('should remove an ambiente', async () => {
+    it('should remove an environment', async () => {
       const id = '1';
 
       mockService.remove.mockResolvedValue(undefined);
@@ -166,3 +166,4 @@ describe('AmbienteController', () => {
     });
   });
 });
+

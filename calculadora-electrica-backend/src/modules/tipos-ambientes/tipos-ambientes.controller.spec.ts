@@ -1,11 +1,11 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { TiposAmbientesController } from './tipos-ambientes.controller';
-import { TiposAmbientesService } from './tipos-ambientes.service';
-import { CreateTipoAmbienteDto } from './dtos/create-tipo-ambiente.dto';
-import { UpdateTipoAmbienteDto } from './dtos/update-tipo-ambiente.dto';
+﻿import { Test, TestingModule } from '@nestjs/testing';
+import { TiposAmbientesController } from './tipos-environments.controller';
+import { TiposAmbientesService } from './tipos-environments.service';
+import { CreateTipoAmbienteDto } from './dtos/create-type-environment.dto';
+import { UpdateTipoAmbienteDto } from './dtos/update-type-environment.dto';
 import { PaginateQuery } from 'nestjs-paginate';
-import { TipoAmbiente } from './entities/tipo-ambiente.entity';
-import { TipoInstalacion } from '../tipos-instalaciones/entities/tipo-instalacion.entity';
+import { TipoAmbiente } from './entities/type-environment.entity';
+import { TipoInstalacion } from '../tipos-installations/entities/type-installation.entity';
 import { User, UserRole, UserStatus } from '../users/entities/user.entity';
 import { createMockUser } from '../users/__tests__/user.mock.helper';
 
@@ -51,16 +51,16 @@ describe('TiposAmbientesController', () => {
   });
 
   describe('create', () => {
-    it('should create a new tipo ambiente', async () => {
+    it('should create a new type environment', async () => {
       const createDto: CreateTipoAmbienteDto = {
-        nombre: 'Test Ambiente',
+        name: 'Test environment',
         tipoInstalacion_Id: '1',
       };
 
       const mockTipoInstalacion: TipoInstalacion = {
         id: '1',
-        nombre: 'Test Instalacion',
-        descripcion: 'Test Description',
+        name: 'Test installation',
+        description: 'Test Description',
         active: true,
         creationDate: new Date(),
         updateDate: new Date(),
@@ -70,8 +70,8 @@ describe('TiposAmbientesController', () => {
 
       const expectedTipoAmbiente: TipoAmbiente = {
         id: '1',
-        nombre: createDto.nombre,
-        descripcion: '',
+        name: createDto.name,
+        description: '',
         active: true,
         creationDate: new Date(),
         updateDate: new Date(),
@@ -96,7 +96,7 @@ describe('TiposAmbientesController', () => {
       const query: PaginateQuery = {
         page: 1,
         limit: 10,
-        path: '/tipos-ambientes',
+        path: '/tipos-environments',
       };
       const mockPaginatedResult = {
         success: true,
@@ -104,7 +104,7 @@ describe('TiposAmbientesController', () => {
         data: [
           {
             id: '1',
-            nombre: 'Test Ambiente',
+            name: 'Test environment',
             tipoInstalacion_Id: '1',
             active: true,
           },
@@ -115,8 +115,8 @@ describe('TiposAmbientesController', () => {
           totalItems: 1,
           currentPage: 1,
           totalPages: 1,
-          sortBy: [['nombre', 'ASC']],
-          searchBy: ['nombre'],
+          sortBy: [['name', 'ASC']],
+          searchBy: ['name'],
           search: '',
           select: [],
         },
@@ -133,20 +133,20 @@ describe('TiposAmbientesController', () => {
       );
     });
 
-    it('should apply nombre specification when provided', async () => {
+    it('should apply name specification when provided', async () => {
       const query: PaginateQuery = {
         page: 1,
         limit: 10,
-        path: '/tipos-ambientes',
+        path: '/tipos-environments',
       };
-      const nombre = 'Test';
+      const name = 'Test';
       const mockPaginatedResult = {
         success: true,
         message: 'Operación exitosa',
         data: [
           {
             id: '1',
-            nombre: 'Test Ambiente',
+            name: 'Test environment',
             tipoInstalacion_Id: '1',
             active: true,
           },
@@ -157,8 +157,8 @@ describe('TiposAmbientesController', () => {
           totalItems: 1,
           currentPage: 1,
           totalPages: 1,
-          sortBy: [['nombre', 'ASC']],
-          searchBy: ['nombre'],
+          sortBy: [['name', 'ASC']],
+          searchBy: ['name'],
           search: '',
           select: [],
         },
@@ -166,7 +166,7 @@ describe('TiposAmbientesController', () => {
 
       mockService.findAll.mockResolvedValue(mockPaginatedResult);
 
-      const result = await controller.findAll(query, nombre);
+      const result = await controller.findAll(query, name);
 
       expect(result).toEqual(mockPaginatedResult);
       expect(mockService.findAll).toHaveBeenCalledWith(
@@ -177,11 +177,11 @@ describe('TiposAmbientesController', () => {
   });
 
   describe('findOne', () => {
-    it('should return a tipo ambiente by id', async () => {
+    it('should return a type environment by id', async () => {
       const id = '1';
       const expectedTipoAmbiente = {
         id,
-        nombre: 'Test Ambiente',
+        name: 'Test environment',
         tipoInstalacion_Id: '1',
         active: true,
       };
@@ -196,16 +196,16 @@ describe('TiposAmbientesController', () => {
   });
 
   describe('update', () => {
-    it('should update a tipo ambiente', async () => {
+    it('should update a type environment', async () => {
       const id = '1';
       const updateDto: UpdateTipoAmbienteDto = {
-        nombre: 'Updated Ambiente',
+        name: 'Updated environment',
       };
 
       const mockTipoInstalacion: TipoInstalacion = {
         id: '1',
-        nombre: 'Test Instalacion',
-        descripcion: 'Test Description',
+        name: 'Test installation',
+        description: 'Test Description',
         active: true,
         creationDate: new Date(),
         updateDate: new Date(),
@@ -215,8 +215,8 @@ describe('TiposAmbientesController', () => {
 
       const expectedTipoAmbiente: TipoAmbiente = {
         id,
-        nombre: updateDto.nombre || 'Default Name',
-        descripcion: '',
+        name: updateDto.name || 'Default Name',
+        description: '',
         active: true,
         creationDate: new Date(),
         updateDate: new Date(),
@@ -238,7 +238,7 @@ describe('TiposAmbientesController', () => {
   });
 
   describe('remove', () => {
-    it('should remove a tipo ambiente', async () => {
+    it('should remove a type environment', async () => {
       const id = '1';
       mockService.remove.mockResolvedValue(undefined);
 
@@ -248,3 +248,4 @@ describe('TiposAmbientesController', () => {
     });
   });
 });
+

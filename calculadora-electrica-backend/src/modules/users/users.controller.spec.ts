@@ -1,4 +1,4 @@
-import { Test, TestingModule } from '@nestjs/testing';
+﻿import { Test, TestingModule } from '@nestjs/testing';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 import { User, UserRole, UserStatus } from './entities/user.entity';
@@ -12,7 +12,7 @@ describe('UsersController', () => {
     username: 'testuser',
     email: 'test@example.com',
     password: 'hashedpassword',
-    nombre: 'Test',
+    name: 'Test',
     apellido: 'User',
     role: UserRole.CLIENTE,
     estado: UserStatus.ACTIVO,
@@ -54,7 +54,7 @@ describe('UsersController', () => {
   });
 
   describe('findAll', () => {
-    it('debería retornar todos los usuarios', async () => {
+    it('debería retornar todos los users', async () => {
       serviceMock.findAll.mockResolvedValue([userMock]);
       const result = await controller.findAll();
       expect(result).toEqual([userMock]);
@@ -64,7 +64,7 @@ describe('UsersController', () => {
   });
 
   describe('findOne', () => {
-    it('debería retornar un usuario por id', async () => {
+    it('debería retornar un user por id', async () => {
       serviceMock.findById.mockResolvedValue(userMock);
       const result = await controller.findOne(userMock.id);
       expect(result).toEqual(userMock);
@@ -74,8 +74,8 @@ describe('UsersController', () => {
   });
 
   describe('update', () => {
-    it('debería actualizar un usuario', async () => {
-      const updateData = { nombre: 'NuevoNombre' };
+    it('debería actualizar un user', async () => {
+      const updateData = { name: 'NuevoNombre' };
       const updatedUser = { ...userMock, ...updateData };
       serviceMock.update.mockResolvedValue(updatedUser);
       const result = await controller.update(userMock.id, updateData);
@@ -86,7 +86,7 @@ describe('UsersController', () => {
   });
 
   describe('remove', () => {
-    it('debería eliminar un usuario', async () => {
+    it('debería eliminar un user', async () => {
       serviceMock.remove.mockResolvedValue(undefined);
       await expect(controller.remove(userMock.id)).resolves.toBeUndefined();
       // eslint-disable-next-line @typescript-eslint/unbound-method
@@ -94,3 +94,4 @@ describe('UsersController', () => {
     });
   });
 });
+

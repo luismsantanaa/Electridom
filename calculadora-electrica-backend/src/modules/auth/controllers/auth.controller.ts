@@ -1,4 +1,4 @@
-import {
+﻿import {
   Controller,
   Post,
   Body,
@@ -33,7 +33,7 @@ type UserResponse = Pick<
   | 'id'
   | 'username'
   | 'email'
-  | 'nombre'
+  | 'name'
   | 'apellido'
   | 'role'
   | 'estado'
@@ -52,10 +52,10 @@ export class AuthController {
 
   @Post('register')
   @Throttle({ default: { ttl: 300, limit: 3 } }) // 3 intentos por 5 minutos
-  @ApiOperation({ summary: 'Registrar un nuevo usuario' })
+  @ApiOperation({ summary: 'Registrar un nuevo user' })
   @ApiResponse({
     status: 201,
-    description: 'Usuario registrado exitosamente',
+    description: 'user registrado exitosamente',
   })
   @ApiResponse({
     status: 400,
@@ -194,10 +194,10 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Get('sessions')
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'Obtener sesiones activas del usuario' })
+  @ApiOperation({ summary: 'Obtener sessions activas del user' })
   @ApiResponse({
     status: 200,
-    description: 'Sesiones obtenidas exitosamente',
+    description: 'sessions obtenidas exitosamente',
   })
   @ApiResponse({
     status: 401,
@@ -234,10 +234,10 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Get('profile')
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'Obtener perfil del usuario autenticado' })
+  @ApiOperation({ summary: 'Obtener perfil del user autenticado' })
   @ApiResponse({
     status: 200,
-    description: 'Perfil del usuario obtenido exitosamente',
+    description: 'Perfil del user obtenido exitosamente',
   })
   @ApiResponse({
     status: 401,
@@ -247,3 +247,4 @@ export class AuthController {
     return req.user;
   }
 }
+

@@ -1,4 +1,4 @@
-import {
+﻿import {
   Controller,
   Post,
   Body,
@@ -27,23 +27,23 @@ export class CalculosController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Calcular preview de instalación eléctrica',
-    description: 'Calcula carga conectada total, demanda estimada y propuesta preliminar de circuitos para una vivienda',
+    description: 'Calcula load conectada total, demanda estimada y propuesta preliminar de circuits para una vivienda',
   })
   @ApiBody({
     type: PreviewRequestDto,
-    description: 'Datos de superficies y consumos de la vivienda',
+    description: 'Datos de surfaces y consumptions de la vivienda',
     examples: {
       ejemplo1: {
         summary: 'Ejemplo básico',
         description: 'Vivienda con sala y dormitorio',
         value: {
-          superficies: [
-            { ambiente: 'Sala', areaM2: 18.5 },
-            { ambiente: 'Dormitorio 1', areaM2: 12.0 },
+          surfaces: [
+            { environment: 'Sala', areaM2: 18.5 },
+            { environment: 'Dormitorio 1', areaM2: 12.0 },
           ],
-          consumos: [
-            { nombre: 'Televisor', ambiente: 'Sala', watts: 120 },
-            { nombre: 'Lámpara', ambiente: 'Dormitorio 1', watts: 60 },
+          consumptions: [
+            { name: 'Televisor', environment: 'Sala', watts: 120 },
+            { name: 'Lámpara', environment: 'Dormitorio 1', watts: 60 },
           ],
           opciones: { tensionV: 120, monofasico: true },
         },
@@ -87,3 +87,4 @@ export class CalculosController {
     return this.calculationAppService.preview(request);
   }
 }
+

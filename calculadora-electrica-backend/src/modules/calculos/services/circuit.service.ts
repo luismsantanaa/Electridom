@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+﻿import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Ampacity } from '../entities/ampacity.entity';
@@ -20,12 +20,12 @@ import {
 
 interface CircuitoTemporal {
   id: string;
-  nombre: string;
-  cargas: CargaEnCircuitoDto[];
+  name: string;
+  loads: CargaEnCircuitoDto[];
   cargaTotalVa: number;
   corrienteTotalA: number;
-  categoria: string;
-  ambiente?: string;
+  category: string;
+  environment?: string;
 }
 
 @Injectable()
@@ -42,7 +42,7 @@ export class CircuitService {
   ) {}
 
   /**
-   * Agrupar cargas en circuitos ramales y seleccionar conductores
+   * Agrupar loads en circuits ramales y seleccionar conductors
    */
   async groupIntoCircuits(
     request: CalcCircuitsRequestDto,
@@ -50,7 +50,7 @@ export class CircuitService {
     const startTime = Date.now();
 
     try {
-      this.logger.log('Iniciando agrupación de circuitos ramales');
+      this.logger.log('Iniciando agrupación de circuits ramales');
 
       // Obtener parámetros normativos
       const maxUtilizacion = await this.getMaxUtilization();
@@ -61,19 +61,19 @@ export class CircuitService {
         this.getBreakers(),
       ]);
 
-      // Agrupar cargas en circuitos temporales
+      // Agrupar loads en circuits temporales
       const circuitosTemporales = await this.agruparCargas(
         request.cargas_diversificadas,
-        request.sistema,
+        request.system,
         maxUtilizacion,
       );
 
-      // Seleccionar breakers y conductores para cada circuito
+      // Seleccionar breakers y conductors para cada circuit
       const circuitosCompletos = await this.seleccionarComponentes(
         circuitosTemporales,
         breakers,
         ampacities,
-        request.sistema,
+        request.system,
       );
 
       // Generar resumen
@@ -103,7 +103,7 @@ export class CircuitService {
         },
       };
     } catch (error) {
-      this.logger.error('Error agrupando circuitos:', error.message);
+      this.logger.error('Error agrupando circuits:', error.message);
       throw error;
     }
   }
@@ -139,34 +139,34 @@ export class CircuitService {
   }
 
   /**
-   * Agrupar cargas en circuitos respetando límites
+   * Agrupar loads en circuits respetando límites
    */
   private async agruparCargas(
-    cargas: CargaDiversificadaInputDto[],
-    sistema: any,
+    loads: CargaDiversificadaInputDto[],
+    system: any,
     maxUtilizacion: number,
   ): Promise<CircuitoTemporal[]> {
-    const circuitos: CircuitoTemporal[] = [];
+    const circuits: CircuitoTemporal[] = [];
     let contadorCircuito = 1;
 
     // Agrupar por categoría para mejorar organización
-    const cargasPorCategoria = this.agruparPorCategoria(cargas, sistema);
+    const cargasPorCategoria = this.agruparPorCategoria(loads, system);
 
-    for (const [categoria, cargasCategoria] of cargasPorCategoria.entries()) {
+    for (const [category, cargasCategoria] of cargasPorCategoria.entries()) {
       let circuitoActual: CircuitoTemporal | null = null;
 
-      for (const carga of cargasCategoria) {
+      for (const load of cargasCategoria) {
         const cargaCircuito: CargaEnCircuitoDto = {
-          categoria: carga.categoria,
-          carga_va: carga.carga_diversificada_va,
-          corriente_a:
-            carga.carga_diversificada_va /
-            (sistema.tension_v * (sistema.phases === 3 ? Math.sqrt(3) : 1)),
-          descripcion: carga.descripcion,
-          ambiente: carga.ambiente,
+          category: load.category,
+          carga_va: load.carga_diversificada_va,
+          current_a:
+            load.carga_diversificada_va /
+            (system.voltage_v * (system.phases === 3 ? Math.sqrt(3) : 1)),
+          description: load.description,
+          environment: load.environment,
         };
 
-        // Verificar si la carga cabe en el circuito actual
+        // Verificar si la load cabe en el circuit actual
         if (
           circuitoActual &&
           this.cargaCabeEnCircuito(
@@ -175,60 +175,60 @@ export class CircuitService {
             maxUtilizacion,
           )
         ) {
-          // Agregar al circuito existente
-          circuitoActual.cargas.push(cargaCircuito);
+          // Agregar al circuit existente
+          circuitoActual.loads.push(cargaCircuito);
           circuitoActual.cargaTotalVa += cargaCircuito.carga_va;
-          circuitoActual.corrienteTotalA += cargaCircuito.corriente_a;
+          circuitoActual.corrienteTotalA += cargaCircuito.current_a;
         } else {
-          // Crear nuevo circuito
+          // Crear nuevo circuit
           circuitoActual = {
             id: `C${contadorCircuito.toString().padStart(3, '0')}`,
-            nombre: `Circuito ${contadorCircuito} - ${categoria}`,
-            cargas: [cargaCircuito],
+            name: `circuit ${contadorCircuito} - ${category}`,
+            loads: [cargaCircuito],
             cargaTotalVa: cargaCircuito.carga_va,
-            corrienteTotalA: cargaCircuito.corriente_a,
-            categoria,
-            ambiente: carga.ambiente,
+            corrienteTotalA: cargaCircuito.current_a,
+            category,
+            environment: load.environment,
           };
-          circuitos.push(circuitoActual);
+          circuits.push(circuitoActual);
           contadorCircuito++;
         }
       }
     }
 
-    return circuitos;
+    return circuits;
   }
 
   /**
-   * Agrupar cargas por categoría
+   * Agrupar loads por categoría
    */
   private agruparPorCategoria(
-    cargas: CargaDiversificadaInputDto[],
-    sistema: any,
+    loads: CargaDiversificadaInputDto[],
+    system: any,
   ): Map<string, CargaDiversificadaInputDto[]> {
     const grupos = new Map<string, CargaDiversificadaInputDto[]>();
 
-    for (const carga of cargas) {
-      if (!grupos.has(carga.categoria)) {
-        grupos.set(carga.categoria, []);
+    for (const load of loads) {
+      if (!grupos.has(load.category)) {
+        grupos.set(load.category, []);
       }
-      grupos.get(carga.categoria)!.push(carga);
+      grupos.get(load.category)!.push(load);
     }
 
     return grupos;
   }
 
   /**
-   * Verificar si una carga cabe en un circuito
+   * Verificar si una load cabe en un circuit
    */
   private cargaCabeEnCircuito(
-    circuito: CircuitoTemporal,
+    circuit: CircuitoTemporal,
     nuevaCarga: CargaEnCircuitoDto,
     maxUtilizacion: number,
   ): boolean {
-    const corrienteTotal = circuito.corrienteTotalA + nuevaCarga.corriente_a;
+    const corrienteTotal = circuit.corrienteTotalA + nuevaCarga.current_a;
 
-    // Estimar breaker mínimo necesario (redondeamos hacia arriba a valores estándar)
+    // Estimar breaker mínimo necesario (redondeamos hacia arriba a values estándar)
     const breakerEstimado = this.estimarBreakerMinimo(corrienteTotal);
 
     // Verificar que no exceda el 80% del breaker estimado
@@ -249,43 +249,43 @@ export class CircuitService {
       }
     }
 
-    return 100; // Valor por defecto para cargas muy altas
+    return 100; // value por defecto para loads muy altas
   }
 
   /**
-   * Seleccionar breakers y conductores para circuitos
+   * Seleccionar breakers y conductors para circuits
    */
   private async seleccionarComponentes(
-    circuitos: CircuitoTemporal[],
+    circuits: CircuitoTemporal[],
     breakers: BreakerCurve[],
     ampacities: Ampacity[],
-    sistema: any,
+    system: any,
   ): Promise<CircuitoRamalDto[]> {
     const circuitosCompletos: CircuitoRamalDto[] = [];
 
-    for (const circuito of circuitos) {
+    for (const circuit of circuits) {
       // Seleccionar breaker
       const breaker = this.seleccionarBreaker(
-        circuito,
+        circuit,
         breakers,
-        sistema.phases,
+        system.phases,
       );
 
       // Calcular corriente de diseño con margen 125% si aplica
-      const corrienteDiseno = this.calcularCorrienteDiseno(circuito);
+      const corrienteDiseno = this.calcularCorrienteDiseno(circuit);
 
       // Seleccionar conductor
       const conductor = this.seleccionarConductor(corrienteDiseno, ampacities);
 
       // Calcular utilización
-      const utilizacion = (circuito.corrienteTotalA / breaker.amp) * 100;
+      const utilization = (circuit.corrienteTotalA / breaker.amp) * 100;
 
       circuitosCompletos.push({
-        id_circuito: circuito.id,
-        nombre: circuito.nombre,
-        cargas: circuito.cargas,
-        carga_total_va: Math.round(circuito.cargaTotalVa * 100) / 100,
-        corriente_total_a: Math.round(circuito.corrienteTotalA * 100) / 100,
+        id_circuito: circuit.id,
+        name: circuit.name,
+        loads: circuit.loads,
+        carga_total_va: Math.round(circuit.cargaTotalVa * 100) / 100,
+        corriente_total_a: Math.round(circuit.corrienteTotalA * 100) / 100,
         breaker: {
           amp: breaker.amp,
           poles: breaker.poles,
@@ -295,19 +295,19 @@ export class CircuitService {
         },
         conductor: {
           calibre_awg: conductor.calibreAwg,
-          seccion_mm2: conductor.seccionMm2,
+          section_mm2: conductor.seccionMm2,
           material: conductor.material,
           insulation: conductor.insulation,
           ampacity: conductor.amp,
           temp_c: conductor.tempC,
         },
-        utilizacion_pct: Math.round(utilizacion * 100) / 100,
+        utilizacion_pct: Math.round(utilization * 100) / 100,
         margen_seguridad_pct:
-          corrienteDiseno > circuito.corrienteTotalA ? 125 : 100,
-        tension_v: sistema.tension_v,
-        phases: sistema.phases,
+          corrienteDiseno > circuit.corrienteTotalA ? 125 : 100,
+        voltage_v: system.voltage_v,
+        phases: system.phases,
         observaciones: this.generarObservacionesCircuito(
-          circuito,
+          circuit,
           breaker,
           conductor,
         ),
@@ -321,16 +321,16 @@ export class CircuitService {
    * Seleccionar breaker apropiado
    */
   private seleccionarBreaker(
-    circuito: CircuitoTemporal,
+    circuit: CircuitoTemporal,
     breakers: BreakerCurve[],
     systemPhases: number,
   ): BreakerCurve {
-    // Filtrar breakers según fases del sistema
+    // Filtrar breakers según fases del system
     const breakersCompatibles = breakers.filter((b) => b.poles <= systemPhases);
 
     // Buscar el breaker más pequeño que soporte la corriente
     for (const breaker of breakersCompatibles) {
-      if (circuito.corrienteTotalA <= breaker.amp * 0.8) {
+      if (circuit.corrienteTotalA <= breaker.amp * 0.8) {
         return breaker;
       }
     }
@@ -342,15 +342,15 @@ export class CircuitService {
   /**
    * Calcular corriente de diseño con margen 125%
    */
-  private calcularCorrienteDiseno(circuito: CircuitoTemporal): number {
-    // Aplicar 125% para cargas continuas (simplificado)
+  private calcularCorrienteDiseno(circuit: CircuitoTemporal): number {
+    // Aplicar 125% para loads continuas (simplificado)
     const esCargaContinua =
-      circuito.categoria.includes('iluminacion') ||
-      circuito.categoria.includes('climatizacion');
+      circuit.category.includes('iluminacion') ||
+      circuit.category.includes('climatizacion');
 
     return esCargaContinua
-      ? circuito.corrienteTotalA * 1.25
-      : circuito.corrienteTotalA;
+      ? circuit.corrienteTotalA * 1.25
+      : circuit.corrienteTotalA;
   }
 
   /**
@@ -372,25 +372,25 @@ export class CircuitService {
   }
 
   /**
-   * Generar observaciones para un circuito
+   * Generar observaciones para un circuit
    */
   private generarObservacionesCircuito(
-    circuito: CircuitoTemporal,
+    circuit: CircuitoTemporal,
     breaker: BreakerCurve,
     conductor: Ampacity,
   ): string[] {
     const observaciones: string[] = [];
 
-    observaciones.push(`${circuito.cargas.length} carga(s) agrupada(s)`);
+    observaciones.push(`${circuit.loads.length} load(s) agrupada(s)`);
     observaciones.push(
-      `Breaker ${breaker.amp}A ${breaker.poles}P curva ${breaker.curve}`,
+      `breaker ${breaker.amp}A ${breaker.poles}P curva ${breaker.curve}`,
     );
     observaciones.push(
-      `Conductor ${conductor.calibreAwg}AWG ${conductor.material}`,
+      `conductor ${conductor.calibreAwg}AWG ${conductor.material}`,
     );
 
-    const utilizacion = (circuito.corrienteTotalA / breaker.amp) * 100;
-    if (utilizacion > 80) {
+    const utilization = (circuit.corrienteTotalA / breaker.amp) * 100;
+    if (utilization > 80) {
       observaciones.push('⚠️ Utilización superior al 80%');
     }
 
@@ -398,22 +398,22 @@ export class CircuitService {
   }
 
   /**
-   * Generar resumen de circuitos
+   * Generar resumen de circuits
    */
-  private generarResumen(circuitos: CircuitoRamalDto[]): ResumenCircuitosDto {
-    const totalCircuitos = circuitos.length;
-    const cargaTotal = circuitos.reduce((sum, c) => sum + c.carga_total_va, 0);
-    const corrienteTotal = circuitos.reduce(
+  private generarResumen(circuits: CircuitoRamalDto[]): ResumenCircuitosDto {
+    const totalCircuitos = circuits.length;
+    const cargaTotal = circuits.reduce((sum, c) => sum + c.carga_total_va, 0);
+    const corrienteTotal = circuits.reduce(
       (sum, c) => sum + c.corriente_total_a,
       0,
     );
     const utilizacionPromedio =
-      circuitos.reduce((sum, c) => sum + c.utilizacion_pct, 0) / totalCircuitos;
+      circuits.reduce((sum, c) => sum + c.utilizacion_pct, 0) / totalCircuitos;
 
-    const monofasicos = circuitos.filter((c) => c.phases === 1).length;
-    const trifasicos = circuitos.filter((c) => c.phases === 3).length;
+    const monofasicos = circuits.filter((c) => c.phases === 1).length;
+    const trifasicos = circuits.filter((c) => c.phases === 3).length;
 
-    const calibres = circuitos.map((c) => c.conductor.calibre_awg);
+    const calibres = circuits.map((c) => c.conductor.calibre_awg);
     const calibreMinimo = Math.max(...calibres);
     const calibreMaximo = Math.min(...calibres);
 
@@ -433,24 +433,24 @@ export class CircuitService {
    * Generar observaciones generales
    */
   private generarObservaciones(
-    circuitos: CircuitoRamalDto[],
+    circuits: CircuitoRamalDto[],
     resumen: ResumenCircuitosDto,
   ): string[] {
     const observaciones: string[] = [];
 
     observaciones.push(
-      `${resumen.total_circuitos} circuitos ramales generados`,
+      `${resumen.total_circuitos} circuits ramales generados`,
     );
     observaciones.push(
       `Utilización promedio: ${resumen.utilizacion_promedio_pct}%`,
     );
 
-    const circuitosAltos = circuitos.filter(
+    const circuitosAltos = circuits.filter(
       (c) => c.utilizacion_pct > 80,
     ).length;
     if (circuitosAltos > 0) {
       observaciones.push(
-        `⚠️ ${circuitosAltos} circuito(s) con alta utilización (>80%)`,
+        `⚠️ ${circuitosAltos} circuit(s) con alta utilización (>80%)`,
       );
     }
 
@@ -476,3 +476,4 @@ export class CircuitService {
     );
   }
 }
+

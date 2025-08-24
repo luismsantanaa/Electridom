@@ -1,8 +1,8 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { CargasController } from './cargas.controller';
-import { CargasService } from './cargas.service';
-import { CreateCargaDto } from './dto/create-carga.dto';
-import { UpdateCargaDto } from './dto/update-carga.dto';
+﻿import { Test, TestingModule } from '@nestjs/testing';
+import { CargasController } from './loads.controller';
+import { CargasService } from './loads.service';
+import { CreateCargaDto } from './dto/create-load.dto';
+import { UpdateCargaDto } from './dto/update-load.dto';
 import { PaginateQuery } from 'nestjs-paginate';
 import { User, UserRole, UserStatus } from '../users/entities/user.entity';
 import { createMockUser } from '../users/__tests__/user.mock.helper';
@@ -41,7 +41,7 @@ describe('CargasController', () => {
   });
 
   describe('create', () => {
-    it('should create a new carga', async () => {
+    it('should create a new load', async () => {
       const createDto: CreateCargaDto = {
         tipoAmbiente: '1',
         tipoArtefacto: '1',
@@ -73,7 +73,7 @@ describe('CargasController', () => {
       const query: PaginateQuery = {
         page: 1,
         limit: 10,
-        path: '/cargas',
+        path: '/loads',
       };
       const mockResult = {
         success: true,
@@ -81,8 +81,8 @@ describe('CargasController', () => {
         data: [
           {
             id: '1',
-            tipoAmbiente: { id: '1', nombre: 'Test Ambiente' },
-            tipoArtefacto: { id: '1', nombre: 'Test Artefacto' },
+            tipoAmbiente: { id: '1', name: 'Test environment' },
+            tipoArtefacto: { id: '1', name: 'Test Artefacto' },
             activo: true,
           },
         ],
@@ -112,12 +112,12 @@ describe('CargasController', () => {
   });
 
   describe('findOne', () => {
-    it('should return a carga by id', async () => {
+    it('should return a load by id', async () => {
       const id = '1';
       const expectedResult = {
         id,
-        tipoAmbiente: { id: '1', nombre: 'Test Ambiente' },
-        tipoArtefacto: { id: '1', nombre: 'Test Artefacto' },
+        tipoAmbiente: { id: '1', name: 'Test environment' },
+        tipoArtefacto: { id: '1', name: 'Test Artefacto' },
         activo: true,
       };
 
@@ -131,7 +131,7 @@ describe('CargasController', () => {
   });
 
   describe('update', () => {
-    it('should update a carga', async () => {
+    it('should update a load', async () => {
       const id = '1';
       const updateDto: UpdateCargaDto = {
         voltaje: 110,
@@ -157,7 +157,7 @@ describe('CargasController', () => {
   });
 
   describe('remove', () => {
-    it('should remove a carga', async () => {
+    it('should remove a load', async () => {
       const id = '1';
 
       mockService.remove.mockResolvedValue(undefined);
@@ -168,3 +168,4 @@ describe('CargasController', () => {
     });
   });
 });
+

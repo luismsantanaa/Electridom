@@ -1,4 +1,4 @@
-import { Test, TestingModule } from '@nestjs/testing';
+﻿import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
@@ -61,7 +61,7 @@ describe('Calculations E2E Tests', () => {
     });
     await ruleSetRepository.save(defaultRuleSet);
 
-    // Crear reglas con el RuleSet
+    // Crear rules con el RuleSet
     for (const ruleData of normRulesSeed) {
       const rule = normRuleRepository.create({
         ...ruleData,
@@ -162,10 +162,10 @@ describe('Calculations E2E Tests', () => {
       });
     });
 
-    it('should return 400 for empty superficies', async () => {
+    it('should return 400 for empty surfaces', async () => {
       const result = await performanceTester.testEndpoint(
         app,
-        'POST /v1/calculations/preview - Empty superficies',
+        'POST /v1/calculations/preview - Empty surfaces',
         'POST',
         '/v1/calculations/preview',
         calculationFixtures.invalid.emptySuperficies,
@@ -178,7 +178,7 @@ describe('Calculations E2E Tests', () => {
       expect(result.statusCode).toBe(400);
 
       coverageReporter.addTestResult({
-        test: 'Calculate preview with empty superficies',
+        test: 'Calculate preview with empty surfaces',
         status: 'PASSED',
         category: 'Validation',
       });
@@ -324,3 +324,4 @@ describe('Calculations E2E Tests', () => {
     coverageReporter.printReport();
   });
 });
+

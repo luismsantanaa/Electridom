@@ -1,4 +1,4 @@
-import {
+﻿import {
   IsArray,
   IsNumber,
   IsOptional,
@@ -10,11 +10,11 @@ import { Type } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CargaDiversificadaInputDto {
-  @ApiProperty({ description: 'Categoría de la carga' })
+  @ApiProperty({ description: 'Categoría de la load' })
   @IsString()
-  categoria: string;
+  category: string;
 
-  @ApiProperty({ description: 'Carga diversificada en VA', minimum: 0 })
+  @ApiProperty({ description: 'load diversificada en VA', minimum: 0 })
   @IsNumber()
   @Min(0)
   carga_diversificada_va: number;
@@ -22,30 +22,30 @@ export class CargaDiversificadaInputDto {
   @ApiPropertyOptional({ description: 'Factor de demanda aplicado' })
   @IsOptional()
   @IsNumber()
-  factor_demanda?: number;
+  demand_factor?: number;
 
-  @ApiPropertyOptional({ description: 'Descripción de la carga' })
+  @ApiPropertyOptional({ description: 'Descripción de la load' })
   @IsOptional()
   @IsString()
-  descripcion?: string;
+  description?: string;
 
-  @ApiPropertyOptional({ description: 'Ambiente donde se ubica' })
+  @ApiPropertyOptional({ description: 'environment donde se ubica' })
   @IsOptional()
   @IsString()
-  ambiente?: string;
+  environment?: string;
 }
 
 export class SistemaElectricoDto {
-  @ApiProperty({ description: 'Tensión del sistema en voltios' })
+  @ApiProperty({ description: 'Tensión del system en voltios' })
   @IsNumber()
   @Min(1)
-  tension_v: number;
+  voltage_v: number;
 
   @ApiProperty({ description: 'Número de fases (1 o 3)' })
   @IsNumber()
   phases: number;
 
-  @ApiProperty({ description: 'Tipo de sistema (1=monofásico, 3=trifásico)' })
+  @ApiProperty({ description: 'type de system (1=monofásico, 3=trifásico)' })
   @IsNumber()
   system_type: number;
 
@@ -58,7 +58,7 @@ export class SistemaElectricoDto {
 export class CalcCircuitsRequestDto {
   @ApiProperty({
     type: [CargaDiversificadaInputDto],
-    description: 'Cargas diversificadas desde CE-02',
+    description: 'loads diversificadas desde CE-02',
   })
   @IsArray()
   @ValidateNested({ each: true })
@@ -67,11 +67,11 @@ export class CalcCircuitsRequestDto {
 
   @ApiProperty({
     type: SistemaElectricoDto,
-    description: 'Configuración del sistema eléctrico',
+    description: 'Configuración del system eléctrico',
   })
   @ValidateNested()
   @Type(() => SistemaElectricoDto)
-  sistema: SistemaElectricoDto;
+  system: SistemaElectricoDto;
 
   @ApiPropertyOptional({ description: 'Observaciones adicionales' })
   @IsOptional()
@@ -87,3 +87,4 @@ export class CalcCircuitsRequestDto {
     preferir_monofasico?: boolean;
   };
 }
+

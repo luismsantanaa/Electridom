@@ -1,32 +1,32 @@
-import { ApiProperty } from '@nestjs/swagger';
+﻿import { ApiProperty } from '@nestjs/swagger';
 
 export class CargaPorAmbienteDto {
   @ApiProperty({
-    description: 'Nombre del ambiente',
+    description: 'name del environment',
     example: 'Sala',
   })
-  ambiente: string;
+  environment: string;
 
   @ApiProperty({
-    description: 'Carga de iluminación en VA',
+    description: 'load de iluminación en VA',
     example: 1850,
   })
   iluminacionVA: number;
 
   @ApiProperty({
-    description: 'Carga de tomacorrientes en VA',
+    description: 'load de tomacorrientes en VA',
     example: 1200,
   })
   tomasVA: number;
 
   @ApiProperty({
-    description: 'Carga de artefactos fijos en VA',
+    description: 'load de artefactos fijos en VA',
     example: 120,
   })
   cargasFijasVA: number;
 
   @ApiProperty({
-    description: 'Carga total del ambiente en VA',
+    description: 'load total del environment en VA',
     example: 3170,
   })
   totalVA: number;
@@ -34,7 +34,7 @@ export class CargaPorAmbienteDto {
 
 export class TotalesDto {
   @ApiProperty({
-    description: 'Carga conectada total en VA',
+    description: 'load conectada total en VA',
     example: 8120,
   })
   totalConectadaVA: number;
@@ -48,27 +48,27 @@ export class TotalesDto {
 
 export class PropuestaCircuitoDto {
   @ApiProperty({
-    description: 'Tipo de circuito',
+    description: 'type de circuit',
     example: 'ILU',
     enum: ['ILU', 'TOM'],
   })
-  tipo: 'ILU' | 'TOM';
+  type: 'ILU' | 'TOM';
 
   @ApiProperty({
-    description: 'Carga asignada al circuito en VA',
+    description: 'load asignada al circuit en VA',
     example: 3200,
   })
   cargaAsignadaVA: number;
 
   @ApiProperty({
-    description: 'Ambientes incluidos en el circuito',
+    description: 'environments incluidos en el circuit',
     example: ['Sala', 'Dormitorio 1'],
     type: [String],
   })
   ambientesIncluidos: string[];
 
   @ApiProperty({
-    description: 'Breaker sugerido',
+    description: 'breaker sugerido',
     example: '15A // TODO validar RIE RD',
   })
   breakerSugerido: string;
@@ -82,7 +82,7 @@ export class PropuestaCircuitoDto {
 
 export class PreviewResponseDto {
   @ApiProperty({
-    description: 'Cargas calculadas por ambiente',
+    description: 'loads calculadas por environment',
     type: [CargaPorAmbienteDto],
   })
   cargasPorAmbiente: CargaPorAmbienteDto[];
@@ -94,14 +94,14 @@ export class PreviewResponseDto {
   totales: TotalesDto;
 
   @ApiProperty({
-    description: 'Propuesta de circuitos',
+    description: 'Propuesta de circuits',
     type: [PropuestaCircuitoDto],
   })
   propuestaCircuitos: PropuestaCircuitoDto[];
 
   @ApiProperty({
     description: 'Advertencias del cálculo',
-    example: ['Regla LUZ_VA_POR_M2 usa valor por defecto. TODO validar con RIE RD.'],
+    example: ['rule LUZ_VA_POR_M2 usa value por defecto. TODO validar con RIE RD.'],
     type: [String],
   })
   warnings: string[];
@@ -112,3 +112,4 @@ export class PreviewResponseDto {
   })
   traceId: string;
 }
+

@@ -1,8 +1,8 @@
-import { ApiProperty } from '@nestjs/swagger';
+﻿import { ApiProperty } from '@nestjs/swagger';
 
 export class JwkKeyDto {
   @ApiProperty({
-    description: 'Tipo de clave (RSA)',
+    description: 'type de clave (RSA)',
     example: 'RSA',
   })
   kty: string;
@@ -46,3 +46,4 @@ export class JwksResponseDto {
   })
   keys: JwkKeyDto[];
 }
+

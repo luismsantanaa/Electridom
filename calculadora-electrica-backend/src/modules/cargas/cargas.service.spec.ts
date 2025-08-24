@@ -1,9 +1,9 @@
-import { Test, TestingModule } from '@nestjs/testing';
+﻿import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { CargasService } from './cargas.service';
-import { Cargas } from './entities/cargas.entity';
-import { CreateCargaDto } from './dto/create-carga.dto';
-import { UpdateCargaDto } from './dto/update-carga.dto';
+import { CargasService } from './loads.service';
+import { loads } from './entities/loads.entity';
+import { CreateCargaDto } from './dto/create-load.dto';
+import { UpdateCargaDto } from './dto/update-load.dto';
 import { NotFoundException } from '@nestjs/common';
 import { PaginateQuery, paginate } from 'nestjs-paginate';
 import { ActivoSpecification } from './specifications/activo.specification';
@@ -34,7 +34,7 @@ describe('CargasService', () => {
       providers: [
         CargasService,
         {
-          provide: getRepositoryToken(Cargas),
+          provide: getRepositoryToken(loads),
           useValue: mockRepository,
         },
       ],
@@ -48,7 +48,7 @@ describe('CargasService', () => {
   });
 
   describe('create', () => {
-    it('should create a new carga', async () => {
+    it('should create a new load', async () => {
       const createDto: CreateCargaDto = {
         tipoAmbiente: '1',
         tipoArtefacto: '1',
@@ -56,26 +56,26 @@ describe('CargasService', () => {
         horasUso: 8,
         proyectoId: '1',
       };
-      const usuario = 'testUser';
+      const user = 'testUser';
       const expectedCarga = {
         ...createDto,
         id: '1',
         activo: true,
-        creadoPor: usuario,
+        creadoPor: user,
       };
 
       mockRepository.create.mockReturnValue(expectedCarga);
       mockRepository.save.mockResolvedValue(expectedCarga);
 
-      const result = await service.create(createDto, usuario);
+      const result = await service.create(createDto, user);
 
       expect(result).toEqual(expectedCarga);
       expect(mockRepository.create).toHaveBeenCalledWith({
-        nombre: `Carga ${createDto.tipoArtefacto}`,
+        name: `load ${createDto.tipoArtefacto}`,
         potencia: 0,
         voltaje: createDto.voltaje,
         tipoArtefacto: { id: createDto.tipoArtefacto },
-        usrCreate: usuario,
+        usrCreate: user,
       });
       expect(mockRepository.save).toHaveBeenCalledWith(expectedCarga);
     });
@@ -86,13 +86,13 @@ describe('CargasService', () => {
       const query: PaginateQuery = {
         page: 1,
         limit: 10,
-        path: '/cargas',
+        path: '/loads',
       };
       const mockData = [
         {
           id: '1',
-          tipoAmbiente: { id: '1', nombre: 'Test Ambiente' },
-          tipoArtefacto: { id: '1', nombre: 'Test Artefacto' },
+          tipoAmbiente: { id: '1', name: 'Test environment' },
+          tipoArtefacto: { id: '1', name: 'Test Artefacto' },
           activo: true,
         },
       ];
@@ -126,15 +126,15 @@ describe('CargasService', () => {
       const query: PaginateQuery = {
         page: 1,
         limit: 10,
-        path: '/cargas',
+        path: '/loads',
       };
       const specification = new ActivoSpecification(true);
 
       const mockData = [
         {
           id: '1',
-          tipoAmbiente: { id: '1', nombre: 'Test Ambiente' },
-          tipoArtefacto: { id: '1', nombre: 'Test Artefacto' },
+          tipoAmbiente: { id: '1', name: 'Test environment' },
+          tipoArtefacto: { id: '1', name: 'Test Artefacto' },
           activo: true,
         },
       ];
@@ -163,12 +163,12 @@ describe('CargasService', () => {
   });
 
   describe('findOne', () => {
-    it('should return a carga by id', async () => {
+    it('should return a load by id', async () => {
       const id = '1';
       const expectedCarga = {
         id,
-        tipoAmbiente: { id: '1', nombre: 'Test Ambiente' },
-        tipoArtefacto: { id: '1', nombre: 'Test Artefacto' },
+        tipoAmbiente: { id: '1', name: 'Test environment' },
+        tipoArtefacto: { id: '1', name: 'Test Artefacto' },
         activo: true,
       };
 
@@ -183,7 +183,7 @@ describe('CargasService', () => {
       });
     });
 
-    it('should throw NotFoundException when carga not found', async () => {
+    it('should throw NotFoundException when load not found', async () => {
       const id = '1';
       mockRepository.findOne.mockResolvedValue(null);
 
@@ -192,65 +192,66 @@ describe('CargasService', () => {
   });
 
   describe('update', () => {
-    it('should update a carga', async () => {
+    it('should update a load', async () => {
       const id = '1';
       const updateDto: UpdateCargaDto = {
         voltaje: 110,
       };
-      const usuario = 'testUser';
+      const user = 'testUser';
       const existingCarga = {
         id,
-        tipoAmbiente: { id: '1', nombre: 'Test Ambiente' },
-        tipoArtefacto: { id: '1', nombre: 'Test Artefacto' },
+        tipoAmbiente: { id: '1', name: 'Test environment' },
+        tipoArtefacto: { id: '1', name: 'Test Artefacto' },
         activo: true,
       };
       const updatedCarga = {
         ...existingCarga,
         ...updateDto,
-        actualizadoPor: usuario,
+        actualizadoPor: user,
       };
 
       mockRepository.findOne.mockResolvedValue(existingCarga);
       mockRepository.save.mockResolvedValue(updatedCarga);
 
-      const result = await service.update(id, updateDto, usuario);
+      const result = await service.update(id, updateDto, user);
 
       expect(result).toEqual(updatedCarga);
       expect(mockRepository.save).toHaveBeenCalledWith(
         expect.objectContaining({
-          usrUpdate: usuario,
+          usrUpdate: user,
         }),
       );
     });
   });
 
   describe('remove', () => {
-    it('should soft delete a carga', async () => {
+    it('should soft delete a load', async () => {
       const id = '1';
-      const usuario = 'testUser';
+      const user = 'testUser';
       const existingCarga = {
         id,
-        tipoAmbiente: { id: '1', nombre: 'Test Ambiente' },
-        tipoArtefacto: { id: '1', nombre: 'Test Artefacto' },
+        tipoAmbiente: { id: '1', name: 'Test environment' },
+        tipoArtefacto: { id: '1', name: 'Test Artefacto' },
         activo: true,
       };
       const deletedCarga = {
         ...existingCarga,
         activo: false,
-        actualizadoPor: usuario,
+        actualizadoPor: user,
       };
 
       mockRepository.findOne.mockResolvedValue(existingCarga);
       mockRepository.save.mockResolvedValue(deletedCarga);
 
-      await service.remove(id, usuario);
+      await service.remove(id, user);
 
       expect(mockRepository.save).toHaveBeenCalledWith(
         expect.objectContaining({
           active: false,
-          usrUpdate: usuario,
+          usrUpdate: user,
         }),
       );
     });
   });
 });
+

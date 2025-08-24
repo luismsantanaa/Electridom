@@ -1,4 +1,4 @@
-import { Test, TestingModule } from '@nestjs/testing';
+﻿import { Test, TestingModule } from '@nestjs/testing';
 import { CalculosController } from '../src/modules/calculos/controllers/calculos.controller';
 import { CalculosService } from '../src/modules/calculos/services/calculos.service';
 import { RulesModule } from '../src/modules/rules/rules.module';
@@ -25,33 +25,33 @@ describe('Calculations Unit Tests', () => {
 
     it('should validate calculation payload structure', () => {
       const validPayload = {
-        superficies: [
-          { ambiente: 'Sala', areaM2: 18.5 },
+        surfaces: [
+          { environment: 'Sala', areaM2: 18.5 },
         ],
-        consumos: [
-          { nombre: 'Televisor', ambiente: 'Sala', watts: 120 },
+        consumptions: [
+          { name: 'Televisor', environment: 'Sala', watts: 120 },
         ],
         opciones: { tensionV: 120, monofasico: true },
       };
 
       // Verificar que el payload tiene la estructura correcta
-      expect(validPayload).toHaveProperty('superficies');
-      expect(validPayload).toHaveProperty('consumos');
+      expect(validPayload).toHaveProperty('surfaces');
+      expect(validPayload).toHaveProperty('consumptions');
       expect(validPayload).toHaveProperty('opciones');
-      expect(Array.isArray(validPayload.superficies)).toBe(true);
-      expect(Array.isArray(validPayload.consumos)).toBe(true);
-      expect(validPayload.superficies.length).toBeGreaterThan(0);
+      expect(Array.isArray(validPayload.surfaces)).toBe(true);
+      expect(Array.isArray(validPayload.consumptions)).toBe(true);
+      expect(validPayload.surfaces.length).toBeGreaterThan(0);
     });
 
     it('should detect invalid payload structure', () => {
       const invalidPayload = {
-        superficies: [],
-        consumos: [{ nombre: 'Test', ambiente: 'Sala', watts: 100 }],
+        surfaces: [],
+        consumptions: [{ name: 'Test', environment: 'Sala', watts: 100 }],
         opciones: { tensionV: 120, monofasico: true },
       };
 
-      // Verificar que detecta superficies vacías
-      expect(invalidPayload.superficies.length).toBe(0);
+      // Verificar que detecta surfaces vacías
+      expect(invalidPayload.surfaces.length).toBe(0);
     });
 
     it('should validate area values', () => {
@@ -77,3 +77,4 @@ describe('Calculations Unit Tests', () => {
     });
   });
 });
+

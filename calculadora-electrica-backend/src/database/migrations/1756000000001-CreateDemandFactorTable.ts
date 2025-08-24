@@ -1,4 +1,4 @@
-import { MigrationInterface, QueryRunner, Table } from 'typeorm';
+﻿import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
 export class CreateDemandFactorTable1756000000001
   implements MigrationInterface
@@ -20,14 +20,14 @@ export class CreateDemandFactorTable1756000000001
             type: 'varchar',
             length: '100',
             isNullable: true,
-            comment: 'Usuario que creó el registro',
+            comment: 'user que creó el registro',
           },
           {
             name: 'usr_update',
             type: 'varchar',
             length: '100',
             isNullable: true,
-            comment: 'Usuario que actualizó el registro',
+            comment: 'user que actualizó el registro',
           },
           {
             name: 'creation_date',
@@ -51,21 +51,21 @@ export class CreateDemandFactorTable1756000000001
             type: 'varchar',
             length: '100',
             comment:
-              'Categoría de carga (lighting_general, tomas_generales, etc.)',
+              'Categoría de load (lighting_general, tomas_generales, etc.)',
           },
           {
             name: 'range_min',
             type: 'decimal',
             precision: 10,
             scale: 2,
-            comment: 'Rango mínimo de carga en VA',
+            comment: 'Rango mínimo de load en VA',
           },
           {
             name: 'range_max',
             type: 'decimal',
             precision: 10,
             scale: 2,
-            comment: 'Rango máximo de carga en VA',
+            comment: 'Rango máximo de load en VA',
           },
           {
             name: 'factor',
@@ -100,3 +100,4 @@ export class CreateDemandFactorTable1756000000001
     await queryRunner.dropTable('demand_factor');
   }
 }
+

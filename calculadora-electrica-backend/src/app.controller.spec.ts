@@ -1,4 +1,4 @@
-import { Test, TestingModule } from '@nestjs/testing';
+﻿import { Test, TestingModule } from '@nestjs/testing';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
@@ -32,9 +32,9 @@ describe('AppController', () => {
         timestamp: expect.any(String) as unknown as string,
         environment: 'test',
         features: [
-          'Gestión de proyectos eléctricos',
-          'Cálculos de potencia y circuitos',
-          'Selección de conductores',
+          'Gestión de projects eléctricos',
+          'Cálculos de potencia y circuits',
+          'Selección de conductors',
           'Lista de materiales y costos',
           'Generación de reportes PDF/Excel',
         ],
@@ -44,3 +44,4 @@ describe('AppController', () => {
     });
   });
 });
+

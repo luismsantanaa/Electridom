@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 
 /**
  * Script para configurar la base de datos de prueba
@@ -73,7 +73,7 @@ async function setupTestDatabaseWithDocker() {
         `CREATE DATABASE IF NOT EXISTS \`${PROD_DB}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci`,
       );
 
-      // Dar permisos al usuario electridom
+      // Dar permisos al user electridom
       await connection.execute(
         `GRANT ALL PRIVILEGES ON \`${PROD_DB}\`.* TO '${DB_USER}'@'%'`,
       );
@@ -94,7 +94,7 @@ async function setupTestDatabaseWithDocker() {
     );
     console.log(`✅ Base de datos de prueba '${TEST_DB}' creada`);
 
-    // Dar permisos al usuario electridom para la base de datos de prueba
+    // Dar permisos al user electridom para la base de datos de prueba
     await connection.execute(
       `GRANT ALL PRIVILEGES ON \`${TEST_DB}\`.* TO '${DB_USER}'@'%'`,
     );
@@ -156,7 +156,7 @@ async function setupTestDatabaseWithDocker() {
     );
     console.log(`📊 Base de datos: ${TEST_DB}`);
     console.log(`🔗 Host: ${DB_HOST}:${DB_PORT}`);
-    console.log(`👤 Usuario: ${DB_USER}`);
+    console.log(`👤 user: ${DB_USER}`);
   } catch (error) {
     console.error(
       '❌ Error configurando base de datos de prueba con Docker:',
@@ -259,7 +259,7 @@ async function setupTestDatabaseDirect() {
     console.log('🎉 Base de datos de prueba configurada exitosamente!');
     console.log(`📊 Base de datos: ${TEST_DB}`);
     console.log(`🔗 Host: ${DB_HOST}:${DB_PORT}`);
-    console.log(`👤 Usuario: ${DB_USER}`);
+    console.log(`👤 user: ${DB_USER}`);
   } catch (error) {
     console.error(
       '❌ Error configurando base de datos de prueba:',
@@ -305,3 +305,4 @@ if (require.main === module) {
 }
 
 module.exports = { setupTestDatabase };
+

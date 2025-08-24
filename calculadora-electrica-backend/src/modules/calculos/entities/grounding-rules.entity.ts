@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, Index } from 'typeorm';
+﻿import { Entity, Column, PrimaryGeneratedColumn, Index } from 'typeorm';
 import { BaseAuditEntity } from '../../../common/entities/base-audit.entity';
 
 @Entity('grounding_rules')
@@ -19,7 +19,7 @@ export class GroundingRules extends BaseAuditEntity {
     type: 'decimal',
     precision: 8,
     scale: 3,
-    comment: 'Conductor de protección (EGC) en mm²',
+    comment: 'conductor de protección (EGC) en mm²',
   })
   egcMm2: number;
 
@@ -28,14 +28,15 @@ export class GroundingRules extends BaseAuditEntity {
     type: 'decimal',
     precision: 8,
     scale: 3,
-    comment: 'Conductor de tierra (GEC) en mm²',
+    comment: 'conductor de tierra (GEC) en mm²',
   })
   gecMm2: number;
 
   @Column({
     type: 'text',
     nullable: true,
-    comment: 'Notas y observaciones de la regla',
+    comment: 'Notas y observaciones de la rule',
   })
   notes?: string;
 }
+

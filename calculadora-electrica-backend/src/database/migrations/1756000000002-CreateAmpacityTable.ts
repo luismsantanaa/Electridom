@@ -1,4 +1,4 @@
-import { MigrationInterface, QueryRunner, Table } from 'typeorm';
+﻿import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
 export class CreateAmpacityTable1756000000002 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
@@ -18,14 +18,14 @@ export class CreateAmpacityTable1756000000002 implements MigrationInterface {
             type: 'varchar',
             length: '100',
             isNullable: true,
-            comment: 'Usuario que creó el registro',
+            comment: 'user que creó el registro',
           },
           {
             name: 'usr_update',
             type: 'varchar',
             length: '100',
             isNullable: true,
-            comment: 'Usuario que actualizó el registro',
+            comment: 'user que actualizó el registro',
           },
           {
             name: 'creation_date',
@@ -48,13 +48,13 @@ export class CreateAmpacityTable1756000000002 implements MigrationInterface {
             name: 'material',
             type: 'varchar',
             length: '10',
-            comment: 'Material del conductor (Cu, Al)',
+            comment: 'material del conductor (Cu, Al)',
           },
           {
             name: 'insulation',
             type: 'varchar',
             length: '20',
-            comment: 'Tipo de aislación (THHN, THWN, etc.)',
+            comment: 'type de aislación (THHN, THWN, etc.)',
           },
           {
             name: 'temp_c',
@@ -67,7 +67,7 @@ export class CreateAmpacityTable1756000000002 implements MigrationInterface {
             comment: 'Calibre en AWG',
           },
           {
-            name: 'seccion_mm2',
+            name: 'section_mm2',
             type: 'decimal',
             precision: 8,
             scale: 3,
@@ -78,7 +78,7 @@ export class CreateAmpacityTable1756000000002 implements MigrationInterface {
             type: 'decimal',
             precision: 8,
             scale: 2,
-            comment: 'Capacidad de corriente en amperios',
+            comment: 'capacity de corriente en amperios',
           },
         ],
         indices: [
@@ -104,3 +104,4 @@ export class CreateAmpacityTable1756000000002 implements MigrationInterface {
     await queryRunner.dropTable('ampacity');
   }
 }
+

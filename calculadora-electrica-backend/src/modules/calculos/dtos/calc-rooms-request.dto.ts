@@ -1,9 +1,9 @@
-import { IsArray, IsNumber, IsOptional, IsString, Min, ValidateNested, IsEnum, MinLength } from 'class-validator';
+﻿import { IsArray, IsNumber, IsOptional, IsString, Min, ValidateNested, IsEnum, MinLength } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class SystemConfigDto {
-  @ApiPropertyOptional({ default: 120, description: 'Tensión del sistema en voltios' })
+  @ApiPropertyOptional({ default: 120, description: 'Tensión del system en voltios' })
   @IsOptional()
   @IsNumber()
   @Min(1)
@@ -21,11 +21,11 @@ export class SystemConfigDto {
   frequency?: number = 60;
 }
 
-export class SuperficieDto {
-  @ApiProperty({ description: 'Nombre del ambiente' })
+export class SurfaceDto {
+  @ApiProperty({ description: 'name del environment' })
   @IsString()
   @MinLength(1)
-  nombre: string;
+  name: string;
 
   @ApiProperty({ description: 'Área en metros cuadrados', minimum: 0.1 })
   @IsNumber()
@@ -33,19 +33,19 @@ export class SuperficieDto {
   area_m2: number;
 }
 
-export class ConsumoDto {
-  @ApiProperty({ description: 'Nombre del artefacto' })
+export class ConsumptionDto {
+  @ApiProperty({ description: 'name del artefacto' })
   @IsString()
-  nombre: string;
+  name: string;
 
-  @ApiProperty({ description: 'Nombre del ambiente donde se encuentra' })
+  @ApiProperty({ description: 'name del environment donde se encuentra' })
   @IsString()
-  ambiente: string;
+  environment: string;
 
   @ApiProperty({ description: 'Potencia en watts', minimum: 1 })
   @IsNumber()
   @Min(1)
-  potencia_w: number;
+  power_w: number;
 
   @ApiPropertyOptional({ description: 'Factor de potencia', minimum: 0.1, maximum: 1.0 })
   @IsOptional()
@@ -56,29 +56,30 @@ export class ConsumoDto {
   @ApiPropertyOptional({ 
     enum: ['iluminacion', 'toma_general', 'electrodomestico', 'climatizacion', 'especial'],
     default: 'electrodomestico',
-    description: 'Tipo de carga'
+    description: 'type de load'
   })
   @IsOptional()
   @IsEnum(['iluminacion', 'toma_general', 'electrodomestico', 'climatizacion', 'especial'])
-  tipo?: string = 'electrodomestico';
+  type?: string = 'electrodomestico';
 }
 
 export class CalcRoomsRequestDto {
-  @ApiPropertyOptional({ type: SystemConfigDto, description: 'Configuración del sistema' })
+  @ApiPropertyOptional({ type: SystemConfigDto, description: 'Configuración del system' })
   @IsOptional()
   @ValidateNested()
   @Type(() => SystemConfigDto)
   system?: SystemConfigDto;
 
-  @ApiProperty({ type: [SuperficieDto], description: 'Lista de ambientes y sus áreas' })
+  @ApiProperty({ type: [SurfaceDto], description: 'Lista de environments y sus áreas' })
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => SuperficieDto)
-  superficies: SuperficieDto[];
+  @Type(() => SurfaceDto)
+  surfaces: SurfaceDto[];
 
-  @ApiProperty({ type: [ConsumoDto], description: 'Lista de consumos por ambiente' })
+  @ApiProperty({ type: [ConsumptionDto], description: 'Lista de consumptions por environment' })
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => ConsumoDto)
-  consumos: ConsumoDto[];
+  @Type(() => ConsumptionDto)
+  consumptions: ConsumptionDto[];
 }
+

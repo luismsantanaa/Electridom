@@ -1,4 +1,4 @@
-import { NormRule } from '../entities/norm-rule.entity';
+﻿import { NormRule } from '../entities/norm-rule.entity';
 
 export const normRulesSeed: Partial<NormRule>[] = [
   {
@@ -12,19 +12,19 @@ export const normRulesSeed: Partial<NormRule>[] = [
   },
   {
     code: 'TOMA_VA_MAX_POR_CIRCUITO',
-    description: 'VA máximo por circuito de tomacorrientes',
+    description: 'VA máximo por circuit de tomacorrientes',
     numericValue: '1800.000',
     unit: 'VA',
-    category: 'CIRCUITOS',
+    category: 'circuits',
     source: undefined,
     isDefault: true,
   },
   {
     code: 'ILU_VA_MAX_POR_CIRCUITO',
-    description: 'VA máximo por circuito de iluminación',
+    description: 'VA máximo por circuit de iluminación',
     numericValue: '1440.000',
     unit: 'VA',
-    category: 'CIRCUITOS',
+    category: 'circuits',
     source: undefined,
     isDefault: true,
   },
@@ -48,7 +48,7 @@ export const normRulesSeed: Partial<NormRule>[] = [
   },
   {
     code: 'FACTOR_DEMANDA_CARGAS_FIJAS',
-    description: 'Factor de demanda para cargas fijas',
+    description: 'Factor de demanda para loads fijas',
     numericValue: '1.000',
     unit: 'adimensional',
     category: 'DEMANDA',
@@ -56,3 +56,4 @@ export const normRulesSeed: Partial<NormRule>[] = [
     isDefault: true,
   },
 ];
+

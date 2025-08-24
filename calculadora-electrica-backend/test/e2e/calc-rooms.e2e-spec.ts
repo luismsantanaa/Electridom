@@ -1,4 +1,4 @@
-import { Test, TestingModule } from '@nestjs/testing';
+﻿import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../../src/app.module';
@@ -29,7 +29,7 @@ describe('CalcRoomsController (e2e)', () => {
     // Insertar parámetros normativos necesarios
     await dataSource.query(`
       INSERT INTO norm_const (key, value, unit, notes, created_at, updated_at) VALUES
-      ('lighting_va_per_m2', '32.3', 'VA/m2', 'TODO_RIE: valor base', NOW(), NOW()),
+      ('lighting_va_per_m2', '32.3', 'VA/m2', 'TODO_RIE: value base', NOW(), NOW()),
       ('socket_max_va_per_circuit', '1800', 'VA', 'TODO_RIE', NOW(), NOW()),
       ('circuit_max_utilization', '0.8', 'ratio', '80%', NOW(), NOW()),
       ('vd_branch_limit_pct', '3', '%', 'Límite recomendado', NOW(), NOW()),
@@ -39,24 +39,24 @@ describe('CalcRoomsController (e2e)', () => {
   });
 
   describe('/calc/rooms/preview (POST)', () => {
-    it('debería calcular cargas por ambiente correctamente', () => {
+    it('debería calcular loads por environment correctamente', () => {
       const payload = {
-        superficies: [
-          { nombre: 'Sala', area_m2: 18 },
-          { nombre: 'Cocina', area_m2: 12 },
+        surfaces: [
+          { name: 'Sala', area_m2: 18 },
+          { name: 'Cocina', area_m2: 12 },
         ],
-        consumos: [
+        consumptions: [
           {
-            nombre: 'TV',
-            ambiente: 'Sala',
-            potencia_w: 140,
-            tipo: 'electrodomestico',
+            name: 'TV',
+            environment: 'Sala',
+            power_w: 140,
+            type: 'electrodomestico',
           },
           {
-            nombre: 'Nevera',
-            ambiente: 'Cocina',
-            potencia_w: 200,
-            tipo: 'electrodomestico',
+            name: 'Nevera',
+            environment: 'Cocina',
+            power_w: 200,
+            type: 'electrodomestico',
             fp: 0.95,
           },
         ],
@@ -67,10 +67,10 @@ describe('CalcRoomsController (e2e)', () => {
         .send(payload)
         .expect(200)
         .expect((res) => {
-          expect(res.body.ambientes).toHaveLength(2);
-          expect(res.body.ambientes[0].nombre).toBe('Sala');
-          expect(res.body.ambientes[1].nombre).toBe('Cocina');
-          expect(res.body.totales.tension_v).toBe(120);
+          expect(res.body.environments).toHaveLength(2);
+          expect(res.body.environments[0].name).toBe('Sala');
+          expect(res.body.environments[1].name).toBe('Cocina');
+          expect(res.body.totales.voltage_v).toBe(120);
           expect(res.body.totales.phases).toBe(1);
           expect(res.body.circuits).toEqual([]);
           expect(res.body.feeder).toEqual({});
@@ -78,11 +78,11 @@ describe('CalcRoomsController (e2e)', () => {
         });
     });
 
-    it('debería manejar configuración de sistema personalizada', () => {
+    it('debería manejar configuración de system personalizada', () => {
       const payload = {
         system: { voltage: 240, phases: 3, frequency: 50 },
-        superficies: [{ nombre: 'Sala', area_m2: 10 }],
-        consumos: [],
+        surfaces: [{ name: 'Sala', area_m2: 10 }],
+        consumptions: [],
       };
 
       return request(app.getHttpServer())
@@ -90,15 +90,15 @@ describe('CalcRoomsController (e2e)', () => {
         .send(payload)
         .expect(200)
         .expect((res) => {
-          expect(res.body.totales.tension_v).toBe(240);
+          expect(res.body.totales.voltage_v).toBe(240);
           expect(res.body.totales.phases).toBe(3);
         });
     });
 
-    it('debería manejar ambientes sin consumos', () => {
+    it('debería manejar environments sin consumptions', () => {
       const payload = {
-        superficies: [{ nombre: 'Sala', area_m2: 15 }],
-        consumos: [],
+        surfaces: [{ name: 'Sala', area_m2: 15 }],
+        consumptions: [],
       };
 
       return request(app.getHttpServer())
@@ -106,15 +106,15 @@ describe('CalcRoomsController (e2e)', () => {
         .send(payload)
         .expect(200)
         .expect((res) => {
-          expect(res.body.ambientes[0].carga_va).toBeCloseTo(484.5, 1); // 15 * 32.3
-          expect(res.body.ambientes[0].observaciones).toContain('Solo carga base de iluminación');
+          expect(res.body.environments[0].carga_va).toBeCloseTo(484.5, 1); // 15 * 32.3
+          expect(res.body.environments[0].observaciones).toContain('Solo load base de iluminación');
         });
     });
 
     it('debería validar datos de entrada requeridos', () => {
       const payload = {
-        superficies: [],
-        consumos: [],
+        surfaces: [],
+        consumptions: [],
       };
 
       return request(app.getHttpServer())
@@ -123,15 +123,15 @@ describe('CalcRoomsController (e2e)', () => {
         .expect(200);
     });
 
-    it('debería manejar consumos con factor de potencia por defecto', () => {
+    it('debería manejar consumptions con factor de potencia por defecto', () => {
       const payload = {
-        superficies: [{ nombre: 'Sala', area_m2: 10 }],
-        consumos: [
+        surfaces: [{ name: 'Sala', area_m2: 10 }],
+        consumptions: [
           {
-            nombre: 'Carga',
-            ambiente: 'Sala',
-            potencia_w: 100,
-            tipo: 'electrodomestico',
+            name: 'load',
+            environment: 'Sala',
+            power_w: 100,
+            type: 'electrodomestico',
           },
         ],
       };
@@ -141,18 +141,18 @@ describe('CalcRoomsController (e2e)', () => {
         .send(payload)
         .expect(200)
         .expect((res) => {
-          expect(res.body.ambientes[0].carga_va).toBeCloseTo(143.6, 1); // 10*32.3 + 100/0.9
+          expect(res.body.environments[0].carga_va).toBeCloseTo(143.6, 1); // 10*32.3 + 100/0.9
         });
     });
 
-    it('debería ignorar consumos de ambientes no definidos', () => {
+    it('debería ignorar consumptions de environments no definidos', () => {
       const payload = {
-        superficies: [{ nombre: 'Sala', area_m2: 10 }],
-        consumos: [
+        surfaces: [{ name: 'Sala', area_m2: 10 }],
+        consumptions: [
           {
-            nombre: 'Carga',
-            ambiente: 'AmbienteInexistente',
-            potencia_w: 100,
+            name: 'load',
+            environment: 'AmbienteInexistente',
+            power_w: 100,
           },
         ],
       };
@@ -162,21 +162,21 @@ describe('CalcRoomsController (e2e)', () => {
         .send(payload)
         .expect(200)
         .expect((res) => {
-          expect(res.body.ambientes[0].carga_va).toBeCloseTo(323, 1); // Solo iluminación
+          expect(res.body.environments[0].carga_va).toBeCloseTo(323, 1); // Solo iluminación
         });
     });
 
     it('debería calcular totales correctamente', () => {
       const payload = {
-        superficies: [
-          { nombre: 'Sala', area_m2: 10 },
-          { nombre: 'Cocina', area_m2: 8 },
+        surfaces: [
+          { name: 'Sala', area_m2: 10 },
+          { name: 'Cocina', area_m2: 8 },
         ],
-        consumos: [
+        consumptions: [
           {
-            nombre: 'Carga',
-            ambiente: 'Sala',
-            potencia_w: 100,
+            name: 'load',
+            environment: 'Sala',
+            power_w: 100,
             fp: 0.9,
           },
         ],
@@ -193,48 +193,48 @@ describe('CalcRoomsController (e2e)', () => {
         });
     });
 
-    it('debería manejar payload complejo con múltiples ambientes y consumos', () => {
+    it('debería manejar payload complejo con múltiples environments y consumptions', () => {
       const payload = {
         system: { voltage: 120, phases: 1, frequency: 60 },
-        superficies: [
-          { nombre: 'Sala', area_m2: 18 },
-          { nombre: 'Cocina', area_m2: 12 },
-          { nombre: 'Habitación 1', area_m2: 12 },
-          { nombre: 'Baño', area_m2: 5 },
+        surfaces: [
+          { name: 'Sala', area_m2: 18 },
+          { name: 'Cocina', area_m2: 12 },
+          { name: 'Habitación 1', area_m2: 12 },
+          { name: 'Baño', area_m2: 5 },
         ],
-        consumos: [
+        consumptions: [
           {
-            nombre: 'Nevera',
-            ambiente: 'Cocina',
-            potencia_w: 200,
-            tipo: 'electrodomestico',
+            name: 'Nevera',
+            environment: 'Cocina',
+            power_w: 200,
+            type: 'electrodomestico',
             fp: 0.95,
           },
           {
-            nombre: 'Microondas',
-            ambiente: 'Cocina',
-            potencia_w: 1200,
-            tipo: 'electrodomestico',
+            name: 'Microondas',
+            environment: 'Cocina',
+            power_w: 1200,
+            type: 'electrodomestico',
             fp: 0.95,
           },
           {
-            nombre: 'TV',
-            ambiente: 'Sala',
-            potencia_w: 140,
-            tipo: 'electrodomestico',
+            name: 'TV',
+            environment: 'Sala',
+            power_w: 140,
+            type: 'electrodomestico',
           },
           {
-            nombre: 'A/C 12k BTU',
-            ambiente: 'Habitación 1',
-            potencia_w: 1100,
-            tipo: 'climatizacion',
+            name: 'A/C 12k BTU',
+            environment: 'Habitación 1',
+            power_w: 1100,
+            type: 'climatizacion',
             fp: 0.9,
           },
           {
-            nombre: 'Lavadora',
-            ambiente: 'Baño',
-            potencia_w: 500,
-            tipo: 'electrodomestico',
+            name: 'Lavadora',
+            environment: 'Baño',
+            power_w: 500,
+            type: 'electrodomestico',
             fp: 0.9,
           },
         ],
@@ -245,19 +245,20 @@ describe('CalcRoomsController (e2e)', () => {
         .send(payload)
         .expect(200)
         .expect((res) => {
-          expect(res.body.ambientes).toHaveLength(4);
-          expect(res.body.ambientes[0].nombre).toBe('Sala');
-          expect(res.body.ambientes[1].nombre).toBe('Cocina');
-          expect(res.body.ambientes[2].nombre).toBe('Habitación 1');
-          expect(res.body.ambientes[3].nombre).toBe('Baño');
+          expect(res.body.environments).toHaveLength(4);
+          expect(res.body.environments[0].name).toBe('Sala');
+          expect(res.body.environments[1].name).toBe('Cocina');
+          expect(res.body.environments[2].name).toBe('Habitación 1');
+          expect(res.body.environments[3].name).toBe('Baño');
           
-          // Verificar que todos los ambientes tienen carga calculada
-          res.body.ambientes.forEach((ambiente: any) => {
-            expect(ambiente.carga_va).toBeGreaterThan(0);
-            expect(ambiente.fp).toBeGreaterThan(0);
-            expect(ambiente.fp).toBeLessThanOrEqual(1);
+          // Verificar que todos los environments tienen load calculada
+          res.body.environments.forEach((environment: any) => {
+            expect(environment.carga_va).toBeGreaterThan(0);
+            expect(environment.fp).toBeGreaterThan(0);
+            expect(environment.fp).toBeLessThanOrEqual(1);
           });
         });
     });
   });
 });
+

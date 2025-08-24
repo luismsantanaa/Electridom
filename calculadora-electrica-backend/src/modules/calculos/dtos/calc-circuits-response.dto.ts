@@ -1,20 +1,20 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+﻿import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CargaEnCircuitoDto {
-  @ApiProperty({ description: 'Categoría de la carga' })
-  categoria: string;
+  @ApiProperty({ description: 'Categoría de la load' })
+  category: string;
 
-  @ApiProperty({ description: 'Carga en VA' })
+  @ApiProperty({ description: 'load en VA' })
   carga_va: number;
 
   @ApiProperty({ description: 'Corriente en amperios' })
-  corriente_a: number;
+  current_a: number;
 
-  @ApiPropertyOptional({ description: 'Descripción de la carga' })
-  descripcion?: string;
+  @ApiPropertyOptional({ description: 'Descripción de la load' })
+  description?: string;
 
-  @ApiPropertyOptional({ description: 'Ambiente donde se ubica' })
-  ambiente?: string;
+  @ApiPropertyOptional({ description: 'environment donde se ubica' })
+  environment?: string;
 }
 
 export class ConductorDto {
@@ -22,15 +22,15 @@ export class ConductorDto {
   calibre_awg: number;
 
   @ApiProperty({ description: 'Sección en mm²' })
-  seccion_mm2: number;
+  section_mm2: number;
 
-  @ApiProperty({ description: 'Material del conductor' })
+  @ApiProperty({ description: 'material del conductor' })
   material: string;
 
-  @ApiProperty({ description: 'Tipo de aislación' })
+  @ApiProperty({ description: 'type de aislación' })
   insulation: string;
 
-  @ApiProperty({ description: 'Capacidad de corriente en amperios' })
+  @ApiProperty({ description: 'capacity de corriente en amperios' })
   ampacity: number;
 
   @ApiProperty({ description: 'Temperatura de operación' })
@@ -38,7 +38,7 @@ export class ConductorDto {
 }
 
 export class BreakerDto {
-  @ApiProperty({ description: 'Capacidad nominal en amperios' })
+  @ApiProperty({ description: 'capacity nominal en amperios' })
   amp: number;
 
   @ApiProperty({ description: 'Número de polos' })
@@ -55,31 +55,31 @@ export class BreakerDto {
 }
 
 export class CircuitoRamalDto {
-  @ApiProperty({ description: 'Identificador único del circuito' })
+  @ApiProperty({ description: 'Identificador único del circuit' })
   id_circuito: string;
 
-  @ApiProperty({ description: 'Nombre descriptivo del circuito' })
-  nombre: string;
+  @ApiProperty({ description: 'name descriptivo del circuit' })
+  name: string;
 
   @ApiProperty({
     type: [CargaEnCircuitoDto],
-    description: 'Cargas agrupadas en este circuito',
+    description: 'loads agrupadas en este circuit',
   })
-  cargas: CargaEnCircuitoDto[];
+  loads: CargaEnCircuitoDto[];
 
-  @ApiProperty({ description: 'Carga total del circuito en VA' })
+  @ApiProperty({ description: 'load total del circuit en VA' })
   carga_total_va: number;
 
   @ApiProperty({ description: 'Corriente total en amperios' })
   corriente_total_a: number;
 
-  @ApiProperty({ type: BreakerDto, description: 'Breaker seleccionado' })
+  @ApiProperty({ type: BreakerDto, description: 'breaker seleccionado' })
   breaker: BreakerDto;
 
-  @ApiProperty({ type: ConductorDto, description: 'Conductor seleccionado' })
+  @ApiProperty({ type: ConductorDto, description: 'conductor seleccionado' })
   conductor: ConductorDto;
 
-  @ApiProperty({ description: 'Porcentaje de utilización del circuito' })
+  @ApiProperty({ description: 'Porcentaje de utilización del circuit' })
   utilizacion_pct: number;
 
   @ApiProperty({
@@ -87,33 +87,33 @@ export class CircuitoRamalDto {
   })
   margen_seguridad_pct: number;
 
-  @ApiProperty({ description: 'Tensión del circuito' })
-  tension_v: number;
+  @ApiProperty({ description: 'Tensión del circuit' })
+  voltage_v: number;
 
-  @ApiProperty({ description: 'Número de fases del circuito' })
+  @ApiProperty({ description: 'Número de fases del circuit' })
   phases: number;
 
-  @ApiPropertyOptional({ description: 'Observaciones del circuito' })
+  @ApiPropertyOptional({ description: 'Observaciones del circuit' })
   observaciones?: string[];
 }
 
 export class ResumenCircuitosDto {
-  @ApiProperty({ description: 'Número total de circuitos generados' })
+  @ApiProperty({ description: 'Número total de circuits generados' })
   total_circuitos: number;
 
-  @ApiProperty({ description: 'Carga total agrupada en VA' })
+  @ApiProperty({ description: 'load total agrupada en VA' })
   carga_total_va: number;
 
   @ApiProperty({ description: 'Corriente total en amperios' })
   corriente_total_a: number;
 
-  @ApiProperty({ description: 'Utilización promedio de circuitos' })
+  @ApiProperty({ description: 'Utilización promedio de circuits' })
   utilizacion_promedio_pct: number;
 
-  @ApiProperty({ description: 'Circuitos monofásicos' })
+  @ApiProperty({ description: 'circuits monofásicos' })
   circuitos_monofasicos: number;
 
-  @ApiProperty({ description: 'Circuitos trifásicos' })
+  @ApiProperty({ description: 'circuits trifásicos' })
   circuitos_trifasicos: number;
 
   @ApiProperty({ description: 'Calibre mínimo usado (AWG)' })
@@ -126,13 +126,13 @@ export class ResumenCircuitosDto {
 export class CalcCircuitsResponseDto {
   @ApiProperty({
     type: [CircuitoRamalDto],
-    description: 'Circuitos ramales generados',
+    description: 'circuits ramales generados',
   })
   circuitos_ramales: CircuitoRamalDto[];
 
   @ApiProperty({
     type: ResumenCircuitosDto,
-    description: 'Resumen de los circuitos',
+    description: 'Resumen de los circuits',
   })
   resumen: ResumenCircuitosDto;
 
@@ -147,3 +147,4 @@ export class CalcCircuitsResponseDto {
     algoritmo_usado: string;
   };
 }
+

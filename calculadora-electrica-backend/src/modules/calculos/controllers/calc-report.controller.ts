@@ -1,4 +1,4 @@
-import {
+﻿import {
   Controller,
   Post,
   Body,
@@ -37,17 +37,17 @@ export class CalcReportController {
       **Funcionalidades:**
       - Genera reporte PDF profesional con plantilla HTML
       - Genera archivo Excel con múltiples hojas de datos
-      - Incluye sello de tiempo y versión de normas
+      - Incluye sello de tiempo y versión de norms
       - Calcula hashes MD5 para verificación de integridad
       - Soporta modo stateless (payload completo) y con estado (calculationId)
       
       **Contenido del Reporte:**
-      - Resumen ejecutivo del proyecto
-      - Cuadro de cargas por ambiente
+      - Resumen ejecutivo del project
+      - Cuadro de loads por environment
       - Análisis de demanda y diversificación
-      - Circuitos ramales y conductores
+      - circuits ramales y conductors
       - Análisis de caída de tensión
-      - Sistema de puesta a tierra
+      - system de puesta a tierra
       - Observaciones y recomendaciones
       
       **Formatos de Salida:**
@@ -65,18 +65,18 @@ export class CalcReportController {
         description: 'Genera reporte con datos de CE-01 a CE-05',
         value: {
           roomsData: {
-            ambientes: [
+            environments: [
               {
-                nombre: 'Habitación Principal',
+                name: 'Habitación Principal',
                 area_m2: 15,
                 tipo_ambiente: 'dormitorio',
                 artefactos: [
-                  { tipo: 'lámpara', cantidad: 2, potencia_va: 60 },
-                  { tipo: 'tomacorriente', cantidad: 4, potencia_va: 180 },
+                  { type: 'lámpara', cantidad: 2, potencia_va: 60 },
+                  { type: 'tomacorriente', cantidad: 4, potencia_va: 180 },
                 ],
               },
             ],
-            parametros: {
+            parameters: {
               tipo_instalacion: 'residencial',
               tension_nominal_v: 120,
               phases: 1,
@@ -85,15 +85,15 @@ export class CalcReportController {
           demandData: {
             cargas_por_categoria: [
               {
-                categoria: 'iluminacion_general',
+                category: 'iluminacion_general',
                 carga_bruta_va: 1200,
               },
               {
-                categoria: 'tomas_generales',
+                category: 'tomas_generales',
                 carga_bruta_va: 2400,
               },
             ],
-            parametros: {
+            parameters: {
               tipo_instalacion: 'residencial',
             },
           },
@@ -101,13 +101,13 @@ export class CalcReportController {
             circuitos_individuales: [
               {
                 id_circuito: 'CIRC-001',
-                nombre: 'Iluminación Habitación 1',
-                corriente_a: 8.5,
+                name: 'Iluminación Habitación 1',
+                current_a: 8.5,
                 carga_va: 1020,
-                longitud_m: 15,
+                length_m: 15,
               },
             ],
-            parametros: {
+            parameters: {
               material_conductor: 'Cu',
               tipo_instalacion: 'residencial',
             },
@@ -116,19 +116,19 @@ export class CalcReportController {
             circuitos_ramales: [
               {
                 id_circuito: 'CIRC-001',
-                nombre: 'Iluminación Habitación 1',
+                name: 'Iluminación Habitación 1',
                 corriente_total_a: 8.5,
                 carga_total_va: 1020,
-                longitud_m: 15,
+                length_m: 15,
               },
             ],
-            sistema: {
-              tension_v: 120,
+            system: {
+              voltage_v: 120,
               phases: 1,
               corriente_total_a: 8.5,
               carga_total_va: 1020,
             },
-            parametros: {
+            parameters: {
               longitud_alimentador_m: 50,
               material_conductor: 'Cu',
               max_caida_ramal_pct: 3,
@@ -136,19 +136,19 @@ export class CalcReportController {
             },
           },
           groundingData: {
-            sistema: {
-              tension_v: 120,
+            system: {
+              voltage_v: 120,
               phases: 1,
               corriente_total_a: 8.5,
               carga_total_va: 1020,
             },
-            alimentador: {
-              corriente_a: 8.5,
-              seccion_mm2: 10,
+            feeder: {
+              current_a: 8.5,
+              section_mm2: 10,
               material: 'Cu',
-              longitud_m: 50,
+              length_m: 50,
             },
-            parametros: {
+            parameters: {
               main_breaker_amp: 100,
               tipo_instalacion: 'residencial',
               tipo_sistema_tierra: 'TN-S',
@@ -195,8 +195,8 @@ export class CalcReportController {
             generalStatus: 'OK',
             observations: [
               'Reporte generado automáticamente por Calculadora Eléctrica RD',
-              'Todos los cálculos cumplen con las normas NEC 2023 y RIE RD',
-              'Se dimensionaron 4 circuitos ramales',
+              'Todos los cálculos cumplen con las norms NEC 2023 y RIE RD',
+              'Se dimensionaron 4 circuits ramales',
             ],
           },
           message: 'Reporte generado exitosamente',
@@ -342,3 +342,4 @@ export class CalcReportController {
     res.send(result.pdfBuffer);
   }
 }
+

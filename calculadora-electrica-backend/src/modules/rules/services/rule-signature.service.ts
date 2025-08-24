@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+﻿import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { NormRule } from '../entities/norm-rule.entity';
@@ -14,9 +14,9 @@ export class RuleSignatureService {
   ) {}
 
   /**
-   * Genera una firma SHA-256 de todas las reglas normativas (legacy)
+   * Genera una firma SHA-256 de todas las rules normativas (legacy)
    * La firma se calcula a partir de code, numericValue y updatedAt
-   * @returns Firma SHA-256 de las reglas actuales
+   * @returns Firma SHA-256 de las rules actuales
    */
   async getCurrentSignature(): Promise<string> {
     const rules = await this.normRuleRepository.find({
@@ -70,9 +70,9 @@ export class RuleSignatureService {
   }
 
   /**
-   * Genera una firma SHA-256 de las reglas activas para una fecha específica
+   * Genera una firma SHA-256 de las rules activas para una fecha específica
    * @param effectiveDate Fecha efectiva (ISO 8601)
-   * @returns Firma SHA-256 de las reglas activas
+   * @returns Firma SHA-256 de las rules activas
    */
   async getActiveRulesSignature(effectiveDate?: string): Promise<string> {
     const { rules } = await this.rulesAdminService.getActiveRuleSet(effectiveDate);
@@ -98,7 +98,7 @@ export class RuleSignatureService {
   }
 
   /**
-   * Compara dos firmas de reglas
+   * Compara dos firmas de rules
    * @param signature1 Primera firma
    * @param signature2 Segunda firma
    * @returns true si las firmas son diferentes
@@ -107,3 +107,4 @@ export class RuleSignatureService {
     return signature1 !== signature2;
   }
 }
+

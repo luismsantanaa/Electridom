@@ -1,9 +1,9 @@
-import { Module } from '@nestjs/common';
+﻿import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SeedsService } from './seeds.service';
-import { TipoInstalacion } from '../../modules/tipos-instalaciones/entities/tipo-instalacion.entity';
-import { TipoAmbiente } from '../../modules/tipos-ambientes/entities/tipo-ambiente.entity';
-import { TipoArtefacto } from '../../modules/tipos-artefactos/entities/tipo-artefacto.entity';
+import { TipoInstalacion } from '../../modules/tipos-instalaciones/entities/type-installation.entity';
+import { TipoAmbiente } from '../../modules/tipos-ambientes/entities/type-environment.entity';
+import { TipoArtefacto } from '../../modules/tipos-artefactos/entities/type-artifact.entity';
 import { NormConst } from '../../modules/calculos/entities/norm-const.entity';
 import { DemandFactor } from '../../modules/calculos/entities/demand-factor.entity';
 import { Ampacity } from '../../modules/calculos/entities/ampacity.entity';
@@ -31,3 +31,4 @@ import { AppDataSource } from '../data-source';
   exports: [SeedsService],
 })
 export class SeedsModule {}
+

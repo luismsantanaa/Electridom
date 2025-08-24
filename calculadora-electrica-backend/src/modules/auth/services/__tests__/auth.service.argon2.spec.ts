@@ -1,4 +1,4 @@
-import { Test, TestingModule } from '@nestjs/testing';
+﻿import { Test, TestingModule } from '@nestjs/testing';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { AuthService } from '../auth.service';
@@ -70,7 +70,7 @@ describe('AuthService - Argon2id Migration Tests', () => {
         id: '1',
         email,
         username: 'testuser',
-        nombre: 'Test',
+        name: 'Test',
         apellido: 'User',
         role: UserRole.CLIENTE,
         estado: UserStatus.ACTIVO,
@@ -133,7 +133,7 @@ describe('AuthService - Argon2id Migration Tests', () => {
         id: '1',
         email,
         username: 'testuser',
-        nombre: 'Test',
+        name: 'Test',
         apellido: 'User',
         role: UserRole.CLIENTE,
         estado: UserStatus.ACTIVO,
@@ -193,7 +193,7 @@ describe('AuthService - Argon2id Migration Tests', () => {
         id: '1',
         email,
         username: 'testuser',
-        nombre: 'Test',
+        name: 'Test',
         apellido: 'User',
         role: UserRole.CLIENTE,
         estado: UserStatus.ACTIVO,
@@ -252,7 +252,7 @@ describe('AuthService - Argon2id Migration Tests', () => {
         email: 'newuser@example.com',
         password: 'NewPassword123!',
         username: 'newuser',
-        nombre: 'New',
+        name: 'New',
         apellido: 'User',
       };
 
@@ -267,7 +267,7 @@ describe('AuthService - Argon2id Migration Tests', () => {
         password: 'hashed-password', // Se reemplazará por el hash real
       } as User;
 
-      mockUsersService.findByEmail.mockResolvedValue(null); // Usuario no existe
+      mockUsersService.findByEmail.mockResolvedValue(null); // user no existe
       mockUsersService.create.mockImplementation(async (userData) => {
         // Verificar que el password es un hash de Argon2id
         expect(userData.password).toMatch(/^\$argon2id\$/);
@@ -298,7 +298,7 @@ describe('AuthService - Argon2id Migration Tests', () => {
         id: '1',
         email,
         username: 'testuser',
-        nombre: 'Test',
+        name: 'Test',
         apellido: 'User',
         role: UserRole.CLIENTE,
         estado: UserStatus.ACTIVO,
@@ -337,7 +337,7 @@ describe('AuthService - Argon2id Migration Tests', () => {
         email: 'speedtest@example.com',
         password: 'SpeedTestPassword123!',
         username: 'speedtest',
-        nombre: 'Speed',
+        name: 'Speed',
         apellido: 'Test',
       };
 
@@ -365,7 +365,7 @@ describe('AuthService - Argon2id Migration Tests', () => {
         id: '1',
         email,
         username: 'audituser',
-        nombre: 'Audit',
+        name: 'Audit',
         apellido: 'User',
         role: UserRole.CLIENTE,
         estado: UserStatus.ACTIVO,
@@ -427,3 +427,4 @@ describe('AuthService - Argon2id Migration Tests', () => {
     });
   });
 });
+

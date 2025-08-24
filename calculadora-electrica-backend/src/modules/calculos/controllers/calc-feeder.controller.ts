@@ -1,4 +1,4 @@
-import {
+﻿import {
   Controller,
   Post,
   Body,
@@ -19,7 +19,7 @@ import { VoltageDropService } from '../services/voltage-drop.service';
 import { CalcFeederRequestDto } from '../dtos/calc-feeder-request.dto';
 import { CalcFeederResponseDto } from '../dtos/calc-feeder-response.dto';
 
-@ApiTags('Cálculos Eléctricos - Alimentador y Caída de Tensión')
+@ApiTags('Cálculos Eléctricos - feeder y Caída de Tensión')
 @Controller('calc')
 export class CalcFeederController {
   constructor(private readonly voltageDropService: VoltageDropService) {}
@@ -28,67 +28,67 @@ export class CalcFeederController {
   @HttpCode(HttpStatus.OK)
   @UsePipes(new ValidationPipe({ transform: true }))
   @ApiOperation({
-    summary: 'Análisis de caída de tensión y selección de alimentador',
+    summary: 'Análisis de caída de tensión y selección de feeder',
     description: `
-      Analiza la caída de tensión en circuitos ramales y alimentador principal.
+      Analiza la caída de tensión en circuits ramales y feeder principal.
       
       **Funcionalidades:**
-      - Calcula caída de tensión en cada circuito ramal
-      - Selecciona calibre del alimentador considerando límites
+      - Calcula caída de tensión en cada circuit ramal
+      - Selecciona calibre del feeder considerando límites
       - Determina longitud crítica máxima
       - Valida cumplimiento de límites (3% ramal, 5% total por defecto)
       
       **Parámetros configurables:**
       - Límites de caída de tensión desde norm_const
-      - Material del conductor (Cu, Al)
-      - Longitudes de circuitos y alimentador
+      - material del conductor (Cu, Al)
+      - Longitudes de circuits y feeder
     `,
   })
   @ApiBody({
     type: CalcFeederRequestDto,
-    description: 'Datos de circuitos ramales y parámetros de instalación',
+    description: 'Datos de circuits ramales y parámetros de instalación',
     examples: {
       ejemplo1: {
-        summary: 'Ejemplo con circuitos residenciales',
+        summary: 'Ejemplo con circuits residenciales',
         description: 'Análisis de caída de tensión para instalación residencial',
         value: {
           circuitos_ramales: [
             {
               id_circuito: 'CIRC-001',
-              nombre: 'Iluminación Habitación 1',
+              name: 'Iluminación Habitación 1',
               corriente_total_a: 8.5,
               carga_total_va: 1020,
-              longitud_m: 15,
+              length_m: 15,
             },
             {
               id_circuito: 'CIRC-002',
-              nombre: 'Enchufes Habitación 1',
+              name: 'Enchufes Habitación 1',
               corriente_total_a: 12.3,
               carga_total_va: 1476,
-              longitud_m: 18,
+              length_m: 18,
             },
             {
               id_circuito: 'CIRC-003',
-              nombre: 'Cocina',
+              name: 'Cocina',
               corriente_total_a: 25.8,
               carga_total_va: 3096,
-              longitud_m: 25,
+              length_m: 25,
             },
             {
               id_circuito: 'CIRC-004',
-              nombre: 'Aire Acondicionado',
+              name: 'Aire Acondicionado',
               corriente_total_a: 15.2,
               carga_total_va: 1824,
-              longitud_m: 30,
+              length_m: 30,
             },
           ],
-          sistema: {
-            tension_v: 120,
+          system: {
+            voltage_v: 120,
             phases: 1,
             corriente_total_a: 61.8,
             carga_total_va: 7416,
           },
-          parametros: {
+          parameters: {
             longitud_alimentador_m: 50,
             material_conductor: 'Cu',
             max_caida_ramal_pct: 3,
@@ -96,37 +96,37 @@ export class CalcFeederController {
           },
           observaciones: [
             'Instalación residencial monofásica',
-            'Alimentador desde medidor hasta panel principal',
+            'feeder desde medidor hasta panel principal',
           ],
         },
       },
       ejemplo2: {
         summary: 'Ejemplo con longitudes grandes',
-        description: 'Análisis con circuitos de longitud crítica',
+        description: 'Análisis con circuits de longitud crítica',
         value: {
           circuitos_ramales: [
             {
               id_circuito: 'CIRC-001',
-              nombre: 'Iluminación Exterior',
+              name: 'Iluminación Exterior',
               corriente_total_a: 5.2,
               carga_total_va: 624,
-              longitud_m: 80,
+              length_m: 80,
             },
             {
               id_circuito: 'CIRC-002',
-              nombre: 'Bomba de Agua',
+              name: 'Bomba de Agua',
               corriente_total_a: 18.5,
               carga_total_va: 2220,
-              longitud_m: 120,
+              length_m: 120,
             },
           ],
-          sistema: {
-            tension_v: 240,
+          system: {
+            voltage_v: 240,
             phases: 1,
             corriente_total_a: 23.7,
             carga_total_va: 2844,
           },
-          parametros: {
+          parameters: {
             longitud_alimentador_m: 200,
             material_conductor: 'Cu',
             max_caida_ramal_pct: 2.5,
@@ -151,29 +151,29 @@ export class CalcFeederController {
           circuitos_analisis: [
             {
               id_circuito: 'CIRC-001',
-              nombre: 'Iluminación Habitación 1',
-              corriente_a: 8.5,
-              longitud_m: 15,
+              name: 'Iluminación Habitación 1',
+              current_a: 8.5,
+              length_m: 15,
               caida_tension_ramal_v: 1.89,
               caida_tension_ramal_pct: 1.58,
               estado: 'OK',
             },
             {
               id_circuito: 'CIRC-002',
-              nombre: 'Enchufes Habitación 1',
-              corriente_a: 12.3,
-              longitud_m: 18,
+              name: 'Enchufes Habitación 1',
+              current_a: 12.3,
+              length_m: 18,
               caida_tension_ramal_v: 4.11,
               caida_tension_ramal_pct: 3.43,
               estado: 'WARNING',
               observaciones: ['Cerca del límite de 3% en ramal'],
             },
           ],
-          alimentador: {
+          feeder: {
             corriente_total_a: 61.8,
-            longitud_m: 50,
+            length_m: 50,
             material: 'Cu',
-            seccion_mm2: 10,
+            section_mm2: 10,
             resistencia_ohm_km: 1.83,
             caida_tension_alimentador_v: 5.66,
             caida_tension_alimentador_pct: 4.72,
@@ -193,10 +193,10 @@ export class CalcFeederController {
             calibre_minimo_recomendado_mm2: 10,
           },
           observaciones_generales: [
-            'Análisis de 4 circuitos ramales',
-            'Alimentador: Cu 10mm² para 50m',
-            '⚠️ 1 circuito(s) exceden límites',
-            '⚠️ Alimentador excede límite de caída de tensión',
+            'Análisis de 4 circuits ramales',
+            'feeder: Cu 10mm² para 50m',
+            '⚠️ 1 circuit(s) exceden límites',
+            '⚠️ feeder excede límite de caída de tensión',
             'Longitud crítica máxima: 63.7m',
           ],
           metadata: {
@@ -244,3 +244,4 @@ export class CalcFeederController {
     return this.voltageDropService.selectFeeder(request);
   }
 }
+

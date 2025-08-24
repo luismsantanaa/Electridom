@@ -1,4 +1,4 @@
-import {
+﻿import {
   Injectable,
   NotFoundException,
   ConflictException,
@@ -65,7 +65,7 @@ export class RulesAdminService {
   }
 
   /**
-   * Realiza bulk upsert de reglas en un RuleSet DRAFT
+   * Realiza bulk upsert de rules en un RuleSet DRAFT
    */
   async bulkUpsertRules(
     ruleSetId: string,
@@ -81,7 +81,7 @@ export class RulesAdminService {
 
     if (ruleSet.status !== 'DRAFT') {
       throw new BadRequestException(
-        'Solo se pueden modificar reglas en RuleSets en estado DRAFT',
+        'Solo se pueden modificar rules en RuleSets en estado DRAFT',
       );
     }
 
@@ -93,13 +93,13 @@ export class RulesAdminService {
       const changeLogs: RuleChangeLog[] = [];
 
       for (const ruleDto of dto.rules) {
-        // Buscar regla existente
+        // Buscar rule existente
         const existingRule = await queryRunner.manager.findOne(NormRule, {
           where: { ruleSetId, code: ruleDto.code },
         });
 
         if (existingRule) {
-          // Actualizar regla existente
+          // Actualizar rule existente
           const beforeValue = {
             code: existingRule.code,
             description: existingRule.description,
@@ -140,7 +140,7 @@ export class RulesAdminService {
             }),
           );
         } else {
-          // Crear nueva regla
+          // Crear nueva rule
           const newRule = queryRunner.manager.create(NormRule, {
             ruleSetId,
             code: ruleDto.code,
@@ -323,7 +323,7 @@ export class RulesAdminService {
   }
 
   /**
-   * Obtiene un RuleSet con sus reglas
+   * Obtiene un RuleSet con sus rules
    */
   async getRuleSetDetail(ruleSetId: string): Promise<RuleSetDetailResponseDto> {
     const ruleSet = await this.ruleSetRepository.findOne({
@@ -380,7 +380,7 @@ export class RulesAdminService {
     const removed: RuleDto[] = [];
     const changed: Array<{ code: string; before: any; after: any }> = [];
 
-    // Encontrar reglas agregadas
+    // Encontrar rules agregadas
     for (const [code, rule] of rulesB) {
       if (!rulesA.has(code)) {
         added.push({
@@ -395,7 +395,7 @@ export class RulesAdminService {
       }
     }
 
-    // Encontrar reglas eliminadas
+    // Encontrar rules eliminadas
     for (const [code, rule] of rulesA) {
       if (!rulesB.has(code)) {
         removed.push({
@@ -410,7 +410,7 @@ export class RulesAdminService {
       }
     }
 
-    // Encontrar reglas modificadas
+    // Encontrar rules modificadas
     for (const [code, ruleA] of rulesA) {
       const ruleB = rulesB.get(code);
       if (ruleB && this.hasRuleChanged(ruleA, ruleB)) {
@@ -481,7 +481,7 @@ export class RulesAdminService {
 
     const savedRuleSet = await this.ruleSetRepository.save(ruleSet);
 
-    // Crear las reglas
+    // Crear las rules
     const rules = dto.rules.map((ruleDto) =>
       this.normRuleRepository.create({
         ruleSetId: savedRuleSet.id,
@@ -607,7 +607,7 @@ export class RulesAdminService {
   }
 
   /**
-   * Verifica si una regla ha cambiado
+   * Verifica si una rule ha cambiado
    */
   private hasRuleChanged(ruleA: NormRule, ruleB: NormRule): boolean {
     return (
@@ -620,3 +620,4 @@ export class RulesAdminService {
     );
   }
 }
+

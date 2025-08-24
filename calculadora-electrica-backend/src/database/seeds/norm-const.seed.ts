@@ -1,4 +1,4 @@
-import { DataSource } from 'typeorm';
+﻿import { DataSource } from 'typeorm';
 import { NormConst } from '../../modules/calculos/entities/norm-const.entity';
 
 export const normConstSeed = async (dataSource: DataSource): Promise<void> => {
@@ -16,7 +16,7 @@ export const normConstSeed = async (dataSource: DataSource): Promise<void> => {
       key: 'lighting_va_per_m2',
       value: '32.3',
       unit: 'VA/m2',
-      notes: 'TODO_RIE: valor base; origen NEC 3VA/ft2 aprox.',
+      notes: 'TODO_RIE: value base; origen NEC 3VA/ft2 aprox.',
     },
     {
       key: 'socket_max_va_per_circuit',
@@ -58,3 +58,4 @@ export const normConstSeed = async (dataSource: DataSource): Promise<void> => {
 
   console.log(`✅ Parámetros normativos cargados: ${normParams.length} registros`);
 };
+

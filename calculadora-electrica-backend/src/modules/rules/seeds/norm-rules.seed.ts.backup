@@ -1,0 +1,58 @@
+import { NormRule } from '../entities/norm-rule.entity';
+
+export const normRulesSeed: Partial<NormRule>[] = [
+  {
+    code: 'LUZ_VA_POR_M2',
+    description: 'VA de iluminación por metro cuadrado',
+    numericValue: '100.000',
+    unit: 'VA/m²',
+    category: 'ILUMINACION',
+    source: undefined,
+    isDefault: true,
+  },
+  {
+    code: 'TOMA_VA_MAX_POR_CIRCUITO',
+    description: 'VA máximo por circuito de tomacorrientes',
+    numericValue: '1800.000',
+    unit: 'VA',
+    category: 'CIRCUITOS',
+    source: undefined,
+    isDefault: true,
+  },
+  {
+    code: 'ILU_VA_MAX_POR_CIRCUITO',
+    description: 'VA máximo por circuito de iluminación',
+    numericValue: '1440.000',
+    unit: 'VA',
+    category: 'CIRCUITOS',
+    source: undefined,
+    isDefault: true,
+  },
+  {
+    code: 'FACTOR_DEMANDA_LUZ',
+    description: 'Factor de demanda para iluminación',
+    numericValue: '1.000',
+    unit: 'adimensional',
+    category: 'DEMANDA',
+    source: undefined,
+    isDefault: true,
+  },
+  {
+    code: 'FACTOR_DEMANDA_TOMA',
+    description: 'Factor de demanda para tomacorrientes',
+    numericValue: '1.000',
+    unit: 'adimensional',
+    category: 'DEMANDA',
+    source: undefined,
+    isDefault: true,
+  },
+  {
+    code: 'FACTOR_DEMANDA_CARGAS_FIJAS',
+    description: 'Factor de demanda para cargas fijas',
+    numericValue: '1.000',
+    unit: 'adimensional',
+    category: 'DEMANDA',
+    source: undefined,
+    isDefault: true,
+  },
+];

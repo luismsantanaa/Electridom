@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, MaxLength, IsOptional, IsDateString, IsArray, ValidateNested, IsNumber, IsBoolean } from 'class-validator';
+﻿import { IsString, IsNotEmpty, MaxLength, IsOptional, IsDateString, IsArray, ValidateNested, IsNumber, IsBoolean } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -6,7 +6,7 @@ import { ApiProperty } from '@nestjs/swagger';
 export class CreateRuleSetDto {
   @ApiProperty({ 
     example: 'RIE-RD Baseline 2025-08', 
-    description: 'Nombre del conjunto de reglas',
+    description: 'name del conjunto de rules',
     maxLength: 200 
   })
   @IsString() @IsNotEmpty() @MaxLength(200) 
@@ -14,7 +14,7 @@ export class CreateRuleSetDto {
 
   @ApiProperty({ 
     example: 'Semilla basada en RIE RD (placeholder)', 
-    description: 'Descripción del conjunto de reglas',
+    description: 'Descripción del conjunto de rules',
     required: false,
     maxLength: 500 
   })
@@ -38,17 +38,17 @@ export class CreateRuleSetDto {
   effectiveTo?: string;
 }
 
-// DTO para regla individual
+// DTO para rule individual
 export class RuleDto {
-  @ApiProperty({ example: 'LUZ_VA_POR_M2', description: 'Código de la regla' })
+  @ApiProperty({ example: 'LUZ_VA_POR_M2', description: 'Código de la rule' })
   @IsString() @IsNotEmpty() @MaxLength(100) 
   code: string;
 
-  @ApiProperty({ example: 'VA por m² iluminación', description: 'Descripción de la regla' })
+  @ApiProperty({ example: 'VA por m² iluminación', description: 'Descripción de la rule' })
   @IsString() @IsNotEmpty() 
   description: string;
 
-  @ApiProperty({ example: 100.0, description: 'Valor numérico de la regla' })
+  @ApiProperty({ example: 100.0, description: 'value numérico de la rule' })
   @IsNumber() 
   numericValue: number;
 
@@ -56,13 +56,13 @@ export class RuleDto {
   @IsString() @IsNotEmpty() 
   unit: string;
 
-  @ApiProperty({ example: 'ILU', description: 'Categoría de la regla' })
+  @ApiProperty({ example: 'ILU', description: 'Categoría de la rule' })
   @IsString() @IsNotEmpty() 
   category: string;
 
   @ApiProperty({ 
     example: 'TODO validar RIE RD', 
-    description: 'Fuente de la regla',
+    description: 'Fuente de la rule',
     required: false
   })
   @IsOptional() @IsString() 
@@ -70,18 +70,18 @@ export class RuleDto {
 
   @ApiProperty({ 
     example: true, 
-    description: 'Si es valor por defecto',
+    description: 'Si es value por defecto',
     default: true
   })
   @IsOptional() @IsBoolean() 
   isDefault?: boolean;
 }
 
-// DTO para bulk upsert de reglas
+// DTO para bulk upsert de rules
 export class BulkUpsertRulesDto {
   @ApiProperty({ 
     type: [RuleDto],
-    description: 'Lista de reglas a insertar/actualizar'
+    description: 'Lista de rules a insertar/actualizar'
   })
   @IsArray() @ValidateNested({ each: true }) @Type(() => RuleDto) 
   rules: RuleDto[];
@@ -99,7 +99,7 @@ export class RuleSetResponseDto {
   @ApiProperty({ example: 'uuid', description: 'ID del RuleSet' })
   id: string;
 
-  @ApiProperty({ example: 'RIE-RD Baseline 2025-08', description: 'Nombre del RuleSet' })
+  @ApiProperty({ example: 'RIE-RD Baseline 2025-08', description: 'name del RuleSet' })
   name: string;
 
   @ApiProperty({ example: 'Semilla basada en RIE RD', description: 'Descripción' })
@@ -118,7 +118,7 @@ export class RuleSetResponseDto {
   @ApiProperty({ example: '2025-12-31T23:59:59Z', description: 'Fecha de vigencia hasta' })
   effectiveTo?: string;
 
-  @ApiProperty({ example: 15, description: 'Número de reglas en el conjunto' })
+  @ApiProperty({ example: 15, description: 'Número de rules en el conjunto' })
   rulesCount: number;
 
   @ApiProperty({ example: '2025-08-21T18:00:00Z', description: 'Fecha de creación' })
@@ -128,18 +128,18 @@ export class RuleSetResponseDto {
   updatedAt: string;
 }
 
-// DTO para respuesta de RuleSet con reglas
+// DTO para respuesta de RuleSet con rules
 export class RuleSetDetailResponseDto extends RuleSetResponseDto {
-  @ApiProperty({ type: [RuleDto], description: 'Lista de reglas del conjunto' })
+  @ApiProperty({ type: [RuleDto], description: 'Lista de rules del conjunto' })
   rules: RuleDto[];
 }
 
 // DTO para diff entre RuleSets
 export class RuleSetDiffResponseDto {
-  @ApiProperty({ type: [RuleDto], description: 'Reglas agregadas' })
+  @ApiProperty({ type: [RuleDto], description: 'rules agregadas' })
   added: RuleDto[];
 
-  @ApiProperty({ type: [RuleDto], description: 'Reglas eliminadas' })
+  @ApiProperty({ type: [RuleDto], description: 'rules eliminadas' })
   removed: RuleDto[];
 
   @ApiProperty({ 
@@ -152,7 +152,7 @@ export class RuleSetDiffResponseDto {
         after: { type: 'object' }
       }
     },
-    description: 'Reglas modificadas'
+    description: 'rules modificadas'
   })
   changed: Array<{
     code: string;
@@ -166,7 +166,7 @@ export class RuleSetExportDto {
   @ApiProperty({ description: 'Metadatos del RuleSet' })
   ruleSet: RuleSetResponseDto;
 
-  @ApiProperty({ type: [RuleDto], description: 'Reglas del conjunto' })
+  @ApiProperty({ type: [RuleDto], description: 'rules del conjunto' })
   rules: RuleDto[];
 }
 
@@ -174,7 +174,7 @@ export class RuleSetExportDto {
 export class ImportRuleSetDto {
   @ApiProperty({ 
     example: 'RIE-RD Imported 2025-08', 
-    description: 'Nombre del RuleSet a importar'
+    description: 'name del RuleSet a importar'
   })
   @IsString() @IsNotEmpty() @MaxLength(200) 
   name: string;
@@ -189,7 +189,7 @@ export class ImportRuleSetDto {
 
   @ApiProperty({ 
     type: [RuleDto],
-    description: 'Reglas a importar'
+    description: 'rules a importar'
   })
   @IsArray() @ValidateNested({ each: true }) @Type(() => RuleDto) 
   rules: RuleDto[];
@@ -201,3 +201,4 @@ export class ImportRuleSetDto {
   @IsString() @IsNotEmpty() @MaxLength(100) 
   actor: string;
 }
+

@@ -1,4 +1,4 @@
-import {
+﻿import {
   Injectable,
   ConflictException,
   NotFoundException,
@@ -43,7 +43,7 @@ export class UsersService {
   async findById(id: string): Promise<User> {
     const user = await this.usersRepository.findOne({ where: { id } });
     if (!user) {
-      throw new NotFoundException('Usuario no encontrado');
+      throw new NotFoundException('user no encontrado');
     }
     user.setHashService(this.hashService);
     return user;
@@ -70,7 +70,7 @@ export class UsersService {
   ): Promise<{ message: string }> {
     const user = await this.findByEmail(email);
     if (!user) {
-      throw new NotFoundException('Usuario no encontrado');
+      throw new NotFoundException('user no encontrado');
     }
 
     const hashedPassword = await user.hashedPassword(newPassword);
@@ -80,7 +80,7 @@ export class UsersService {
   }
 
   /**
-   * Actualiza la contraseña de un usuario con migración automática a Argon2id
+   * Actualiza la contraseña de un user con migración automática a Argon2id
    */
   async updatePasswordWithMigration(
     user: User,
@@ -91,3 +91,4 @@ export class UsersService {
     return this.usersRepository.save(user);
   }
 }
+

@@ -1,4 +1,4 @@
-import { Test, TestingModule } from '@nestjs/testing';
+﻿import { Test, TestingModule } from '@nestjs/testing';
 import { HashService } from '../hash.service';
 import * as bcrypt from 'bcryptjs';
 
@@ -69,7 +69,7 @@ describe('HashService Integration Tests', () => {
         { email: 'legacy3@test.com', password: 'LegacyPass3!' },
       ];
 
-      // Simular usuarios con hashes de bcrypt
+      // Simular users con hashes de bcrypt
       const legacyUsers = await Promise.all(
         users.map(async (user) => ({
           ...user,
@@ -210,3 +210,4 @@ describe('HashService Integration Tests', () => {
     });
   });
 });
+

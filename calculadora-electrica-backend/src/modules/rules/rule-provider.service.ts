@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+﻿import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { RulesService } from './rules.service';
 import { RulesAdminService } from '../rules-admin/services/rules-admin.service';
@@ -56,7 +56,7 @@ export class RuleProviderService {
           ruleValue = rule.numericValue;
         }
       } catch (error) {
-        this.logger.warn(`Error obteniendo regla ${code} del RuleSet ${opts.ruleSetId}:`, error.message);
+        this.logger.warn(`Error obteniendo rule ${code} del RuleSet ${opts.ruleSetId}:`, error.message);
       }
     }
 
@@ -69,7 +69,7 @@ export class RuleProviderService {
           ruleValue = rule.numericValue;
         }
       } catch (error) {
-        this.logger.warn(`Error obteniendo regla ${code} para fecha ${opts.effectiveDate}:`, error.message);
+        this.logger.warn(`Error obteniendo rule ${code} para fecha ${opts.effectiveDate}:`, error.message);
       }
     }
 
@@ -92,18 +92,18 @@ export class RuleProviderService {
 
     // Use fallback if provided
     if (opts?.fallback !== undefined) {
-      const warning = `Regla ${code} usa valor por defecto (${opts.fallback}). TODO validar con RIE RD.`;
+      const warning = `rule ${code} usa value por defecto (${opts.fallback}). TODO validar con RIE RD.`;
       opts.warnings.push(warning);
       this.logger.warn(warning);
       return opts.fallback;
     }
 
     // Throw error if no fallback
-    throw new Error(`Regla ${code} no encontrada y no se proporcionó valor por defecto`);
+    throw new Error(`rule ${code} no encontrada y no se proporcionó value por defecto`);
   }
 
   /**
-   * Obtiene todas las reglas de un RuleSet específico
+   * Obtiene todas las rules de un RuleSet específico
    */
   async getRulesFromRuleSet(ruleSetId: string): Promise<Map<string, number>> {
     try {
@@ -116,13 +116,13 @@ export class RuleProviderService {
       
       return rulesMap;
     } catch (error) {
-      this.logger.error(`Error obteniendo reglas del RuleSet ${ruleSetId}:`, error);
+      this.logger.error(`Error obteniendo rules del RuleSet ${ruleSetId}:`, error);
       throw error;
     }
   }
 
   /**
-   * Obtiene todas las reglas activas para una fecha específica
+   * Obtiene todas las rules activas para una fecha específica
    */
   async getActiveRules(effectiveDate?: string): Promise<Map<string, number>> {
     try {
@@ -135,7 +135,7 @@ export class RuleProviderService {
       
       return rulesMap;
     } catch (error) {
-      this.logger.error(`Error obteniendo reglas activas para fecha ${effectiveDate}:`, error);
+      this.logger.error(`Error obteniendo rules activas para fecha ${effectiveDate}:`, error);
       throw error;
     }
   }
@@ -158,3 +158,4 @@ export class RuleProviderService {
     return this.cache.size;
   }
 }
+

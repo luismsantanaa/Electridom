@@ -1,4 +1,4 @@
-import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
+﻿import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { createHmac, randomBytes } from 'crypto';
 import { SessionRepository } from '../repositories/session.repository';
@@ -90,7 +90,7 @@ export class SessionService {
   }
 
   /**
-   * Crea una nueva sesión para un usuario
+   * Crea una nueva sesión para un user
    */
   async createSession(
     user: User,
@@ -201,7 +201,7 @@ export class SessionService {
   }
 
   /**
-   * Revoca todas las sesiones de un usuario
+   * Revoca todas las sessions de un user
    */
   async revokeAllUserSessions(userId: string): Promise<void> {
     await this.sessionRepository.revokeByUserId(userId);
@@ -252,18 +252,18 @@ export class SessionService {
   }
 
   /**
-   * Obtiene todas las sesiones activas de un usuario
+   * Obtiene todas las sessions activas de un user
    */
   async getUserSessions(userId: string): Promise<Session[]> {
     return this.sessionRepository.findActiveByUserId(userId);
   }
 
   /**
-   * Limpia sesiones expiradas
+   * Limpia sessions expiradas
    */
   async cleanupExpiredSessions(): Promise<number> {
     const deletedCount = await this.sessionRepository.cleanupExpiredSessions();
-    this.logger.log(`Limpiadas ${deletedCount} sesiones expiradas`);
+    this.logger.log(`Limpiadas ${deletedCount} sessions expiradas`);
     return deletedCount;
   }
 
@@ -296,3 +296,4 @@ export class SessionService {
     }
   }
 }
+

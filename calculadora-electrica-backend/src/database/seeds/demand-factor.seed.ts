@@ -1,4 +1,4 @@
-import { DataSource } from 'typeorm';
+﻿import { DataSource } from 'typeorm';
 import { DemandFactor } from '../../modules/calculos/entities/demand-factor.entity';
 
 export const demandFactorSeed = async (
@@ -62,13 +62,13 @@ export const demandFactorSeed = async (
       active: true,
     },
 
-    // Cargas especiales
+    // loads especiales
     {
       category: 'especiales',
       rangeMin: 0,
       rangeMax: 999999,
       factor: 1.0,
-      notes: 'TODO_RIE: Factor base para cargas especiales',
+      notes: 'TODO_RIE: Factor base para loads especiales',
       usrCreate: 'SEED',
       usrUpdate: 'SEED',
       active: true,
@@ -85,3 +85,4 @@ export const demandFactorSeed = async (
     `✅ Factores de demanda cargados: ${demandFactors.length} registros`,
   );
 };
+

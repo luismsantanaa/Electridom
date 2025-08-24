@@ -1,4 +1,4 @@
-import { Controller, Post, Body, HttpStatus, HttpCode } from '@nestjs/common';
+﻿import { Controller, Post, Body, HttpStatus, HttpCode } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
 import { CalcEngineService } from '../services/calc-engine.service';
 import { CalcRoomsRequestDto } from '../dtos/calc-rooms-request.dto';
@@ -12,12 +12,12 @@ export class CalcRoomsController {
   @Post('rooms/preview')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
-    summary: 'Calcular cargas por ambiente',
-    description: 'Calcula las cargas eléctricas por ambiente basado en superficies y consumos definidos',
+    summary: 'Calcular loads por environment',
+    description: 'Calcula las loads eléctricas por environment basado en surfaces y consumptions definidos',
   })
   @ApiBody({
     type: CalcRoomsRequestDto,
-    description: 'Datos de superficies y consumos para el cálculo',
+    description: 'Datos de surfaces y consumptions para el cálculo',
     examples: {
       ejemplo1: {
         summary: 'Ejemplo de cálculo residencial',
@@ -28,45 +28,45 @@ export class CalcRoomsController {
             phases: 1,
             frequency: 60
           },
-          superficies: [
-            { nombre: "Sala", area_m2: 18 },
-            { nombre: "Cocina", area_m2: 12 },
-            { nombre: "Habitación 1", area_m2: 12 },
-            { nombre: "Baño", area_m2: 5 }
+          surfaces: [
+            { name: "Sala", area_m2: 18 },
+            { name: "Cocina", area_m2: 12 },
+            { name: "Habitación 1", area_m2: 12 },
+            { name: "Baño", area_m2: 5 }
           ],
-          consumos: [
+          consumptions: [
             {
-              nombre: "Nevera",
-              ambiente: "Cocina",
-              potencia_w: 200,
-              tipo: "electrodomestico",
+              name: "Nevera",
+              environment: "Cocina",
+              power_w: 200,
+              type: "electrodomestico",
               fp: 0.95
             },
             {
-              nombre: "Microondas",
-              ambiente: "Cocina",
-              potencia_w: 1200,
-              tipo: "electrodomestico",
+              name: "Microondas",
+              environment: "Cocina",
+              power_w: 1200,
+              type: "electrodomestico",
               fp: 0.95
             },
             {
-              nombre: "TV",
-              ambiente: "Sala",
-              potencia_w: 140,
-              tipo: "electrodomestico"
+              name: "TV",
+              environment: "Sala",
+              power_w: 140,
+              type: "electrodomestico"
             },
             {
-              nombre: "A/C 12k BTU",
-              ambiente: "Habitación 1",
-              potencia_w: 1100,
-              tipo: "climatizacion",
+              name: "A/C 12k BTU",
+              environment: "Habitación 1",
+              power_w: 1100,
+              type: "climatizacion",
               fp: 0.9
             },
             {
-              nombre: "Lavadora",
-              ambiente: "Baño",
-              potencia_w: 500,
-              tipo: "electrodomestico",
+              name: "Lavadora",
+              environment: "Baño",
+              power_w: 500,
+              type: "electrodomestico",
               fp: 0.9
             }
           ]
@@ -91,3 +91,4 @@ export class CalcRoomsController {
     return this.calcEngineService.calcByRoom(request);
   }
 }
+

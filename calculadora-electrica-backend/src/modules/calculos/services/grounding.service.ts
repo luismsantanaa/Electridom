@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+﻿import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { GroundingRules } from '../entities/grounding-rules.entity';
@@ -24,7 +24,7 @@ export class GroundingService {
   ) {}
 
   /**
-   * Dimensionar conductores de protección y sistema de tierra
+   * Dimensionar conductors de protección y system de tierra
    */
   async size(request: CalcGroundingRequestDto): Promise<CalcGroundingResponseDto> {
     const startTime = Date.now();
@@ -32,30 +32,30 @@ export class GroundingService {
     try {
       this.logger.log('Iniciando dimensionamiento de puesta a tierra');
 
-      // Obtener reglas de puesta a tierra
+      // Obtener rules de puesta a tierra
       const groundingRules = await this.getGroundingRules();
 
       // Dimensionar conductor de protección (EGC)
       const conductorProteccion = this.dimensionarConductorProteccion(
-        request.parametros.main_breaker_amp,
+        request.parameters.main_breaker_amp,
         groundingRules,
       );
 
       // Dimensionar conductor de tierra (GEC)
       const conductorTierra = this.dimensionarConductorTierra(
-        request.parametros.main_breaker_amp,
+        request.parameters.main_breaker_amp,
         groundingRules,
       );
 
-      // Configurar sistema de tierra
+      // Configurar system de tierra
       const sistemaTierra = this.configurarSistemaTierra(
-        request.parametros,
-        request.sistema,
+        request.parameters,
+        request.system,
       );
 
       // Generar resumen
       const resumen = this.generarResumen(
-        request.parametros,
+        request.parameters,
         conductorProteccion,
         conductorTierra,
         sistemaTierra,
@@ -63,7 +63,7 @@ export class GroundingService {
 
       // Generar observaciones
       const observacionesGenerales = this.generarObservaciones(
-        request.parametros,
+        request.parameters,
         conductorProteccion,
         conductorTierra,
         sistemaTierra,
@@ -95,7 +95,7 @@ export class GroundingService {
   }
 
   /**
-   * Obtener reglas de puesta a tierra desde la base de datos
+   * Obtener rules de puesta a tierra desde la base de datos
    */
   private async getGroundingRules(): Promise<GroundingRules[]> {
     return this.groundingRulesRepository.find({
@@ -111,20 +111,20 @@ export class GroundingService {
     mainBreakerAmp: number,
     groundingRules: GroundingRules[],
   ): ConductorProteccionDto {
-    // Buscar la regla apropiada basada en el amperaje del breaker
-    const regla = this.encontrarReglaApropiada(mainBreakerAmp, groundingRules);
+    // Buscar la rule apropiada basada en el amperaje del breaker
+    const rule = this.encontrarReglaApropiada(mainBreakerAmp, groundingRules);
 
-    const seccionMm2 = regla?.egcMm2 || this.calcularSeccionMinima(mainBreakerAmp);
+    const seccionMm2 = rule?.egcMm2 || this.calcularSeccionMinima(mainBreakerAmp);
     const calibreAwg = this.convertirMm2ToAwg(seccionMm2);
 
     return {
-      tipo: 'EGC',
-      seccion_mm2: seccionMm2,
+      type: 'EGC',
+      section_mm2: seccionMm2,
       calibre_awg: calibreAwg,
       material: 'Cu',
       longitud_minima_m: this.calcularLongitudMinima(mainBreakerAmp),
       observaciones: [
-        `Conductor de protección para breaker de ${mainBreakerAmp}A`,
+        `conductor de protección para breaker de ${mainBreakerAmp}A`,
         `Sección mínima requerida: ${seccionMm2}mm² (${calibreAwg})`,
       ],
     };
@@ -137,42 +137,42 @@ export class GroundingService {
     mainBreakerAmp: number,
     groundingRules: GroundingRules[],
   ): ConductorProteccionDto {
-    // Buscar la regla apropiada basada en el amperaje del breaker
-    const regla = this.encontrarReglaApropiada(mainBreakerAmp, groundingRules);
+    // Buscar la rule apropiada basada en el amperaje del breaker
+    const rule = this.encontrarReglaApropiada(mainBreakerAmp, groundingRules);
 
-    const seccionMm2 = regla?.gecMm2 || this.calcularSeccionMinima(mainBreakerAmp);
+    const seccionMm2 = rule?.gecMm2 || this.calcularSeccionMinima(mainBreakerAmp);
     const calibreAwg = this.convertirMm2ToAwg(seccionMm2);
 
     return {
-      tipo: 'GEC',
-      seccion_mm2: seccionMm2,
+      type: 'GEC',
+      section_mm2: seccionMm2,
       calibre_awg: calibreAwg,
       material: 'Cu',
       longitud_minima_m: this.calcularLongitudMinima(mainBreakerAmp),
       observaciones: [
-        `Conductor de tierra para breaker de ${mainBreakerAmp}A`,
+        `conductor de tierra para breaker de ${mainBreakerAmp}A`,
         `Sección mínima requerida: ${seccionMm2}mm² (${calibreAwg})`,
       ],
     };
   }
 
   /**
-   * Configurar sistema de tierra
+   * Configurar system de tierra
    */
   private configurarSistemaTierra(
-    parametros: any,
-    sistema: any,
+    parameters: any,
+    system: any,
   ): SistemaTierraDto {
-    const tipoSistema = parametros.tipo_sistema_tierra || 'TN-S';
-    const tipoInstalacion = parametros.tipo_instalacion || 'residencial';
+    const tipoSistema = parameters.tipo_sistema_tierra || 'TN-S';
+    const tipoInstalacion = parameters.tipo_instalacion || 'residencial';
 
-    // Determinar resistencia máxima según tipo de instalación
+    // Determinar resistencia máxima según type de instalación
     const resistenciaMaxima = this.determinarResistenciaMaxima(tipoInstalacion);
 
-    // Determinar número de electrodos según tipo de sistema
+    // Determinar número de electrodos según type de system
     const numeroElectrodos = this.determinarNumeroElectrodos(tipoSistema, tipoInstalacion);
 
-    // Determinar tipo de electrodo
+    // Determinar type de electrodo
     const tipoElectrodo = this.determinarTipoElectrodo(tipoInstalacion);
 
     // Calcular longitudes y separaciones
@@ -187,7 +187,7 @@ export class GroundingService {
       longitud_electrodo_m: longitudElectrodo,
       separacion_electrodos_m: separacionElectrodos,
       observaciones: [
-        `Sistema ${tipoSistema} para instalación ${tipoInstalacion}`,
+        `system ${tipoSistema} para instalación ${tipoInstalacion}`,
         `Resistencia máxima: ${resistenciaMaxima}Ω`,
         `${numeroElectrodos} electrodo(s) de ${tipoElectrodo}`,
       ],
@@ -195,21 +195,21 @@ export class GroundingService {
   }
 
   /**
-   * Encontrar regla apropiada basada en amperaje
+   * Encontrar rule apropiada basada en amperaje
    */
   private encontrarReglaApropiada(
     mainBreakerAmp: number,
     groundingRules: GroundingRules[],
   ): GroundingRules | null {
-    // Buscar la regla que coincida exactamente o la más cercana mayor
+    // Buscar la rule que coincida exactamente o la más cercana mayor
     const reglaExacta = groundingRules.find(r => r.mainBreakerAmp === mainBreakerAmp);
     if (reglaExacta) return reglaExacta;
 
-    // Buscar la regla con amperaje mayor más cercano
+    // Buscar la rule con amperaje mayor más cercano
     const reglaMayor = groundingRules.find(r => r.mainBreakerAmp > mainBreakerAmp);
     if (reglaMayor) return reglaMayor;
 
-    // Si no hay regla mayor, usar la más grande disponible
+    // Si no hay rule mayor, usar la más grande disponible
     return groundingRules.length > 0 ? groundingRules[groundingRules.length - 1] : null;
   }
 
@@ -217,7 +217,7 @@ export class GroundingService {
    * Calcular sección mínima basada en amperaje
    */
   private calcularSeccionMinima(mainBreakerAmp: number): number {
-    // Reglas básicas de dimensionamiento
+    // rules básicas de dimensionamiento
     if (mainBreakerAmp <= 100) return 10;
     if (mainBreakerAmp <= 200) return 16;
     if (mainBreakerAmp <= 400) return 25;
@@ -268,7 +268,7 @@ export class GroundingService {
   }
 
   /**
-   * Determinar resistencia máxima según tipo de instalación
+   * Determinar resistencia máxima según type de instalación
    */
   private determinarResistenciaMaxima(tipoInstalacion: string): number {
     switch (tipoInstalacion) {
@@ -284,7 +284,7 @@ export class GroundingService {
   }
 
   /**
-   * Determinar número de electrodos según tipo de sistema
+   * Determinar número de electrodos según type de system
    */
   private determinarNumeroElectrodos(tipoSistema: string, tipoInstalacion: string): number {
     if (tipoSistema === 'TT' || tipoSistema === 'IT') {
@@ -294,7 +294,7 @@ export class GroundingService {
   }
 
   /**
-   * Determinar tipo de electrodo
+   * Determinar type de electrodo
    */
   private determinarTipoElectrodo(tipoInstalacion: string): string {
     switch (tipoInstalacion) {
@@ -337,20 +337,20 @@ export class GroundingService {
    * Generar resumen
    */
   private generarResumen(
-    parametros: any,
+    parameters: any,
     conductorProteccion: ConductorProteccionDto,
     conductorTierra: ConductorProteccionDto,
     sistemaTierra: SistemaTierraDto,
   ): ResumenGroundingDto {
     const estado = this.determinarEstado(sistemaTierra.resistencia_maxima_ohm);
-    const cumplimiento = this.determinarCumplimiento(parametros.tipo_instalacion);
+    const cumplimiento = this.determinarCumplimiento(parameters.tipo_instalacion);
 
     return {
-      main_breaker_amp: parametros.main_breaker_amp,
-      tipo_instalacion: parametros.tipo_instalacion || 'residencial',
-      tipo_sistema_tierra: parametros.tipo_sistema_tierra || 'TN-S',
-      egc_mm2: conductorProteccion.seccion_mm2,
-      gec_mm2: conductorTierra.seccion_mm2,
+      main_breaker_amp: parameters.main_breaker_amp,
+      tipo_instalacion: parameters.tipo_instalacion || 'residencial',
+      tipo_sistema_tierra: parameters.tipo_sistema_tierra || 'TN-S',
+      egc_mm2: conductorProteccion.section_mm2,
+      gec_mm2: conductorTierra.section_mm2,
       resistencia_maxima_ohm: sistemaTierra.resistencia_maxima_ohm,
       estado,
       cumplimiento_normas: cumplimiento,
@@ -358,7 +358,7 @@ export class GroundingService {
   }
 
   /**
-   * Determinar estado del sistema
+   * Determinar estado del system
    */
   private determinarEstado(resistenciaMaxima: number): string {
     if (resistenciaMaxima <= 1) return 'CRÍTICO';
@@ -368,7 +368,7 @@ export class GroundingService {
   }
 
   /**
-   * Determinar cumplimiento de normas
+   * Determinar cumplimiento de norms
    */
   private determinarCumplimiento(tipoInstalacion: string): string {
     switch (tipoInstalacion) {
@@ -387,7 +387,7 @@ export class GroundingService {
    * Generar observaciones generales
    */
   private generarObservaciones(
-    parametros: any,
+    parameters: any,
     conductorProteccion: ConductorProteccionDto,
     conductorTierra: ConductorProteccionDto,
     sistemaTierra: SistemaTierraDto,
@@ -395,16 +395,16 @@ export class GroundingService {
     const observaciones: string[] = [];
 
     observaciones.push(
-      `Sistema de puesta a tierra para breaker de ${parametros.main_breaker_amp}A`,
+      `system de puesta a tierra para breaker de ${parameters.main_breaker_amp}A`,
     );
     observaciones.push(
-      `EGC: ${conductorProteccion.seccion_mm2}mm² (${conductorProteccion.calibre_awg})`,
+      `EGC: ${conductorProteccion.section_mm2}mm² (${conductorProteccion.calibre_awg})`,
     );
     observaciones.push(
-      `GEC: ${conductorTierra.seccion_mm2}mm² (${conductorTierra.calibre_awg})`,
+      `GEC: ${conductorTierra.section_mm2}mm² (${conductorTierra.calibre_awg})`,
     );
     observaciones.push(
-      `Sistema ${sistemaTierra.tipo_sistema} con ${sistemaTierra.numero_electrodos} electrodo(s)`,
+      `system ${sistemaTierra.tipo_sistema} con ${sistemaTierra.numero_electrodos} electrodo(s)`,
     );
     observaciones.push(
       `Resistencia máxima: ${sistemaTierra.resistencia_maxima_ohm}Ω`,
@@ -431,3 +431,4 @@ export class GroundingService {
     );
   }
 }
+

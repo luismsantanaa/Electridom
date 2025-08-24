@@ -1,4 +1,4 @@
-import {
+﻿import {
   IsNumber,
   IsOptional,
   IsString,
@@ -9,45 +9,45 @@ import { Type } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class SistemaElectricoGroundingDto {
-  @ApiProperty({ description: 'Tensión del sistema en voltios' })
+  @ApiProperty({ description: 'Tensión del system en voltios' })
   @IsNumber()
   @Min(1)
-  tension_v: number;
+  voltage_v: number;
 
   @ApiProperty({ description: 'Número de fases (1 o 3)' })
   @IsNumber()
   phases: number;
 
-  @ApiProperty({ description: 'Corriente total del sistema en amperios' })
+  @ApiProperty({ description: 'Corriente total del system en amperios' })
   @IsNumber()
   @Min(0)
   corriente_total_a: number;
 
-  @ApiProperty({ description: 'Carga total del sistema en VA' })
+  @ApiProperty({ description: 'load total del system en VA' })
   @IsNumber()
   @Min(0)
   carga_total_va: number;
 }
 
 export class AlimentadorGroundingDto {
-  @ApiProperty({ description: 'Corriente del alimentador en amperios' })
+  @ApiProperty({ description: 'Corriente del feeder en amperios' })
   @IsNumber()
   @Min(0)
-  corriente_a: number;
+  current_a: number;
 
-  @ApiProperty({ description: 'Sección del alimentador en mm²' })
+  @ApiProperty({ description: 'Sección del feeder en mm²' })
   @IsNumber()
   @Min(0)
-  seccion_mm2: number;
+  section_mm2: number;
 
-  @ApiProperty({ description: 'Material del alimentador' })
+  @ApiProperty({ description: 'material del feeder' })
   @IsString()
   material: string;
 
-  @ApiProperty({ description: 'Longitud del alimentador en metros' })
+  @ApiProperty({ description: 'Longitud del feeder en metros' })
   @IsNumber()
   @Min(0)
-  longitud_m: number;
+  length_m: number;
 }
 
 export class ParametrosGroundingDto {
@@ -60,7 +60,7 @@ export class ParametrosGroundingDto {
   main_breaker_amp: number;
 
   @ApiPropertyOptional({
-    description: 'Tipo de instalación (residencial, comercial, industrial)',
+    description: 'type de instalación (residencial, comercial, industrial)',
     default: 'residencial',
   })
   @IsOptional()
@@ -68,7 +68,7 @@ export class ParametrosGroundingDto {
   tipo_instalacion?: string;
 
   @ApiPropertyOptional({
-    description: 'Tipo de sistema de tierra (TN-S, TN-C-S, TT, IT)',
+    description: 'type de system de tierra (TN-S, TN-C-S, TT, IT)',
     default: 'TN-S',
   })
   @IsOptional()
@@ -76,7 +76,7 @@ export class ParametrosGroundingDto {
   tipo_sistema_tierra?: string;
 
   @ApiPropertyOptional({
-    description: 'Resistividad del suelo en Ohm·m',
+    description: 'resistivity del suelo en Ohm·m',
     default: 100,
   })
   @IsOptional()
@@ -88,19 +88,19 @@ export class ParametrosGroundingDto {
 export class CalcGroundingRequestDto {
   @ApiProperty({
     type: SistemaElectricoGroundingDto,
-    description: 'Configuración del sistema eléctrico',
+    description: 'Configuración del system eléctrico',
   })
   @ValidateNested()
   @Type(() => SistemaElectricoGroundingDto)
-  sistema: SistemaElectricoGroundingDto;
+  system: SistemaElectricoGroundingDto;
 
   @ApiProperty({
     type: AlimentadorGroundingDto,
-    description: 'Configuración del alimentador principal',
+    description: 'Configuración del feeder principal',
   })
   @ValidateNested()
   @Type(() => AlimentadorGroundingDto)
-  alimentador: AlimentadorGroundingDto;
+  feeder: AlimentadorGroundingDto;
 
   @ApiProperty({
     type: ParametrosGroundingDto,
@@ -108,9 +108,10 @@ export class CalcGroundingRequestDto {
   })
   @ValidateNested()
   @Type(() => ParametrosGroundingDto)
-  parametros: ParametrosGroundingDto;
+  parameters: ParametrosGroundingDto;
 
   @ApiPropertyOptional({ description: 'Observaciones adicionales' })
   @IsOptional()
   observaciones?: string[];
 }
+

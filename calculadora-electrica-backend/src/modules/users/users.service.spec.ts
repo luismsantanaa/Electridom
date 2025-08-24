@@ -1,4 +1,4 @@
-import { Test, TestingModule } from '@nestjs/testing';
+﻿import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { UsersService } from './users.service';
 import { User, UserRole, UserStatus } from './entities/user.entity';
@@ -15,7 +15,7 @@ describe('UsersService', () => {
     username: 'testuser',
     email: 'test@example.com',
     password: 'hashedpassword',
-    nombre: 'Test',
+    name: 'Test',
     apellido: 'User',
     role: UserRole.CLIENTE,
     estado: UserStatus.ACTIVO,
@@ -74,7 +74,7 @@ describe('UsersService', () => {
   });
 
   describe('create', () => {
-    it('debería crear un usuario nuevo', async () => {
+    it('debería crear un user nuevo', async () => {
       repository.findOne.mockResolvedValue(null);
       repository.create.mockReturnValue(userMock);
       repository.save.mockResolvedValue(userMock);
@@ -97,7 +97,7 @@ describe('UsersService', () => {
   });
 
   describe('findByEmail', () => {
-    it('debería retornar un usuario por email', async () => {
+    it('debería retornar un user por email', async () => {
       repository.findOne.mockResolvedValue(userMock);
       const result = await service.findByEmail(userMock.email);
       expect(result).toEqual(userMock);
@@ -113,7 +113,7 @@ describe('UsersService', () => {
   });
 
   describe('findById', () => {
-    it('debería retornar un usuario por id', async () => {
+    it('debería retornar un user por id', async () => {
       repository.findOne.mockResolvedValue(userMock);
       const result = await service.findById(userMock.id);
       expect(result).toEqual(userMock);
@@ -123,32 +123,32 @@ describe('UsersService', () => {
       });
     });
 
-    it('debería lanzar NotFoundException si no encuentra el usuario', async () => {
+    it('debería lanzar NotFoundException si no encuentra el user', async () => {
       repository.findOne.mockResolvedValue(null);
       await expect(service.findById('2')).rejects.toThrow(NotFoundException);
     });
   });
 
   describe('update', () => {
-    it('debería actualizar un usuario', async () => {
+    it('debería actualizar un user', async () => {
       repository.findOne.mockResolvedValue(userMock);
       repository.update.mockResolvedValue({ affected: 1 } as UpdateResult);
       const updatedUser = new User();
-      Object.assign(updatedUser, { ...userMock, nombre: 'NuevoNombre' });
+      Object.assign(updatedUser, { ...userMock, name: 'NuevoNombre' });
       jest.spyOn(service, 'findById').mockResolvedValue(updatedUser);
       const result = await service.update(userMock.id, {
-        nombre: 'NuevoNombre',
+        name: 'NuevoNombre',
       });
       expect(result).toEqual(updatedUser);
       // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(repository.update).toHaveBeenCalledWith(userMock.id, {
-        nombre: 'NuevoNombre',
+        name: 'NuevoNombre',
       });
     });
   });
 
   describe('remove', () => {
-    it('debería eliminar un usuario', async () => {
+    it('debería eliminar un user', async () => {
       repository.findOne.mockResolvedValue(userMock);
       repository.remove.mockResolvedValue(userMock);
       await expect(service.remove(userMock.id)).resolves.toBeUndefined();
@@ -158,7 +158,7 @@ describe('UsersService', () => {
   });
 
   describe('findAll', () => {
-    it('debería retornar todos los usuarios', async () => {
+    it('debería retornar todos los users', async () => {
       repository.find.mockResolvedValue([userMock]);
       const result = await service.findAll();
       expect(result).toEqual([userMock]);
@@ -167,3 +167,4 @@ describe('UsersService', () => {
     });
   });
 });
+

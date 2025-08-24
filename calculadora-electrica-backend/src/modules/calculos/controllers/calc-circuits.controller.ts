@@ -1,4 +1,4 @@
-import { Controller, Post, Body, HttpStatus, HttpCode } from '@nestjs/common';
+﻿import { Controller, Post, Body, HttpStatus, HttpCode } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
 import { CircuitService } from '../services/circuit.service';
 import { CalcCircuitsRequestDto } from '../dtos/calc-circuits-request.dto';
@@ -12,57 +12,57 @@ export class CalcCircuitsController {
   @Post('circuits/preview')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
-    summary: 'Agrupar cargas en circuitos ramales y seleccionar conductores',
+    summary: 'Agrupar loads en circuits ramales y seleccionar conductors',
     description:
-      'Agrupa las cargas diversificadas en circuitos ramales respetando el 80% de utilización, selecciona breakers y conductores apropiados conforme ampacity',
+      'Agrupa las loads diversificadas en circuits ramales respetando el 80% de utilización, selecciona breakers y conductors apropiados conforme ampacity',
   })
   @ApiBody({
     type: CalcCircuitsRequestDto,
-    description: 'Cargas diversificadas (típicamente salida de CE-02)',
+    description: 'loads diversificadas (típicamente salida de CE-02)',
     examples: {
       ejemplo1: {
-        summary: 'Ejemplo de agrupación de circuitos',
-        description: 'Agrupación de cargas residenciales en circuitos ramales',
+        summary: 'Ejemplo de agrupación de circuits',
+        description: 'Agrupación de loads residenciales en circuits ramales',
         value: {
           cargas_diversificadas: [
             {
-              categoria: 'lighting_general',
+              category: 'lighting_general',
               carga_diversificada_va: 1453.5,
-              factor_demanda: 1.0,
-              descripcion: 'Iluminación general de todos los ambientes',
-              ambiente: 'General',
+              demand_factor: 1.0,
+              description: 'Iluminación general de todos los environments',
+              environment: 'General',
             },
             {
-              categoria: 'tomas_generales',
+              category: 'tomas_generales',
               carga_diversificada_va: 800.0,
-              factor_demanda: 1.0,
-              descripcion: 'Tomacorrientes generales',
-              ambiente: 'General',
+              demand_factor: 1.0,
+              description: 'Tomacorrientes generales',
+              environment: 'General',
             },
             {
-              categoria: 'electrodomesticos',
+              category: 'electrodomesticos',
               carga_diversificada_va: 1252.65,
-              factor_demanda: 0.85,
-              descripcion: 'Nevera, microondas, lavadora, TV',
-              ambiente: 'Cocina/Lavandería',
+              demand_factor: 0.85,
+              description: 'Nevera, microondas, lavadora, TV',
+              environment: 'Cocina/Lavandería',
             },
             {
-              categoria: 'climatizacion',
+              category: 'climatizacion',
               carga_diversificada_va: 1222.2,
-              factor_demanda: 1.0,
-              descripcion: 'Aires acondicionados',
-              ambiente: 'Habitaciones',
+              demand_factor: 1.0,
+              description: 'Aires acondicionados',
+              environment: 'Habitaciones',
             },
           ],
-          sistema: {
-            tension_v: 120,
+          system: {
+            voltage_v: 120,
             phases: 1,
             system_type: 1,
             frequency: 60,
           },
           observaciones: [
-            'Cargas diversificadas desde CE-02',
-            'Sistema residencial monofásico',
+            'loads diversificadas desde CE-02',
+            'system residencial monofásico',
           ],
           configuraciones: {
             max_utilizacion_circuito: 0.8,
@@ -75,7 +75,7 @@ export class CalcCircuitsController {
   })
   @ApiResponse({
     status: 200,
-    description: 'Circuitos ramales generados exitosamente',
+    description: 'circuits ramales generados exitosamente',
     type: CalcCircuitsResponseDto,
   })
   @ApiResponse({
@@ -92,3 +92,4 @@ export class CalcCircuitsController {
     return this.circuitService.groupIntoCircuits(request);
   }
 }
+

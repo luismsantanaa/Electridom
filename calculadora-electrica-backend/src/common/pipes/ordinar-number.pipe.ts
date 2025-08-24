@@ -1,11 +1,11 @@
-import { BadRequestException, Injectable, PipeTransform } from '@nestjs/common';
+﻿import { BadRequestException, Injectable, PipeTransform } from '@nestjs/common';
 
 @Injectable()
 export class OrdinarNumberPipe implements PipeTransform {
   transform(value: number): string {
-    // Validar que el valor es un número
+    // Validar que el value es un número
     if (isNaN(value) || !Number.isInteger(Number(value))) {
-      throw new BadRequestException('El valor debe ser un número entero');
+      throw new BadRequestException('El value debe ser un número entero');
     }
 
     const number = Number(value);
@@ -19,3 +19,4 @@ export class OrdinarNumberPipe implements PipeTransform {
     return `${number}º`;
   }
 }
+

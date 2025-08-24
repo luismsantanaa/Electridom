@@ -1,4 +1,4 @@
-import {
+﻿import {
   IsArray,
   ArrayMinSize,
   IsString,
@@ -13,14 +13,14 @@ import {
 import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class SuperficieDto {
+export class SurfaceDto {
   @ApiProperty({
-    description: 'Nombre del ambiente',
+    description: 'name del environment',
     example: 'Sala',
   })
   @IsString()
   @IsNotEmpty()
-  ambiente: string;
+  environment: string;
 
   @ApiProperty({
     description: 'Área en metros cuadrados',
@@ -32,22 +32,22 @@ export class SuperficieDto {
   areaM2: number;
 }
 
-export class ConsumoDto {
+export class ConsumptionDto {
   @ApiProperty({
-    description: 'Nombre del artefacto',
+    description: 'name del artefacto',
     example: 'Televisor',
   })
   @IsString()
   @IsNotEmpty()
-  nombre: string;
+  name: string;
 
   @ApiProperty({
-    description: 'Ambiente donde se encuentra el artefacto',
+    description: 'environment donde se encuentra el artefacto',
     example: 'Sala',
   })
   @IsString()
   @IsNotEmpty()
-  ambiente: string;
+  environment: string;
 
   @ApiProperty({
     description: 'Potencia en watts',
@@ -84,7 +84,7 @@ export class OpcionesDto {
   tensionV?: number;
 
   @ApiProperty({
-    description: 'Sistema monofásico',
+    description: 'system monofásico',
     example: true,
     default: true,
     required: false,
@@ -103,7 +103,7 @@ export class OpcionesDto {
   ruleSetId?: string;
 
   @ApiProperty({
-    description: 'Fecha efectiva para resolver reglas activas (ISO 8601)',
+    description: 'Fecha efectiva para resolver rules activas (ISO 8601)',
     example: '2025-09-10T00:00:00Z',
     required: false,
   })
@@ -114,24 +114,24 @@ export class OpcionesDto {
 
 export class PreviewRequestDto {
   @ApiProperty({
-    description: 'Lista de superficies por ambiente',
-    type: [SuperficieDto],
+    description: 'Lista de surfaces por environment',
+    type: [SurfaceDto],
     minItems: 1,
   })
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => SuperficieDto)
+  @Type(() => SurfaceDto)
   @ArrayMinSize(1)
-  superficies: SuperficieDto[];
+  surfaces: SurfaceDto[];
 
   @ApiProperty({
-    description: 'Lista de consumos por artefacto',
-    type: [ConsumoDto],
+    description: 'Lista de consumptions por artefacto',
+    type: [ConsumptionDto],
   })
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => ConsumoDto)
-  consumos: ConsumoDto[];
+  @Type(() => ConsumptionDto)
+  consumptions: ConsumptionDto[];
 
   @ApiProperty({
     description: 'Opciones de cálculo',
@@ -143,3 +143,4 @@ export class PreviewRequestDto {
   @IsOptional()
   opciones?: OpcionesDto;
 }
+

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+﻿import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { NormRule } from './entities/norm-rule.entity';
@@ -11,7 +11,7 @@ export class RulesService {
   ) {}
 
   async findByCode(code: string): Promise<NormRule | null> {
-    // Buscar reglas sin RuleSet (legacy) primero
+    // Buscar rules sin RuleSet (legacy) primero
     const legacyRule = await this.normRuleRepository
       .createQueryBuilder('rule')
       .where('rule.code = :code', { code })
@@ -22,7 +22,7 @@ export class RulesService {
       return legacyRule;
     }
     
-    // Si no hay regla legacy, buscar en RuleSets activos
+    // Si no hay rule legacy, buscar en RuleSets activos
     const activeRule = await this.normRuleRepository
       .createQueryBuilder('rule')
       .leftJoin('rule.ruleSet', 'ruleSet')
@@ -56,3 +56,4 @@ export class RulesService {
     return this.normRuleRepository.count();
   }
 }
+

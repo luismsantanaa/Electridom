@@ -1,8 +1,8 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { TiposInstalacionesController } from './tipos-instalaciones.controller';
-import { TiposInstalacionesService } from './tipos-instalaciones.service';
-import { CreateTipoInstalacionDto } from './dtos/create-tipo-instalacion.dto';
-import { UpdateTipoInstalacionDto } from './dtos/update-tipo-instalacion.dto';
+﻿import { Test, TestingModule } from '@nestjs/testing';
+import { TiposInstalacionesController } from './tipos-installations.controller';
+import { TiposInstalacionesService } from './tipos-installations.service';
+import { CreateTipoInstalacionDto } from './dtos/create-type-installation.dto';
+import { UpdateTipoInstalacionDto } from './dtos/update-type-installation.dto';
 import { User, UserRole, UserStatus } from '../users/entities/user.entity';
 import { createMockUser } from '../users/__tests__/user.mock.helper';
 import { PaginateQuery } from 'nestjs-paginate';
@@ -41,19 +41,19 @@ describe('TiposInstalacionesController', () => {
   });
 
   describe('create', () => {
-    it('should create a new tipo instalacion', async () => {
+    it('should create a new type installation', async () => {
       const createDto: CreateTipoInstalacionDto = {
         id: '1',
-        nombre: 'Test Instalacion',
-        descripcion: 'Test Description',
+        name: 'Test installation',
+        description: 'Test Description',
       };
 
       const mockUser = createMockUser({ role: UserRole.ADMIN });
 
       const expectedResult = {
         id: '1',
-        nombre: 'Test Instalacion',
-        descripcion: 'Test Description',
+        name: 'Test installation',
+        description: 'Test Description',
         active: true,
         usrCreate: 'testuser',
         creationDate: expect.any(Date),
@@ -70,25 +70,25 @@ describe('TiposInstalacionesController', () => {
   });
 
   describe('findAll', () => {
-    it('should return all tipos instalacion', async () => {
+    it('should return all tipos installation', async () => {
       const expectedResult = [
         {
           id: '1',
-          nombre: 'Test Instalacion 1',
-          descripcion: 'Test Description 1',
+          name: 'Test installation 1',
+          description: 'Test Description 1',
           active: true,
         },
         {
           id: '2',
-          nombre: 'Test Instalacion 2',
-          descripcion: 'Test Description 2',
+          name: 'Test installation 2',
+          description: 'Test Description 2',
           active: true,
         },
       ];
 
       mockTiposInstalacionesService.findAll.mockResolvedValue(expectedResult);
 
-      const mockQuery: PaginateQuery = { page: 1, limit: 10, path: '/tipos-instalaciones' };
+      const mockQuery: PaginateQuery = { page: 1, limit: 10, path: '/tipos-installations' };
       const result = await controller.findAll(mockQuery);
 
       expect(service.findAll).toHaveBeenCalledWith(
@@ -100,12 +100,12 @@ describe('TiposInstalacionesController', () => {
   });
 
   describe('findOne', () => {
-    it('should return a tipo instalacion by id', async () => {
+    it('should return a type installation by id', async () => {
       const id = '1';
       const expectedResult = {
         id: '1',
-        nombre: 'Test Instalacion',
-        descripcion: 'Test Description',
+        name: 'Test installation',
+        description: 'Test Description',
         active: true,
       };
 
@@ -119,19 +119,19 @@ describe('TiposInstalacionesController', () => {
   });
 
   describe('update', () => {
-    it('should update a tipo instalacion', async () => {
+    it('should update a type installation', async () => {
       const id = '1';
       const updateDto: UpdateTipoInstalacionDto = {
-        nombre: 'Updated Instalacion',
-        descripcion: 'Updated Description',
+        name: 'Updated installation',
+        description: 'Updated Description',
       };
 
       const mockUser = createMockUser({ role: UserRole.ADMIN });
 
       const expectedResult = {
         id: '1',
-        nombre: 'Updated Instalacion',
-        descripcion: 'Updated Description',
+        name: 'Updated installation',
+        description: 'Updated Description',
         active: true,
         usrUpdate: 'testuser',
       };
@@ -150,7 +150,7 @@ describe('TiposInstalacionesController', () => {
   });
 
   describe('remove', () => {
-    it('should remove a tipo instalacion', async () => {
+    it('should remove a type installation', async () => {
       const id = '1';
       const mockUser = createMockUser({ role: UserRole.ADMIN });
 
@@ -162,3 +162,4 @@ describe('TiposInstalacionesController', () => {
     });
   });
 });
+

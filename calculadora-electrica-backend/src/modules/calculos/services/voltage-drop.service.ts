@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+﻿import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Resistivity } from '../entities/resistivity.entity';
@@ -11,7 +11,7 @@ import {
 import {
   CalcFeederResponseDto,
   CaidaTensionCircuitoDto,
-  AlimentadorDto,
+  FeederDto,
   ResumenCaidaTensionDto,
 } from '../dtos/calc-feeder-response.dto';
 
@@ -27,7 +27,7 @@ export class VoltageDropService {
   ) {}
 
   /**
-   * Seleccionar alimentador considerando caída de tensión
+   * Seleccionar feeder considerando caída de tensión
    */
   async selectFeeder(
     request: CalcFeederRequestDto,
@@ -36,41 +36,41 @@ export class VoltageDropService {
 
     try {
       this.logger.log(
-        'Iniciando selección de alimentador y análisis de caída de tensión',
+        'Iniciando selección de feeder y análisis de caída de tensión',
       );
 
       // Obtener parámetros normativos
       const [limiteRamal, limiteTotal] = await Promise.all([
-        this.getLimiteRamal(request.parametros.max_caida_ramal_pct),
-        this.getLimiteTotal(request.parametros.max_caida_total_pct),
+        this.getLimiteRamal(request.parameters.max_caida_ramal_pct),
+        this.getLimiteTotal(request.parameters.max_caida_total_pct),
       ]);
 
       // Obtener resistividades disponibles
       const resistividades = await this.getResistivities(
-        request.parametros.material_conductor || 'Cu',
+        request.parameters.material_conductor || 'Cu',
       );
 
-      // Analizar caída de tensión en circuitos ramales
+      // Analizar caída de tensión en circuits ramales
       const circuitosAnalisis = await this.analizarCircuitosRamales(
         request.circuitos_ramales,
-        request.sistema,
+        request.system,
         limiteRamal,
         resistividades,
       );
 
-      // Seleccionar y analizar alimentador principal
-      const alimentador = await this.analizarAlimentadorPrincipal(
-        request.sistema,
-        request.parametros,
+      // Seleccionar y analizar feeder principal
+      const feeder = await this.analizarAlimentadorPrincipal(
+        request.system,
+        request.parameters,
         resistividades,
         limiteTotal,
       );
 
       // Generar resumen
       const resumen = this.generarResumen(
-        request.sistema,
+        request.system,
         circuitosAnalisis,
-        alimentador,
+        feeder,
         limiteRamal,
         limiteTotal,
       );
@@ -78,7 +78,7 @@ export class VoltageDropService {
       // Generar observaciones
       const observacionesGenerales = this.generarObservaciones(
         circuitosAnalisis,
-        alimentador,
+        feeder,
         resumen,
       );
 
@@ -92,7 +92,7 @@ export class VoltageDropService {
 
       return {
         circuitos_analisis: circuitosAnalisis,
-        alimentador,
+        feeder,
         resumen,
         observaciones_generales: observacionesGenerales,
         metadata: {
@@ -117,10 +117,10 @@ export class VoltageDropService {
   private async getLimiteRamal(parametroUsuario?: number): Promise<number> {
     if (parametroUsuario) return parametroUsuario;
 
-    const limite = await this.normParamService.getParamAsNumber(
+    const limit = await this.normParamService.getParamAsNumber(
       'vd_branch_limit_pct',
     );
-    return limite || 3; // 3% por defecto
+    return limit || 3; // 3% por defecto
   }
 
   /**
@@ -129,9 +129,9 @@ export class VoltageDropService {
   private async getLimiteTotal(parametroUsuario?: number): Promise<number> {
     if (parametroUsuario) return parametroUsuario;
 
-    const limite =
+    const limit =
       await this.normParamService.getParamAsNumber('vd_total_limit_pct');
-    return limite || 5; // 5% por defecto
+    return limit || 5; // 5% por defecto
   }
 
   /**
@@ -145,30 +145,30 @@ export class VoltageDropService {
   }
 
   /**
-   * Analizar caída de tensión en circuitos ramales
+   * Analizar caída de tensión en circuits ramales
    */
   private async analizarCircuitosRamales(
-    circuitos: CircuitoRamalInputDto[],
-    sistema: any,
+    circuits: CircuitoRamalInputDto[],
+    system: any,
     limiteRamal: number,
     resistividades: Resistivity[],
   ): Promise<CaidaTensionCircuitoDto[]> {
     const analisis: CaidaTensionCircuitoDto[] = [];
 
-    for (const circuito of circuitos) {
-      const longitud = circuito.longitud_m || 20; // 20m por defecto
+    for (const circuit of circuits) {
+      const longitud = circuit.length_m || 20; // 20m por defecto
 
       // Calcular caída de tensión del ramal
       const caidaTensionRamal = this.calcularCaidaTension(
-        circuito.corriente_total_a,
+        circuit.corriente_total_a,
         longitud,
-        sistema.tension_v,
-        sistema.phases,
-        resistividades[0]?.ohmKm || 7.41, // Resistividad por defecto
+        system.voltage_v,
+        system.phases,
+        resistividades[0]?.ohmKm || 7.41, // resistivity por defecto
       );
 
       const caidaPorcentajeRamal =
-        (caidaTensionRamal / sistema.tension_v) * 100;
+        (caidaTensionRamal / system.voltage_v) * 100;
 
       // Determinar estado
       let estado = 'OK';
@@ -183,10 +183,10 @@ export class VoltageDropService {
       }
 
       analisis.push({
-        id_circuito: circuito.id_circuito,
-        nombre: circuito.nombre,
-        corriente_a: circuito.corriente_total_a,
-        longitud_m: longitud,
+        id_circuito: circuit.id_circuito,
+        name: circuit.name,
+        current_a: circuit.corriente_total_a,
+        length_m: longitud,
         caida_tension_ramal_v: Math.round(caidaTensionRamal * 100) / 100,
         caida_tension_ramal_pct: Math.round(caidaPorcentajeRamal * 100) / 100,
         estado,
@@ -198,23 +198,23 @@ export class VoltageDropService {
   }
 
   /**
-   * Analizar alimentador principal
+   * Analizar feeder principal
    */
   private async analizarAlimentadorPrincipal(
-    sistema: any,
-    parametros: any,
+    system: any,
+    parameters: any,
     resistividades: Resistivity[],
     limiteTotal: number,
-  ): Promise<AlimentadorDto> {
-    const corrienteTotal = sistema.corriente_total_a;
-    const longitud = parametros.longitud_alimentador_m;
+  ): Promise<FeederDto> {
+    const corrienteTotal = system.corriente_total_a;
+    const longitud = parameters.longitud_alimentador_m;
 
     // Seleccionar sección mínima que cumpla con límites
     const seccionSeleccionada = this.seleccionarSeccionAlimentador(
       corrienteTotal,
       longitud,
-      sistema.tension_v,
-      sistema.phases,
+      system.voltage_v,
+      system.phases,
       limiteTotal,
       resistividades,
     );
@@ -227,23 +227,23 @@ export class VoltageDropService {
         ohmKm: 1.83,
       };
 
-    // Calcular caída de tensión del alimentador
+    // Calcular caída de tensión del feeder
     const caidaTensionAlimentador = this.calcularCaidaTension(
       corrienteTotal,
       longitud,
-      sistema.tension_v,
-      sistema.phases,
+      system.voltage_v,
+      system.phases,
       resistividadSeleccionada.ohmKm,
     );
 
     const caidaPorcentajeAlimentador =
-      (caidaTensionAlimentador / sistema.tension_v) * 100;
+      (caidaTensionAlimentador / system.voltage_v) * 100;
 
     // Calcular longitud crítica
     const longitudCritica = this.calcularLongitudCritica(
       corrienteTotal,
-      sistema.tension_v,
-      sistema.phases,
+      system.voltage_v,
+      system.phases,
       limiteTotal,
       resistividadSeleccionada.ohmKm,
     );
@@ -262,9 +262,9 @@ export class VoltageDropService {
 
     return {
       corriente_total_a: corrienteTotal,
-      longitud_m: longitud,
+      length_m: longitud,
       material: resistividadSeleccionada.material,
-      seccion_mm2: resistividadSeleccionada.seccionMm2,
+      section_mm2: resistividadSeleccionada.seccionMm2,
       resistencia_ohm_km: resistividadSeleccionada.ohmKm,
       caida_tension_alimentador_v:
         Math.round(caidaTensionAlimentador * 100) / 100,
@@ -298,7 +298,7 @@ export class VoltageDropService {
   }
 
   /**
-   * Seleccionar sección del alimentador
+   * Seleccionar sección del feeder
    */
   private seleccionarSeccionAlimentador(
     corriente: number,
@@ -308,19 +308,19 @@ export class VoltageDropService {
     limiteTotal: number,
     resistividades: Resistivity[],
   ): number {
-    for (const resistividad of resistividades) {
+    for (const resistivity of resistividades) {
       const caidaTension = this.calcularCaidaTension(
         corriente,
         longitud,
         tension,
         fases,
-        resistividad.ohmKm,
+        resistivity.ohmKm,
       );
 
       const caidaPorcentaje = (caidaTension / tension) * 100;
 
       if (caidaPorcentaje <= limiteTotal) {
-        return resistividad.seccionMm2;
+        return resistivity.seccionMm2;
       }
     }
 
@@ -350,9 +350,9 @@ export class VoltageDropService {
    * Generar resumen
    */
   private generarResumen(
-    sistema: any,
+    system: any,
     circuitosAnalisis: CaidaTensionCircuitoDto[],
-    alimentador: AlimentadorDto,
+    feeder: FeederDto,
     limiteRamal: number,
     limiteTotal: number,
   ): ResumenCaidaTensionDto {
@@ -361,26 +361,26 @@ export class VoltageDropService {
     ).length;
 
     const caidaTotalMaxima = Math.max(
-      alimentador.caida_tension_alimentador_pct,
+      feeder.caida_tension_alimentador_pct,
       ...circuitosAnalisis.map((c) => c.caida_tension_ramal_pct),
     );
 
     let estadoGeneral = 'OK';
-    if (circuitosFueraLimite > 0 || alimentador.estado === 'ERROR') {
+    if (circuitosFueraLimite > 0 || feeder.estado === 'ERROR') {
       estadoGeneral = 'ERROR';
-    } else if (alimentador.estado === 'WARNING') {
+    } else if (feeder.estado === 'WARNING') {
       estadoGeneral = 'WARNING';
     }
 
     return {
-      tension_nominal_v: sistema.tension_v,
-      phases: sistema.phases,
+      tension_nominal_v: system.voltage_v,
+      phases: system.phases,
       limite_caida_ramal_pct: limiteRamal,
       limite_caida_total_pct: limiteTotal,
       caida_total_maxima_pct: Math.round(caidaTotalMaxima * 100) / 100,
       circuitos_fuera_limite: circuitosFueraLimite,
       estado_general: estadoGeneral,
-      calibre_minimo_recomendado_mm2: alimentador.seccion_mm2,
+      calibre_minimo_recomendado_mm2: feeder.section_mm2,
     };
   }
 
@@ -389,26 +389,26 @@ export class VoltageDropService {
    */
   private generarObservaciones(
     circuitosAnalisis: CaidaTensionCircuitoDto[],
-    alimentador: AlimentadorDto,
+    feeder: FeederDto,
     resumen: ResumenCaidaTensionDto,
   ): string[] {
     const observaciones: string[] = [];
 
     observaciones.push(
-      `Análisis de ${circuitosAnalisis.length} circuitos ramales`,
+      `Análisis de ${circuitosAnalisis.length} circuits ramales`,
     );
     observaciones.push(
-      `Alimentador: ${alimentador.material} ${alimentador.seccion_mm2}mm² para ${alimentador.longitud_m}m`,
+      `feeder: ${feeder.material} ${feeder.section_mm2}mm² para ${feeder.length_m}m`,
     );
 
     if (resumen.circuitos_fuera_limite > 0) {
       observaciones.push(
-        `⚠️ ${resumen.circuitos_fuera_limite} circuito(s) exceden límites`,
+        `⚠️ ${resumen.circuitos_fuera_limite} circuit(s) exceden límites`,
       );
     }
 
-    if (alimentador.estado === 'ERROR') {
-      observaciones.push(`⚠️ Alimentador excede límite de caída de tensión`);
+    if (feeder.estado === 'ERROR') {
+      observaciones.push(`⚠️ feeder excede límite de caída de tensión`);
     }
 
     if (resumen.estado_general === 'OK') {
@@ -416,7 +416,7 @@ export class VoltageDropService {
     }
 
     observaciones.push(
-      `Longitud crítica máxima: ${alimentador.longitud_critica_m}m`,
+      `Longitud crítica máxima: ${feeder.longitud_critica_m}m`,
     );
 
     return observaciones;
@@ -437,3 +437,4 @@ export class VoltageDropService {
     );
   }
 }
+

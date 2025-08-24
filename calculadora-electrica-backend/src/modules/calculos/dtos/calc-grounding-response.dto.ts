@@ -1,16 +1,16 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+﻿import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class ConductorProteccionDto {
-  @ApiProperty({ description: 'Tipo de conductor (EGC, GEC)' })
-  tipo: string;
+  @ApiProperty({ description: 'type de conductor (EGC, GEC)' })
+  type: string;
 
   @ApiProperty({ description: 'Sección del conductor en mm²' })
-  seccion_mm2: number;
+  section_mm2: number;
 
   @ApiProperty({ description: 'Calibre AWG equivalente' })
   calibre_awg: string;
 
-  @ApiProperty({ description: 'Material recomendado' })
+  @ApiProperty({ description: 'material recomendado' })
   material: string;
 
   @ApiProperty({ description: 'Longitud mínima requerida en metros' })
@@ -21,7 +21,7 @@ export class ConductorProteccionDto {
 }
 
 export class SistemaTierraDto {
-  @ApiProperty({ description: 'Tipo de sistema de tierra' })
+  @ApiProperty({ description: 'type de system de tierra' })
   tipo_sistema: string;
 
   @ApiProperty({ description: 'Resistencia máxima permitida en Ohm' })
@@ -30,7 +30,7 @@ export class SistemaTierraDto {
   @ApiProperty({ description: 'Número de electrodos requeridos' })
   numero_electrodos: number;
 
-  @ApiProperty({ description: 'Tipo de electrodo recomendado' })
+  @ApiProperty({ description: 'type de electrodo recomendado' })
   tipo_electrodo: string;
 
   @ApiProperty({ description: 'Longitud mínima del electrodo en metros' })
@@ -39,7 +39,7 @@ export class SistemaTierraDto {
   @ApiProperty({ description: 'Separación mínima entre electrodos en metros' })
   separacion_electrodos_m: number;
 
-  @ApiPropertyOptional({ description: 'Observaciones del sistema' })
+  @ApiPropertyOptional({ description: 'Observaciones del system' })
   observaciones?: string[];
 }
 
@@ -47,25 +47,25 @@ export class ResumenGroundingDto {
   @ApiProperty({ description: 'Amperaje del breaker principal' })
   main_breaker_amp: number;
 
-  @ApiProperty({ description: 'Tipo de instalación' })
+  @ApiProperty({ description: 'type de instalación' })
   tipo_instalacion: string;
 
-  @ApiProperty({ description: 'Tipo de sistema de tierra' })
+  @ApiProperty({ description: 'type de system de tierra' })
   tipo_sistema_tierra: string;
 
-  @ApiProperty({ description: 'Conductor de protección (EGC) en mm²' })
+  @ApiProperty({ description: 'conductor de protección (EGC) en mm²' })
   egc_mm2: number;
 
-  @ApiProperty({ description: 'Conductor de tierra (GEC) en mm²' })
+  @ApiProperty({ description: 'conductor de tierra (GEC) en mm²' })
   gec_mm2: number;
 
-  @ApiProperty({ description: 'Resistencia máxima del sistema en Ohm' })
+  @ApiProperty({ description: 'Resistencia máxima del system en Ohm' })
   resistencia_maxima_ohm: number;
 
-  @ApiProperty({ description: 'Estado del sistema de tierra' })
+  @ApiProperty({ description: 'Estado del system de tierra' })
   estado: string;
 
-  @ApiProperty({ description: 'Cumplimiento de normas' })
+  @ApiProperty({ description: 'Cumplimiento de norms' })
   cumplimiento_normas: string;
 }
 
@@ -84,13 +84,13 @@ export class CalcGroundingResponseDto {
 
   @ApiProperty({
     type: SistemaTierraDto,
-    description: 'Configuración del sistema de puesta a tierra',
+    description: 'Configuración del system de puesta a tierra',
   })
   sistema_tierra: SistemaTierraDto;
 
   @ApiProperty({
     type: ResumenGroundingDto,
-    description: 'Resumen del sistema de puesta a tierra',
+    description: 'Resumen del system de puesta a tierra',
   })
   resumen: ResumenGroundingDto;
 
@@ -105,3 +105,4 @@ export class CalcGroundingResponseDto {
     algoritmo_usado: string;
   };
 }
+

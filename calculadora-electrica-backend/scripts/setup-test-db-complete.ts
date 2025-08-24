@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 
 /**
  * Script completo para configurar la base de datos de prueba
@@ -75,7 +75,7 @@ async function runSeeds(dataSource: DataSource) {
     console.log('  📋 Ejecutando seeds de tipos de instalación...');
     await seedsService.seedTiposInstalaciones();
     
-    console.log('  📋 Ejecutando seeds de tipos de ambientes...');
+    console.log('  📋 Ejecutando seeds de tipos de environments...');
     await seedsService.seedTiposAmbientes();
     
     console.log('  📋 Ejecutando seeds de tipos de artefactos...');
@@ -94,15 +94,15 @@ class SimpleSeedsService {
 
   async seedTiposInstalaciones(): Promise<void> {
     const tiposInstalaciones = [
-      { id: '1', nombre: 'Residencial', descripcion: 'Instalaciones residenciales', active: true },
-      { id: '2', nombre: 'Comercial', descripcion: 'Instalaciones comerciales', active: true },
-      { id: '3', nombre: 'Industrial', descripcion: 'Instalaciones industriales', active: true },
+      { id: '1', name: 'Residencial', description: 'installations residenciales', active: true },
+      { id: '2', name: 'Comercial', description: 'installations comerciales', active: true },
+      { id: '3', name: 'Industrial', description: 'installations industriales', active: true },
     ];
 
-    for (const tipo of tiposInstalaciones) {
+    for (const type of tiposInstalaciones) {
       await this.dataSource.query(
-        'INSERT IGNORE INTO tipos_instalaciones (id, nombre, descripcion, active) VALUES (?, ?, ?, ?)',
-        [tipo.id, tipo.nombre, tipo.descripcion, tipo.active]
+        'INSERT IGNORE INTO tipos_instalaciones (id, name, description, active) VALUES (?, ?, ?, ?)',
+        [type.id, type.name, type.description, type.active]
       );
     }
     console.log('    ✅ Tipos de instalación sembrados');
@@ -110,35 +110,35 @@ class SimpleSeedsService {
 
   async seedTiposAmbientes(): Promise<void> {
     const tiposAmbientes = [
-      { id: '1', nombre: 'Sala', descripcion: 'Sala de estar', active: true },
-      { id: '2', nombre: 'Cocina', descripcion: 'Cocina', active: true },
-      { id: '3', nombre: 'Dormitorio', descripcion: 'Dormitorio', active: true },
-      { id: '4', nombre: 'Baño', descripcion: 'Baño', active: true },
-      { id: '5', nombre: 'Oficina', descripcion: 'Oficina', active: true },
+      { id: '1', name: 'Sala', description: 'Sala de estar', active: true },
+      { id: '2', name: 'Cocina', description: 'Cocina', active: true },
+      { id: '3', name: 'Dormitorio', description: 'Dormitorio', active: true },
+      { id: '4', name: 'Baño', description: 'Baño', active: true },
+      { id: '5', name: 'Oficina', description: 'Oficina', active: true },
     ];
 
-    for (const tipo of tiposAmbientes) {
+    for (const type of tiposAmbientes) {
       await this.dataSource.query(
-        'INSERT IGNORE INTO tipos_ambientes (id, nombre, descripcion, active) VALUES (?, ?, ?, ?)',
-        [tipo.id, tipo.nombre, tipo.descripcion, tipo.active]
+        'INSERT IGNORE INTO tipos_ambientes (id, name, description, active) VALUES (?, ?, ?, ?)',
+        [type.id, type.name, type.description, type.active]
       );
     }
-    console.log('    ✅ Tipos de ambientes sembrados');
+    console.log('    ✅ Tipos de environments sembrados');
   }
 
   async seedTiposArtefactos(): Promise<void> {
     const tiposArtefactos = [
-      { id: '1', nombre: 'Televisor', descripcion: 'Televisor LED', potenciaNominal: 120, factorDemanda: 0.8, active: true },
-      { id: '2', nombre: 'Refrigerador', descripcion: 'Refrigerador doméstico', potenciaNominal: 150, factorDemanda: 0.7, active: true },
-      { id: '3', nombre: 'Lámpara', descripcion: 'Lámpara LED', potenciaNominal: 15, factorDemanda: 1.0, active: true },
-      { id: '4', nombre: 'Computadora', descripcion: 'Computadora de escritorio', potenciaNominal: 200, factorDemanda: 0.9, active: true },
-      { id: '5', nombre: 'Aire Acondicionado', descripcion: 'Aire acondicionado', potenciaNominal: 1500, factorDemanda: 0.8, active: true },
+      { id: '1', name: 'Televisor', description: 'Televisor LED', potenciaNominal: 120, factorDemanda: 0.8, active: true },
+      { id: '2', name: 'Refrigerador', description: 'Refrigerador doméstico', potenciaNominal: 150, factorDemanda: 0.7, active: true },
+      { id: '3', name: 'Lámpara', description: 'Lámpara LED', potenciaNominal: 15, factorDemanda: 1.0, active: true },
+      { id: '4', name: 'Computadora', description: 'Computadora de escritorio', potenciaNominal: 200, factorDemanda: 0.9, active: true },
+      { id: '5', name: 'Aire Acondicionado', description: 'Aire acondicionado', potenciaNominal: 1500, factorDemanda: 0.8, active: true },
     ];
 
-    for (const tipo of tiposArtefactos) {
+    for (const type of tiposArtefactos) {
       await this.dataSource.query(
-        'INSERT IGNORE INTO tipos_artefactos (id, nombre, descripcion, potenciaNominal, factorDemanda, active) VALUES (?, ?, ?, ?, ?, ?)',
-        [tipo.id, tipo.nombre, tipo.descripcion, tipo.potenciaNominal, tipo.factorDemanda, tipo.active]
+        'INSERT IGNORE INTO tipos_artefactos (id, name, description, potenciaNominal, factorDemanda, active) VALUES (?, ?, ?, ?, ?, ?)',
+        [type.id, type.name, type.description, type.potenciaNominal, type.factorDemanda, type.active]
       );
     }
     console.log('    ✅ Tipos de artefactos sembrados');
@@ -151,3 +151,4 @@ if (require.main === module) {
 }
 
 export { setupTestDatabase };
+

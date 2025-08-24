@@ -1,4 +1,4 @@
-import {
+﻿import {
   Controller,
   Get,
   Post,
@@ -23,7 +23,7 @@ import { ProjectsAppService } from '../services/projects-app.service';
 import { CreateProjectRequestDto, CreateVersionRequestDto, UpdateProjectStatusDto } from '../dtos/create-project.dto';
 import { ProjectSummaryDto, ProjectVersionDetailDto, ProjectListResponseDto, ProjectExportDto } from '../dtos/project-response.dto';
 
-@ApiTags('Proyectos Eléctricos')
+@ApiTags('projects Eléctricos')
 @Controller('v1/projects')
 @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
 export class ProjectsController {
@@ -32,39 +32,39 @@ export class ProjectsController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({
-    summary: 'Crear un nuevo proyecto eléctrico',
-    description: 'Crea un nuevo proyecto y opcionalmente ejecuta el cálculo inicial para generar la primera versión',
+    summary: 'Crear un nuevo project eléctrico',
+    description: 'Crea un nuevo project y opcionalmente ejecuta el cálculo inicial para generar la primera versión',
   })
   @ApiBody({
     type: CreateProjectRequestDto,
-    description: 'Datos del proyecto y cálculo inicial',
+    description: 'Datos del project y cálculo inicial',
     examples: {
       ejemplo1: {
-        summary: 'Proyecto con cálculo inmediato',
-        description: 'Crea proyecto y ejecuta cálculo para versión 1',
+        summary: 'project con cálculo inmediato',
+        description: 'Crea project y ejecuta cálculo para versión 1',
         value: {
           projectName: 'Residencia García',
           description: 'Unifamiliar 2 plantas',
-          superficies: [
-            { ambiente: 'Sala', areaM2: 18.5 },
-            { ambiente: 'Dormitorio 1', areaM2: 12.0 },
+          surfaces: [
+            { environment: 'Sala', areaM2: 18.5 },
+            { environment: 'Dormitorio 1', areaM2: 12.0 },
           ],
-          consumos: [
-            { nombre: 'Televisor', ambiente: 'Sala', watts: 120 },
-            { nombre: 'Lámpara', ambiente: 'Dormitorio 1', watts: 60 },
+          consumptions: [
+            { name: 'Televisor', environment: 'Sala', watts: 120 },
+            { name: 'Lámpara', environment: 'Dormitorio 1', watts: 60 },
           ],
           opciones: { tensionV: 120, monofasico: true },
           computeNow: true,
         },
       },
       ejemplo2: {
-        summary: 'Proyecto sin cálculo inicial',
-        description: 'Crea proyecto sin ejecutar cálculo',
+        summary: 'project sin cálculo inicial',
+        description: 'Crea project sin ejecutar cálculo',
         value: {
-          projectName: 'Proyecto Futuro',
-          description: 'Proyecto para cálculo posterior',
-          superficies: [],
-          consumos: [],
+          projectName: 'project Futuro',
+          description: 'project para cálculo posterior',
+          surfaces: [],
+          consumptions: [],
           computeNow: false,
         },
       },
@@ -72,7 +72,7 @@ export class ProjectsController {
   })
   @ApiResponse({
     status: 201,
-    description: 'Proyecto creado exitosamente',
+    description: 'project creado exitosamente',
     type: ProjectSummaryDto,
   })
   @ApiResponse({
@@ -81,7 +81,7 @@ export class ProjectsController {
   })
   @ApiResponse({
     status: 409,
-    description: 'Ya existe un proyecto con ese nombre',
+    description: 'Ya existe un project con ese name',
   })
   async createProject(@Body() request: CreateProjectRequestDto): Promise<ProjectSummaryDto> {
     return this.projectsAppService.createProject(request);
@@ -90,12 +90,12 @@ export class ProjectsController {
   @Post(':projectId/versions')
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({
-    summary: 'Crear nueva versión de un proyecto',
-    description: 'Crea una nueva versión de un proyecto existente ejecutando el cálculo con los datos proporcionados',
+    summary: 'Crear nueva versión de un project',
+    description: 'Crea una nueva versión de un project existente ejecutando el cálculo con los datos proporcionados',
   })
   @ApiParam({
     name: 'projectId',
-    description: 'ID del proyecto',
+    description: 'ID del project',
     example: 'uuid',
   })
   @ApiBody({
@@ -104,18 +104,18 @@ export class ProjectsController {
     examples: {
       ejemplo1: {
         summary: 'Nueva versión con ajustes',
-        description: 'Crea versión con modificaciones en consumos',
+        description: 'Crea versión con modificaciones en consumptions',
         value: {
-          superficies: [
-            { ambiente: 'Sala', areaM2: 18.5 },
-            { ambiente: 'Cocina', areaM2: 15.0 },
+          surfaces: [
+            { environment: 'Sala', areaM2: 18.5 },
+            { environment: 'Cocina', areaM2: 15.0 },
           ],
-          consumos: [
-            { nombre: 'Televisor', ambiente: 'Sala', watts: 120 },
-            { nombre: 'Refrigerador', ambiente: 'Cocina', watts: 800 },
+          consumptions: [
+            { name: 'Televisor', environment: 'Sala', watts: 120 },
+            { name: 'Refrigerador', environment: 'Cocina', watts: 800 },
           ],
           opciones: { tensionV: 120, monofasico: true },
-          note: 'Ajuste de consumos cocina',
+          note: 'Ajuste de consumptions cocina',
         },
       },
     },
@@ -127,11 +127,11 @@ export class ProjectsController {
   })
   @ApiResponse({
     status: 400,
-    description: 'Datos inválidos o proyecto archivado',
+    description: 'Datos inválidos o project archivado',
   })
   @ApiResponse({
     status: 404,
-    description: 'Proyecto no encontrado',
+    description: 'project no encontrado',
   })
   @ApiResponse({
     status: 422,
@@ -146,28 +146,28 @@ export class ProjectsController {
 
   @Get(':projectId')
   @ApiOperation({
-    summary: 'Obtener proyecto con resumen',
-    description: 'Obtiene los metadatos del proyecto y información de la última versión',
+    summary: 'Obtener project con resumen',
+    description: 'Obtiene los metadatos del project y información de la última versión',
   })
   @ApiParam({
     name: 'projectId',
-    description: 'ID del proyecto',
+    description: 'ID del project',
     example: 'uuid',
   })
   @ApiQuery({
     name: 'includeArchived',
-    description: 'Incluir proyectos archivados',
+    description: 'Incluir projects archivados',
     required: false,
     type: Boolean,
   })
   @ApiResponse({
     status: 200,
-    description: 'Proyecto obtenido exitosamente',
+    description: 'project obtenido exitosamente',
     type: ProjectSummaryDto,
   })
   @ApiResponse({
     status: 404,
-    description: 'Proyecto no encontrado',
+    description: 'project no encontrado',
   })
   async getProject(
     @Param('projectId') projectId: string,
@@ -179,11 +179,11 @@ export class ProjectsController {
   @Get(':projectId/versions/:versionId')
   @ApiOperation({
     summary: 'Obtener versión específica',
-    description: 'Obtiene el detalle completo de una versión específica del proyecto',
+    description: 'Obtiene el detalle completo de una versión específica del project',
   })
   @ApiParam({
     name: 'projectId',
-    description: 'ID del proyecto',
+    description: 'ID del project',
     example: 'uuid',
   })
   @ApiParam({
@@ -198,7 +198,7 @@ export class ProjectsController {
   })
   @ApiResponse({
     status: 404,
-    description: 'Proyecto o versión no encontrada',
+    description: 'project o versión no encontrada',
   })
   async getVersion(
     @Param('projectId') projectId: string,
@@ -209,8 +209,8 @@ export class ProjectsController {
 
   @Get()
   @ApiOperation({
-    summary: 'Listar proyectos',
-    description: 'Lista proyectos con paginación y filtros de búsqueda',
+    summary: 'Listar projects',
+    description: 'Lista projects con paginación y filtros de búsqueda',
   })
   @ApiQuery({
     name: 'page',
@@ -228,19 +228,19 @@ export class ProjectsController {
   })
   @ApiQuery({
     name: 'query',
-    description: 'Término de búsqueda en nombre o descripción',
+    description: 'Término de búsqueda en name o descripción',
     required: false,
     type: String,
   })
   @ApiQuery({
     name: 'includeArchived',
-    description: 'Incluir proyectos archivados',
+    description: 'Incluir projects archivados',
     required: false,
     type: Boolean,
   })
   @ApiResponse({
     status: 200,
-    description: 'Lista de proyectos obtenida exitosamente',
+    description: 'Lista de projects obtenida exitosamente',
     type: ProjectListResponseDto,
   })
   async listProjects(
@@ -254,24 +254,24 @@ export class ProjectsController {
 
   @Patch(':projectId')
   @ApiOperation({
-    summary: 'Actualizar estado del proyecto',
-    description: 'Archiva o restaura un proyecto',
+    summary: 'Actualizar estado del project',
+    description: 'Archiva o restaura un project',
   })
   @ApiParam({
     name: 'projectId',
-    description: 'ID del proyecto',
+    description: 'ID del project',
     example: 'uuid',
   })
   @ApiBody({
     type: UpdateProjectStatusDto,
-    description: 'Nuevo estado del proyecto',
+    description: 'Nuevo estado del project',
     examples: {
       archivar: {
-        summary: 'Archivar proyecto',
+        summary: 'Archivar project',
         value: { status: 'ARCHIVED' },
       },
       restaurar: {
-        summary: 'Restaurar proyecto',
+        summary: 'Restaurar project',
         value: { status: 'ACTIVE' },
       },
     },
@@ -283,7 +283,7 @@ export class ProjectsController {
   })
   @ApiResponse({
     status: 404,
-    description: 'Proyecto no encontrado',
+    description: 'project no encontrado',
   })
   async updateProjectStatus(
     @Param('projectId') projectId: string,
@@ -294,24 +294,25 @@ export class ProjectsController {
 
   @Get(':projectId/export')
   @ApiOperation({
-    summary: 'Exportar proyecto completo',
-    description: 'Exporta un proyecto con todas sus versiones en formato JSON',
+    summary: 'Exportar project completo',
+    description: 'Exporta un project con todas sus versiones en formato JSON',
   })
   @ApiParam({
     name: 'projectId',
-    description: 'ID del proyecto',
+    description: 'ID del project',
     example: 'uuid',
   })
   @ApiResponse({
     status: 200,
-    description: 'Proyecto exportado exitosamente',
+    description: 'project exportado exitosamente',
     type: ProjectExportDto,
   })
   @ApiResponse({
     status: 404,
-    description: 'Proyecto no encontrado',
+    description: 'project no encontrado',
   })
   async exportProject(@Param('projectId') projectId: string): Promise<ProjectExportDto> {
     return this.projectsAppService.exportProject(projectId);
   }
 }
+

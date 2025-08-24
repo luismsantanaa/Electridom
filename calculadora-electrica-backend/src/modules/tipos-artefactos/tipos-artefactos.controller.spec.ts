@@ -1,8 +1,8 @@
-import { Test, TestingModule } from '@nestjs/testing';
+﻿import { Test, TestingModule } from '@nestjs/testing';
 import { TiposArtefactosController } from './tipos-artefactos.controller';
 import { TiposArtefactosService } from './tipos-artefactos.service';
-import { CreateTipoArtefactoDto } from './dtos/create-tipo-artefacto.dto';
-import { UpdateTipoArtefactoDto } from './dtos/update-tipo-artefacto.dto';
+import { CreateTipoArtefactoDto } from './dtos/create-type-artefacto.dto';
+import { UpdateTipoArtefactoDto } from './dtos/update-type-artefacto.dto';
 import { PaginateQuery } from 'nestjs-paginate';
 import { UserRole, UserStatus } from '../users/entities/user.entity';
 import { createMockUser } from '../users/__tests__/user.mock.helper';
@@ -41,17 +41,17 @@ describe('TiposArtefactosController', () => {
   });
 
   describe('create', () => {
-    it('should create a new tipo artefacto', async () => {
+    it('should create a new type artefacto', async () => {
       const createDto: CreateTipoArtefactoDto = {
-        nombre: 'Test Artefacto',
+        name: 'Test Artefacto',
         potencia: 100,
         voltaje: 220,
         tipoAmbiente_Id: '1',
       };
-      const usuario = createMockUser({
+      const user = createMockUser({
         id: '1',
         email: 'test@example.com',
-        nombre: 'Test',
+        name: 'Test',
         apellido: 'User',
         username: 'testUser',
         role: UserRole.CLIENTE,
@@ -61,16 +61,16 @@ describe('TiposArtefactosController', () => {
         ...createDto,
         id: '1',
         activo: true,
-        creadoPor: usuario,
+        creadoPor: user,
       };
 
       mockService.create.mockResolvedValue(expectedTipoArtefacto);
 
-      const result = await controller.create(createDto, usuario);
+      const result = await controller.create(createDto, user);
 
       expect(result).toEqual(expectedTipoArtefacto);
       // eslint-disable-next-line @typescript-eslint/unbound-method
-      expect(service.create).toHaveBeenCalledWith(createDto, usuario.username);
+      expect(service.create).toHaveBeenCalledWith(createDto, user.username);
     });
   });
 
@@ -84,7 +84,7 @@ describe('TiposArtefactosController', () => {
       const mockData = [
         {
           id: '1',
-          nombre: 'Test Artefacto',
+          name: 'Test Artefacto',
           potencia: 100,
           voltaje: 220,
           tipoAmbiente_Id: '1',
@@ -96,8 +96,8 @@ describe('TiposArtefactosController', () => {
         totalItems: 1,
         currentPage: 1,
         totalPages: 1,
-        sortBy: [['nombre', 'ASC']],
-        searchBy: ['nombre'],
+        sortBy: [['name', 'ASC']],
+        searchBy: ['name'],
         search: '',
         select: [],
       };
@@ -118,11 +118,11 @@ describe('TiposArtefactosController', () => {
   });
 
   describe('findOne', () => {
-    it('should return a tipo artefacto by id', async () => {
+    it('should return a type artefacto by id', async () => {
       const id = '1';
       const expectedTipoArtefacto = {
         id,
-        nombre: 'Test Artefacto',
+        name: 'Test Artefacto',
         potencia: 100,
         voltaje: 220,
         tipoAmbiente_Id: '1',
@@ -140,15 +140,15 @@ describe('TiposArtefactosController', () => {
   });
 
   describe('update', () => {
-    it('should update a tipo artefacto', async () => {
+    it('should update a type artefacto', async () => {
       const id = '1';
       const updateDto: UpdateTipoArtefactoDto = {
-        nombre: 'Updated Artefacto',
+        name: 'Updated Artefacto',
       };
-      const usuario = createMockUser({
+      const user = createMockUser({
         id: '1',
         email: 'test@example.com',
-        nombre: 'Test',
+        name: 'Test',
         apellido: 'User',
         username: 'testUser',
         role: UserRole.CLIENTE,
@@ -161,40 +161,41 @@ describe('TiposArtefactosController', () => {
         voltaje: 220,
         tipoAmbiente_Id: '1',
         activo: true,
-        actualizadoPor: usuario,
+        actualizadoPor: user,
       };
 
       mockService.update.mockResolvedValue(updatedTipoArtefacto);
 
-      const result = await controller.update(id, updateDto, usuario);
+      const result = await controller.update(id, updateDto, user);
 
       expect(result).toEqual(updatedTipoArtefacto);
       // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(service.update).toHaveBeenCalledWith(
         id,
         updateDto,
-        usuario.username,
+        user.username,
       );
     });
   });
 
   describe('remove', () => {
-    it('should remove a tipo artefacto', async () => {
+    it('should remove a type artefacto', async () => {
       const id = '1';
-      const usuario = createMockUser({
+      const user = createMockUser({
         id: '1',
         email: 'test@example.com',
-        nombre: 'Test',
+        name: 'Test',
         apellido: 'User',
         username: 'testUser',
         role: UserRole.CLIENTE,
         estado: UserStatus.ACTIVO,
       });
 
-      await controller.remove(id, usuario);
+      await controller.remove(id, user);
 
       // eslint-disable-next-line @typescript-eslint/unbound-method
-      expect(service.remove).toHaveBeenCalledWith(id, usuario.username);
+      expect(service.remove).toHaveBeenCalledWith(id, user.username);
     });
   });
 });
+

@@ -1,11 +1,11 @@
-import { BadRequestException, Injectable, PipeTransform } from '@nestjs/common';
+﻿import { BadRequestException, Injectable, PipeTransform } from '@nestjs/common';
 
 @Injectable()
 export class SquareMeterPipe implements PipeTransform {
   transform(value: number): string {
-    // Validar que el valor es un número
+    // Validar que el value es un número
     if (isNaN(value)) {
-      throw new BadRequestException('El valor debe ser un número');
+      throw new BadRequestException('El value debe ser un número');
     }
 
     const number = Number(value);
@@ -19,3 +19,4 @@ export class SquareMeterPipe implements PipeTransform {
     return `${number.toFixed(2)} m²`;
   }
 }
+

@@ -1,4 +1,4 @@
-import { Test, TestingModule } from '@nestjs/testing';
+﻿import { Test, TestingModule } from '@nestjs/testing';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { JwtStrategy } from '../jwt.strategy';
@@ -75,7 +75,7 @@ describe('JwtStrategy', () => {
         id: '1',
         username: 'testuser',
         email: 'test@example.com',
-        nombre: 'Test',
+        name: 'Test',
         apellido: 'User',
         role: UserRole.CLIENTE,
         estado: UserStatus.ACTIVO,
@@ -119,7 +119,7 @@ describe('JwtStrategy', () => {
         id: '1',
         username: 'inactiveuser',
         email: 'inactive@example.com',
-        nombre: 'Inactive',
+        name: 'Inactive',
         apellido: 'User',
         role: UserRole.CLIENTE,
         estado: UserStatus.INACTIVO,
@@ -137,3 +137,4 @@ describe('JwtStrategy', () => {
     });
   });
 });
+

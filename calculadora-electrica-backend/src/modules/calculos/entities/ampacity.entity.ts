@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, Index } from 'typeorm';
+﻿import { Entity, Column, PrimaryGeneratedColumn, Index } from 'typeorm';
 import { BaseAuditEntity } from '../../../common/entities/base-audit.entity';
 
 @Entity('ampacity')
@@ -17,14 +17,14 @@ export class Ampacity extends BaseAuditEntity {
   @Column({
     type: 'varchar',
     length: 10,
-    comment: 'Material del conductor (Cu, Al)',
+    comment: 'material del conductor (Cu, Al)',
   })
   material: string;
 
   @Column({
     type: 'varchar',
     length: 20,
-    comment: 'Tipo de aislación (THHN, THWN, etc.)',
+    comment: 'type de aislación (THHN, THWN, etc.)',
   })
   insulation: string;
 
@@ -43,7 +43,7 @@ export class Ampacity extends BaseAuditEntity {
   calibreAwg: number;
 
   @Column({
-    name: 'seccion_mm2',
+    name: 'section_mm2',
     type: 'decimal',
     precision: 8,
     scale: 3,
@@ -55,7 +55,8 @@ export class Ampacity extends BaseAuditEntity {
     type: 'decimal',
     precision: 8,
     scale: 2,
-    comment: 'Capacidad de corriente en amperios',
+    comment: 'capacity de corriente en amperios',
   })
   amp: number;
 }
+

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+﻿import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class AppService {
@@ -9,9 +9,9 @@ export class AppService {
       timestamp: new Date().toISOString(),
       environment: process.env.NODE_ENV || 'development',
       features: [
-        'Gestión de proyectos eléctricos',
-        'Cálculos de potencia y circuitos',
-        'Selección de conductores',
+        'Gestión de projects eléctricos',
+        'Cálculos de potencia y circuits',
+        'Selección de conductors',
         'Lista de materiales y costos',
         'Generación de reportes PDF/Excel',
       ],
@@ -46,3 +46,4 @@ export class AppService {
     return `${hours}h ${minutes}m ${secs}s`;
   }
 }
+

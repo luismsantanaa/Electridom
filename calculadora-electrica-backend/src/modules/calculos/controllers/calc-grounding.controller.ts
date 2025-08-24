@@ -1,4 +1,4 @@
-import {
+﻿import {
   Controller,
   Post,
   Body,
@@ -28,23 +28,23 @@ export class CalcGroundingController {
   @HttpCode(HttpStatus.OK)
   @UsePipes(new ValidationPipe({ transform: true }))
   @ApiOperation({
-    summary: 'Dimensionamiento de puesta a tierra y conductores de protección',
+    summary: 'Dimensionamiento de puesta a tierra y conductors de protección',
     description: `
-      Dimensiona conductores de protección (EGC) y tierra (GEC) según el amperaje del breaker principal.
+      Dimensiona conductors de protección (EGC) y tierra (GEC) según el amperaje del breaker principal.
       
       **Funcionalidades:**
       - Dimensiona conductor de protección (EGC) según NEC 250.66
-      - Dimensiona conductor de tierra (GEC) según normas aplicables
-      - Configura sistema de puesta a tierra según tipo de instalación
-      - Determina número y tipo de electrodos requeridos
-      - Valida cumplimiento de normas de seguridad
+      - Dimensiona conductor de tierra (GEC) según norms aplicables
+      - Configura system de puesta a tierra según type de instalación
+      - Determina número y type de electrodos requeridos
+      - Valida cumplimiento de norms de seguridad
       
       **Tipos de instalación soportados:**
       - Residencial (≤25Ω)
       - Comercial (≤5Ω)
       - Industrial (≤1Ω)
       
-      **Sistemas de tierra soportados:**
+      **systems de tierra soportados:**
       - TN-S (Tierra Neutral Separada)
       - TN-C-S (Tierra Neutral Combinada-Separada)
       - TT (Tierra-Tierra)
@@ -53,25 +53,25 @@ export class CalcGroundingController {
   })
   @ApiBody({
     type: CalcGroundingRequestDto,
-    description: 'Datos del sistema eléctrico y parámetros de puesta a tierra',
+    description: 'Datos del system eléctrico y parámetros de puesta a tierra',
     examples: {
       ejemplo1: {
         summary: 'Ejemplo residencial',
         description: 'Dimensionamiento para instalación residencial',
         value: {
-          sistema: {
-            tension_v: 120,
+          system: {
+            voltage_v: 120,
             phases: 1,
             corriente_total_a: 61.8,
             carga_total_va: 7416,
           },
-          alimentador: {
-            corriente_a: 61.8,
-            seccion_mm2: 10,
+          feeder: {
+            current_a: 61.8,
+            section_mm2: 10,
             material: 'Cu',
-            longitud_m: 50,
+            length_m: 50,
           },
-          parametros: {
+          parameters: {
             main_breaker_amp: 100,
             tipo_instalacion: 'residencial',
             tipo_sistema_tierra: 'TN-S',
@@ -79,7 +79,7 @@ export class CalcGroundingController {
           },
           observaciones: [
             'Instalación residencial monofásica',
-            'Sistema TN-S estándar',
+            'system TN-S estándar',
           ],
         },
       },
@@ -87,19 +87,19 @@ export class CalcGroundingController {
         summary: 'Ejemplo comercial',
         description: 'Dimensionamiento para instalación comercial',
         value: {
-          sistema: {
-            tension_v: 208,
+          system: {
+            voltage_v: 208,
             phases: 3,
             corriente_total_a: 150.0,
             carga_total_va: 54000,
           },
-          alimentador: {
-            corriente_a: 150.0,
-            seccion_mm2: 25,
+          feeder: {
+            current_a: 150.0,
+            section_mm2: 25,
             material: 'Cu',
-            longitud_m: 80,
+            length_m: 80,
           },
-          parametros: {
+          parameters: {
             main_breaker_amp: 200,
             tipo_instalacion: 'comercial',
             tipo_sistema_tierra: 'TN-C-S',
@@ -107,7 +107,7 @@ export class CalcGroundingController {
           },
           observaciones: [
             'Instalación comercial trifásica',
-            'Sistema TN-C-S con múltiples electrodos',
+            'system TN-C-S con múltiples electrodos',
           ],
         },
       },
@@ -115,19 +115,19 @@ export class CalcGroundingController {
         summary: 'Ejemplo industrial',
         description: 'Dimensionamiento para instalación industrial',
         value: {
-          sistema: {
-            tension_v: 480,
+          system: {
+            voltage_v: 480,
             phases: 3,
             corriente_total_a: 500.0,
             carga_total_va: 240000,
           },
-          alimentador: {
-            corriente_a: 500.0,
-            seccion_mm2: 95,
+          feeder: {
+            current_a: 500.0,
+            section_mm2: 95,
             material: 'Cu',
-            longitud_m: 120,
+            length_m: 120,
           },
-          parametros: {
+          parameters: {
             main_breaker_amp: 600,
             tipo_instalacion: 'industrial',
             tipo_sistema_tierra: 'TT',
@@ -135,7 +135,7 @@ export class CalcGroundingController {
           },
           observaciones: [
             'Instalación industrial de alta potencia',
-            'Sistema TT con malla de tierra',
+            'system TT con malla de tierra',
           ],
         },
       },
@@ -150,24 +150,24 @@ export class CalcGroundingController {
         summary: 'Dimensionamiento exitoso',
         value: {
           conductor_proteccion: {
-            tipo: 'EGC',
-            seccion_mm2: 10,
+            type: 'EGC',
+            section_mm2: 10,
             calibre_awg: '8',
             material: 'Cu',
             longitud_minima_m: 3,
             observaciones: [
-              'Conductor de protección para breaker de 100A',
+              'conductor de protección para breaker de 100A',
               'Sección mínima requerida: 10mm² (8 AWG)',
             ],
           },
           conductor_tierra: {
-            tipo: 'GEC',
-            seccion_mm2: 16,
+            type: 'GEC',
+            section_mm2: 16,
             calibre_awg: '6',
             material: 'Cu',
             longitud_minima_m: 3,
             observaciones: [
-              'Conductor de tierra para breaker de 100A',
+              'conductor de tierra para breaker de 100A',
               'Sección mínima requerida: 16mm² (6 AWG)',
             ],
           },
@@ -179,7 +179,7 @@ export class CalcGroundingController {
             longitud_electrodo_m: 2.4,
             separacion_electrodos_m: 0,
             observaciones: [
-              'Sistema TN-S para instalación residencial',
+              'system TN-S para instalación residencial',
               'Resistencia máxima: 25Ω',
               '1 electrodo(s) de Varilla de cobre',
             ],
@@ -195,10 +195,10 @@ export class CalcGroundingController {
             cumplimiento_normas: 'NEC 250.66',
           },
           observaciones_generales: [
-            'Sistema de puesta a tierra para breaker de 100A',
+            'system de puesta a tierra para breaker de 100A',
             'EGC: 10mm² (8 AWG)',
             'GEC: 16mm² (6 AWG)',
-            'Sistema TN-S con 1 electrodo(s)',
+            'system TN-S con 1 electrodo(s)',
             'Resistencia máxima: 25Ω',
           ],
           metadata: {
@@ -222,7 +222,7 @@ export class CalcGroundingController {
           items: { type: 'string' },
           example: [
             'main_breaker_amp must be a positive number',
-            'tension_v must be a positive number',
+            'voltage_v must be a positive number',
           ],
         },
         error: { type: 'string', example: 'Bad Request' },
@@ -246,3 +246,4 @@ export class CalcGroundingController {
     return this.groundingService.size(request);
   }
 }
+

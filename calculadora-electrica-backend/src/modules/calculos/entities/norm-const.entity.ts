@@ -1,4 +1,4 @@
-import { Entity, Column, Index } from 'typeorm';
+﻿import { Entity, Column, Index } from 'typeorm';
 import { BaseAuditEntity } from '../../../common/entities/base-audit.entity';
 
 @Entity('norm_const')
@@ -13,7 +13,7 @@ export class NormConst extends BaseAuditEntity {
   })
   key: string;
 
-  @Column({ type: 'varchar', length: 255, comment: 'Valor del parámetro' })
+  @Column({ type: 'varchar', length: 255, comment: 'value del parámetro' })
   value: string;
 
   @Column({ type: 'varchar', length: 50, comment: 'Unidad de medida' })
@@ -26,3 +26,4 @@ export class NormConst extends BaseAuditEntity {
   })
   notes?: string;
 }
+

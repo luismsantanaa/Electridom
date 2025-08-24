@@ -1,21 +1,22 @@
-import { BaseSpecification } from '../../../common/specifications/base.specification';
-import { Ambiente } from '../entities/ambiente.entity';
+﻿import { BaseSpecification } from '../../../common/specifications/base.specification';
+import { environment } from '../entities/environment.entity';
 import { SelectQueryBuilder } from 'typeorm';
 
-export class ActivoSpecification extends BaseSpecification<Ambiente> {
+export class ActivoSpecification extends BaseSpecification<environment> {
   constructor(private readonly activo: boolean = true) {
     super();
   }
 
-  isSatisfiedBy(entity: Ambiente): boolean {
+  isSatisfiedBy(entity: environment): boolean {
     return entity.active === this.activo;
   }
 
   toQueryBuilder(
-    queryBuilder: SelectQueryBuilder<Ambiente>,
-  ): SelectQueryBuilder<Ambiente> {
-    return queryBuilder.andWhere('ambiente.activo = :activo', {
+    queryBuilder: SelectQueryBuilder<environment>,
+  ): SelectQueryBuilder<environment> {
+    return queryBuilder.andWhere('environment.activo = :activo', {
       activo: this.activo,
     });
   }
 }
+

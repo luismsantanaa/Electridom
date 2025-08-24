@@ -1,4 +1,4 @@
-#!/usr/bin/env ts-node
+﻿#!/usr/bin/env ts-node
 
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from '../src/app.module';
@@ -19,7 +19,7 @@ async function rotateKeys() {
 
     logger.log(`✅ Clave RSA rotada exitosamente`);
     logger.log(`   KID: ${newKey.kid}`);
-    logger.log(`   Tipo: ${newKey.type}`);
+    logger.log(`   type: ${newKey.type}`);
     logger.log(`   Activa: ${newKey.isActive}`);
     logger.log(`   Creada: ${newKey.createdAt}`);
 
@@ -35,3 +35,4 @@ async function rotateKeys() {
 if (require.main === module) {
   rotateKeys();
 }
+

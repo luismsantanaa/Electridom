@@ -1,4 +1,4 @@
-import { MigrationInterface, QueryRunner, Table } from 'typeorm';
+﻿import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
 export class CreateResistivityTable1756000000004 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
@@ -18,14 +18,14 @@ export class CreateResistivityTable1756000000004 implements MigrationInterface {
             type: 'varchar',
             length: '100',
             isNullable: true,
-            comment: 'Usuario que creó el registro',
+            comment: 'user que creó el registro',
           },
           {
             name: 'usr_update',
             type: 'varchar',
             length: '100',
             isNullable: true,
-            comment: 'Usuario que actualizó el registro',
+            comment: 'user que actualizó el registro',
           },
           {
             name: 'creation_date',
@@ -48,10 +48,10 @@ export class CreateResistivityTable1756000000004 implements MigrationInterface {
             name: 'material',
             type: 'varchar',
             length: '10',
-            comment: 'Material del conductor (Cu, Al)',
+            comment: 'material del conductor (Cu, Al)',
           },
           {
-            name: 'seccion_mm2',
+            name: 'section_mm2',
             type: 'decimal',
             precision: 8,
             scale: 3,
@@ -68,17 +68,17 @@ export class CreateResistivityTable1756000000004 implements MigrationInterface {
             name: 'notes',
             type: 'text',
             isNullable: true,
-            comment: 'Notas y observaciones de la resistividad',
+            comment: 'Notas y observaciones de la resistivity',
           },
         ],
         indices: [
           {
             name: 'IDX_RESISTIVITY_MATERIAL_SECTION',
-            columnNames: ['material', 'seccion_mm2', 'active'],
+            columnNames: ['material', 'section_mm2', 'active'],
           },
           {
             name: 'IDX_RESISTIVITY_SECTION',
-            columnNames: ['seccion_mm2', 'active'],
+            columnNames: ['section_mm2', 'active'],
           },
         ],
       }),
@@ -90,3 +90,4 @@ export class CreateResistivityTable1756000000004 implements MigrationInterface {
     await queryRunner.dropTable('resistivity');
   }
 }
+

@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+﻿import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsNotEmpty } from 'class-validator';
 
 export class RefreshTokenDto {
@@ -25,12 +25,12 @@ export class LoginResponseDto {
   refresh_token: string;
 
   @ApiProperty({
-    description: 'Información del usuario',
+    description: 'Información del user',
     example: {
       id: '7d4b3e44-e850-43bb-94b4-48ad19a29953',
       email: 'test@example.com',
       username: 'testuser',
-      nombre: 'Test',
+      name: 'Test',
       apellido: 'User',
       role: 'cliente',
     },
@@ -39,7 +39,7 @@ export class LoginResponseDto {
     id: string;
     email: string;
     username: string;
-    nombre: string;
+    name: string;
     apellido: string;
     role: string;
   };
@@ -96,3 +96,4 @@ export class SessionDto {
   })
   jti: string;
 }
+

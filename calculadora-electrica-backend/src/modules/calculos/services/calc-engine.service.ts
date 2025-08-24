@@ -1,10 +1,10 @@
-import { Injectable, Logger } from '@nestjs/common';
+﻿import { Injectable, Logger } from '@nestjs/common';
 import { NormParamService } from './norm-param.service';
 import { MetricsService } from '../../metrics/metrics.service';
 import { 
   CalcRoomsRequestDto, 
-  SuperficieDto, 
-  ConsumoDto, 
+  SurfaceDto, 
+  ConsumptionDto, 
   SystemConfigDto 
 } from '../dtos/calc-rooms-request.dto';
 import { 
@@ -14,9 +14,9 @@ import {
 } from '../dtos/calc-rooms-response.dto';
 
 interface AmbienteCarga {
-  nombre: string;
+  name: string;
   area_m2: number;
-  consumos: ConsumoDto[];
+  consumptions: ConsumptionDto[];
   carga_va: number;
   fp_efectivo: number;
   observaciones: string[];
@@ -32,21 +32,21 @@ export class CalcEngineService {
   ) {}
 
   /**
-   * Calcular cargas por ambiente
+   * Calcular loads por environment
    */
   async calcByRoom(request: CalcRoomsRequestDto): Promise<CalcRoomsResponseDto> {
     const startTime = Date.now();
     
     try {
-      this.logger.log('Iniciando cálculo de cargas por ambiente');
+      this.logger.log('Iniciando cálculo de loads por environment');
       
-      // Configuración del sistema
+      // Configuración del system
       const system = request.system || { voltage: 120, phases: 1, frequency: 60 };
       
-      // Agrupar consumos por ambiente
-      const ambientesCarga = this.groupConsumosByAmbiente(request.superficies, request.consumos);
+      // Agrupar consumptions por environment
+      const ambientesCarga = this.groupConsumosByAmbiente(request.surfaces, request.consumptions);
       
-      // Calcular cargas por ambiente
+      // Calcular loads por environment
       const resultadosAmbientes = await this.calculateAmbienteCargas(ambientesCarga);
       
       // Calcular totales
@@ -59,8 +59,8 @@ export class CalcEngineService {
       this.logger.log(`Cálculo completado en ${duration}ms`);
       
       return {
-        ambientes: resultadosAmbientes.map(amb => ({
-          nombre: amb.nombre,
+        environments: resultadosAmbientes.map(amb => ({
+          name: amb.name,
           area_m2: amb.area_m2,
           carga_va: amb.carga_va,
           fp: amb.fp_efectivo,
@@ -73,36 +73,36 @@ export class CalcEngineService {
       };
       
     } catch (error) {
-      this.logger.error('Error en cálculo de cargas por ambiente:', error.message);
+      this.logger.error('Error en cálculo de loads por environment:', error.message);
       throw error;
     }
   }
 
   /**
-   * Agrupar consumos por ambiente
+   * Agrupar consumptions por environment
    */
-  private groupConsumosByAmbiente(superficies: SuperficieDto[], consumos: ConsumoDto[]): AmbienteCarga[] {
+  private groupConsumosByAmbiente(surfaces: SurfaceDto[], consumptions: ConsumptionDto[]): AmbienteCarga[] {
     const ambientesMap = new Map<string, AmbienteCarga>();
     
-    // Inicializar ambientes con superficies
-    for (const superficie of superficies) {
-      ambientesMap.set(superficie.nombre, {
-        nombre: superficie.nombre,
-        area_m2: superficie.area_m2,
-        consumos: [],
+    // Inicializar environments con surfaces
+    for (const surface of surfaces) {
+      ambientesMap.set(surface.name, {
+        name: surface.name,
+        area_m2: surface.area_m2,
+        consumptions: [],
         carga_va: 0,
         fp_efectivo: 1.0,
         observaciones: [],
       });
     }
     
-    // Agrupar consumos por ambiente
-    for (const consumo of consumos) {
-      const ambiente = ambientesMap.get(consumo.ambiente);
-      if (ambiente) {
-        ambiente.consumos.push(consumo);
+    // Agrupar consumptions por environment
+    for (const consumption of consumptions) {
+      const environment = ambientesMap.get(consumption.environment);
+      if (environment) {
+        environment.consumptions.push(consumption);
       } else {
-        this.logger.warn(`Ambiente '${consumo.ambiente}' no encontrado en superficies`);
+        this.logger.warn(`environment '${consumption.environment}' no encontrado en surfaces`);
       }
     }
     
@@ -110,61 +110,61 @@ export class CalcEngineService {
   }
 
   /**
-   * Calcular cargas por ambiente
+   * Calcular loads por environment
    */
-  private async calculateAmbienteCargas(ambientes: AmbienteCarga[]): Promise<AmbienteCarga[]> {
+  private async calculateAmbienteCargas(environments: AmbienteCarga[]): Promise<AmbienteCarga[]> {
     const lightingVaPerM2 = await this.normParamService.getParamAsNumber('lighting_va_per_m2');
     
-    for (const ambiente of ambientes) {
-      // Calcular carga base de iluminación
-      const cargaIluminacion = ambiente.area_m2 * lightingVaPerM2;
+    for (const environment of environments) {
+      // Calcular load base de iluminación
+      const cargaIluminacion = environment.area_m2 * lightingVaPerM2;
       
-      // Calcular carga de consumos definidos
+      // Calcular load de consumptions definidos
       let cargaConsumos = 0;
       let potenciaActiva = 0;
       let potenciaReactiva = 0;
       
-      for (const consumo of ambiente.consumos) {
-        const fp = consumo.fp || 0.9; // Factor de potencia por defecto
-        const potenciaVa = consumo.potencia_w / fp;
+      for (const consumption of environment.consumptions) {
+        const fp = consumption.fp || 0.9; // Factor de potencia por defecto
+        const potenciaVa = consumption.power_w / fp;
         
         cargaConsumos += potenciaVa;
-        potenciaActiva += consumo.potencia_w;
+        potenciaActiva += consumption.power_w;
         potenciaReactiva += potenciaVa * Math.sqrt(1 - fp * fp);
       }
       
-      // Carga total del ambiente
-      ambiente.carga_va = cargaIluminacion + cargaConsumos;
+      // load total del environment
+      environment.carga_va = cargaIluminacion + cargaConsumos;
       
       // Factor de potencia efectivo
-      if (ambiente.carga_va > 0) {
-        const fpEfectivo = potenciaActiva / ambiente.carga_va;
-        ambiente.fp_efectivo = Math.max(0.1, Math.min(1.0, fpEfectivo));
+      if (environment.carga_va > 0) {
+        const fpEfectivo = potenciaActiva / environment.carga_va;
+        environment.fp_efectivo = Math.max(0.1, Math.min(1.0, fpEfectivo));
       } else {
-        ambiente.fp_efectivo = 1.0;
+        environment.fp_efectivo = 1.0;
       }
       
       // Observaciones
-      ambiente.observaciones = [];
+      environment.observaciones = [];
       if (cargaIluminacion > 0) {
-        ambiente.observaciones.push(`Iluminación base: ${cargaIluminacion.toFixed(1)} VA (${lightingVaPerM2} VA/m²)`);
+        environment.observaciones.push(`Iluminación base: ${cargaIluminacion.toFixed(1)} VA (${lightingVaPerM2} VA/m²)`);
       }
       if (cargaConsumos > 0) {
-        ambiente.observaciones.push(`Consumos definidos: ${cargaConsumos.toFixed(1)} VA`);
+        environment.observaciones.push(`consumptions definidos: ${cargaConsumos.toFixed(1)} VA`);
       }
-      if (ambiente.consumos.length === 0) {
-        ambiente.observaciones.push('Solo carga base de iluminación');
+      if (environment.consumptions.length === 0) {
+        environment.observaciones.push('Solo load base de iluminación');
       }
     }
     
-    return ambientes;
+    return environments;
   }
 
   /**
-   * Calcular totales del sistema
+   * Calcular totales del system
    */
-  private calculateTotales(ambientes: AmbienteCarga[], system: SystemConfigDto): TotalesDto {
-    const cargaTotalVa = ambientes.reduce((sum, amb) => sum + amb.carga_va, 0);
+  private calculateTotales(environments: AmbienteCarga[], system: SystemConfigDto): TotalesDto {
+    const cargaTotalVa = environments.reduce((sum, amb) => sum + amb.carga_va, 0);
     const cargaDiversificadaVa = cargaTotalVa; // Por ahora sin factor de diversificación
     const voltage = system.voltage || 120;
     const phases = system.phases || 1;
@@ -174,7 +174,7 @@ export class CalcEngineService {
       carga_total_va: Math.round(cargaTotalVa * 100) / 100,
       carga_diversificada_va: Math.round(cargaDiversificadaVa * 100) / 100,
       corriente_total_a: Math.round(corrienteTotalA * 100) / 100,
-      tension_v: voltage,
+      voltage_v: voltage,
       phases: phases,
     };
   }
@@ -182,8 +182,8 @@ export class CalcEngineService {
   /**
    * Registrar métricas Prometheus
    */
-  private recordMetrics(ambientes: AmbienteCarga[], duration: number): void {
-    const totalVa = ambientes.reduce((sum, amb) => sum + amb.carga_va, 0);
+  private recordMetrics(environments: AmbienteCarga[], duration: number): void {
+    const totalVa = environments.reduce((sum, amb) => sum + amb.carga_va, 0);
     
     // Métricas específicas de CE-01
     this.metricsService.incrementCalcRuns('rooms', 'success');
@@ -196,3 +196,4 @@ export class CalcEngineService {
     this.logger.debug(`Métricas registradas: total_va=${totalVa.toFixed(1)}, duration=${duration}ms`);
   }
 }
+

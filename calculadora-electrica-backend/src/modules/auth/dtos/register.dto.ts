@@ -1,4 +1,4 @@
-import {
+﻿import {
   IsEmail,
   IsNotEmpty,
   IsString,
@@ -11,25 +11,25 @@ import { UserRole } from '../../users/entities/user.entity';
 
 export class RegisterDto {
   @ApiProperty({
-    example: 'usuario@ejemplo.com',
-    description: 'Correo electrónico del usuario',
+    example: 'user@ejemplo.com',
+    description: 'Correo electrónico del user',
   })
   @IsEmail({}, { message: 'El correo electrónico debe ser válido' })
   email: string;
 
   @ApiProperty({
     example: 'usuario123',
-    description: 'Nombre de usuario único',
+    description: 'name de user único',
   })
-  @IsString({ message: 'El nombre de usuario debe ser una cadena de texto' })
+  @IsString({ message: 'El name de user debe ser una cadena de texto' })
   @MinLength(3, {
-    message: 'El nombre de usuario debe tener al menos 3 caracteres',
+    message: 'El name de user debe tener al menos 3 caracteres',
   })
   username: string;
 
   @ApiProperty({
     example: 'Contraseña123!',
-    description: 'Contraseña del usuario',
+    description: 'Contraseña del user',
   })
   @IsString({ message: 'La contraseña debe ser una cadena de texto' })
   @MinLength(6, { message: 'La contraseña debe tener al menos 6 caracteres' })
@@ -37,22 +37,22 @@ export class RegisterDto {
 
   @ApiProperty({
     example: 'Juan',
-    description: 'Nombre del usuario',
+    description: 'name del user',
   })
-  @IsString({ message: 'El nombre debe ser una cadena de texto' })
-  @IsNotEmpty({ message: 'El nombre es obligatorio' })
-  nombre: string;
+  @IsString({ message: 'El name debe ser una cadena de texto' })
+  @IsNotEmpty({ message: 'El name es obligatorio' })
+  name: string;
 
   @ApiProperty({
     example: 'Pérez',
-    description: 'Apellido del usuario',
+    description: 'Apellido del user',
   })
   @IsString({ message: 'El apellido debe ser una cadena de texto' })
   @IsNotEmpty({ message: 'El apellido es obligatorio' })
   apellido: string;
 
   @ApiPropertyOptional({
-    description: 'Rol del usuario',
+    description: 'Rol del user',
     enum: UserRole,
     default: UserRole.CLIENTE,
   })
@@ -62,7 +62,7 @@ export class RegisterDto {
 
   @ApiProperty({
     example: '809-123-4567',
-    description: 'Número de teléfono del usuario',
+    description: 'Número de teléfono del user',
     required: false,
   })
   @IsOptional()
@@ -71,7 +71,7 @@ export class RegisterDto {
 
   @ApiProperty({
     example: 'Empresa XYZ',
-    description: 'Nombre de la empresa del usuario',
+    description: 'name de la empresa del user',
     required: false,
   })
   @IsOptional()
@@ -80,10 +80,11 @@ export class RegisterDto {
 
   @ApiProperty({
     example: '001-1234567-8',
-    description: 'Número de cédula del usuario',
+    description: 'Número de cédula del user',
     required: false,
   })
   @IsOptional()
   @IsString({ message: 'La cédula debe ser una cadena de texto' })
   cedula?: string;
 }
+

@@ -1,0 +1,7 @@
+﻿import { PartialType } from '@nestjs/mapped-types';
+import { CreateTipoArtefactoDto } from './create-type-artefacto.dto';
+
+export class UpdateTipoArtefactoDto extends PartialType(
+  CreateTipoArtefactoDto,
+) {}
+

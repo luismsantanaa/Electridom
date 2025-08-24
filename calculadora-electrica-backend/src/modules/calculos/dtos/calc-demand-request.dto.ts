@@ -1,4 +1,4 @@
-import {
+﻿import {
   IsArray,
   IsNumber,
   IsOptional,
@@ -9,11 +9,11 @@ import { Type } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CargaPorCategoriaDto {
-  @ApiProperty({ description: 'Categoría de carga' })
-  categoria: string;
+  @ApiProperty({ description: 'Categoría de load' })
+  category: string;
 
   @ApiProperty({
-    description: 'Carga total en VA para esta categoría',
+    description: 'load total en VA para esta categoría',
     minimum: 0,
   })
   @IsNumber()
@@ -22,19 +22,19 @@ export class CargaPorCategoriaDto {
 
   @ApiPropertyOptional({ description: 'Descripción de la categoría' })
   @IsOptional()
-  descripcion?: string;
+  description?: string;
 }
 
 export class TotalesInputDto {
-  @ApiProperty({ description: 'Carga total sin diversificar en VA' })
+  @ApiProperty({ description: 'load total sin diversificar en VA' })
   @IsNumber()
   @Min(0)
   carga_total_va: number;
 
-  @ApiProperty({ description: 'Tensión del sistema en voltios' })
+  @ApiProperty({ description: 'Tensión del system en voltios' })
   @IsNumber()
   @Min(1)
-  tension_v: number;
+  voltage_v: number;
 
   @ApiProperty({ description: 'Número de fases' })
   @IsNumber()
@@ -44,14 +44,14 @@ export class TotalesInputDto {
 export class CalcDemandRequestDto {
   @ApiProperty({
     type: [CargaPorCategoriaDto],
-    description: 'Cargas agrupadas por categoría desde CE-01',
+    description: 'loads agrupadas por categoría desde CE-01',
   })
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => CargaPorCategoriaDto)
   cargas_por_categoria: CargaPorCategoriaDto[];
 
-  @ApiProperty({ type: TotalesInputDto, description: 'Totales del sistema' })
+  @ApiProperty({ type: TotalesInputDto, description: 'Totales del system' })
   @ValidateNested()
   @Type(() => TotalesInputDto)
   totales: TotalesInputDto;
@@ -60,3 +60,4 @@ export class CalcDemandRequestDto {
   @IsOptional()
   observaciones?: string[];
 }
+

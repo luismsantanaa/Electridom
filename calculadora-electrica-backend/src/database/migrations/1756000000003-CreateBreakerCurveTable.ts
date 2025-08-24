@@ -1,4 +1,4 @@
-import { MigrationInterface, QueryRunner, Table } from 'typeorm';
+﻿import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
 export class CreateBreakerCurveTable1756000000003
   implements MigrationInterface
@@ -20,14 +20,14 @@ export class CreateBreakerCurveTable1756000000003
             type: 'varchar',
             length: '100',
             isNullable: true,
-            comment: 'Usuario que creó el registro',
+            comment: 'user que creó el registro',
           },
           {
             name: 'usr_update',
             type: 'varchar',
             length: '100',
             isNullable: true,
-            comment: 'Usuario que actualizó el registro',
+            comment: 'user que actualizó el registro',
           },
           {
             name: 'creation_date',
@@ -51,7 +51,7 @@ export class CreateBreakerCurveTable1756000000003
             type: 'decimal',
             precision: 8,
             scale: 2,
-            comment: 'Capacidad nominal del breaker en amperios',
+            comment: 'capacity nominal del breaker en amperios',
           },
           {
             name: 'poles',
@@ -100,3 +100,4 @@ export class CreateBreakerCurveTable1756000000003
     await queryRunner.dropTable('breaker_curve');
   }
 }
+

@@ -1,4 +1,4 @@
-import { Test, TestingModule } from '@nestjs/testing';
+﻿import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../../src/app.module';
@@ -81,16 +81,16 @@ describe('API Contract Tests (e2e)', () => {
           phases: 1,
           frequency: 60
         },
-        superficies: [
-          { nombre: "Sala", area_m2: 18 },
-          { nombre: "Cocina", area_m2: 12 }
+        surfaces: [
+          { name: "Sala", area_m2: 18 },
+          { name: "Cocina", area_m2: 12 }
         ],
-        consumos: [
+        consumptions: [
           {
-            nombre: "TV",
-            ambiente: "Sala",
-            potencia_w: 140,
-            tipo: "electrodomestico"
+            name: "TV",
+            environment: "Sala",
+            power_w: 140,
+            type: "electrodomestico"
           }
         ]
       };
@@ -101,11 +101,11 @@ describe('API Contract Tests (e2e)', () => {
         .expect(200)
         .expect((res) => {
           // Verificar estructura de respuesta
-          expect(res.body).toHaveProperty('ambientes');
+          expect(res.body).toHaveProperty('environments');
           expect(res.body).toHaveProperty('totales');
           expect(res.body).toHaveProperty('metadata');
           
-          expect(Array.isArray(res.body.ambientes)).toBe(true);
+          expect(Array.isArray(res.body.environments)).toBe(true);
           expect(res.body.totales).toHaveProperty('carga_total_va');
           expect(res.body.totales).toHaveProperty('corriente_total_a');
           expect(res.body.metadata).toHaveProperty('calculation_date');
@@ -117,11 +117,11 @@ describe('API Contract Tests (e2e)', () => {
       const requestData = {
         cargas_por_categoria: [
           {
-            categoria: "iluminacion_general",
+            category: "iluminacion_general",
             carga_bruta_va: 1200
           }
         ],
-        parametros: {
+        parameters: {
           tipo_instalacion: "residencial"
         }
       };
@@ -146,13 +146,13 @@ describe('API Contract Tests (e2e)', () => {
         circuitos_individuales: [
           {
             id_circuito: "CIRC-001",
-            nombre: "Circuito de Prueba",
-            corriente_a: 10,
+            name: "circuit de Prueba",
+            current_a: 10,
             carga_va: 1200,
-            longitud_m: 20
+            length_m: 20
           }
         ],
-        parametros: {
+        parameters: {
           material_conductor: "Cu",
           tipo_instalacion: "residencial"
         }
@@ -178,19 +178,19 @@ describe('API Contract Tests (e2e)', () => {
         circuitos_ramales: [
           {
             id_circuito: "CIRC-001",
-            nombre: "Alimentador Principal",
+            name: "feeder Principal",
             corriente_total_a: 15,
             carga_total_va: 1800,
-            longitud_m: 30
+            length_m: 30
           }
         ],
-        sistema: {
-          tension_v: 120,
+        system: {
+          voltage_v: 120,
           phases: 1,
           corriente_total_a: 15,
           carga_total_va: 1800
         },
-        parametros: {
+        parameters: {
           longitud_alimentador_m: 40,
           material_conductor: "Cu",
           max_caida_ramal_pct: 3,
@@ -204,32 +204,32 @@ describe('API Contract Tests (e2e)', () => {
         .expect(200)
         .expect((res) => {
           expect(res.body).toHaveProperty('circuitos_analisis');
-          expect(res.body).toHaveProperty('alimentador');
+          expect(res.body).toHaveProperty('feeder');
           expect(res.body).toHaveProperty('resumen');
           expect(res.body).toHaveProperty('metadata');
           
           expect(Array.isArray(res.body.circuitos_analisis)).toBe(true);
-          expect(res.body.alimentador).toHaveProperty('material');
-          expect(res.body.alimentador).toHaveProperty('seccion_mm2');
+          expect(res.body.feeder).toHaveProperty('material');
+          expect(res.body.feeder).toHaveProperty('section_mm2');
           expect(res.body.resumen).toHaveProperty('estado_general');
         });
     });
 
     it('should validate grounding endpoint contract', () => {
       const requestData = {
-        sistema: {
-          tension_v: 120,
+        system: {
+          voltage_v: 120,
           phases: 1,
           corriente_total_a: 20,
           carga_total_va: 2400
         },
-        alimentador: {
-          corriente_a: 20,
-          seccion_mm2: 16,
+        feeder: {
+          current_a: 20,
+          section_mm2: 16,
           material: "Cu",
-          longitud_m: 25
+          length_m: 25
         },
-        parametros: {
+        parameters: {
           main_breaker_amp: 150,
           tipo_instalacion: "comercial",
           tipo_sistema_tierra: "TN-S",
@@ -248,7 +248,7 @@ describe('API Contract Tests (e2e)', () => {
           expect(res.body).toHaveProperty('resumen');
           expect(res.body).toHaveProperty('metadata');
           
-          expect(res.body.conductor_proteccion).toHaveProperty('seccion_mm2');
+          expect(res.body.conductor_proteccion).toHaveProperty('section_mm2');
           expect(res.body.conductor_proteccion).toHaveProperty('calibre_awg');
           expect(res.body.sistema_tierra).toHaveProperty('tipo_sistema');
           expect(res.body.resumen).toHaveProperty('estado');
@@ -287,8 +287,8 @@ describe('API Contract Tests (e2e)', () => {
   describe('Error Handling Contract', () => {
     it('should return proper error structure for invalid input', () => {
       const invalidRequest = {
-        superficies: [], // Array vacío - inválido
-        consumos: []     // Array vacío - inválido
+        surfaces: [], // Array vacío - inválido
+        consumptions: []     // Array vacío - inválido
       };
 
       return request(app.getHttpServer())
@@ -305,8 +305,8 @@ describe('API Contract Tests (e2e)', () => {
 
     it('should return proper error structure for missing required fields', () => {
       const incompleteRequest = {
-        superficies: [
-          { nombre: "Sala" } // Falta area_m2
+        surfaces: [
+          { name: "Sala" } // Falta area_m2
         ]
       };
 
@@ -356,3 +356,4 @@ describe('API Contract Tests (e2e)', () => {
     });
   });
 });
+

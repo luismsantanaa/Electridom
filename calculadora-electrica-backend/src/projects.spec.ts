@@ -1,4 +1,4 @@
-import { projectFixtures } from '../test/e2e/fixtures/project-payloads';
+﻿import { projectFixtures } from '../test/e2e/fixtures/project-payloads';
 
 describe('Projects Validation Tests', () => {
   describe('Project Structure Validation', () => {
@@ -8,20 +8,20 @@ describe('Projects Validation Tests', () => {
       // Verificar estructura básica
       expect(validProject).toHaveProperty('projectName');
       expect(validProject).toHaveProperty('description');
-      expect(validProject).toHaveProperty('superficies');
-      expect(validProject).toHaveProperty('consumos');
+      expect(validProject).toHaveProperty('surfaces');
+      expect(validProject).toHaveProperty('consumptions');
       expect(validProject).toHaveProperty('opciones');
       expect(validProject).toHaveProperty('computeNow');
 
       // Verificar tipos de datos
       expect(typeof validProject.projectName).toBe('string');
       expect(typeof validProject.description).toBe('string');
-      expect(Array.isArray(validProject.superficies)).toBe(true);
-      expect(Array.isArray(validProject.consumos)).toBe(true);
+      expect(Array.isArray(validProject.surfaces)).toBe(true);
+      expect(Array.isArray(validProject.consumptions)).toBe(true);
       expect(typeof validProject.opciones).toBe('object');
       expect(typeof validProject.computeNow).toBe('boolean');
 
-      // Verificar que el nombre no esté vacío
+      // Verificar que el name no esté vacío
       expect(validProject.projectName.length).toBeGreaterThan(0);
     });
 
@@ -42,16 +42,16 @@ describe('Projects Validation Tests', () => {
       const projectWithCalculation = projectFixtures.valid.minimal;
 
       expect(projectWithCalculation.computeNow).toBe(true);
-      expect(projectWithCalculation.superficies.length).toBeGreaterThan(0);
-      expect(projectWithCalculation.consumos.length).toBeGreaterThan(0);
+      expect(projectWithCalculation.surfaces.length).toBeGreaterThan(0);
+      expect(projectWithCalculation.consumptions.length).toBeGreaterThan(0);
     });
 
     it('should validate project without calculation data', () => {
       const projectWithoutCalculation = projectFixtures.valid.withoutCalculation;
 
       expect(projectWithoutCalculation.computeNow).toBe(false);
-      expect(projectWithoutCalculation.superficies.length).toBe(0);
-      expect(projectWithoutCalculation.consumos.length).toBe(0);
+      expect(projectWithoutCalculation.surfaces.length).toBe(0);
+      expect(projectWithoutCalculation.consumptions.length).toBe(0);
     });
   });
 
@@ -60,30 +60,30 @@ describe('Projects Validation Tests', () => {
       const projectWithCalculation = projectFixtures.valid.minimal;
 
       if (projectWithCalculation.computeNow) {
-        // Verificar que hay superficies
-        expect(projectWithCalculation.superficies.length).toBeGreaterThan(0);
+        // Verificar que hay surfaces
+        expect(projectWithCalculation.surfaces.length).toBeGreaterThan(0);
         
-        // Verificar que hay consumos
-        expect(projectWithCalculation.consumos.length).toBeGreaterThan(0);
+        // Verificar que hay consumptions
+        expect(projectWithCalculation.consumptions.length).toBeGreaterThan(0);
         
-        // Verificar estructura de superficies
-        projectWithCalculation.superficies.forEach(superficie => {
-          expect(superficie).toHaveProperty('ambiente');
-          expect(superficie).toHaveProperty('areaM2');
-          expect(typeof superficie.ambiente).toBe('string');
-          expect(typeof superficie.areaM2).toBe('number');
-          expect(superficie.areaM2).toBeGreaterThan(0);
+        // Verificar estructura de surfaces
+        projectWithCalculation.surfaces.forEach(surface => {
+          expect(surface).toHaveProperty('environment');
+          expect(surface).toHaveProperty('areaM2');
+          expect(typeof surface.environment).toBe('string');
+          expect(typeof surface.areaM2).toBe('number');
+          expect(surface.areaM2).toBeGreaterThan(0);
         });
 
-        // Verificar estructura de consumos
-        projectWithCalculation.consumos.forEach(consumo => {
-          expect(consumo).toHaveProperty('nombre');
-          expect(consumo).toHaveProperty('ambiente');
-          expect(consumo).toHaveProperty('watts');
-          expect(typeof consumo.nombre).toBe('string');
-          expect(typeof consumo.ambiente).toBe('string');
-          expect(typeof consumo.watts).toBe('number');
-          expect(consumo.watts).toBeGreaterThan(0);
+        // Verificar estructura de consumptions
+        projectWithCalculation.consumptions.forEach(consumption => {
+          expect(consumption).toHaveProperty('name');
+          expect(consumption).toHaveProperty('environment');
+          expect(consumption).toHaveProperty('watts');
+          expect(typeof consumption.name).toBe('string');
+          expect(typeof consumption.environment).toBe('string');
+          expect(typeof consumption.watts).toBe('number');
+          expect(consumption.watts).toBeGreaterThan(0);
         });
 
         // Verificar opciones
@@ -98,12 +98,12 @@ describe('Projects Validation Tests', () => {
       const invalidProject = projectFixtures.invalid.invalidCalculationData;
 
       // Verificar áreas negativas
-      const negativeArea = invalidProject.superficies.find(s => s.areaM2 < 0);
+      const negativeArea = invalidProject.surfaces.find(s => s.areaM2 < 0);
       expect(negativeArea).toBeDefined();
       expect(negativeArea!.areaM2).toBeLessThan(0);
 
       // Verificar watts negativos
-      const negativeWatts = invalidProject.consumos.find(c => c.watts < 0);
+      const negativeWatts = invalidProject.consumptions.find(c => c.watts < 0);
       expect(negativeWatts).toBeDefined();
       expect(negativeWatts!.watts).toBeLessThan(0);
     });
@@ -113,11 +113,11 @@ describe('Projects Validation Tests', () => {
     it('should validate version structure', () => {
       const version = projectFixtures.versions.version1;
 
-      expect(version).toHaveProperty('superficies');
-      expect(version).toHaveProperty('consumos');
+      expect(version).toHaveProperty('surfaces');
+      expect(version).toHaveProperty('consumptions');
       expect(version).toHaveProperty('opciones');
-      expect(Array.isArray(version.superficies)).toBe(true);
-      expect(Array.isArray(version.consumos)).toBe(true);
+      expect(Array.isArray(version.surfaces)).toBe(true);
+      expect(Array.isArray(version.consumptions)).toBe(true);
       expect(typeof version.opciones).toBe('object');
     });
 
@@ -126,19 +126,19 @@ describe('Projects Validation Tests', () => {
       const version2 = projectFixtures.versions.version2;
       const version3 = projectFixtures.versions.version3;
 
-      // Version 2 tiene más ambientes que version 1
-      expect(version2.superficies.length).toBeGreaterThan(version1.superficies.length);
-      expect(version2.consumos.length).toBeGreaterThan(version1.consumos.length);
+      // Version 2 tiene más environments que version 1
+      expect(version2.surfaces.length).toBeGreaterThan(version1.surfaces.length);
+      expect(version2.consumptions.length).toBeGreaterThan(version1.consumptions.length);
 
-      // Version 3 tiene cambios en valores
-      const salaV1 = version1.superficies.find(s => s.ambiente === 'Sala');
-      const salaV3 = version3.superficies.find(s => s.ambiente === 'Sala');
+      // Version 3 tiene cambios en values
+      const salaV1 = version1.surfaces.find(s => s.environment === 'Sala');
+      const salaV3 = version3.surfaces.find(s => s.environment === 'Sala');
       expect(salaV1).toBeDefined();
       expect(salaV3).toBeDefined();
       expect(salaV3!.areaM2).toBeGreaterThan(salaV1!.areaM2);
 
-      const tvV1 = version1.consumos.find(c => c.nombre === 'Televisor');
-      const tvV3 = version3.consumos.find(c => c.nombre === 'Televisor');
+      const tvV1 = version1.consumptions.find(c => c.name === 'Televisor');
+      const tvV3 = version3.consumptions.find(c => c.name === 'Televisor');
       expect(tvV1).toBeDefined();
       expect(tvV3).toBeDefined();
       expect(tvV3!.watts).toBeGreaterThan(tvV1!.watts);
@@ -235,8 +235,8 @@ describe('Projects Validation Tests', () => {
         createdAt: '2024-01-01T00:00:00.000Z',
         rulesSignature: 'hash-string',
         inputData: {
-          superficies: [],
-          consumos: [],
+          surfaces: [],
+          consumptions: [],
           opciones: {},
         },
         outputTotales: {
@@ -269,3 +269,4 @@ describe('Projects Validation Tests', () => {
     });
   });
 });
+

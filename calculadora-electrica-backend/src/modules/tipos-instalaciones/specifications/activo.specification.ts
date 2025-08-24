@@ -1,6 +1,6 @@
-import { SelectQueryBuilder } from 'typeorm';
+﻿import { SelectQueryBuilder } from 'typeorm';
 import { BaseSpecification } from '../../../common/specifications/base.specification';
-import { TipoInstalacion } from '../entities/tipo-instalacion.entity';
+import { TipoInstalacion } from '../entities/type-installation.entity';
 
 export class ActivoSpecification extends BaseSpecification<TipoInstalacion> {
   constructor(private readonly activo: boolean = true) {
@@ -19,3 +19,4 @@ export class ActivoSpecification extends BaseSpecification<TipoInstalacion> {
     });
   }
 }
+

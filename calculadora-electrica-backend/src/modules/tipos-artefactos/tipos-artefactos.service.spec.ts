@@ -1,9 +1,9 @@
-import { Test, TestingModule } from '@nestjs/testing';
+﻿import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { TiposArtefactosService } from './tipos-artefactos.service';
-import { TipoArtefacto } from './entities/tipo-artefacto.entity';
-import { CreateTipoArtefactoDto } from './dtos/create-tipo-artefacto.dto';
-import { UpdateTipoArtefactoDto } from './dtos/update-tipo-artefacto.dto';
+import { TipoArtefacto } from './entities/type-artefacto.entity';
+import { CreateTipoArtefactoDto } from './dtos/create-type-artefacto.dto';
+import { UpdateTipoArtefactoDto } from './dtos/update-type-artefacto.dto';
 import { NotFoundException } from '@nestjs/common';
 import { PaginateQuery, paginate } from 'nestjs-paginate';
 
@@ -44,30 +44,30 @@ describe('TiposArtefactosService', () => {
   });
 
   describe('create', () => {
-    it('should create a new tipo artefacto', async () => {
+    it('should create a new type artefacto', async () => {
       const createDto: CreateTipoArtefactoDto = {
-        nombre: 'Test Artefacto',
+        name: 'Test Artefacto',
         potencia: 100,
         voltaje: 220,
         tipoAmbiente_Id: '1',
       };
-      const usuario = 'testUser';
+      const user = 'testUser';
       const expectedTipoArtefacto = {
         ...createDto,
         id: '1',
         activo: true,
-        creadoPor: usuario,
+        creadoPor: user,
       };
 
       mockRepository.create.mockReturnValue(expectedTipoArtefacto);
       mockRepository.save.mockResolvedValue(expectedTipoArtefacto);
 
-      const result = await service.create(createDto, usuario);
+      const result = await service.create(createDto, user);
 
       expect(result).toEqual(expectedTipoArtefacto);
       expect(mockRepository.create).toHaveBeenCalledWith({
         ...createDto,
-        usrCreate: usuario,
+        usrCreate: user,
       });
       expect(mockRepository.save).toHaveBeenCalledWith(expectedTipoArtefacto);
     });
@@ -83,7 +83,7 @@ describe('TiposArtefactosService', () => {
       const mockData = [
         {
           id: '1',
-          nombre: 'Test Artefacto',
+          name: 'Test Artefacto',
           potencia: 100,
           voltaje: 220,
           tipoAmbiente_Id: '1',
@@ -95,8 +95,8 @@ describe('TiposArtefactosService', () => {
         totalItems: 1,
         currentPage: 1,
         totalPages: 1,
-        sortBy: [['nombre', 'ASC']],
-        searchBy: ['nombre'],
+        sortBy: [['name', 'ASC']],
+        searchBy: ['name'],
         search: '',
         select: [],
       };
@@ -124,7 +124,7 @@ describe('TiposArtefactosService', () => {
       const mockData = [
         {
           id: '1',
-          nombre: 'Test Artefacto',
+          name: 'Test Artefacto',
           activo: true,
         },
       ];
@@ -133,8 +133,8 @@ describe('TiposArtefactosService', () => {
         totalItems: 1,
         currentPage: 1,
         totalPages: 1,
-        sortBy: [['nombre', 'ASC']],
-        searchBy: ['nombre'],
+        sortBy: [['name', 'ASC']],
+        searchBy: ['name'],
         search: '',
         select: [],
       };
@@ -153,11 +153,11 @@ describe('TiposArtefactosService', () => {
   });
 
   describe('findOne', () => {
-    it('should return a tipo artefacto by id', async () => {
+    it('should return a type artefacto by id', async () => {
       const id = '1';
       const expectedTipoArtefacto = {
         id,
-        nombre: 'Test Artefacto',
+        name: 'Test Artefacto',
         potencia: 100,
         voltaje: 220,
         tipoAmbiente_Id: '1',
@@ -175,7 +175,7 @@ describe('TiposArtefactosService', () => {
       });
     });
 
-    it('should throw NotFoundException when tipo artefacto not found', async () => {
+    it('should throw NotFoundException when type artefacto not found', async () => {
       const id = '1';
       mockRepository.findOne.mockResolvedValue(null);
 
@@ -184,15 +184,15 @@ describe('TiposArtefactosService', () => {
   });
 
   describe('update', () => {
-    it('should update a tipo artefacto', async () => {
+    it('should update a type artefacto', async () => {
       const id = '1';
       const updateDto: UpdateTipoArtefactoDto = {
-        nombre: 'Updated Artefacto',
+        name: 'Updated Artefacto',
       };
-      const usuario = 'testUser';
+      const user = 'testUser';
       const existingTipoArtefacto = {
         id,
-        nombre: 'Test Artefacto',
+        name: 'Test Artefacto',
         potencia: 100,
         voltaje: 220,
         tipoAmbiente_Id: '1',
@@ -201,30 +201,30 @@ describe('TiposArtefactosService', () => {
       const updatedTipoArtefacto = {
         ...existingTipoArtefacto,
         ...updateDto,
-        actualizadoPor: usuario,
+        actualizadoPor: user,
       };
 
       mockRepository.findOne.mockResolvedValue(existingTipoArtefacto);
       mockRepository.save.mockResolvedValue(updatedTipoArtefacto);
 
-      const result = await service.update(id, updateDto, usuario);
+      const result = await service.update(id, updateDto, user);
 
       expect(result).toEqual(updatedTipoArtefacto);
       expect(mockRepository.save).toHaveBeenCalledWith(
         expect.objectContaining({
-          usrUpdate: usuario,
+          usrUpdate: user,
         }),
       );
     });
   });
 
   describe('remove', () => {
-    it('should soft delete a tipo artefacto', async () => {
+    it('should soft delete a type artefacto', async () => {
       const id = '1';
-      const usuario = 'testUser';
+      const user = 'testUser';
       const existingTipoArtefacto = {
         id,
-        nombre: 'Test Artefacto',
+        name: 'Test Artefacto',
         potencia: 100,
         voltaje: 220,
         tipoAmbiente_Id: '1',
@@ -233,20 +233,21 @@ describe('TiposArtefactosService', () => {
       const deletedTipoArtefacto = {
         ...existingTipoArtefacto,
         activo: false,
-        actualizadoPor: usuario,
+        actualizadoPor: user,
       };
 
       mockRepository.findOne.mockResolvedValue(existingTipoArtefacto);
       mockRepository.save.mockResolvedValue(deletedTipoArtefacto);
 
-      await service.remove(id, usuario);
+      await service.remove(id, user);
 
       expect(mockRepository.save).toHaveBeenCalledWith(
         expect.objectContaining({
           active: false,
-          usrUpdate: usuario,
+          usrUpdate: user,
         }),
       );
     });
   });
 });
+

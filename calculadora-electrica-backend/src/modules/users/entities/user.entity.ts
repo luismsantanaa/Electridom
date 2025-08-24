@@ -1,4 +1,4 @@
-import { Entity, Column, BeforeInsert } from 'typeorm';
+﻿import { Entity, Column, BeforeInsert } from 'typeorm';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { BaseAuditEntity } from '../../../common/entities/base-audit.entity';
 import { HashService, HashResult } from '../../../common/services/hash.service';
@@ -31,30 +31,30 @@ export type UserWithoutPassword = Omit<
 export class User extends BaseAuditEntity {
   private hashService: HashService;
 
-  @ApiProperty({ description: 'ID único del usuario' })
+  @ApiProperty({ description: 'ID único del user' })
   // id ya viene de BaseAuditEntity
-  @ApiProperty({ description: 'Nombre de usuario único' })
+  @ApiProperty({ description: 'name de user único' })
   @Column({ unique: true, length: 50 })
   username: string;
 
-  @ApiProperty({ description: 'Correo electrónico del usuario' })
+  @ApiProperty({ description: 'Correo electrónico del user' })
   @Column({ unique: true, length: 100 })
   email: string;
 
-  @ApiProperty({ description: 'Contraseña del usuario' })
+  @ApiProperty({ description: 'Contraseña del user' })
   @Column({ length: 255 })
   password: string;
 
-  @ApiProperty({ description: 'Nombre del usuario' })
+  @ApiProperty({ description: 'name del user' })
   @Column({ length: 50 })
-  nombre: string;
+  name: string;
 
-  @ApiProperty({ description: 'Apellido del usuario' })
+  @ApiProperty({ description: 'Apellido del user' })
   @Column({ length: 50 })
   apellido: string;
 
   @ApiProperty({
-    description: 'Rol del usuario',
+    description: 'Rol del user',
     enum: UserRole,
     default: UserRole.CLIENTE,
   })
@@ -66,7 +66,7 @@ export class User extends BaseAuditEntity {
   role: UserRole;
 
   @ApiProperty({
-    description: 'Estado del usuario',
+    description: 'Estado del user',
     enum: UserStatus,
     default: UserStatus.ACTIVO,
   })
@@ -175,3 +175,4 @@ export class User extends BaseAuditEntity {
     return result;
   }
 }
+

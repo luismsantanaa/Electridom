@@ -1,21 +1,22 @@
-import { BaseSpecification } from '../../../common/specifications/base.specification';
-import { Ambiente } from '../entities/ambiente.entity';
+﻿import { BaseSpecification } from '../../../common/specifications/base.specification';
+import { environment } from '../entities/environment.entity';
 import { SelectQueryBuilder } from 'typeorm';
 
-export class NombreSpecification extends BaseSpecification<Ambiente> {
-  constructor(private readonly nombre: string) {
+export class NombreSpecification extends BaseSpecification<environment> {
+  constructor(private readonly name: string) {
     super();
   }
 
-  isSatisfiedBy(entity: Ambiente): boolean {
-    return entity.nombre.toLowerCase().includes(this.nombre.toLowerCase());
+  isSatisfiedBy(entity: environment): boolean {
+    return entity.name.toLowerCase().includes(this.name.toLowerCase());
   }
 
   toQueryBuilder(
-    queryBuilder: SelectQueryBuilder<Ambiente>,
-  ): SelectQueryBuilder<Ambiente> {
-    return queryBuilder.andWhere('ambiente.nombre ILIKE :nombre', {
-      nombre: `%${this.nombre}%`,
+    queryBuilder: SelectQueryBuilder<environment>,
+  ): SelectQueryBuilder<environment> {
+    return queryBuilder.andWhere('environment.name ILIKE :name', {
+      name: `%${this.name}%`,
     });
   }
 }
+

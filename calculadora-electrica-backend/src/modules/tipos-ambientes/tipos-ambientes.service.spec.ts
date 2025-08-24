@@ -1,9 +1,9 @@
-import { Test, TestingModule } from '@nestjs/testing';
+﻿import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { TiposAmbientesService } from './tipos-ambientes.service';
-import { TipoAmbiente } from './entities/tipo-ambiente.entity';
-import { CreateTipoAmbienteDto } from './dtos/create-tipo-ambiente.dto';
-import { UpdateTipoAmbienteDto } from './dtos/update-tipo-ambiente.dto';
+import { TiposAmbientesService } from './tipos-environments.service';
+import { TipoAmbiente } from './entities/type-environment.entity';
+import { CreateTipoAmbienteDto } from './dtos/create-type-environment.dto';
+import { UpdateTipoAmbienteDto } from './dtos/update-type-environment.dto';
 import { NotFoundException } from '@nestjs/common';
 import { PaginateQuery, paginate } from 'nestjs-paginate';
 import { ActivoSpecification } from './specifications/activo.specification';
@@ -45,28 +45,28 @@ describe('TiposAmbientesService', () => {
   });
 
   describe('create', () => {
-    it('should create a new tipo ambiente', async () => {
+    it('should create a new type environment', async () => {
       const createDto: CreateTipoAmbienteDto = {
-        nombre: 'Test Ambiente',
+        name: 'Test environment',
         tipoInstalacion_Id: '1',
       };
-      const usuario = 'testUser';
+      const user = 'testUser';
       const expectedTipoAmbiente = {
         ...createDto,
         id: '1',
         activo: true,
-        creadoPor: usuario,
+        creadoPor: user,
       };
 
       mockRepository.create.mockReturnValue(expectedTipoAmbiente);
       mockRepository.save.mockResolvedValue(expectedTipoAmbiente);
 
-      const result = await service.create(createDto, usuario);
+      const result = await service.create(createDto, user);
 
       expect(result).toEqual(expectedTipoAmbiente);
       expect(mockRepository.create).toHaveBeenCalledWith({
         ...createDto,
-        usrCreate: usuario,
+        usrCreate: user,
       });
       expect(mockRepository.save).toHaveBeenCalledWith(expectedTipoAmbiente);
     });
@@ -77,14 +77,14 @@ describe('TiposAmbientesService', () => {
       const query: PaginateQuery = {
         page: 1,
         limit: 10,
-        path: '/tipos-ambientes',
+        path: '/tipos-environments',
       };
       const mockData = [
         {
           id: '1',
-          nombre: 'Test Ambiente',
+          name: 'Test environment',
           activo: true,
-          tipoInstalacion: { id: '1', nombre: 'Test Instalacion' },
+          tipoInstalacion: { id: '1', name: 'Test installation' },
         },
       ];
       const mockMeta = {
@@ -92,8 +92,8 @@ describe('TiposAmbientesService', () => {
         totalItems: 1,
         currentPage: 1,
         totalPages: 1,
-        sortBy: [['nombre', 'ASC']],
-        searchBy: ['nombre'],
+        sortBy: [['name', 'ASC']],
+        searchBy: ['name'],
         search: '',
         select: [],
       };
@@ -117,16 +117,16 @@ describe('TiposAmbientesService', () => {
       const query: PaginateQuery = {
         page: 1,
         limit: 10,
-        path: '/tipos-ambientes',
+        path: '/tipos-environments',
       };
       const specification = new ActivoSpecification(true);
 
       const mockData = [
         {
           id: '1',
-          nombre: 'Test Ambiente',
+          name: 'Test environment',
           activo: true,
-          tipoInstalacion: { id: '1', nombre: 'Test Instalacion' },
+          tipoInstalacion: { id: '1', name: 'Test installation' },
         },
       ];
       const mockMeta = {
@@ -134,8 +134,8 @@ describe('TiposAmbientesService', () => {
         totalItems: 1,
         currentPage: 1,
         totalPages: 1,
-        sortBy: [['nombre', 'ASC']],
-        searchBy: ['nombre'],
+        sortBy: [['name', 'ASC']],
+        searchBy: ['name'],
         search: '',
         select: [],
       };
@@ -154,11 +154,11 @@ describe('TiposAmbientesService', () => {
   });
 
   describe('findOne', () => {
-    it('should return a tipo ambiente by id', async () => {
+    it('should return a type environment by id', async () => {
       const id = '1';
       const expectedTipoAmbiente = {
         id,
-        nombre: 'Test Ambiente',
+        name: 'Test environment',
         activo: true,
       };
 
@@ -172,7 +172,7 @@ describe('TiposAmbientesService', () => {
       });
     });
 
-    it('should throw NotFoundException when tipo ambiente not found', async () => {
+    it('should throw NotFoundException when type environment not found', async () => {
       const id = '1';
       mockRepository.findOne.mockResolvedValue(null);
 
@@ -181,27 +181,27 @@ describe('TiposAmbientesService', () => {
   });
 
   describe('update', () => {
-    it('should update a tipo ambiente', async () => {
+    it('should update a type environment', async () => {
       const id = '1';
       const updateDto: UpdateTipoAmbienteDto = {
-        nombre: 'Updated Ambiente',
+        name: 'Updated environment',
       };
-      const usuario = 'testUser';
+      const user = 'testUser';
       const existingTipoAmbiente = {
         id,
-        nombre: 'Test Ambiente',
+        name: 'Test environment',
         activo: true,
       };
       const updatedTipoAmbiente = {
         ...existingTipoAmbiente,
         ...updateDto,
-        actualizadoPor: usuario,
+        actualizadoPor: user,
       };
 
       mockRepository.findOne.mockResolvedValue(existingTipoAmbiente);
       mockRepository.save.mockResolvedValue(updatedTipoAmbiente);
 
-      const result = await service.update(id, updateDto, usuario);
+      const result = await service.update(id, updateDto, user);
 
       expect(result).toEqual(updatedTipoAmbiente);
       expect(mockRepository.save).toHaveBeenCalledWith(updatedTipoAmbiente);
@@ -209,31 +209,32 @@ describe('TiposAmbientesService', () => {
   });
 
   describe('remove', () => {
-    it('should soft delete a tipo ambiente', async () => {
+    it('should soft delete a type environment', async () => {
       const id = '1';
-      const usuario = 'testUser';
+      const user = 'testUser';
       const existingTipoAmbiente = {
         id,
-        nombre: 'Test Ambiente',
+        name: 'Test environment',
         activo: true,
       };
       const deletedTipoAmbiente = {
         ...existingTipoAmbiente,
         activo: false,
-        actualizadoPor: usuario,
+        actualizadoPor: user,
       };
 
       mockRepository.findOne.mockResolvedValue(existingTipoAmbiente);
       mockRepository.save.mockResolvedValue(deletedTipoAmbiente);
 
-      await service.remove(id, usuario);
+      await service.remove(id, user);
 
       expect(mockRepository.save).toHaveBeenCalledWith(
         expect.objectContaining({
           active: false,
-          usrUpdate: usuario,
+          usrUpdate: user,
         }),
       );
     });
   });
 });
+

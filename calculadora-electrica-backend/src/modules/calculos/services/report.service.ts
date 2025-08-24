@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+﻿import { Injectable, Logger } from '@nestjs/common';
 import * as puppeteer from 'puppeteer';
 import * as XLSX from 'xlsx';
 import * as fs from 'fs';
@@ -127,42 +127,42 @@ export class ReportService {
     const feederData = request.feederData;
     const groundingData = request.groundingData;
 
-            // Preparar cargas por ambiente
-        const roomLoads = roomsData?.ambientes?.map(ambiente => ({
-          name: ambiente.nombre,
-          area: ambiente.area_m2,
-          lightingLoad: ambiente.carga_va * 0.4, // Estimación: 40% iluminación
-          outletLoad: ambiente.carga_va * 0.6, // Estimación: 60% tomas
+            // Preparar loads por environment
+        const roomLoads = roomsData?.environments?.map(environment => ({
+          name: environment.name,
+          area: environment.area_m2,
+          lightingLoad: environment.carga_va * 0.4, // Estimación: 40% iluminación
+          outletLoad: environment.carga_va * 0.6, // Estimación: 60% tomas
           specialLoad: 0,
-          totalLoad: ambiente.carga_va,
+          totalLoad: environment.carga_va,
         })) || [];
 
             // Preparar análisis de demanda
         const demandAnalysis = demandData?.cargas_diversificadas?.map(analisis => ({
-          category: analisis.categoria,
+          category: analisis.category,
           grossLoad: analisis.carga_original_va,
-          demandFactor: analisis.factor_demanda,
+          demandFactor: analisis.demand_factor,
           diversifiedLoad: analisis.carga_diversificada_va,
           percentage: (analisis.carga_diversificada_va / (demandData?.totales_diversificados?.carga_total_original_va || 1)) * 100,
         })) || [];
 
-            // Preparar circuitos
-        const circuits = circuitsData?.circuitos_ramales?.map(circuito => ({
-          id: circuito.id_circuito,
-          name: circuito.nombre,
-          current: circuito.corriente_total_a,
-          load: circuito.carga_total_va,
-          conductor: `${circuito.conductor.seccion_mm2}mm² ${circuito.conductor.calibre_awg}`,
-          breaker: `${circuito.breaker.amp}A ${circuito.breaker.poles}P`,
+            // Preparar circuits
+        const circuits = circuitsData?.circuitos_ramales?.map(circuit => ({
+          id: circuit.id_circuito,
+          name: circuit.name,
+          current: circuit.corriente_total_a,
+          load: circuit.carga_total_va,
+          conductor: `${circuit.conductor.section_mm2}mm² ${circuit.conductor.calibre_awg}`,
+          breaker: `${circuit.breaker.amp}A ${circuit.breaker.poles}P`,
           status: 'OK', // Estado por defecto
         })) || [];
 
     // Preparar análisis de caída de tensión
-    const voltageDropAnalysis = feederData?.circuitos_analisis?.map(circuito => ({
-      circuitId: circuito.id_circuito,
-      length: circuito.longitud_m,
-      voltageDrop: circuito.caida_tension_ramal_pct,
-      status: circuito.estado,
+    const voltageDropAnalysis = feederData?.circuitos_analisis?.map(circuit => ({
+      circuitId: circuit.id_circuito,
+      length: circuit.length_m,
+      voltageDrop: circuit.caida_tension_ramal_pct,
+      status: circuit.estado,
     })) || [];
 
             // Calcular totales
@@ -201,14 +201,14 @@ export class ReportService {
       demandAnalysis,
       circuits,
       voltageDropAnalysis,
-      feederMaterial: feederData?.alimentador?.material || 'Cu',
-      feederSection: feederData?.alimentador?.seccion_mm2 || 0,
-      feederLength: feederData?.alimentador?.longitud_m || 0,
-      totalVoltageDrop: feederData?.alimentador?.caida_tension_total_max_pct || 0,
-      egcSection: groundingData?.conductor_proteccion?.seccion_mm2 || 0,
+      feederMaterial: feederData?.feeder?.material || 'Cu',
+      feederSection: feederData?.feeder?.section_mm2 || 0,
+      feederLength: feederData?.feeder?.length_m || 0,
+      totalVoltageDrop: feederData?.feeder?.caida_tension_total_max_pct || 0,
+      egcSection: groundingData?.conductor_proteccion?.section_mm2 || 0,
       egcAwg: groundingData?.conductor_proteccion?.calibre_awg || '',
       egcMaterial: groundingData?.conductor_proteccion?.material || 'Cu',
-      gecSection: groundingData?.conductor_tierra?.seccion_mm2 || 0,
+      gecSection: groundingData?.conductor_tierra?.section_mm2 || 0,
       gecAwg: groundingData?.conductor_tierra?.calibre_awg || '',
       gecMaterial: groundingData?.conductor_tierra?.material || 'Cu',
       groundingSystemType: groundingData?.sistema_tierra?.tipo_sistema || 'TN-S',
@@ -272,26 +272,26 @@ export class ReportService {
     const summaryData = [
       ['REPORTE DE CÁLCULO ELÉCTRICO'],
       [''],
-      ['Información del Proyecto'],
+      ['Información del project'],
       ['Fecha de Cálculo', reportData.calculationDate],
-      ['Versión de Normas', reportData.normsVersion],
-      ['Hash de Normas', reportData.normsHash],
-      ['Tipo de Instalación', reportData.installationType],
-      ['Sistema Eléctrico', reportData.electricalSystem],
+      ['Versión de norms', reportData.normsVersion],
+      ['Hash de norms', reportData.normsHash],
+      ['type de Instalación', reportData.installationType],
+      ['system Eléctrico', reportData.electricalSystem],
       [''],
       ['Resumen Ejecutivo'],
       ['Corriente Total', `${reportData.totalCurrent} A`],
-      ['Carga Total', `${reportData.totalLoad} VA`],
-      ['Número de Circuitos', reportData.circuitCount],
+      ['load Total', `${reportData.totalLoad} VA`],
+      ['Número de circuits', reportData.circuitCount],
       ['Estado General', reportData.generalStatus],
     ];
 
     const summarySheet = XLSX.utils.aoa_to_sheet(summaryData);
     XLSX.utils.book_append_sheet(workbook, summarySheet, 'Resumen');
 
-    // Hoja 2: Cuadro de Cargas por Ambiente
+    // Hoja 2: Cuadro de loads por environment
     const roomLoadsData = [
-      ['Ambiente', 'Área (m²)', 'Carga Iluminación (VA)', 'Carga Tomas (VA)', 'Carga Especial (VA)', 'Total Ambiente (VA)'],
+      ['environment', 'Área (m²)', 'load Iluminación (VA)', 'load Tomas (VA)', 'load Especial (VA)', 'Total environment (VA)'],
       ...reportData.roomLoads.map(room => [
         room.name,
         room.area,
@@ -303,11 +303,11 @@ export class ReportService {
     ];
 
     const roomLoadsSheet = XLSX.utils.aoa_to_sheet(roomLoadsData);
-    XLSX.utils.book_append_sheet(workbook, roomLoadsSheet, 'Cargas por Ambiente');
+    XLSX.utils.book_append_sheet(workbook, roomLoadsSheet, 'loads por environment');
 
     // Hoja 3: Análisis de Demanda
     const demandData = [
-      ['Categoría', 'Carga Bruta (VA)', 'Factor de Demanda', 'Carga Diversificada (VA)', 'Porcentaje (%)'],
+      ['Categoría', 'load Bruta (VA)', 'Factor de Demanda', 'load Diversificada (VA)', 'Porcentaje (%)'],
       ...reportData.demandAnalysis.map(demand => [
         demand.category,
         demand.grossLoad,
@@ -320,9 +320,9 @@ export class ReportService {
     const demandSheet = XLSX.utils.aoa_to_sheet(demandData);
     XLSX.utils.book_append_sheet(workbook, demandSheet, 'Análisis de Demanda');
 
-    // Hoja 4: Circuitos Ramales
+    // Hoja 4: circuits Ramales
     const circuitsData = [
-      ['Circuito', 'Nombre', 'Corriente (A)', 'Carga (VA)', 'Conductor', 'Breaker', 'Estado'],
+      ['circuit', 'name', 'Corriente (A)', 'load (VA)', 'conductor', 'breaker', 'Estado'],
       ...reportData.circuits.map(circuit => [
         circuit.id,
         circuit.name,
@@ -335,11 +335,11 @@ export class ReportService {
     ];
 
     const circuitsSheet = XLSX.utils.aoa_to_sheet(circuitsData);
-    XLSX.utils.book_append_sheet(workbook, circuitsSheet, 'Circuitos Ramales');
+    XLSX.utils.book_append_sheet(workbook, circuitsSheet, 'circuits Ramales');
 
     // Hoja 5: Análisis de Caída de Tensión
     const voltageDropData = [
-      ['Circuito', 'Longitud (m)', 'Caída Ramal (%)', 'Estado'],
+      ['circuit', 'Longitud (m)', 'Caída Ramal (%)', 'Estado'],
       ...reportData.voltageDropAnalysis.map(vd => [
         vd.circuitId,
         vd.length,
@@ -347,8 +347,8 @@ export class ReportService {
         vd.status,
       ]),
       [''],
-      ['Alimentador Principal'],
-      ['Material', reportData.feederMaterial],
+      ['feeder Principal'],
+      ['material', reportData.feederMaterial],
       ['Sección', `${reportData.feederSection} mm²`],
       ['Longitud', `${reportData.feederLength} m`],
       ['Caída Total', `${reportData.totalVoltageDrop}%`],
@@ -357,16 +357,16 @@ export class ReportService {
     const voltageDropSheet = XLSX.utils.aoa_to_sheet(voltageDropData);
     XLSX.utils.book_append_sheet(workbook, voltageDropSheet, 'Caída de Tensión');
 
-    // Hoja 6: Sistema de Puesta a Tierra
+    // Hoja 6: system de Puesta a Tierra
     const groundingData = [
-      ['Sistema de Puesta a Tierra'],
+      ['system de Puesta a Tierra'],
       [''],
-      ['Componente', 'Tipo', 'Sección (mm²)', 'Calibre AWG', 'Material'],
-      ['Conductor de Protección', 'EGC', reportData.egcSection, reportData.egcAwg, reportData.egcMaterial],
-      ['Conductor de Tierra', 'GEC', reportData.gecSection, reportData.gecAwg, reportData.gecMaterial],
+      ['Componente', 'type', 'Sección (mm²)', 'Calibre AWG', 'material'],
+      ['conductor de Protección', 'EGC', reportData.egcSection, reportData.egcAwg, reportData.egcMaterial],
+      ['conductor de Tierra', 'GEC', reportData.gecSection, reportData.gecAwg, reportData.gecMaterial],
       [''],
-      ['Configuración del Sistema'],
-      ['Tipo de Sistema', reportData.groundingSystemType],
+      ['Configuración del system'],
+      ['type de system', reportData.groundingSystemType],
       ['Número de Electrodos', reportData.electrodeCount],
       ['Resistencia Máxima', `${reportData.maxResistance} Ω`],
       ['Estado', reportData.groundingStatus],
@@ -467,16 +467,16 @@ export class ReportService {
   }
 
   /**
-   * Calcular hash de las normas (semillas)
+   * Calcular hash de las norms (semillas)
    */
   private async calculateNormsHash(): Promise<string> {
-    // En una implementación real, esto calcularía el hash de las semillas de normas
+    // En una implementación real, esto calcularía el hash de las semillas de norms
     // Por ahora, retornamos un hash simulado
     return crypto.createHash('md5').update('norms-seed-data').digest('hex').substring(0, 8);
   }
 
   /**
-   * Determinar estado general del sistema
+   * Determinar estado general del system
    */
   private determineGeneralStatus(
     circuits: any[],
@@ -510,22 +510,22 @@ export class ReportService {
 
     // Observaciones generales
     observations.push('Reporte generado automáticamente por Calculadora Eléctrica RD');
-    observations.push('Todos los cálculos cumplen con las normas NEC 2023 y RIE RD');
+    observations.push('Todos los cálculos cumplen con las norms NEC 2023 y RIE RD');
 
-            // Observaciones de circuitos
+            // Observaciones de circuits
         if (circuitsData?.circuitos_ramales) {
           const circuitCount = circuitsData.circuitos_ramales.length;
-          observations.push(`Se dimensionaron ${circuitCount} circuitos ramales`);
+          observations.push(`Se dimensionaron ${circuitCount} circuits ramales`);
           
           const errorCircuits = circuitsData.circuitos_ramales.filter(c => c.utilizacion_pct > 100).length;
           if (errorCircuits > 0) {
-            observations.push(`⚠️ ${errorCircuits} circuito(s) requieren atención`);
+            observations.push(`⚠️ ${errorCircuits} circuit(s) requieren atención`);
           }
         }
 
     // Observaciones de caída de tensión
-    if (feederData?.alimentador) {
-      const totalDrop = feederData.alimentador.caida_tension_total_max_pct;
+    if (feederData?.feeder) {
+      const totalDrop = feederData.feeder.caida_tension_total_max_pct;
       if (totalDrop > 5) {
         observations.push(`⚠️ Caída de tensión total (${totalDrop.toFixed(2)}%) excede el límite recomendado`);
       }
@@ -533,9 +533,9 @@ export class ReportService {
 
     // Observaciones de puesta a tierra
     if (groundingData?.resumen) {
-      observations.push(`Sistema de puesta a tierra: ${groundingData.resumen.estado}`);
+      observations.push(`system de puesta a tierra: ${groundingData.resumen.estado}`);
       if (groundingData.resumen.estado === 'CRÍTICO') {
-        observations.push('⚠️ Sistema de puesta a tierra requiere revisión inmediata');
+        observations.push('⚠️ system de puesta a tierra requiere revisión inmediata');
       }
     }
 
@@ -559,3 +559,4 @@ export class ReportService {
     }
   }
 }
+

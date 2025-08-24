@@ -1,4 +1,4 @@
-import { Test, TestingModule } from '@nestjs/testing';
+﻿import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { DemandService } from './demand.service';
@@ -92,19 +92,19 @@ describe('DemandService', () => {
     const baseRequest: CalcDemandRequestDto = {
       cargas_por_categoria: [
         {
-          categoria: 'lighting_general',
+          category: 'lighting_general',
           carga_va: 1000,
-          descripcion: 'Iluminación general',
+          description: 'Iluminación general',
         },
         {
-          categoria: 'electrodomesticos',
+          category: 'electrodomesticos',
           carga_va: 2000,
-          descripcion: 'Electrodomésticos',
+          description: 'Electrodomésticos',
         },
       ],
       totales: {
         carga_total_va: 3000,
-        tension_v: 120,
+        voltage_v: 120,
         phases: 1,
       },
       observaciones: ['Test'],
@@ -119,17 +119,17 @@ describe('DemandService', () => {
 
       expect(result.cargas_diversificadas).toHaveLength(2);
       expect(result.cargas_diversificadas[0]).toEqual({
-        categoria: 'lighting_general',
+        category: 'lighting_general',
         carga_original_va: 1000,
-        factor_demanda: 1.0,
+        demand_factor: 1.0,
         carga_diversificada_va: 1000,
         rango_aplicado: '0-999999 VA',
         observaciones: 'Factor base para iluminación',
       });
       expect(result.cargas_diversificadas[1]).toEqual({
-        categoria: 'electrodomesticos',
+        category: 'electrodomesticos',
         carga_original_va: 2000,
-        factor_demanda: 0.85,
+        demand_factor: 0.85,
         carga_diversificada_va: 1700,
         rango_aplicado: '0-999999 VA',
         observaciones: 'Factor para electrodomésticos',
@@ -146,7 +146,7 @@ describe('DemandService', () => {
         corriente_total_diversificada_a: 22.5,
         ahorro_carga_va: 300,
         porcentaje_ahorro: 10,
-        tension_v: 120,
+        voltage_v: 120,
         phases: 1,
       });
     });
@@ -156,14 +156,14 @@ describe('DemandService', () => {
         ...baseRequest,
         cargas_por_categoria: [
           {
-            categoria: 'categoria_desconocida',
+            category: 'categoria_desconocida',
             carga_va: 500,
-            descripcion: 'Categoría sin factor definido',
+            description: 'Categoría sin factor definido',
           },
         ],
         totales: {
           carga_total_va: 500,
-          tension_v: 120,
+          voltage_v: 120,
           phases: 1,
         },
       };
@@ -171,9 +171,9 @@ describe('DemandService', () => {
       const result = await service.apply(requestWithUnknownCategory);
 
       expect(result.cargas_diversificadas[0]).toEqual({
-        categoria: 'categoria_desconocida',
+        category: 'categoria_desconocida',
         carga_original_va: 500,
-        factor_demanda: 1.0,
+        demand_factor: 1.0,
         carga_diversificada_va: 500,
         rango_aplicado: 'Sin factor definido',
         observaciones: 'Factor por defecto 1.0 aplicado - sin diversificación',
@@ -217,13 +217,13 @@ describe('DemandService', () => {
       );
     });
 
-    it('should handle empty cargas array', async () => {
+    it('should handle empty loads array', async () => {
       const emptyRequest = {
         ...baseRequest,
         cargas_por_categoria: [],
         totales: {
           carga_total_va: 0,
-          tension_v: 120,
+          voltage_v: 120,
           phases: 1,
         },
       };
@@ -242,7 +242,7 @@ describe('DemandService', () => {
         ...baseRequest,
         totales: {
           carga_total_va: 3000,
-          tension_v: 0,
+          voltage_v: 0,
           phases: 1,
         },
       };
@@ -259,14 +259,14 @@ describe('DemandService', () => {
         ...baseRequest,
         cargas_por_categoria: [
           {
-            categoria: 'lighting_general',
+            category: 'lighting_general',
             carga_va: 100000,
-            descripcion: 'Carga grande',
+            description: 'load grande',
           },
         ],
         totales: {
           carga_total_va: 100000,
-          tension_v: 120,
+          voltage_v: 120,
           phases: 1,
         },
       };
@@ -286,14 +286,14 @@ describe('DemandService', () => {
         ...baseRequest,
         cargas_por_categoria: [
           {
-            categoria: 'electrodomesticos',
+            category: 'electrodomesticos',
             carga_va: 1000.123,
-            descripcion: 'Carga con decimales',
+            description: 'load con decimales',
           },
         ],
         totales: {
           carga_total_va: 1000.123,
-          tension_v: 120,
+          voltage_v: 120,
           phases: 1,
         },
       };
@@ -310,19 +310,19 @@ describe('DemandService', () => {
         ...baseRequest,
         cargas_por_categoria: [
           {
-            categoria: 'lighting_general',
+            category: 'lighting_general',
             carga_va: 500,
-            descripcion: 'Iluminación 1',
+            description: 'Iluminación 1',
           },
           {
-            categoria: 'tomas_generales',
+            category: 'tomas_generales',
             carga_va: 300,
-            descripcion: 'Tomas 1',
+            description: 'Tomas 1',
           },
         ],
         totales: {
           carga_total_va: 800,
-          tension_v: 120,
+          voltage_v: 120,
           phases: 1,
         },
       };
@@ -330,8 +330,8 @@ describe('DemandService', () => {
       const result = await service.apply(multipleCategoriesRequest);
 
       expect(result.cargas_diversificadas).toHaveLength(2);
-      expect(result.cargas_diversificadas[0].factor_demanda).toBe(1.0);
-      expect(result.cargas_diversificadas[1].factor_demanda).toBe(1.0);
+      expect(result.cargas_diversificadas[0].demand_factor).toBe(1.0);
+      expect(result.cargas_diversificadas[1].demand_factor).toBe(1.0);
     });
 
     it('should handle database error gracefully', async () => {
@@ -360,3 +360,4 @@ describe('DemandService', () => {
     });
   });
 });
+

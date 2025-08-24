@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+﻿import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { DemandFactor } from '../entities/demand-factor.entity';
@@ -14,7 +14,7 @@ import {
 } from '../dtos/calc-demand-response.dto';
 
 interface FactorAplicado {
-  categoria: string;
+  category: string;
   carga_original: number;
   factor: number;
   carga_diversificada: number;
@@ -33,7 +33,7 @@ export class DemandService {
   ) {}
 
   /**
-   * Aplicar factores de demanda a cargas agregadas
+   * Aplicar factores de demanda a loads agregadas
    */
   async apply(request: CalcDemandRequestDto): Promise<CalcDemandResponseDto> {
     const startTime = Date.now();
@@ -68,9 +68,9 @@ export class DemandService {
 
       return {
         cargas_diversificadas: factoresAplicados.map((factor) => ({
-          categoria: factor.categoria,
+          category: factor.category,
           carga_original_va: factor.carga_original,
-          factor_demanda: factor.factor,
+          demand_factor: factor.factor,
           carga_diversificada_va: factor.carga_diversificada,
           rango_aplicado: factor.rango,
           observaciones: factor.observaciones,
@@ -103,24 +103,24 @@ export class DemandService {
    * Aplicar factores de demanda a cada categoría
    */
   private async applyDemandFactors(
-    cargas: CargaPorCategoriaDto[],
+    loads: CargaPorCategoriaDto[],
     factores: DemandFactor[],
   ): Promise<FactorAplicado[]> {
     const factoresAplicados: FactorAplicado[] = [];
 
-    for (const carga of cargas) {
+    for (const load of loads) {
       const factor = this.findApplicableFactor(
-        carga.categoria,
-        carga.carga_va,
+        load.category,
+        load.carga_va,
         factores,
       );
 
       if (factor) {
-        const cargaDiversificada = carga.carga_va * factor.factor;
+        const cargaDiversificada = load.carga_va * factor.factor;
 
         factoresAplicados.push({
-          categoria: carga.categoria,
-          carga_original: carga.carga_va,
+          category: load.category,
+          carga_original: load.carga_va,
           factor: factor.factor,
           carga_diversificada: Math.round(cargaDiversificada * 100) / 100,
           rango: `${factor.rangeMin}-${factor.rangeMax} VA`,
@@ -129,14 +129,14 @@ export class DemandService {
       } else {
         // Si no se encuentra factor, aplicar factor 1.0 (sin diversificación)
         this.logger.warn(
-          `No se encontró factor de demanda para categoría '${carga.categoria}'`,
+          `No se encontró factor de demanda para categoría '${load.category}'`,
         );
 
         factoresAplicados.push({
-          categoria: carga.categoria,
-          carga_original: carga.carga_va,
+          category: load.category,
+          carga_original: load.carga_va,
           factor: 1.0,
-          carga_diversificada: carga.carga_va,
+          carga_diversificada: load.carga_va,
           rango: 'Sin factor definido',
           observaciones:
             'Factor por defecto 1.0 aplicado - sin diversificación',
@@ -148,25 +148,25 @@ export class DemandService {
   }
 
   /**
-   * Encontrar factor de demanda aplicable para una categoría y carga específica
+   * Encontrar factor de demanda aplicable para una categoría y load específica
    */
   private findApplicableFactor(
-    categoria: string,
-    carga: number,
+    category: string,
+    load: number,
     factores: DemandFactor[],
   ): DemandFactor | null {
     // Buscar factores que coincidan con la categoría y rango
     const factoresCategoria = factores.filter(
       (factor) =>
-        factor.category === categoria &&
-        carga >= factor.rangeMin &&
-        carga <= factor.rangeMax,
+        factor.category === category &&
+        load >= factor.rangeMin &&
+        load <= factor.rangeMax,
     );
 
     if (factoresCategoria.length === 0) {
       // Si no hay coincidencia exacta, buscar factores genéricos para la categoría
       const factoresGenericos = factores.filter(
-        (factor) => factor.category === categoria,
+        (factor) => factor.category === category,
       );
 
       return factoresGenericos.length > 0 ? factoresGenericos[0] : null;
@@ -199,7 +199,7 @@ export class DemandService {
         : 1.0;
 
     const corrienteTotalDiversificada =
-      cargaTotalDiversificada / totalesOriginales.tension_v;
+      cargaTotalDiversificada / totalesOriginales.voltage_v;
     const ahorroCarga = cargaTotalOriginal - cargaTotalDiversificada;
     const porcentajeAhorro =
       cargaTotalOriginal > 0 ? (ahorroCarga / cargaTotalOriginal) * 100 : 0;
@@ -214,7 +214,7 @@ export class DemandService {
         Math.round(corrienteTotalDiversificada * 100) / 100,
       ahorro_carga_va: Math.round(ahorroCarga * 100) / 100,
       porcentaje_ahorro: Math.round(porcentajeAhorro * 100) / 100,
-      tension_v: totalesOriginales.tension_v,
+      voltage_v: totalesOriginales.voltage_v,
       phases: totalesOriginales.phases,
     };
   }
@@ -234,7 +234,7 @@ export class DemandService {
     // Categorías con mayor diversificación
     const mayorDiversificacion = factoresAplicados
       .filter((f) => f.factor < 0.9)
-      .map((f) => f.categoria);
+      .map((f) => f.category);
 
     if (mayorDiversificacion.length > 0) {
       observaciones.push(
@@ -245,7 +245,7 @@ export class DemandService {
     // Categorías sin diversificación
     const sinDiversificacion = factoresAplicados
       .filter((f) => f.factor >= 1.0)
-      .map((f) => f.categoria);
+      .map((f) => f.category);
 
     if (sinDiversificacion.length > 0) {
       observaciones.push(
@@ -275,3 +275,4 @@ export class DemandService {
     );
   }
 }
+

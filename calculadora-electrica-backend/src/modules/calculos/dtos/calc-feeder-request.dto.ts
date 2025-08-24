@@ -1,4 +1,4 @@
-import {
+﻿import {
   IsArray,
   IsNumber,
   IsOptional,
@@ -10,47 +10,47 @@ import { Type } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CircuitoRamalInputDto {
-  @ApiProperty({ description: 'ID del circuito' })
+  @ApiProperty({ description: 'ID del circuit' })
   @IsString()
   id_circuito: string;
 
-  @ApiProperty({ description: 'Nombre del circuito' })
+  @ApiProperty({ description: 'name del circuit' })
   @IsString()
-  nombre: string;
+  name: string;
 
-  @ApiProperty({ description: 'Corriente total del circuito en amperios' })
+  @ApiProperty({ description: 'Corriente total del circuit en amperios' })
   @IsNumber()
   @Min(0)
   corriente_total_a: number;
 
-  @ApiProperty({ description: 'Carga total del circuito en VA' })
+  @ApiProperty({ description: 'load total del circuit en VA' })
   @IsNumber()
   @Min(0)
   carga_total_va: number;
 
-  @ApiPropertyOptional({ description: 'Longitud del circuito en metros' })
+  @ApiPropertyOptional({ description: 'Longitud del circuit en metros' })
   @IsOptional()
   @IsNumber()
   @Min(0)
-  longitud_m?: number;
+  length_m?: number;
 }
 
 export class SistemaElectricoInputDto {
-  @ApiProperty({ description: 'Tensión del sistema en voltios' })
+  @ApiProperty({ description: 'Tensión del system en voltios' })
   @IsNumber()
   @Min(1)
-  tension_v: number;
+  voltage_v: number;
 
   @ApiProperty({ description: 'Número de fases (1 o 3)' })
   @IsNumber()
   phases: number;
 
-  @ApiProperty({ description: 'Corriente total del sistema en amperios' })
+  @ApiProperty({ description: 'Corriente total del system en amperios' })
   @IsNumber()
   @Min(0)
   corriente_total_a: number;
 
-  @ApiProperty({ description: 'Carga total del sistema en VA' })
+  @ApiProperty({ description: 'load total del system en VA' })
   @IsNumber()
   @Min(0)
   carga_total_va: number;
@@ -58,7 +58,7 @@ export class SistemaElectricoInputDto {
 
 export class ParametrosInstalizacionDto {
   @ApiProperty({
-    description: 'Longitud del alimentador principal en metros',
+    description: 'Longitud del feeder principal en metros',
     minimum: 0,
   })
   @IsNumber()
@@ -66,7 +66,7 @@ export class ParametrosInstalizacionDto {
   longitud_alimentador_m: number;
 
   @ApiPropertyOptional({
-    description: 'Material preferido del conductor (Cu, Al)',
+    description: 'material preferido del conductor (Cu, Al)',
     default: 'Cu',
   })
   @IsOptional()
@@ -95,7 +95,7 @@ export class ParametrosInstalizacionDto {
 export class CalcFeederRequestDto {
   @ApiProperty({
     type: [CircuitoRamalInputDto],
-    description: 'Circuitos ramales desde CE-03',
+    description: 'circuits ramales desde CE-03',
   })
   @IsArray()
   @ValidateNested({ each: true })
@@ -104,11 +104,11 @@ export class CalcFeederRequestDto {
 
   @ApiProperty({
     type: SistemaElectricoInputDto,
-    description: 'Configuración del sistema eléctrico',
+    description: 'Configuración del system eléctrico',
   })
   @ValidateNested()
   @Type(() => SistemaElectricoInputDto)
-  sistema: SistemaElectricoInputDto;
+  system: SistemaElectricoInputDto;
 
   @ApiProperty({
     type: ParametrosInstalizacionDto,
@@ -116,9 +116,10 @@ export class CalcFeederRequestDto {
   })
   @ValidateNested()
   @Type(() => ParametrosInstalizacionDto)
-  parametros: ParametrosInstalizacionDto;
+  parameters: ParametrosInstalizacionDto;
 
   @ApiPropertyOptional({ description: 'Observaciones adicionales' })
   @IsOptional()
   observaciones?: string[];
 }
+

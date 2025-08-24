@@ -1,4 +1,4 @@
-import { Test, TestingModule } from '@nestjs/testing';
+﻿import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../../src/app.module';
@@ -67,33 +67,33 @@ describe('CalcDemandController (e2e)', () => {
     const validRequest = {
       cargas_por_categoria: [
         {
-          categoria: 'lighting_general',
+          category: 'lighting_general',
           carga_va: 1453.5,
-          descripcion: 'Iluminación general de todos los ambientes',
+          description: 'Iluminación general de todos los environments',
         },
         {
-          categoria: 'tomas_generales',
+          category: 'tomas_generales',
           carga_va: 800.0,
-          descripcion: 'Tomacorrientes generales',
+          description: 'Tomacorrientes generales',
         },
         {
-          categoria: 'electrodomesticos',
+          category: 'electrodomesticos',
           carga_va: 1473.7,
-          descripcion: 'Nevera, microondas, lavadora, TV',
+          description: 'Nevera, microondas, lavadora, TV',
         },
         {
-          categoria: 'climatizacion',
+          category: 'climatizacion',
           carga_va: 1222.2,
-          descripcion: 'Aires acondicionados',
+          description: 'Aires acondicionados',
         },
       ],
       totales: {
         carga_total_va: 4949.4,
-        tension_v: 120,
+        voltage_v: 120,
         phases: 1,
       },
       observaciones: [
-        'Cargas calculadas desde CE-01',
+        'loads calculadas desde CE-01',
         'Factores RIE/NEC aplicables',
       ],
     };
@@ -113,16 +113,16 @@ describe('CalcDemandController (e2e)', () => {
           
           // Verificar iluminación (factor 1.0)
           const lighting = res.body.cargas_diversificadas.find(
-            (c: any) => c.categoria === 'lighting_general',
+            (c: any) => c.category === 'lighting_general',
           );
-          expect(lighting.factor_demanda).toBe(1.0);
+          expect(lighting.demand_factor).toBe(1.0);
           expect(lighting.carga_diversificada_va).toBe(1453.5);
 
           // Verificar electrodomésticos (factor 0.85)
           const appliances = res.body.cargas_diversificadas.find(
-            (c: any) => c.categoria === 'electrodomesticos',
+            (c: any) => c.category === 'electrodomesticos',
           );
-          expect(appliances.factor_demanda).toBe(0.85);
+          expect(appliances.demand_factor).toBe(0.85);
           expect(appliances.carga_diversificada_va).toBe(1252.65);
 
           // Verificar totales
@@ -137,14 +137,14 @@ describe('CalcDemandController (e2e)', () => {
         ...validRequest,
         cargas_por_categoria: [
           {
-            categoria: 'categoria_desconocida',
+            category: 'categoria_desconocida',
             carga_va: 500,
-            descripcion: 'Categoría sin factor definido',
+            description: 'Categoría sin factor definido',
           },
         ],
         totales: {
           carga_total_va: 500,
-          tension_v: 120,
+          voltage_v: 120,
           phases: 1,
         },
       };
@@ -154,19 +154,19 @@ describe('CalcDemandController (e2e)', () => {
         .send(requestWithUnknownCategory)
         .expect(200)
         .expect((res) => {
-          expect(res.body.cargas_diversificadas[0].factor_demanda).toBe(1.0);
+          expect(res.body.cargas_diversificadas[0].demand_factor).toBe(1.0);
           expect(res.body.cargas_diversificadas[0].carga_diversificada_va).toBe(500);
           expect(res.body.cargas_diversificadas[0].rango_aplicado).toBe('Sin factor definido');
         });
     });
 
-    it('should handle empty cargas array', () => {
+    it('should handle empty loads array', () => {
       const emptyRequest = {
         ...validRequest,
         cargas_por_categoria: [],
         totales: {
           carga_total_va: 0,
-          tension_v: 120,
+          voltage_v: 120,
           phases: 1,
         },
       };
@@ -186,13 +186,13 @@ describe('CalcDemandController (e2e)', () => {
       const invalidRequest = {
         cargas_por_categoria: [
           {
-            categoria: 'lighting_general',
+            category: 'lighting_general',
             // falta carga_va
           },
         ],
         totales: {
           carga_total_va: 1000,
-          tension_v: 120,
+          voltage_v: 120,
           phases: 1,
         },
       };
@@ -208,14 +208,14 @@ describe('CalcDemandController (e2e)', () => {
         ...validRequest,
         cargas_por_categoria: [
           {
-            categoria: 'lighting_general',
+            category: 'lighting_general',
             carga_va: -100,
-            descripcion: 'Carga negativa',
+            description: 'load negativa',
           },
         ],
         totales: {
           carga_total_va: -100,
-          tension_v: 120,
+          voltage_v: 120,
           phases: 1,
         },
       };
@@ -256,3 +256,4 @@ describe('CalcDemandController (e2e)', () => {
     });
   });
 });
+

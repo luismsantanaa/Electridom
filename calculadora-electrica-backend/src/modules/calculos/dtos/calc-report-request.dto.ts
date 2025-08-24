@@ -1,4 +1,4 @@
-import {
+﻿import {
   IsOptional,
   IsString,
   ValidateNested,
@@ -21,7 +21,7 @@ export class CalcReportRequestDto {
   calculationId?: string;
 
   @ApiPropertyOptional({
-    description: 'Datos de cálculo de cargas por ambiente',
+    description: 'Datos de cálculo de loads por environment',
     type: CalcRoomsRequestDto,
   })
   @IsOptional()
@@ -39,7 +39,7 @@ export class CalcReportRequestDto {
   demandData?: CalcDemandRequestDto;
 
   @ApiPropertyOptional({
-    description: 'Datos de circuitos ramales y conductores',
+    description: 'Datos de circuits ramales y conductors',
     type: CalcCircuitsRequestDto,
   })
   @IsOptional()
@@ -48,7 +48,7 @@ export class CalcReportRequestDto {
   circuitsData?: CalcCircuitsRequestDto;
 
   @ApiPropertyOptional({
-    description: 'Datos de análisis de caída de tensión y alimentador',
+    description: 'Datos de análisis de caída de tensión y feeder',
     type: CalcFeederRequestDto,
   })
   @IsOptional()
@@ -57,7 +57,7 @@ export class CalcReportRequestDto {
   feederData?: CalcFeederRequestDto;
 
   @ApiPropertyOptional({
-    description: 'Datos de puesta a tierra y conductores de protección',
+    description: 'Datos de puesta a tierra y conductors de protección',
     type: CalcGroundingRequestDto,
   })
   @IsOptional()
@@ -66,7 +66,7 @@ export class CalcReportRequestDto {
   groundingData?: CalcGroundingRequestDto;
 
   @ApiPropertyOptional({
-    description: 'Tipo de instalación',
+    description: 'type de instalación',
     example: 'residencial',
     enum: ['residencial', 'comercial', 'industrial'],
   })
@@ -75,10 +75,11 @@ export class CalcReportRequestDto {
   installationType?: string;
 
   @ApiPropertyOptional({
-    description: 'Sistema eléctrico',
+    description: 'system eléctrico',
     example: 'Monofásico 120V',
   })
   @IsOptional()
   @IsString()
   electricalSystem?: string;
 }
+

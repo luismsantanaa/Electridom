@@ -1,18 +1,18 @@
-{
+﻿{
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "title": "Calculadora Electrica RD - Output",
     "type": "object",
     "required": [
-        "ambientes",
+        "environments",
         "totales"
     ],
     "properties": {
-        "ambientes": {
+        "environments": {
             "type": "array",
             "items": {
                 "type": "object",
                 "properties": {
-                    "nombre": {
+                    "name": {
                         "type": "string"
                     },
                     "area_m2": {
@@ -42,7 +42,7 @@
                 "corriente_total_a": {
                     "type": "number"
                 },
-                "tension_v": {
+                "voltage_v": {
                     "type": "number"
                 },
                 "phases": {
@@ -61,3 +61,4 @@
         }
     }
 }
+

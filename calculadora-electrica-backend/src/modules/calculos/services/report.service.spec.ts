@@ -1,4 +1,4 @@
-import { Test, TestingModule } from '@nestjs/testing';
+﻿import { Test, TestingModule } from '@nestjs/testing';
 import { ReportService, ReportRequest } from './report.service';
 import { MetricsService } from '../../metrics/metrics.service';
 
@@ -132,7 +132,7 @@ describe('ReportService', () => {
         'Reporte generado automáticamente por Calculadora Eléctrica RD',
       );
       expect(result.reportData.observations).toContain(
-        'Todos los cálculos cumplen con las normas NEC 2023 y RIE RD',
+        'Todos los cálculos cumplen con las norms NEC 2023 y RIE RD',
       );
     });
 
@@ -179,9 +179,9 @@ describe('ReportService', () => {
         installationType: 'residencial',
         electricalSystem: 'Monofásico 120V',
         roomsData: {
-          ambientes: [
+          environments: [
             {
-              nombre: 'Habitación 1',
+              name: 'Habitación 1',
               area_m2: 15,
               carga_va: 840,
               fp: 0.9,
@@ -191,7 +191,7 @@ describe('ReportService', () => {
             carga_total_va: 840,
             carga_diversificada_va: 840,
             corriente_total_a: 7,
-            tension_v: 120,
+            voltage_v: 120,
             phases: 1,
           },
         },
@@ -199,12 +199,12 @@ describe('ReportService', () => {
           circuitos_ramales: [
             {
               id_circuito: 'CIRC-001',
-              nombre: 'Circuito de Prueba 1',
-              cargas: [
+              name: 'circuit de Prueba 1',
+              loads: [
                 {
-                  categoria: 'iluminacion',
+                  category: 'iluminacion',
                   carga_va: 1200,
-                  corriente_a: 10,
+                  current_a: 10,
                 },
               ],
               carga_total_va: 1200,
@@ -217,7 +217,7 @@ describe('ReportService', () => {
               },
               conductor: {
                 calibre_awg: 14,
-                seccion_mm2: 2.08,
+                section_mm2: 2.08,
                 material: 'Cu',
                 insulation: 'THHN',
                 ampacity: 20,
@@ -225,7 +225,7 @@ describe('ReportService', () => {
               },
               utilizacion_pct: 80,
               margen_seguridad_pct: 125,
-              tension_v: 120,
+              voltage_v: 120,
               phases: 1,
             },
           ],
@@ -248,15 +248,15 @@ describe('ReportService', () => {
         demandData: {
           cargas_diversificadas: [
             {
-              categoria: 'iluminacion_general',
+              category: 'iluminacion_general',
               carga_original_va: 5000,
-              factor_demanda: 0.7,
+              demand_factor: 0.7,
               carga_diversificada_va: 3500,
             },
             {
-              categoria: 'electrodomesticos',
+              category: 'electrodomesticos',
               carga_original_va: 3000,
-              factor_demanda: 0.6,
+              demand_factor: 0.6,
               carga_diversificada_va: 1800,
             },
           ],
@@ -267,7 +267,7 @@ describe('ReportService', () => {
             corriente_total_diversificada_a: 15,
             ahorro_carga_va: 2700,
             porcentaje_ahorro: 34,
-            tension_v: 480,
+            voltage_v: 480,
             phases: 3,
           },
         },
@@ -275,19 +275,19 @@ describe('ReportService', () => {
           circuitos_analisis: [
             {
               id_circuito: 'CIRC-001',
-              nombre: 'Circuito de Prueba',
-              corriente_a: 10,
-              longitud_m: 20,
+              name: 'circuit de Prueba',
+              current_a: 10,
+              length_m: 20,
               caida_tension_ramal_v: 6.2,
               caida_tension_ramal_pct: 2.1,
               estado: 'OK',
             },
           ],
-          alimentador: {
+          feeder: {
             corriente_total_a: 15,
-            longitud_m: 50,
+            length_m: 50,
             material: 'Cu',
-            seccion_mm2: 25,
+            section_mm2: 25,
             resistencia_ohm_km: 0.727,
             caida_tension_alimentador_v: 18.2,
             caida_tension_alimentador_pct: 3.8,
@@ -334,9 +334,9 @@ describe('ReportService', () => {
     it('should handle rooms data correctly', async () => {
       const request: ReportRequest = {
         roomsData: {
-          ambientes: [
+          environments: [
             {
-              nombre: 'Habitación Principal',
+              name: 'Habitación Principal',
               area_m2: 15,
               carga_va: 840,
               fp: 0.9,
@@ -346,7 +346,7 @@ describe('ReportService', () => {
             carga_total_va: 840,
             carga_diversificada_va: 840,
             corriente_total_a: 7,
-            tension_v: 120,
+            voltage_v: 120,
             phases: 1,
           },
         },
@@ -366,9 +366,9 @@ describe('ReportService', () => {
         demandData: {
           cargas_diversificadas: [
             {
-              categoria: 'iluminacion_general',
+              category: 'iluminacion_general',
               carga_original_va: 120,
-              factor_demanda: 0.8,
+              demand_factor: 0.8,
               carga_diversificada_va: 96,
             },
           ],
@@ -379,7 +379,7 @@ describe('ReportService', () => {
             corriente_total_diversificada_a: 7,
             ahorro_carga_va: 168,
             porcentaje_ahorro: 20,
-            tension_v: 120,
+            voltage_v: 120,
             phases: 1,
           },
         },
@@ -402,8 +402,8 @@ describe('ReportService', () => {
           circuitos_ramales: [
             {
               id_circuito: 'CIRC-001',
-              nombre: 'Iluminación Habitación 1',
-              cargas: [],
+              name: 'Iluminación Habitación 1',
+              loads: [],
               carga_total_va: 840,
               corriente_total_a: 7,
               breaker: {
@@ -414,7 +414,7 @@ describe('ReportService', () => {
               },
               conductor: {
                 calibre_awg: 14,
-                seccion_mm2: 2.5,
+                section_mm2: 2.5,
                 material: 'Cu',
                 insulation: 'THHN',
                 ampacity: 20,
@@ -422,7 +422,7 @@ describe('ReportService', () => {
               },
               utilizacion_pct: 80,
               margen_seguridad_pct: 125,
-              tension_v: 120,
+              voltage_v: 120,
               phases: 1,
             },
           ],
@@ -456,18 +456,18 @@ describe('ReportService', () => {
           circuitos_analisis: [
             {
               id_circuito: 'CIRC-001',
-              nombre: 'Circuito Test',
-              corriente_a: 8.5,
-              longitud_m: 15,
+              name: 'circuit Test',
+              current_a: 8.5,
+              length_m: 15,
               caida_tension_ramal_v: 1.2,
               caida_tension_ramal_pct: 1.0,
               estado: 'OK',
             },
           ],
-          alimentador: {
+          feeder: {
             material: 'Cu',
-            seccion_mm2: 10,
-            longitud_m: 50,
+            section_mm2: 10,
+            length_m: 50,
             corriente_total_a: 8.5,
             resistencia_ohm_km: 1.8,
             caida_tension_alimentador_v: 0.8,
@@ -504,17 +504,17 @@ describe('ReportService', () => {
       const request: ReportRequest = {
         groundingData: {
           conductor_proteccion: {
-            seccion_mm2: 10,
+            section_mm2: 10,
             calibre_awg: '8',
             material: 'Cu',
-            tipo: 'EGC',
+            type: 'EGC',
             longitud_minima_m: 50,
           },
           conductor_tierra: {
-            seccion_mm2: 10,
+            section_mm2: 10,
             calibre_awg: '8',
             material: 'Cu',
-            tipo: 'GEC',
+            type: 'GEC',
             longitud_minima_m: 30,
           },
           sistema_tierra: {
@@ -556,8 +556,8 @@ describe('ReportService', () => {
           circuitos_ramales: [
             {
               id_circuito: 'CIRC-001',
-              nombre: 'Test Circuit',
-              cargas: [],
+              name: 'Test Circuit',
+              loads: [],
               carga_total_va: 1800,
               corriente_total_a: 15,
               breaker: {
@@ -568,7 +568,7 @@ describe('ReportService', () => {
               },
               conductor: {
                 calibre_awg: 14,
-                seccion_mm2: 2.5,
+                section_mm2: 2.5,
                 material: 'Cu',
                 insulation: 'THHN',
                 ampacity: 20,
@@ -576,7 +576,7 @@ describe('ReportService', () => {
               },
               utilizacion_pct: 120, // Over 100% utilization
               margen_seguridad_pct: 125,
-              tension_v: 120,
+              voltage_v: 120,
               phases: 1,
             },
           ],
@@ -596,7 +596,7 @@ describe('ReportService', () => {
       const result = await service.generateReport(request);
 
       expect(result.reportData.observations).toContain(
-        '⚠️ 1 circuito(s) requieren atención',
+        '⚠️ 1 circuit(s) requieren atención',
       );
     });
 
@@ -604,10 +604,10 @@ describe('ReportService', () => {
       const request: ReportRequest = {
         feederData: {
           circuitos_analisis: [],
-          alimentador: {
+          feeder: {
             material: 'Cu',
-            seccion_mm2: 10,
-            longitud_m: 50,
+            section_mm2: 10,
+            length_m: 50,
             corriente_total_a: 8.5,
             resistencia_ohm_km: 1.8,
             caida_tension_alimentador_v: 0.8,
@@ -640,17 +640,17 @@ describe('ReportService', () => {
       const request: ReportRequest = {
         groundingData: {
           conductor_proteccion: {
-            seccion_mm2: 10,
+            section_mm2: 10,
             calibre_awg: '8',
             material: 'Cu',
-            tipo: 'EGC',
+            type: 'EGC',
             longitud_minima_m: 50,
           },
           conductor_tierra: {
-            seccion_mm2: 10,
+            section_mm2: 10,
             calibre_awg: '8',
             material: 'Cu',
-            tipo: 'GEC',
+            type: 'GEC',
             longitud_minima_m: 30,
           },
           sistema_tierra: {
@@ -677,10 +677,10 @@ describe('ReportService', () => {
       const result = await service.generateReport(request);
 
       expect(result.reportData.observations).toContain(
-        'Sistema de puesta a tierra: CRÍTICO',
+        'system de puesta a tierra: CRÍTICO',
       );
       expect(result.reportData.observations).toContain(
-        '⚠️ Sistema de puesta a tierra requiere revisión inmediata',
+        '⚠️ system de puesta a tierra requiere revisión inmediata',
       );
       expect(result.reportData.generalStatus).toBe('ERROR');
     });
@@ -695,3 +695,4 @@ describe('ReportService', () => {
     });
   });
 });
+

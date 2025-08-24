@@ -1,4 +1,4 @@
-import { Test, TestingModule } from '@nestjs/testing';
+﻿import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { VoltageDropService } from './voltage-drop.service';
@@ -104,26 +104,26 @@ describe('VoltageDropService', () => {
       circuitos_ramales: [
         {
           id_circuito: 'CIRC-001',
-          nombre: 'Iluminación Habitación 1',
+          name: 'Iluminación Habitación 1',
           corriente_total_a: 8.5,
           carga_total_va: 1020,
-          longitud_m: 15,
+          length_m: 15,
         },
         {
           id_circuito: 'CIRC-002',
-          nombre: 'Enchufes Habitación 1',
+          name: 'Enchufes Habitación 1',
           corriente_total_a: 12.3,
           carga_total_va: 1476,
-          longitud_m: 18,
+          length_m: 18,
         },
       ],
-      sistema: {
-        tension_v: 120,
+      system: {
+        voltage_v: 120,
         phases: 1,
         corriente_total_a: 20.8,
         carga_total_va: 2496,
       },
-      parametros: {
+      parameters: {
         longitud_alimentador_m: 50,
         material_conductor: 'Cu',
         max_caida_ramal_pct: 3,
@@ -136,11 +136,11 @@ describe('VoltageDropService', () => {
       const result = await service.selectFeeder(baseRequest);
 
       expect(result.circuitos_analisis).toHaveLength(2);
-      expect(result.alimentador).toBeDefined();
+      expect(result.feeder).toBeDefined();
       expect(result.resumen).toBeDefined();
       expect(result.metadata).toBeDefined();
 
-      // Verificar análisis de circuitos
+      // Verificar análisis de circuits
       expect(result.circuitos_analisis[0].estado).toBe('OK');
       expect(result.circuitos_analisis[0].caida_tension_ramal_pct).toBeLessThan(
         3,
@@ -150,10 +150,10 @@ describe('VoltageDropService', () => {
         3,
       );
 
-      // Verificar alimentador
-      expect(result.alimentador.material).toBe('Cu');
-      expect(result.alimentador.seccion_mm2).toBeGreaterThan(0);
-      expect(result.alimentador.longitud_critica_m).toBeGreaterThan(0);
+      // Verificar feeder
+      expect(result.feeder.material).toBe('Cu');
+      expect(result.feeder.section_mm2).toBeGreaterThan(0);
+      expect(result.feeder.longitud_critica_m).toBeGreaterThan(0);
     });
 
     it('should handle circuits with long lengths (critical case)', async () => {
@@ -162,26 +162,26 @@ describe('VoltageDropService', () => {
         circuitos_ramales: [
           {
             id_circuito: 'CIRC-001',
-            nombre: 'Iluminación Exterior',
+            name: 'Iluminación Exterior',
             corriente_total_a: 5.2,
             carga_total_va: 624,
-            longitud_m: 80,
+            length_m: 80,
           },
           {
             id_circuito: 'CIRC-002',
-            nombre: 'Bomba de Agua',
+            name: 'Bomba de Agua',
             corriente_total_a: 18.5,
             carga_total_va: 2220,
-            longitud_m: 120,
+            length_m: 120,
           },
         ],
-        sistema: {
-          tension_v: 240,
+        system: {
+          voltage_v: 240,
           phases: 1,
           corriente_total_a: 23.7,
           carga_total_va: 2844,
         },
-        parametros: {
+        parameters: {
           longitud_alimentador_m: 200,
           material_conductor: 'Cu',
           max_caida_ramal_pct: 2.5,
@@ -193,14 +193,14 @@ describe('VoltageDropService', () => {
 
       expect(result.circuitos_analisis).toHaveLength(2);
 
-      // Verificar que los circuitos largos tengan mayor caída de tensión
+      // Verificar que los circuits largos tengan mayor caída de tensión
       const circuitosConAltaCaida = result.circuitos_analisis.filter(
         (c) => c.caida_tension_ramal_pct > 2,
       );
       expect(circuitosConAltaCaida.length).toBeGreaterThan(0);
 
-      // Verificar que el alimentador seleccione sección apropiada
-      expect(result.alimentador.seccion_mm2).toBeGreaterThanOrEqual(16);
+      // Verificar que el feeder seleccione sección apropiada
+      expect(result.feeder.section_mm2).toBeGreaterThanOrEqual(16);
     });
 
     it('should handle aluminum conductors', async () => {
@@ -224,24 +224,24 @@ describe('VoltageDropService', () => {
 
       const aluminumRequest = {
         ...baseRequest,
-        parametros: {
-          ...baseRequest.parametros,
+        parameters: {
+          ...baseRequest.parameters,
           material_conductor: 'Al',
         },
       };
 
       const result = await service.selectFeeder(aluminumRequest);
 
-      expect(result.alimentador.material).toBe('Al');
-      expect(result.alimentador.resistencia_ohm_km).toBe(1.91);
+      expect(result.feeder.material).toBe('Al');
+      expect(result.feeder.resistencia_ohm_km).toBe(1.91);
     });
 
     it('should handle three-phase systems', async () => {
       const threePhaseRequest = {
         ...baseRequest,
-        sistema: {
-          ...baseRequest.sistema,
-          tension_v: 208,
+        system: {
+          ...baseRequest.system,
+          voltage_v: 208,
           phases: 3,
           corriente_total_a: 35.2,
           carga_total_va: 12672,
@@ -254,7 +254,7 @@ describe('VoltageDropService', () => {
       expect(result.resumen.tension_nominal_v).toBe(208);
 
       // En trifásico, la caída de tensión debería ser menor que en monofásico
-      expect(result.alimentador.caida_tension_alimentador_pct).toBeLessThan(5);
+      expect(result.feeder.caida_tension_alimentador_pct).toBeLessThan(5);
     });
 
     it('should detect circuits exceeding voltage drop limits', async () => {
@@ -263,19 +263,19 @@ describe('VoltageDropService', () => {
         circuitos_ramales: [
           {
             id_circuito: 'CIRC-001',
-            nombre: 'Carga Crítica',
+            name: 'load Crítica',
             corriente_total_a: 25.0,
             carga_total_va: 3000,
-            longitud_m: 150,
+            length_m: 150,
           },
         ],
-        sistema: {
-          tension_v: 120,
+        system: {
+          voltage_v: 120,
           phases: 1,
           corriente_total_a: 25.0,
           carga_total_va: 3000,
         },
-        parametros: {
+        parameters: {
           longitud_alimentador_m: 100,
           material_conductor: 'Cu',
           max_caida_ramal_pct: 2,
@@ -285,7 +285,7 @@ describe('VoltageDropService', () => {
 
       const result = await service.selectFeeder(criticalRequest);
 
-      // Verificar que se detecten circuitos fuera de límite
+      // Verificar que se detecten circuits fuera de límite
       const circuitosFueraLimite = result.circuitos_analisis.filter(
         (c) => c.estado === 'ERROR',
       );
@@ -296,12 +296,12 @@ describe('VoltageDropService', () => {
     it('should calculate critical length correctly', async () => {
       const result = await service.selectFeeder(baseRequest);
 
-      expect(result.alimentador.longitud_critica_m).toBeGreaterThan(0);
-      expect(result.alimentador.longitud_critica_m).toBeLessThan(1000);
+      expect(result.feeder.longitud_critica_m).toBeGreaterThan(0);
+      expect(result.feeder.longitud_critica_m).toBeLessThan(1000);
 
-      // La longitud crítica debería ser mayor que la longitud del alimentador
-      expect(result.alimentador.longitud_critica_m).toBeGreaterThan(
-        baseRequest.parametros.longitud_alimentador_m,
+      // La longitud crítica debería ser mayor que la longitud del feeder
+      expect(result.feeder.longitud_critica_m).toBeGreaterThan(
+        baseRequest.parameters.longitud_alimentador_m,
       );
     });
 
@@ -312,8 +312,8 @@ describe('VoltageDropService', () => {
 
       const requestWithoutLimits = {
         ...baseRequest,
-        parametros: {
-          ...baseRequest.parametros,
+        parameters: {
+          ...baseRequest.parameters,
           max_caida_ramal_pct: undefined,
           max_caida_total_pct: undefined,
         },
@@ -331,17 +331,17 @@ describe('VoltageDropService', () => {
         circuitos_ramales: [
           {
             id_circuito: 'CIRC-001',
-            nombre: 'Circuito sin longitud',
+            name: 'circuit sin longitud',
             corriente_total_a: 10.0,
             carga_total_va: 1200,
-            // longitud_m no especificada
+            // length_m no especificada
           },
         ],
       };
 
       const result = await service.selectFeeder(requestWithoutLengths);
 
-      expect(result.circuitos_analisis[0].longitud_m).toBe(20); // Valor por defecto
+      expect(result.circuitos_analisis[0].length_m).toBe(20); // value por defecto
       expect(
         result.circuitos_analisis[0].caida_tension_ramal_pct,
       ).toBeGreaterThan(0);
@@ -355,8 +355,8 @@ describe('VoltageDropService', () => {
 
       // Verificar que contenga información sobre el análisis
       const observationsText = result.observaciones_generales!.join(' ');
-      expect(observationsText).toContain('circuitos ramales');
-      expect(observationsText).toContain('Alimentador');
+      expect(observationsText).toContain('circuits ramales');
+      expect(observationsText).toContain('feeder');
     });
 
     it('should record metrics correctly', async () => {
@@ -378,19 +378,19 @@ describe('VoltageDropService', () => {
         circuitos_ramales: [
           {
             id_circuito: 'CIRC-001',
-            nombre: 'Carga Industrial',
+            name: 'load Industrial',
             corriente_total_a: 100.0,
             carga_total_va: 12000,
-            longitud_m: 50,
+            length_m: 50,
           },
         ],
-        sistema: {
-          tension_v: 480,
+        system: {
+          voltage_v: 480,
           phases: 3,
           corriente_total_a: 100.0,
           carga_total_va: 12000,
         },
-        parametros: {
+        parameters: {
           longitud_alimentador_m: 80,
           material_conductor: 'Cu',
           max_caida_ramal_pct: 3,
@@ -400,9 +400,9 @@ describe('VoltageDropService', () => {
 
       const result = await service.selectFeeder(highCurrentRequest);
 
-      expect(result.alimentador.corriente_total_a).toBe(100.0);
-      expect(result.alimentador.seccion_mm2).toBeGreaterThanOrEqual(16);
-      expect(result.alimentador.caida_tension_alimentador_pct).toBeLessThan(5);
+      expect(result.feeder.corriente_total_a).toBe(100.0);
+      expect(result.feeder.section_mm2).toBeGreaterThanOrEqual(16);
+      expect(result.feeder.caida_tension_alimentador_pct).toBeLessThan(5);
     });
 
     it('should handle mixed material scenarios', async () => {
@@ -412,21 +412,21 @@ describe('VoltageDropService', () => {
       const result = await service.selectFeeder(baseRequest);
 
       // Debería manejar el caso cuando no hay resistividades
-      expect(result.alimentador).toBeDefined();
+      expect(result.feeder).toBeDefined();
       expect(result.circuitos_analisis).toHaveLength(2);
     });
 
     it('should validate input parameters', async () => {
       const invalidRequest = {
         ...baseRequest,
-        sistema: {
-          ...baseRequest.sistema,
-          tension_v: 0, // Tensión inválida
+        system: {
+          ...baseRequest.system,
+          voltage_v: 0, // Tensión inválida
         },
       };
 
       const result = await service.selectFeeder(invalidRequest);
-      expect(result.alimentador.estado).toBe('ERROR');
+      expect(result.feeder.estado).toBe('ERROR');
     });
 
     it('should handle edge case with very short lengths', async () => {
@@ -435,13 +435,13 @@ describe('VoltageDropService', () => {
         circuitos_ramales: [
           {
             id_circuito: 'CIRC-001',
-            nombre: 'Circuito Corto',
+            name: 'circuit Corto',
             corriente_total_a: 5.0,
             carga_total_va: 600,
-            longitud_m: 2,
+            length_m: 2,
           },
         ],
-        parametros: {
+        parameters: {
           longitud_alimentador_m: 5,
           material_conductor: 'Cu',
           max_caida_ramal_pct: 3,
@@ -454,14 +454,14 @@ describe('VoltageDropService', () => {
       expect(result.circuitos_analisis[0].caida_tension_ramal_pct).toBeLessThan(
         1,
       );
-      expect(result.alimentador.caida_tension_alimentador_pct).toBeLessThan(2);
+      expect(result.feeder.caida_tension_alimentador_pct).toBeLessThan(2);
     });
 
     it('should handle maximum voltage drop limits', async () => {
       const maxDropRequest = {
         ...baseRequest,
-        parametros: {
-          ...baseRequest.parametros,
+        parameters: {
+          ...baseRequest.parameters,
           max_caida_ramal_pct: 10,
           max_caida_total_pct: 15,
         },
@@ -472,7 +472,7 @@ describe('VoltageDropService', () => {
       expect(result.resumen.limite_caida_ramal_pct).toBe(10);
       expect(result.resumen.limite_caida_total_pct).toBe(15);
 
-      // Con límites altos, todos los circuitos deberían estar OK
+      // Con límites altos, todos los circuits deberían estar OK
       const circuitosOK = result.circuitos_analisis.filter(
         (c) => c.estado === 'OK',
       );
@@ -480,3 +480,4 @@ describe('VoltageDropService', () => {
     });
   });
 });
+

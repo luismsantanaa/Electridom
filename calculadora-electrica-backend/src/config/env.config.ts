@@ -1,4 +1,4 @@
-import { registerAs } from '@nestjs/config';
+﻿import { registerAs } from '@nestjs/config';
 import { Environment, LogLevel } from './env.validation';
 
 export const envConfig = registerAs('env', () => ({
@@ -56,7 +56,7 @@ export const loggerConfig = registerAs('logger', () => ({
   requestIdHeader: process.env.REQUEST_ID_HEADER || 'X-Request-Id',
 }));
 
-// Configuración específica por ambiente
+// Configuración específica por environment
 export const getEnvironmentConfig = () => {
   const nodeEnv = process.env.NODE_ENV || Environment.Development;
 
@@ -126,3 +126,4 @@ export const getConfig = () => ({
   swagger: swaggerConfig(),
   environment: getEnvironmentConfig(),
 });
+

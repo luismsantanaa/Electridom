@@ -1,9 +1,9 @@
-import { Test, TestingModule } from '@nestjs/testing';
+﻿import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { AmbienteService } from './ambiente.service';
-import { Ambiente } from './entities/ambiente.entity';
-import { CreateAmbienteDto } from './dto/create-ambiente.dto';
-import { UpdateAmbienteDto } from './dto/update-ambiente.dto';
+import { EnvironmentService } from './environment.service';
+import { environment } from './entities/environment.entity';
+import { CreateAmbienteDto } from './dto/create-environment.dto';
+import { UpdateAmbienteDto } from './dto/update-environment.dto';
 import { NotFoundException } from '@nestjs/common';
 import { PaginateQuery, paginate } from 'nestjs-paginate';
 import { ActivoSpecification } from './specifications/activo.specification';
@@ -13,8 +13,8 @@ jest.mock('nestjs-paginate', () => ({
   paginate: jest.fn(),
 }));
 
-describe('AmbienteService', () => {
-  let service: AmbienteService;
+describe('EnvironmentService', () => {
+  let service: EnvironmentService;
 
   const mockRepository = {
     create: jest.fn(),
@@ -30,15 +30,15 @@ describe('AmbienteService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        AmbienteService,
+        EnvironmentService,
         {
-          provide: getRepositoryToken(Ambiente),
+          provide: getRepositoryToken(environment),
           useValue: mockRepository,
         },
       ],
     }).compile();
 
-    service = module.get<AmbienteService>(AmbienteService);
+    service = module.get<EnvironmentService>(EnvironmentService);
   });
 
   it('should be defined', () => {
@@ -46,32 +46,32 @@ describe('AmbienteService', () => {
   });
 
   describe('create', () => {
-    it('should create a new ambiente', async () => {
+    it('should create a new environment', async () => {
       const createDto: CreateAmbienteDto = {
-        nombre: 'Test Ambiente',
+        name: 'Test environment',
         tipoAmbienteId: '1',
         tipoSuperficie: tipoSuperficieEnum.RECTANGULAR,
         proyectoId: '1',
       };
-      const usuario = 'testUser';
+      const user = 'testUser';
       const expectedAmbiente = {
         ...createDto,
         id: '1',
         activo: true,
-        creadoPor: usuario,
+        creadoPor: user,
       };
 
       mockRepository.create.mockReturnValue(expectedAmbiente);
       mockRepository.save.mockResolvedValue(expectedAmbiente);
 
-      const result = await service.create(createDto, usuario);
+      const result = await service.create(createDto, user);
 
       expect(result).toEqual(expectedAmbiente);
       expect(mockRepository.create).toHaveBeenCalledWith({
-        nombre: createDto.nombre,
+        name: createDto.name,
         area: 0, // calculado como largo * ancho o 0 si no se proporciona
         tipoAmbiente: { id: createDto.tipoAmbienteId },
-        usrCreate: usuario,
+        usrCreate: user,
       });
       expect(mockRepository.save).toHaveBeenCalledWith(expectedAmbiente);
     });
@@ -82,12 +82,12 @@ describe('AmbienteService', () => {
       const query: PaginateQuery = {
         page: 1,
         limit: 10,
-        path: '/ambientes',
+        path: '/environments',
       };
       const mockData = [
         {
           id: '1',
-          nombre: 'Test Ambiente',
+          name: 'Test environment',
           activo: true,
         },
       ];
@@ -96,8 +96,8 @@ describe('AmbienteService', () => {
         totalItems: 1,
         currentPage: 1,
         totalPages: 1,
-        sortBy: [['nombre', 'ASC']],
-        searchBy: ['nombre'],
+        sortBy: [['name', 'ASC']],
+        searchBy: ['name'],
         search: '',
         select: [],
       };
@@ -121,14 +121,14 @@ describe('AmbienteService', () => {
       const query: PaginateQuery = {
         page: 1,
         limit: 10,
-        path: '/ambientes',
+        path: '/environments',
       };
       const specification = new ActivoSpecification(true);
 
       const mockData = [
         {
           id: '1',
-          nombre: 'Test Ambiente',
+          name: 'Test environment',
           activo: true,
         },
       ];
@@ -137,8 +137,8 @@ describe('AmbienteService', () => {
         totalItems: 1,
         currentPage: 1,
         totalPages: 1,
-        sortBy: [['nombre', 'ASC']],
-        searchBy: ['nombre'],
+        sortBy: [['name', 'ASC']],
+        searchBy: ['name'],
         search: '',
         select: [],
       };
@@ -157,11 +157,11 @@ describe('AmbienteService', () => {
   });
 
   describe('findOne', () => {
-    it('should return an ambiente by id', async () => {
+    it('should return an environment by id', async () => {
       const id = '1';
       const expectedAmbiente = {
         id,
-        nombre: 'Test Ambiente',
+        name: 'Test environment',
         activo: true,
       };
 
@@ -176,7 +176,7 @@ describe('AmbienteService', () => {
       });
     });
 
-    it('should throw NotFoundException when ambiente not found', async () => {
+    it('should throw NotFoundException when environment not found', async () => {
       const id = '1';
       mockRepository.findOne.mockResolvedValue(null);
 
@@ -185,27 +185,27 @@ describe('AmbienteService', () => {
   });
 
   describe('update', () => {
-    it('should update an ambiente', async () => {
+    it('should update an environment', async () => {
       const id = '1';
       const updateDto: UpdateAmbienteDto = {
-        nombre: 'Updated Ambiente',
+        name: 'Updated environment',
       };
-      const usuario = 'testUser';
+      const user = 'testUser';
       const existingAmbiente = {
         id,
-        nombre: 'Test Ambiente',
+        name: 'Test environment',
         activo: true,
       };
       const updatedAmbiente = {
         ...existingAmbiente,
         ...updateDto,
-        actualizadoPor: usuario,
+        actualizadoPor: user,
       };
 
       mockRepository.findOne.mockResolvedValue(existingAmbiente);
       mockRepository.save.mockResolvedValue(updatedAmbiente);
 
-      const result = await service.update(id, updateDto, usuario);
+      const result = await service.update(id, updateDto, user);
 
       expect(result).toEqual(updatedAmbiente);
       expect(mockRepository.save).toHaveBeenCalledWith(updatedAmbiente);
@@ -213,31 +213,32 @@ describe('AmbienteService', () => {
   });
 
   describe('remove', () => {
-    it('should soft delete an ambiente', async () => {
+    it('should soft delete an environment', async () => {
       const id = '1';
-      const usuario = 'testUser';
+      const user = 'testUser';
       const existingAmbiente = {
         id,
-        nombre: 'Test Ambiente',
+        name: 'Test environment',
         activo: true,
       };
       const deletedAmbiente = {
         ...existingAmbiente,
         activo: false,
-        actualizadoPor: usuario,
+        actualizadoPor: user,
       };
 
       mockRepository.findOne.mockResolvedValue(existingAmbiente);
       mockRepository.save.mockResolvedValue(deletedAmbiente);
 
-      await service.remove(id, usuario);
+      await service.remove(id, user);
 
       expect(mockRepository.save).toHaveBeenCalledWith(
         expect.objectContaining({
           active: false,
-          usrUpdate: usuario,
+          usrUpdate: user,
         }),
       );
     });
   });
 });
+

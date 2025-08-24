@@ -12,11 +12,11 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'calc',
+        redirectTo: 'dashboard',
         pathMatch: 'full'
       },
       {
-        path: 'calc',
+        path: 'dashboard',
         loadComponent: () => import('./features/calc/pages/calc.page').then((c) => c.CalcPage)
       }
     ]

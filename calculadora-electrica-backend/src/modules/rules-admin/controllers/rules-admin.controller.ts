@@ -1,4 +1,4 @@
-import {
+﻿import {
   Controller,
   Get,
   Post,
@@ -33,7 +33,7 @@ import {
   ImportRuleSetDto
 } from '../dtos/rule-set.dto';
 
-@ApiTags('Administración de Reglas Normativas')
+@ApiTags('Administración de rules Normativas')
 @Controller('v1/rulesets')
 @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
 export class RulesAdminController {
@@ -44,12 +44,12 @@ export class RulesAdminController {
   @UseGuards(ApiKeyGuard)
   @ApiSecurity('api-key')
   @ApiOperation({
-    summary: 'Crear un nuevo conjunto de reglas',
+    summary: 'Crear un nuevo conjunto de rules',
     description: 'Crea un nuevo RuleSet en estado DRAFT',
   })
   @ApiBody({
     type: CreateRuleSetDto,
-    description: 'Datos del conjunto de reglas',
+    description: 'Datos del conjunto de rules',
     examples: {
       ejemplo1: {
         summary: 'RuleSet básico',
@@ -84,8 +84,8 @@ export class RulesAdminController {
   @UseGuards(ApiKeyGuard)
   @ApiSecurity('api-key')
   @ApiOperation({
-    summary: 'Cargar/actualizar reglas en un RuleSet',
-    description: 'Realiza bulk upsert de reglas en un RuleSet DRAFT',
+    summary: 'Cargar/actualizar rules en un RuleSet',
+    description: 'Realiza bulk upsert de rules en un RuleSet DRAFT',
   })
   @ApiParam({
     name: 'ruleSetId',
@@ -94,10 +94,10 @@ export class RulesAdminController {
   })
   @ApiBody({
     type: BulkUpsertRulesDto,
-    description: 'Reglas a insertar/actualizar',
+    description: 'rules a insertar/actualizar',
     examples: {
       ejemplo1: {
-        summary: 'Reglas básicas',
+        summary: 'rules básicas',
         value: {
           rules: [
             {
@@ -110,7 +110,7 @@ export class RulesAdminController {
             },
             {
               code: 'TOMA_VA_MAX_POR_CIRCUITO',
-              description: 'Límite VA por circuito TOM',
+              description: 'Límite VA por circuit TOM',
               numericValue: 1800.0,
               unit: 'VA',
               category: 'TOM',
@@ -123,7 +123,7 @@ export class RulesAdminController {
   })
   @ApiResponse({
     status: 200,
-    description: 'Reglas actualizadas exitosamente',
+    description: 'rules actualizadas exitosamente',
     type: RuleSetDetailResponseDto,
   })
   @ApiResponse({
@@ -219,7 +219,7 @@ export class RulesAdminController {
 
   @Get()
   @ApiOperation({
-    summary: 'Listar conjuntos de reglas',
+    summary: 'Listar conjuntos de rules',
     description: 'Lista RuleSets con paginación y filtros',
   })
   @ApiQuery({
@@ -244,7 +244,7 @@ export class RulesAdminController {
   })
   @ApiQuery({
     name: 'query',
-    description: 'Término de búsqueda en nombre o descripción',
+    description: 'Término de búsqueda en name o descripción',
     required: false,
     type: String,
   })
@@ -277,7 +277,7 @@ export class RulesAdminController {
   @Get(':ruleSetId')
   @ApiOperation({
     summary: 'Obtener detalle de un RuleSet',
-    description: 'Obtiene un RuleSet con todas sus reglas',
+    description: 'Obtiene un RuleSet con todas sus rules',
   })
   @ApiParam({
     name: 'ruleSetId',
@@ -401,7 +401,7 @@ export class RulesAdminController {
   }
 }
 
-@ApiTags('Resolución de Reglas')
+@ApiTags('Resolución de rules')
 @Controller('v1/rules')
 @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
 export class RulesResolverController {
@@ -409,19 +409,19 @@ export class RulesResolverController {
 
   @Get('active')
   @ApiOperation({
-    summary: 'Obtener reglas activas',
+    summary: 'Obtener rules activas',
     description: 'Resuelve el RuleSet activo para una fecha específica',
   })
   @ApiQuery({
     name: 'at',
-    description: 'Fecha para resolver reglas activas (ISO 8601)',
+    description: 'Fecha para resolver rules activas (ISO 8601)',
     required: false,
     type: String,
     example: '2025-09-10T00:00:00Z',
   })
   @ApiResponse({
     status: 200,
-    description: 'Reglas activas obtenidas exitosamente',
+    description: 'rules activas obtenidas exitosamente',
     schema: {
       type: 'object',
       properties: {
@@ -443,8 +443,8 @@ export class RulesResolverController {
 
   @Get(':ruleSetId')
   @ApiOperation({
-    summary: 'Obtener reglas de un RuleSet específico',
-    description: 'Obtiene las reglas de un RuleSet por ID',
+    summary: 'Obtener rules de un RuleSet específico',
+    description: 'Obtiene las rules de un RuleSet por ID',
   })
   @ApiParam({
     name: 'ruleSetId',
@@ -453,7 +453,7 @@ export class RulesResolverController {
   })
   @ApiResponse({
     status: 200,
-    description: 'Reglas obtenidas exitosamente',
+    description: 'rules obtenidas exitosamente',
     schema: {
       type: 'object',
       properties: {
@@ -473,3 +473,4 @@ export class RulesResolverController {
     return this.rulesAdminService.getRuleSetById(ruleSetId);
   }
 }
+

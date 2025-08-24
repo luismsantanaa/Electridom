@@ -1,23 +1,24 @@
-import { BaseSpecification } from '../../../common/specifications/base.specification';
-import { Cargas } from '../entities/cargas.entity';
+﻿import { BaseSpecification } from '../../../common/specifications/base.specification';
+import { loads } from '../entities/loads.entity';
 import { SelectQueryBuilder } from 'typeorm';
 
-export class NombreSpecification extends BaseSpecification<Cargas> {
-  constructor(private readonly nombre: string) {
+export class NombreSpecification extends BaseSpecification<loads> {
+  constructor(private readonly name: string) {
     super();
   }
 
-  isSatisfiedBy(entity: Cargas): boolean {
-    return entity.tipoArtefacto.nombre
+  isSatisfiedBy(entity: loads): boolean {
+    return entity.tipoArtefacto.name
       .toLowerCase()
-      .includes(this.nombre.toLowerCase());
+      .includes(this.name.toLowerCase());
   }
 
   toQueryBuilder(
-    queryBuilder: SelectQueryBuilder<Cargas>,
-  ): SelectQueryBuilder<Cargas> {
-    return queryBuilder.andWhere('tipoArtefacto.nombre ILIKE :nombre', {
-      nombre: `%${this.nombre}%`,
+    queryBuilder: SelectQueryBuilder<loads>,
+  ): SelectQueryBuilder<loads> {
+    return queryBuilder.andWhere('tipoArtefacto.name ILIKE :name', {
+      name: `%${this.name}%`,
     });
   }
 }
+

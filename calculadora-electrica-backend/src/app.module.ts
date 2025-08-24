@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+﻿import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ThrottlerModule } from '@nestjs/throttler';
@@ -19,13 +19,13 @@ import { AppService } from './app.service';
 import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { HealthModule } from './modules/health/health.module';
-import { TiposInstalacionesModule } from './modules/tipos-instalaciones/tipos-instalaciones.module';
-import { TiposAmbientesModule } from './modules/tipos-ambientes/tipos-ambientes.module';
-import { TiposArtefactosModule } from './modules/tipos-artefactos/tipos-artefactos.module';
+import { TiposInstalacionesModule } from './modules/tipos-instalaciones/tipos-installations.module';
+import { TiposAmbientesModule } from './modules/tipos-ambientes/tipos-environments.module';
+import { TiposArtefactosModule } from './modules/tipos-artefactos/tipos-artifacts.module';
 import { RulesModule } from './modules/rules/rules.module';
 import { CalculosModule } from './modules/calculos/calculos.module';
-import { AmbienteModule } from './modules/ambientes/ambiente.module';
-import { CargasModule } from './modules/cargas/cargas.module';
+import { EnvironmentModule } from './modules/ambientes/environment.module';
+import { CargasModule } from './modules/cargas/loads.module';
 import { ProjectsModule } from './modules/projects/projects.module';
 import { RulesAdminModule } from './modules/rules-admin/rules-admin.module';
 import { JwksModule } from './modules/jwks/jwks.module';
@@ -94,7 +94,7 @@ import { LoggerModule } from 'nestjs-pino';
     TiposArtefactosModule,
     RulesModule,
     CalculosModule,
-    AmbienteModule,
+    EnvironmentModule,
     CargasModule,
     ProjectsModule,
     RulesAdminModule,
@@ -142,3 +142,4 @@ import { LoggerModule } from 'nestjs-pino';
   ],
 })
 export class AppModule {}
+

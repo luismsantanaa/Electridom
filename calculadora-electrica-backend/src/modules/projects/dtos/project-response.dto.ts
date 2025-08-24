@@ -1,20 +1,20 @@
-import { ApiProperty } from '@nestjs/swagger';
+﻿import { ApiProperty } from '@nestjs/swagger';
 
-// DTO para resumen de proyecto
+// DTO para resumen de project
 export class ProjectSummaryDto {
-  @ApiProperty({ example: 'uuid', description: 'ID único del proyecto' })
+  @ApiProperty({ example: 'uuid', description: 'ID único del project' })
   projectId: string;
 
   @ApiProperty({
     example: 'Residencia García',
-    description: 'Nombre del proyecto',
+    description: 'name del project',
   })
   projectName: string;
 
   @ApiProperty({
     enum: ['ACTIVE', 'ARCHIVED'],
     example: 'ACTIVE',
-    description: 'Estado del proyecto',
+    description: 'Estado del project',
   })
   status: 'ACTIVE' | 'ARCHIVED';
 
@@ -48,7 +48,7 @@ export class ProjectSummaryDto {
 
 // DTO para detalle completo de versión
 export class ProjectVersionDetailDto {
-  @ApiProperty({ example: 'uuid', description: 'ID del proyecto' })
+  @ApiProperty({ example: 'uuid', description: 'ID del project' })
   projectId: string;
 
   @ApiProperty({ example: 'uuid', description: 'ID de la versión' })
@@ -67,23 +67,23 @@ export class ProjectVersionDetailDto {
     description: 'Datos de entrada de la versión',
     type: 'object',
     properties: {
-      superficies: {
+      surfaces: {
         type: 'array',
         items: {
           type: 'object',
           properties: {
-            ambiente: { type: 'string', example: 'Sala' },
+            environment: { type: 'string', example: 'Sala' },
             areaM2: { type: 'number', example: 18.5 },
           },
         },
       },
-      consumos: {
+      consumptions: {
         type: 'array',
         items: {
           type: 'object',
           properties: {
-            nombre: { type: 'string', example: 'Televisor' },
-            ambiente: { type: 'string', example: 'Sala' },
+            name: { type: 'string', example: 'Televisor' },
+            environment: { type: 'string', example: 'Sala' },
             watts: { type: 'number', example: 120 },
           },
         },
@@ -98,8 +98,8 @@ export class ProjectVersionDetailDto {
     },
   })
   input: {
-    superficies: any[];
-    consumos: any[];
+    surfaces: any[];
+    consumptions: any[];
     opciones?: any;
   };
 
@@ -119,7 +119,7 @@ export class ProjectVersionDetailDto {
       warnings: {
         type: 'array',
         items: { type: 'string' },
-        example: ['Reglas cambiaron respecto a la versión 1'],
+        example: ['rules cambiaron respecto a la versión 1'],
       },
     },
   })
@@ -132,18 +132,18 @@ export class ProjectVersionDetailDto {
 
   @ApiProperty({
     example: 'sha256:...',
-    description: 'Firma de las reglas utilizadas',
+    description: 'Firma de las rules utilizadas',
   })
   rulesSignature: string;
 
   @ApiProperty({
     example: true,
-    description: 'Si las reglas cambiaron respecto a la versión anterior',
+    description: 'Si las rules cambiaron respecto a la versión anterior',
   })
   rulesChangedFromPrevious: boolean;
 
   @ApiProperty({
-    example: 'Ajuste de consumos cocina',
+    example: 'Ajuste de consumptions cocina',
     description: 'Nota de la versión',
     required: false,
   })
@@ -153,9 +153,9 @@ export class ProjectVersionDetailDto {
   traceId: string;
 }
 
-// DTO para listado de proyectos
+// DTO para listado de projects
 export class ProjectListResponseDto {
-  @ApiProperty({ type: [ProjectSummaryDto], description: 'Lista de proyectos' })
+  @ApiProperty({ type: [ProjectSummaryDto], description: 'Lista de projects' })
   data: ProjectSummaryDto[];
 
   @ApiProperty({ example: 1, description: 'Página actual' })
@@ -164,21 +164,22 @@ export class ProjectListResponseDto {
   @ApiProperty({ example: 20, description: 'Tamaño de página' })
   pageSize: number;
 
-  @ApiProperty({ example: 100, description: 'Total de proyectos' })
+  @ApiProperty({ example: 100, description: 'Total de projects' })
   total: number;
 
   @ApiProperty({ example: 5, description: 'Total de páginas' })
   totalPages: number;
 }
 
-// DTO para exportar proyecto completo
+// DTO para exportar project completo
 export class ProjectExportDto {
-  @ApiProperty({ description: 'Datos del proyecto' })
+  @ApiProperty({ description: 'Datos del project' })
   project: ProjectSummaryDto;
 
   @ApiProperty({
     type: [ProjectVersionDetailDto],
-    description: 'Todas las versiones del proyecto',
+    description: 'Todas las versiones del project',
   })
   versions: ProjectVersionDetailDto[];
 }
+

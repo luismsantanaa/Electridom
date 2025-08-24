@@ -1,133 +1,133 @@
-export const calculationFixtures = {
-  // Payload mínimo (1 ambiente, 1 carga)
+﻿export const calculationFixtures = {
+  // Payload mínimo (1 environment, 1 load)
   minimal: {
-    superficies: [
-      { ambiente: 'Sala', areaM2: 18.5 },
+    surfaces: [
+      { environment: 'Sala', areaM2: 18.5 },
     ],
-    consumos: [
-      { nombre: 'Televisor', ambiente: 'Sala', watts: 120 },
+    consumptions: [
+      { name: 'Televisor', environment: 'Sala', watts: 120 },
     ],
     opciones: { tensionV: 120, monofasico: true },
   },
 
-  // Payload mediano (5 ambientes, 10 cargas)
+  // Payload mediano (5 environments, 10 loads)
   medium: {
-    superficies: [
-      { ambiente: 'Sala', areaM2: 18.5 },
-      { ambiente: 'Dormitorio 1', areaM2: 12.0 },
-      { ambiente: 'Dormitorio 2', areaM2: 10.5 },
-      { ambiente: 'Cocina', areaM2: 15.0 },
-      { ambiente: 'Baño', areaM2: 8.0 },
+    surfaces: [
+      { environment: 'Sala', areaM2: 18.5 },
+      { environment: 'Dormitorio 1', areaM2: 12.0 },
+      { environment: 'Dormitorio 2', areaM2: 10.5 },
+      { environment: 'Cocina', areaM2: 15.0 },
+      { environment: 'Baño', areaM2: 8.0 },
     ],
-    consumos: [
-      { nombre: 'Televisor', ambiente: 'Sala', watts: 120 },
-      { nombre: 'Lámpara', ambiente: 'Sala', watts: 60 },
-      { nombre: 'Lámpara', ambiente: 'Dormitorio 1', watts: 60 },
-      { nombre: 'Ventilador', ambiente: 'Dormitorio 1', watts: 80 },
-      { nombre: 'Lámpara', ambiente: 'Dormitorio 2', watts: 60 },
-      { nombre: 'Refrigerador', ambiente: 'Cocina', watts: 150 },
-      { nombre: 'Microondas', ambiente: 'Cocina', watts: 1000 },
-      { nombre: 'Lámpara', ambiente: 'Cocina', watts: 60 },
-      { nombre: 'Secador', ambiente: 'Baño', watts: 1800 },
-      { nombre: 'Lámpara', ambiente: 'Baño', watts: 40 },
+    consumptions: [
+      { name: 'Televisor', environment: 'Sala', watts: 120 },
+      { name: 'Lámpara', environment: 'Sala', watts: 60 },
+      { name: 'Lámpara', environment: 'Dormitorio 1', watts: 60 },
+      { name: 'Ventilador', environment: 'Dormitorio 1', watts: 80 },
+      { name: 'Lámpara', environment: 'Dormitorio 2', watts: 60 },
+      { name: 'Refrigerador', environment: 'Cocina', watts: 150 },
+      { name: 'Microondas', environment: 'Cocina', watts: 1000 },
+      { name: 'Lámpara', environment: 'Cocina', watts: 60 },
+      { name: 'Secador', environment: 'Baño', watts: 1800 },
+      { name: 'Lámpara', environment: 'Baño', watts: 40 },
     ],
     opciones: { tensionV: 120, monofasico: true },
   },
 
-  // Payload grande (20+ ambientes, 50+ cargas)
+  // Payload grande (20+ environments, 50+ loads)
   large: {
-    superficies: [
-      { ambiente: 'Sala', areaM2: 25.0 },
-      { ambiente: 'Comedor', areaM2: 15.0 },
-      { ambiente: 'Cocina', areaM2: 20.0 },
-      { ambiente: 'Dormitorio Principal', areaM2: 18.0 },
-      { ambiente: 'Dormitorio 1', areaM2: 12.0 },
-      { ambiente: 'Dormitorio 2', areaM2: 12.0 },
-      { ambiente: 'Dormitorio 3', areaM2: 10.0 },
-      { ambiente: 'Baño Principal', areaM2: 8.0 },
-      { ambiente: 'Baño 1', areaM2: 6.0 },
-      { ambiente: 'Baño 2', areaM2: 6.0 },
-      { ambiente: 'Lavandería', areaM2: 8.0 },
-      { ambiente: 'Oficina', areaM2: 12.0 },
-      { ambiente: 'Sala de TV', areaM2: 16.0 },
-      { ambiente: 'Habitación de Servicio', areaM2: 8.0 },
-      { ambiente: 'Closet Principal', areaM2: 6.0 },
-      { ambiente: 'Closet 1', areaM2: 4.0 },
-      { ambiente: 'Closet 2', areaM2: 4.0 },
-      { ambiente: 'Closet 3', areaM2: 4.0 },
-      { ambiente: 'Pasillo', areaM2: 10.0 },
-      { ambiente: 'Terraza', areaM2: 15.0 },
-      { ambiente: 'Garaje', areaM2: 25.0 },
+    surfaces: [
+      { environment: 'Sala', areaM2: 25.0 },
+      { environment: 'Comedor', areaM2: 15.0 },
+      { environment: 'Cocina', areaM2: 20.0 },
+      { environment: 'Dormitorio Principal', areaM2: 18.0 },
+      { environment: 'Dormitorio 1', areaM2: 12.0 },
+      { environment: 'Dormitorio 2', areaM2: 12.0 },
+      { environment: 'Dormitorio 3', areaM2: 10.0 },
+      { environment: 'Baño Principal', areaM2: 8.0 },
+      { environment: 'Baño 1', areaM2: 6.0 },
+      { environment: 'Baño 2', areaM2: 6.0 },
+      { environment: 'Lavandería', areaM2: 8.0 },
+      { environment: 'Oficina', areaM2: 12.0 },
+      { environment: 'Sala de TV', areaM2: 16.0 },
+      { environment: 'Habitación de Servicio', areaM2: 8.0 },
+      { environment: 'Closet Principal', areaM2: 6.0 },
+      { environment: 'Closet 1', areaM2: 4.0 },
+      { environment: 'Closet 2', areaM2: 4.0 },
+      { environment: 'Closet 3', areaM2: 4.0 },
+      { environment: 'Pasillo', areaM2: 10.0 },
+      { environment: 'Terraza', areaM2: 15.0 },
+      { environment: 'Garaje', areaM2: 25.0 },
     ],
-    consumos: [
+    consumptions: [
       // Sala
-      { nombre: 'TV LED 55"', ambiente: 'Sala', watts: 150 },
-      { nombre: 'Lámpara Principal', ambiente: 'Sala', watts: 100 },
-      { nombre: 'Lámpara Secundaria', ambiente: 'Sala', watts: 60 },
-      { nombre: 'Ventilador Techo', ambiente: 'Sala', watts: 80 },
-      { nombre: 'Aire Acondicionado', ambiente: 'Sala', watts: 1500 },
+      { name: 'TV LED 55"', environment: 'Sala', watts: 150 },
+      { name: 'Lámpara Principal', environment: 'Sala', watts: 100 },
+      { name: 'Lámpara Secundaria', environment: 'Sala', watts: 60 },
+      { name: 'Ventilador Techo', environment: 'Sala', watts: 80 },
+      { name: 'Aire Acondicionado', environment: 'Sala', watts: 1500 },
       
       // Comedor
-      { nombre: 'Lámpara Comedor', ambiente: 'Comedor', watts: 80 },
-      { nombre: 'Ventilador Comedor', ambiente: 'Comedor', watts: 60 },
+      { name: 'Lámpara Comedor', environment: 'Comedor', watts: 80 },
+      { name: 'Ventilador Comedor', environment: 'Comedor', watts: 60 },
       
       // Cocina
-      { nombre: 'Refrigerador', ambiente: 'Cocina', watts: 200 },
-      { nombre: 'Microondas', ambiente: 'Cocina', watts: 1200 },
-      { nombre: 'Licuadora', ambiente: 'Cocina', watts: 300 },
-      { nombre: 'Cafetera', ambiente: 'Cocina', watts: 900 },
-      { nombre: 'Lámpara Cocina', ambiente: 'Cocina', watts: 100 },
-      { nombre: 'Extractor', ambiente: 'Cocina', watts: 150 },
+      { name: 'Refrigerador', environment: 'Cocina', watts: 200 },
+      { name: 'Microondas', environment: 'Cocina', watts: 1200 },
+      { name: 'Licuadora', environment: 'Cocina', watts: 300 },
+      { name: 'Cafetera', environment: 'Cocina', watts: 900 },
+      { name: 'Lámpara Cocina', environment: 'Cocina', watts: 100 },
+      { name: 'Extractor', environment: 'Cocina', watts: 150 },
       
       // Dormitorio Principal
-      { nombre: 'TV 32"', ambiente: 'Dormitorio Principal', watts: 80 },
-      { nombre: 'Lámpara Principal', ambiente: 'Dormitorio Principal', watts: 60 },
-      { nombre: 'Lámpara Mesa', ambiente: 'Dormitorio Principal', watts: 40 },
-      { nombre: 'Aire Acondicionado', ambiente: 'Dormitorio Principal', watts: 1200 },
-      { nombre: 'Ventilador', ambiente: 'Dormitorio Principal', watts: 60 },
+      { name: 'TV 32"', environment: 'Dormitorio Principal', watts: 80 },
+      { name: 'Lámpara Principal', environment: 'Dormitorio Principal', watts: 60 },
+      { name: 'Lámpara Mesa', environment: 'Dormitorio Principal', watts: 40 },
+      { name: 'Aire Acondicionado', environment: 'Dormitorio Principal', watts: 1200 },
+      { name: 'Ventilador', environment: 'Dormitorio Principal', watts: 60 },
       
       // Dormitorio 1
-      { nombre: 'Lámpara Principal', ambiente: 'Dormitorio 1', watts: 60 },
-      { nombre: 'Lámpara Mesa', ambiente: 'Dormitorio 1', watts: 40 },
-      { nombre: 'Ventilador', ambiente: 'Dormitorio 1', watts: 60 },
+      { name: 'Lámpara Principal', environment: 'Dormitorio 1', watts: 60 },
+      { name: 'Lámpara Mesa', environment: 'Dormitorio 1', watts: 40 },
+      { name: 'Ventilador', environment: 'Dormitorio 1', watts: 60 },
       
       // Dormitorio 2
-      { nombre: 'Lámpara Principal', ambiente: 'Dormitorio 2', watts: 60 },
-      { nombre: 'Lámpara Mesa', ambiente: 'Dormitorio 2', watts: 40 },
-      { nombre: 'Ventilador', ambiente: 'Dormitorio 2', watts: 60 },
+      { name: 'Lámpara Principal', environment: 'Dormitorio 2', watts: 60 },
+      { name: 'Lámpara Mesa', environment: 'Dormitorio 2', watts: 40 },
+      { name: 'Ventilador', environment: 'Dormitorio 2', watts: 60 },
       
       // Dormitorio 3
-      { nombre: 'Lámpara Principal', ambiente: 'Dormitorio 3', watts: 60 },
-      { nombre: 'Lámpara Mesa', ambiente: 'Dormitorio 3', watts: 40 },
+      { name: 'Lámpara Principal', environment: 'Dormitorio 3', watts: 60 },
+      { name: 'Lámpara Mesa', environment: 'Dormitorio 3', watts: 40 },
       
       // Baños
-      { nombre: 'Secador Cabello', ambiente: 'Baño Principal', watts: 1800 },
-      { nombre: 'Lámpara Baño', ambiente: 'Baño Principal', watts: 40 },
-      { nombre: 'Lámpara Baño', ambiente: 'Baño 1', watts: 40 },
-      { nombre: 'Lámpara Baño', ambiente: 'Baño 2', watts: 40 },
+      { name: 'Secador Cabello', environment: 'Baño Principal', watts: 1800 },
+      { name: 'Lámpara Baño', environment: 'Baño Principal', watts: 40 },
+      { name: 'Lámpara Baño', environment: 'Baño 1', watts: 40 },
+      { name: 'Lámpara Baño', environment: 'Baño 2', watts: 40 },
       
       // Lavandería
-      { nombre: 'Lavadora', ambiente: 'Lavandería', watts: 500 },
-      { nombre: 'Secadora', ambiente: 'Lavandería', watts: 3000 },
-      { nombre: 'Lámpara Lavandería', ambiente: 'Lavandería', watts: 60 },
+      { name: 'Lavadora', environment: 'Lavandería', watts: 500 },
+      { name: 'Secadora', environment: 'Lavandería', watts: 3000 },
+      { name: 'Lámpara Lavandería', environment: 'Lavandería', watts: 60 },
       
       // Oficina
-      { nombre: 'Computadora', ambiente: 'Oficina', watts: 300 },
-      { nombre: 'Monitor', ambiente: 'Oficina', watts: 50 },
-      { nombre: 'Impresora', ambiente: 'Oficina', watts: 100 },
-      { nombre: 'Lámpara Oficina', ambiente: 'Oficina', watts: 60 },
+      { name: 'Computadora', environment: 'Oficina', watts: 300 },
+      { name: 'Monitor', environment: 'Oficina', watts: 50 },
+      { name: 'Impresora', environment: 'Oficina', watts: 100 },
+      { name: 'Lámpara Oficina', environment: 'Oficina', watts: 60 },
       
       // Sala de TV
-      { nombre: 'TV LED 65"', ambiente: 'Sala de TV', watts: 200 },
-      { nombre: 'Sistema de Sonido', ambiente: 'Sala de TV', watts: 150 },
-      { nombre: 'Lámpara Sala TV', ambiente: 'Sala de TV', watts: 80 },
+      { name: 'TV LED 65"', environment: 'Sala de TV', watts: 200 },
+      { name: 'system de Sonido', environment: 'Sala de TV', watts: 150 },
+      { name: 'Lámpara Sala TV', environment: 'Sala de TV', watts: 80 },
       
       // Otros
-      { nombre: 'Lámpara Servicio', ambiente: 'Habitación de Servicio', watts: 60 },
-      { nombre: 'Lámpara Closet', ambiente: 'Closet Principal', watts: 40 },
-      { nombre: 'Lámpara Pasillo', ambiente: 'Pasillo', watts: 60 },
-      { nombre: 'Lámpara Terraza', ambiente: 'Terraza', watts: 100 },
-      { nombre: 'Lámpara Garaje', ambiente: 'Garaje', watts: 120 },
+      { name: 'Lámpara Servicio', environment: 'Habitación de Servicio', watts: 60 },
+      { name: 'Lámpara Closet', environment: 'Closet Principal', watts: 40 },
+      { name: 'Lámpara Pasillo', environment: 'Pasillo', watts: 60 },
+      { name: 'Lámpara Terraza', environment: 'Terraza', watts: 100 },
+      { name: 'Lámpara Garaje', environment: 'Garaje', watts: 120 },
     ],
     opciones: { tensionV: 120, monofasico: true },
   },
@@ -135,48 +135,49 @@ export const calculationFixtures = {
   // Payloads inválidos para testing de errores
   invalid: {
     emptySuperficies: {
-      superficies: [],
-      consumos: [{ nombre: 'Test', ambiente: 'Sala', watts: 100 }],
+      surfaces: [],
+      consumptions: [{ name: 'Test', environment: 'Sala', watts: 100 }],
       opciones: { tensionV: 120, monofasico: true },
     },
 
     negativeArea: {
-      superficies: [{ ambiente: 'Sala', areaM2: -10 }],
-      consumos: [{ nombre: 'Test', ambiente: 'Sala', watts: 100 }],
+      surfaces: [{ environment: 'Sala', areaM2: -10 }],
+      consumptions: [{ name: 'Test', environment: 'Sala', watts: 100 }],
       opciones: { tensionV: 120, monofasico: true },
     },
 
     negativeWatts: {
-      superficies: [{ ambiente: 'Sala', areaM2: 10 }],
-      consumos: [{ nombre: 'Test', ambiente: 'Sala', watts: -100 }],
+      surfaces: [{ environment: 'Sala', areaM2: 10 }],
+      consumptions: [{ name: 'Test', environment: 'Sala', watts: -100 }],
       opciones: { tensionV: 120, monofasico: true },
     },
 
     duplicateEnvironment: {
-      superficies: [
-        { ambiente: 'Sala', areaM2: 10 },
-        { ambiente: 'Sala', areaM2: 15 },
+      surfaces: [
+        { environment: 'Sala', areaM2: 10 },
+        { environment: 'Sala', areaM2: 15 },
       ],
-      consumos: [{ nombre: 'Test', ambiente: 'Sala', watts: 100 }],
+      consumptions: [{ name: 'Test', environment: 'Sala', watts: 100 }],
       opciones: { tensionV: 120, monofasico: true },
     },
 
     consumptionInNonExistentEnvironment: {
-      superficies: [{ ambiente: 'Sala', areaM2: 10 }],
-      consumos: [{ nombre: 'Test', ambiente: 'Cocina', watts: 100 }],
+      surfaces: [{ environment: 'Sala', areaM2: 10 }],
+      consumptions: [{ name: 'Test', environment: 'Cocina', watts: 100 }],
       opciones: { tensionV: 120, monofasico: true },
     },
 
     invalidTension: {
-      superficies: [{ ambiente: 'Sala', areaM2: 10 }],
-      consumos: [{ nombre: 'Test', ambiente: 'Sala', watts: 100 }],
+      surfaces: [{ environment: 'Sala', areaM2: 10 }],
+      consumptions: [{ name: 'Test', environment: 'Sala', watts: 100 }],
       opciones: { tensionV: 0, monofasico: true },
     },
 
     missingRequiredFields: {
-      superficies: [{ ambiente: 'Sala' }], // Falta areaM2
-      consumos: [{ nombre: 'Test', ambiente: 'Sala' }], // Falta watts
+      surfaces: [{ environment: 'Sala' }], // Falta areaM2
+      consumptions: [{ name: 'Test', environment: 'Sala' }], // Falta watts
       opciones: { tensionV: 120 }, // Falta monofasico
     },
   },
 };
+
