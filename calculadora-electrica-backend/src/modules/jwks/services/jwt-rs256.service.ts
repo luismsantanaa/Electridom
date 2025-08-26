@@ -38,7 +38,7 @@ export class JwtRs256Service {
     const signOptions: jwt.SignOptions = {
       algorithm: 'RS256',
       keyid: activeKey.kid,
-      expiresIn: options?.expiresIn || '900s', // 15 minutos por defecto
+      expiresIn: (options?.expiresIn || '900s') as any, // 15 minutos por defecto
     };
 
     try {

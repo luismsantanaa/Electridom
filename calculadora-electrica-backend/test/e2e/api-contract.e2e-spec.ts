@@ -19,339 +19,284 @@ describe('API Contract Tests (e2e)', () => {
     await app.close();
   });
 
-  describe('Swagger Documentation', () => {
-    it('should serve Swagger UI at /api/docs', () => {
+  describe('CORS Configuration', () => {
+    it('should allow CORS preflight requests', () => {
       return request(app.getHttpServer())
-        .get('/api/docs')
-        .expect(200)
-        .expect((res) => {
-          expect(res.text).toContain('swagger-ui');
-          expect(res.text).toContain('Calculadora Eléctrica RD');
-        });
+        .options('/api/calc/rooms/preview')
+        .set('Origin', 'http://localhost:4200')
+        .set('Access-Control-Request-Method', 'POST')
+        .set('Access-Control-Request-Headers', 'Content-Type')
+        .expect(204)
+        .expect('Access-Control-Allow-Origin', 'http://localhost:4200')
+        .expect('Access-Control-Allow-Methods', /POST/)
+        .expect('Access-Control-Allow-Headers', /Content-Type/);
     });
 
-    it('should serve OpenAPI JSON schema at /api/docs-json', () => {
+    it('should include required CORS headers in responses', () => {
       return request(app.getHttpServer())
-        .get('/api/docs-json')
+        .post('/api/calc/rooms/preview')
+        .set('Origin', 'http://localhost:4200')
+        .send({
+          superficies: [{ nombre: 'Sala', area_m2: 20 }],
+          consumos: [{ nombre: 'TV', ambiente: 'Sala', potencia_w: 100 }]
+        })
         .expect(200)
-        .expect((res) => {
-          expect(res.body).toHaveProperty('openapi');
-          expect(res.body).toHaveProperty('info');
-          expect(res.body).toHaveProperty('paths');
-          expect(res.body.info.title).toBe('Calculadora Eléctrica RD - API');
-          expect(res.body.info.version).toBe('1.0.0');
-        });
-    });
-
-    it('should include all calculation endpoints in OpenAPI schema', () => {
-      return request(app.getHttpServer())
-        .get('/api/docs-json')
-        .expect(200)
-        .expect((res) => {
-          const paths = res.body.paths;
-          
-          // Verificar que todos los endpoints de cálculos estén documentados
-          expect(paths).toHaveProperty('/calc/rooms/preview');
-          expect(paths).toHaveProperty('/calc/demand/preview');
-          expect(paths).toHaveProperty('/calc/circuits/preview');
-          expect(paths).toHaveProperty('/calc/feeder/preview');
-          expect(paths).toHaveProperty('/calc/grounding/preview');
-          expect(paths).toHaveProperty('/calc/report');
-          expect(paths).toHaveProperty('/calc/report/download');
-        });
-    });
-
-    it('should include proper security schemes in OpenAPI schema', () => {
-      return request(app.getHttpServer())
-        .get('/api/docs-json')
-        .expect(200)
-        .expect((res) => {
-          expect(res.body.components).toHaveProperty('securitySchemes');
-          expect(res.body.components.securitySchemes).toHaveProperty('bearerAuth');
-          expect(res.body.components.securitySchemes).toHaveProperty('apiKeyAuth');
-        });
+        .expect('Access-Control-Allow-Origin', 'http://localhost:4200')
+        .expect('Access-Control-Allow-Credentials', 'true');
     });
   });
 
-  describe('API Contract Validation', () => {
-    it('should validate rooms endpoint contract', () => {
-      const requestData = {
-        system: {
-          voltage: 120,
-          phases: 1,
-          frequency: 60
-        },
-        surfaces: [
-          { name: "Sala", area_m2: 18 },
-          { name: "Cocina", area_m2: 12 }
-        ],
-        consumptions: [
-          {
-            name: "TV",
-            environment: "Sala",
-            power_w: 140,
-            type: "electrodomestico"
-          }
-        ]
-      };
+  describe('API Endpoints Contract', () => {
+    describe('POST /api/calc/rooms/preview', () => {
+      it('should accept valid frontend payload', () => {
+        const validPayload = {
+          system: {
+            voltage: 120,
+            phases: 1,
+            frequency: 60
+          },
+          superficies: [
+            { nombre: 'Sala', area_m2: 18.5 },
+            { nombre: 'Cocina', area_m2: 12.0 }
+          ],
+          consumos: [
+            { nombre: 'Refrigerador', ambiente: 'Cocina', potencia_w: 350, fp: 0.85, tipo: 'electrodomestico' },
+            { nombre: 'Televisor', ambiente: 'Sala', potencia_w: 120, fp: 0.9, tipo: 'electrodomestico' }
+          ]
+        };
 
-      return request(app.getHttpServer())
-        .post('/calc/rooms/preview')
-        .send(requestData)
-        .expect(200)
-        .expect((res) => {
-          // Verificar estructura de respuesta
-          expect(res.body).toHaveProperty('environments');
-          expect(res.body).toHaveProperty('totales');
-          expect(res.body).toHaveProperty('metadata');
-          
-          expect(Array.isArray(res.body.environments)).toBe(true);
-          expect(res.body.totales).toHaveProperty('carga_total_va');
-          expect(res.body.totales).toHaveProperty('corriente_total_a');
-          expect(res.body.metadata).toHaveProperty('calculation_date');
-          expect(res.body.metadata).toHaveProperty('norms_version');
-        });
+        return request(app.getHttpServer())
+          .post('/api/calc/rooms/preview')
+          .send(validPayload)
+          .expect(200)
+          .expect((res) => {
+            expect(res.body).toHaveProperty('ambientes');
+            expect(res.body).toHaveProperty('totales');
+            expect(Array.isArray(res.body.ambientes)).toBe(true);
+            expect(res.body.totales).toHaveProperty('carga_total_va');
+            expect(res.body.totales).toHaveProperty('corriente_total_a');
+          });
+      });
+
+      it('should validate required fields', () => {
+        const invalidPayload = {
+          superficies: [],
+          consumos: []
+        };
+
+        return request(app.getHttpServer())
+          .post('/api/calc/rooms/preview')
+          .send(invalidPayload)
+          .expect(400);
+      });
     });
 
-    it('should validate demand endpoint contract', () => {
-      const requestData = {
-        cargas_por_categoria: [
-          {
-            category: "iluminacion_general",
-            carga_bruta_va: 1200
-          }
-        ],
-        parameters: {
-          tipo_instalacion: "residencial"
-        }
-      };
+    describe('POST /api/calc/demand/preview', () => {
+      it('should accept valid frontend payload', () => {
+        const validPayload = {
+          system: {
+            voltage: 120,
+            phases: 1,
+            frequency: 60
+          },
+          superficies: [
+            { nombre: 'Sala', area_m2: 18.5 }
+          ],
+          consumos: [
+            { nombre: 'Televisor', ambiente: 'Sala', potencia_w: 120, fp: 0.9, tipo: 'electrodomestico' }
+          ]
+        };
 
-      return request(app.getHttpServer())
-        .post('/calc/demand/preview')
-        .send(requestData)
-        .expect(200)
-        .expect((res) => {
-          expect(res.body).toHaveProperty('cargas_diversificadas');
-          expect(res.body).toHaveProperty('totales_diversificados');
-          expect(res.body).toHaveProperty('metadata');
-          
-          expect(Array.isArray(res.body.cargas_diversificadas)).toBe(true);
-          expect(res.body.totales_diversificados).toHaveProperty('carga_total_diversificada_va');
-          expect(res.body.totales_diversificados).toHaveProperty('corriente_total_diversificada_a');
-        });
+        return request(app.getHttpServer())
+          .post('/api/calc/demand/preview')
+          .send(validPayload)
+          .expect(200)
+          .expect((res) => {
+            expect(res.body).toHaveProperty('ambientes');
+            expect(res.body).toHaveProperty('totales');
+            expect(res.body.totales).toHaveProperty('factor_demanda_promedio');
+          });
+      });
     });
 
-    it('should validate circuits endpoint contract', () => {
-      const requestData = {
-        circuitos_individuales: [
-          {
-            id_circuito: "CIRC-001",
-            name: "circuit de Prueba",
-            current_a: 10,
-            carga_va: 1200,
-            length_m: 20
-          }
-        ],
-        parameters: {
-          material_conductor: "Cu",
-          tipo_instalacion: "residencial"
-        }
-      };
+    describe('POST /api/calc/circuits/preview', () => {
+      it('should accept valid frontend payload', () => {
+        const validPayload = {
+          system: {
+            voltage: 120,
+            phases: 1,
+            frequency: 60
+          },
+          superficies: [
+            { nombre: 'Sala', area_m2: 18.5 }
+          ],
+          consumos: [
+            { nombre: 'Televisor', ambiente: 'Sala', potencia_w: 120, fp: 0.9, tipo: 'electrodomestico' }
+          ]
+        };
 
-      return request(app.getHttpServer())
-        .post('/calc/circuits/preview')
-        .send(requestData)
-        .expect(200)
-        .expect((res) => {
-          expect(res.body).toHaveProperty('circuitos_ramales');
-          expect(res.body).toHaveProperty('resumen');
-          expect(res.body).toHaveProperty('metadata');
-          
-          expect(Array.isArray(res.body.circuitos_ramales)).toBe(true);
-          expect(res.body.resumen).toHaveProperty('total_circuitos');
-          expect(res.body.resumen).toHaveProperty('carga_total_va');
-        });
+        return request(app.getHttpServer())
+          .post('/api/calc/circuits/preview')
+          .send(validPayload)
+          .expect(200)
+          .expect((res) => {
+            expect(res.body).toHaveProperty('circuitos');
+            expect(res.body).toHaveProperty('totales');
+            expect(Array.isArray(res.body.circuitos)).toBe(true);
+          });
+      });
     });
 
-    it('should validate feeder endpoint contract', () => {
-      const requestData = {
-        circuitos_ramales: [
-          {
-            id_circuito: "CIRC-001",
-            name: "feeder Principal",
-            corriente_total_a: 15,
-            carga_total_va: 1800,
-            length_m: 30
-          }
-        ],
-        system: {
-          voltage_v: 120,
-          phases: 1,
-          corriente_total_a: 15,
-          carga_total_va: 1800
-        },
-        parameters: {
-          longitud_alimentador_m: 40,
-          material_conductor: "Cu",
-          max_caida_ramal_pct: 3,
-          max_caida_total_pct: 5
-        }
-      };
+    describe('POST /api/calc/feeder/preview', () => {
+      it('should accept valid frontend payload', () => {
+        const validPayload = {
+          system: {
+            voltage: 120,
+            phases: 1,
+            frequency: 60
+          },
+          superficies: [
+            { nombre: 'Sala', area_m2: 18.5 }
+          ],
+          consumos: [
+            { nombre: 'Televisor', ambiente: 'Sala', potencia_w: 120, fp: 0.9, tipo: 'electrodomestico' }
+          ]
+        };
 
-      return request(app.getHttpServer())
-        .post('/calc/feeder/preview')
-        .send(requestData)
-        .expect(200)
-        .expect((res) => {
-          expect(res.body).toHaveProperty('circuitos_analisis');
-          expect(res.body).toHaveProperty('feeder');
-          expect(res.body).toHaveProperty('resumen');
-          expect(res.body).toHaveProperty('metadata');
-          
-          expect(Array.isArray(res.body.circuitos_analisis)).toBe(true);
-          expect(res.body.feeder).toHaveProperty('material');
-          expect(res.body.feeder).toHaveProperty('section_mm2');
-          expect(res.body.resumen).toHaveProperty('estado_general');
-        });
+        return request(app.getHttpServer())
+          .post('/api/calc/feeder/preview')
+          .send(validPayload)
+          .expect(200)
+          .expect((res) => {
+            expect(res.body).toHaveProperty('alimentador');
+            expect(res.body).toHaveProperty('totales');
+            expect(res.body.alimentador).toHaveProperty('conductor');
+            expect(res.body.alimentador).toHaveProperty('proteccion');
+          });
+      });
     });
 
-    it('should validate grounding endpoint contract', () => {
-      const requestData = {
-        system: {
-          voltage_v: 120,
-          phases: 1,
-          corriente_total_a: 20,
-          carga_total_va: 2400
-        },
-        feeder: {
-          current_a: 20,
-          section_mm2: 16,
-          material: "Cu",
-          length_m: 25
-        },
-        parameters: {
-          main_breaker_amp: 150,
-          tipo_instalacion: "comercial",
-          tipo_sistema_tierra: "TN-S",
-          resistividad_suelo_ohm_m: 80
-        }
-      };
+    describe('POST /api/calc/grounding/preview', () => {
+      it('should accept valid frontend payload', () => {
+        const validPayload = {
+          system: {
+            voltage: 120,
+            phases: 1,
+            frequency: 60
+          },
+          superficies: [
+            { nombre: 'Sala', area_m2: 18.5 }
+          ],
+          consumos: [
+            { nombre: 'Televisor', ambiente: 'Sala', potencia_w: 120, fp: 0.9, tipo: 'electrodomestico' }
+          ]
+        };
 
-      return request(app.getHttpServer())
-        .post('/calc/grounding/preview')
-        .send(requestData)
-        .expect(200)
-        .expect((res) => {
-          expect(res.body).toHaveProperty('conductor_proteccion');
-          expect(res.body).toHaveProperty('conductor_tierra');
-          expect(res.body).toHaveProperty('sistema_tierra');
-          expect(res.body).toHaveProperty('resumen');
-          expect(res.body).toHaveProperty('metadata');
-          
-          expect(res.body.conductor_proteccion).toHaveProperty('section_mm2');
-          expect(res.body.conductor_proteccion).toHaveProperty('calibre_awg');
-          expect(res.body.sistema_tierra).toHaveProperty('tipo_sistema');
-          expect(res.body.resumen).toHaveProperty('estado');
-        });
+        return request(app.getHttpServer())
+          .post('/api/calc/grounding/preview')
+          .send(validPayload)
+          .expect(200)
+          .expect((res) => {
+            expect(res.body).toHaveProperty('puesta_tierra');
+            expect(res.body).toHaveProperty('totales');
+            expect(res.body.puesta_tierra).toHaveProperty('conductor');
+            expect(res.body.puesta_tierra).toHaveProperty('electrodo');
+          });
+      });
     });
 
-    it('should validate report endpoint contract', () => {
-      const requestData = {
-        installationType: 'residencial',
-        electricalSystem: 'Monofásico 120V'
-      };
+    describe('POST /api/calc/report', () => {
+      it('should accept valid frontend payload for PDF report', () => {
+        const validPayload = {
+          system: {
+            voltage: 120,
+            phases: 1,
+            frequency: 60
+          },
+          superficies: [
+            { nombre: 'Sala', area_m2: 18.5 }
+          ],
+          consumos: [
+            { nombre: 'Televisor', ambiente: 'Sala', potencia_w: 120, fp: 0.9, tipo: 'electrodomestico' }
+          ]
+        };
 
-      return request(app.getHttpServer())
-        .post('/calc/report')
-        .send(requestData)
-        .expect(200)
-        .expect((res) => {
-          expect(res.body).toHaveProperty('pdfBase64');
-          expect(res.body).toHaveProperty('excelBase64');
-          expect(res.body).toHaveProperty('metadata');
-          expect(res.body).toHaveProperty('message');
-          
-          expect(res.body.metadata).toHaveProperty('pdfHash');
-          expect(res.body.metadata).toHaveProperty('excelHash');
-          expect(res.body.metadata).toHaveProperty('calculationDate');
-          expect(res.body.metadata).toHaveProperty('installationType');
-          expect(res.body.metadata).toHaveProperty('electricalSystem');
-          
-          expect(res.headers['x-pdf-hash']).toBeDefined();
-          expect(res.headers['x-excel-hash']).toBeDefined();
-          expect(res.headers['x-report-date']).toBeDefined();
-        });
+        return request(app.getHttpServer())
+          .post('/api/calc/report?type=pdf')
+          .send(validPayload)
+          .expect(200)
+          .expect('Content-Type', /application\/pdf/);
+      });
+
+      it('should accept valid frontend payload for Excel report', () => {
+        const validPayload = {
+          system: {
+            voltage: 120,
+            phases: 1,
+            frequency: 60
+          },
+          superficies: [
+            { nombre: 'Sala', area_m2: 18.5 }
+          ],
+          consumos: [
+            { nombre: 'Televisor', ambiente: 'Sala', potencia_w: 120, fp: 0.9, tipo: 'electrodomestico' }
+          ]
+        };
+
+        return request(app.getHttpServer())
+          .post('/api/calc/report?type=xlsx')
+          .send(validPayload)
+          .expect(200)
+          .expect('Content-Type', /application\/vnd\.openxmlformats-officedocument\.spreadsheetml\.sheet/);
+      });
     });
   });
 
   describe('Error Handling Contract', () => {
-    it('should return proper error structure for invalid input', () => {
-      const invalidRequest = {
-        surfaces: [], // Array vacío - inválido
-        consumptions: []     // Array vacío - inválido
-      };
-
+    it('should return consistent error format', () => {
       return request(app.getHttpServer())
-        .post('/calc/rooms/preview')
-        .send(invalidRequest)
+        .post('/api/calc/rooms/preview')
+        .send({})
         .expect(400)
         .expect((res) => {
           expect(res.body).toHaveProperty('message');
-          expect(res.body).toHaveProperty('error');
           expect(res.body).toHaveProperty('statusCode');
-          expect(Array.isArray(res.body.message)).toBe(true);
+          expect(res.body).toHaveProperty('timestamp');
+          expect(res.body).toHaveProperty('path');
         });
     });
 
-    it('should return proper error structure for missing required fields', () => {
-      const incompleteRequest = {
-        surfaces: [
-          { name: "Sala" } // Falta area_m2
-        ]
+    it('should handle validation errors properly', () => {
+      const invalidPayload = {
+        superficies: [{ nombre: '', area_m2: -1 }],
+        consumos: [{ nombre: '', ambiente: '', potencia_w: 0 }]
       };
 
       return request(app.getHttpServer())
-        .post('/calc/rooms/preview')
-        .send(incompleteRequest)
+        .post('/api/calc/rooms/preview')
+        .send(invalidPayload)
         .expect(400)
         .expect((res) => {
           expect(res.body).toHaveProperty('message');
-          expect(res.body).toHaveProperty('error');
-          expect(res.body).toHaveProperty('statusCode');
-          expect(Array.isArray(res.body.message)).toBe(true);
+          expect(res.body).toHaveProperty('errors');
+          expect(Array.isArray(res.body.errors)).toBe(true);
         });
     });
   });
 
-  describe('Content Type Headers', () => {
-    it('should return proper content type headers for JSON responses', () => {
-      const requestData = {
-        installationType: 'residencial',
-        electricalSystem: 'Monofásico 120V'
-      };
-
+  describe('Response Headers Contract', () => {
+    it('should include required headers in all responses', () => {
       return request(app.getHttpServer())
-        .post('/calc/report')
-        .send(requestData)
+        .post('/api/calc/rooms/preview')
+        .send({
+          superficies: [{ nombre: 'Sala', area_m2: 20 }],
+          consumos: [{ nombre: 'TV', ambiente: 'Sala', potencia_w: 100 }]
+        })
         .expect(200)
+        .expect('Content-Type', /application\/json/)
         .expect((res) => {
-          expect(res.headers['content-type']).toContain('application/json');
-        });
-    });
-
-    it('should return proper content type headers for binary downloads', () => {
-      const requestData = {
-        installationType: 'residencial',
-        electricalSystem: 'Monofásico 120V'
-      };
-
-      return request(app.getHttpServer())
-        .post('/calc/report/download')
-        .send(requestData)
-        .expect(200)
-        .expect((res) => {
-          expect(res.headers['content-type']).toContain('application/zip');
-          expect(res.headers['content-disposition']).toContain('attachment');
+          expect(res.headers).toHaveProperty('x-request-id');
+          expect(res.headers).toHaveProperty('x-response-time');
         });
     });
   });

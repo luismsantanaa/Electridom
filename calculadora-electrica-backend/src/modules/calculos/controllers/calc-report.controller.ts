@@ -58,11 +58,33 @@ export class CalcReportController {
   })
   @ApiBody({
     type: CalcReportRequestDto,
-    description: 'Datos para generación del reporte',
+    description: 'Datos para generación del reporte técnico',
     examples: {
-      ejemplo1: {
-        summary: 'Reporte completo con datos de todas las historias',
-        description: 'Genera reporte con datos de CE-01 a CE-05',
+      ejemplo_frontend: {
+        summary: 'Ejemplo Frontend - Datos del Formulario',
+        description: 'Datos típicos enviados desde el frontend Angular',
+        value: {
+          system: {
+            voltage: 120,
+            phases: 1,
+            frequency: 60
+          },
+          superficies: [
+            { nombre: "Sala", area_m2: 18.5 },
+            { nombre: "Cocina", area_m2: 12.0 },
+            { nombre: "Habitación 1", area_m2: 12.0 }
+          ],
+          consumos: [
+            { nombre: "Refrigerador", ambiente: "Cocina", potencia_w: 350, fp: 0.85, tipo: "electrodomestico" },
+            { nombre: "Microondas", ambiente: "Cocina", potencia_w: 1200, fp: 0.95, tipo: "electrodomestico" },
+            { nombre: "Televisor LED", ambiente: "Sala", potencia_w: 120, fp: 0.9, tipo: "electrodomestico" },
+            { nombre: "Aire Acondicionado", ambiente: "Habitación 1", potencia_w: 1100, fp: 0.9, tipo: "climatizacion" }
+          ]
+        }
+      },
+      ejemplo_completo: {
+        summary: 'Ejemplo Completo - Datos de Todas las Historias',
+        description: 'Datos completos incluyendo resultados de CE-01 a CE-05',
         value: {
           roomsData: {
             environments: [
@@ -157,18 +179,18 @@ export class CalcReportController {
           },
           installationType: 'residencial',
           electricalSystem: 'Monofásico 120V',
-        },
+        }
       },
-      ejemplo2: {
-        summary: 'Reporte con ID de cálculo (modo con estado)',
-        description: 'Genera reporte usando calculationId almacenado',
+      ejemplo_con_id: {
+        summary: 'Ejemplo con ID de Cálculo (Modo con Estado)',
+        description: 'Genera reporte usando calculationId almacenado en base de datos',
         value: {
           calculationId: 'calc-12345',
-          installationType: 'comercial',
-          electricalSystem: 'Trifásico 208V',
-        },
-      },
-    },
+          installationType: 'residencial',
+          electricalSystem: 'Monofásico 120V',
+        }
+      }
+    }
   })
   @ApiResponse({
     status: 200,

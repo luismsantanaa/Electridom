@@ -46,13 +46,31 @@ async function bootstrap() {
     }),
   );
 
-  // Enable CORS for frontend with improved security
+  // Enable CORS for frontend with improved security and Angular compatibility
   app.enableCors({
     origin: corsOrigin === '*' ? true : corsOrigin,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'x-api-key', 'x-trace-id'],
+    allowedHeaders: [
+      'Content-Type', 
+      'Authorization', 
+      'x-api-key', 
+      'x-trace-id',
+      'Accept',
+      'Origin',
+      'X-Requested-With',
+      'Cache-Control',
+      'Pragma'
+    ],
+    exposedHeaders: [
+      'Content-Disposition',
+      'Content-Length',
+      'X-Total-Count',
+      'X-Page-Count'
+    ],
     credentials: true,
     maxAge: 86400, // 24 hours
+    preflightContinue: false,
+    optionsSuccessStatus: 204
   });
 
   // Global exception filter

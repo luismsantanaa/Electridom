@@ -1,0 +1,125 @@
+<div class="excel-upload">
+  <div class="upload-header">
+    <h5>
+      <i class="fas fa-file-excel"></i>
+      Cargar Datos desde Excel
+    </h5>
+    <button class="btn btn-sm btn-outline-info" (click)="downloadTemplate()">
+      <i class="fas fa-download"></i>
+      Descargar Template
+    </button>
+  </div>
+
+  <!-- Upload Area -->
+  <div class="upload-area" [class.uploading]="isUploading">
+    <div class="upload-content">
+      <i class="fas fa-cloud-upload-alt"></i>
+      <h6>Arrastra tu archivo Excel aquí o haz clic para seleccionar</h6>
+      <p class="upload-info">
+        Formatos soportados: .xlsx, .xls<br>
+        Tamaño máximo: 5MB
+      </p>
+      <input 
+        type="file" 
+        #fileInput
+        accept=".xlsx,.xls"
+        (change)="onFileSelected($event)"
+        [disabled]="isUploading"
+        style="display: none;">
+      <button 
+        class="btn btn-primary"
+        (click)="fileInput.click()"
+        [disabled]="isUploading">
+        <i class="fas fa-folder-open"></i>
+        Seleccionar Archivo
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isUploading" class="upload-loading">
+    <div class="loading-spinner">
+      <i class="fas fa-spinner fa-spin"></i>
+      <p>Procesando archivo Excel...</p>
+    </div>
+  </div>
+
+  <!-- Error Display -->
+  <div *ngIf="error" class="alert alert-danger">
+    <i class="fas fa-exclamation-triangle"></i>
+    {{ error }}
+    <button class="btn btn-sm btn-outline-danger ms-2" (click)="clearResult()">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+
+  <!-- Success Result -->
+  <div *ngIf="uploadResult?.success" class="upload-success">
+    <div class="success-header">
+      <i class="fas fa-check-circle"></i>
+      <h6>Archivo procesado exitosamente</h6>
+    </div>
+    
+    <div class="result-details">
+      <div class="detail-item">
+        <span class="label">Mensaje:</span>
+        <span class="value">{{ uploadResult.message }}</span>
+      </div>
+      <div class="detail-item">
+        <span class="label">Filas procesadas:</span>
+        <span class="value">{{ uploadResult.rowsProcessed }}</span>
+      </div>
+      <div class="detail-item" *ngIf="uploadResult.rowsWithErrors > 0">
+        <span class="label">Filas con errores:</span>
+        <span class="value text-warning">{{ uploadResult.rowsWithErrors }}</span>
+      </div>
+    </div>
+
+    <div class="data-preview" *ngIf="uploadResult.data">
+      <h6>Vista previa de datos:</h6>
+      <div class="preview-section">
+        <div class="preview-item">
+          <strong>Sistema:</strong>
+          <span>{{ uploadResult.data.system.voltage }}V, {{ uploadResult.data.system.phases }} fases</span>
+        </div>
+        <div class="preview-item">
+          <strong>Superficies:</strong>
+          <span>{{ uploadResult.data.superficies.length }} ambientes</span>
+        </div>
+        <div class="preview-item">
+          <strong>Consumos:</strong>
+          <span>{{ uploadResult.data.consumos.length }} cargas</span>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn btn-outline-secondary" (click)="clearResult()">
+      <i class="fas fa-times"></i>
+      Limpiar
+    </button>
+  </div>
+
+  <!-- Error Result -->
+  <div *ngIf="uploadResult && !uploadResult.success" class="upload-error">
+    <div class="error-header">
+      <i class="fas fa-times-circle"></i>
+      <h6>Error al procesar archivo</h6>
+    </div>
+    
+    <div class="error-details">
+      <p>{{ uploadResult.message }}</p>
+      
+      <div *ngIf="uploadResult.errors && uploadResult.errors.length > 0" class="error-list">
+        <h6>Errores encontrados:</h6>
+        <ul>
+          <li *ngFor="let error of uploadResult.errors">{{ error }}</li>
+        </ul>
+      </div>
+    </div>
+
+    <button class="btn btn-outline-secondary" (click)="clearResult()">
+      <i class="fas fa-times"></i>
+      Limpiar
+    </button>
+  </div>
+</div>

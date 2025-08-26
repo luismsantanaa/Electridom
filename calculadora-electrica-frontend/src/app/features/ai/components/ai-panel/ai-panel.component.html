@@ -1,0 +1,129 @@
+<div class="ai-panel">
+  <!-- Header -->
+  <div class="ai-header">
+    <div class="ai-title">
+      <i class="fas fa-robot"></i>
+      <h3>Asistente IA - Eléctridom</h3>
+    </div>
+    <div class="ai-status">
+      <span *ngIf="isAnalyzing()" class="analyzing">
+        <i class="fas fa-spinner fa-spin"></i>
+        Analizando...
+      </span>
+    </div>
+  </div>
+
+  <!-- Error Display -->
+  <div *ngIf="error()" class="alert alert-danger">
+    <i class="fas fa-exclamation-triangle"></i>
+    {{ error() }}
+  </div>
+
+  <!-- Quick Questions -->
+  <div class="quick-questions">
+    <h5>Preguntas Rápidas</h5>
+    <div class="questions-grid">
+      <button 
+        *ngFor="let question of quickQuestions"
+        class="question-btn"
+        [class.disabled]="isAnalyzing()"
+        (click)="analyzeWithQuestion(question.text)"
+        [disabled]="isAnalyzing()">
+        <span class="question-icon">{{ question.icon }}</span>
+        <span class="question-text">{{ question.text }}</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Custom Question -->
+  <div class="custom-question">
+    <h5>Pregunta Personalizada</h5>
+    <div class="input-group">
+      <input 
+        type="text" 
+        class="form-control"
+        placeholder="Escribe tu pregunta específica..."
+        [(ngModel)]="customQuestion"
+        [disabled]="isAnalyzing()"
+        (keyup.enter)="analyzeWithCustomQuestion()">
+      <button 
+        class="btn btn-primary"
+        [class.disabled]="isAnalyzing()"
+        (click)="analyzeWithCustomQuestion()"
+        [disabled]="isAnalyzing()">
+        <i class="fas fa-paper-plane"></i>
+        Enviar
+      </button>
+    </div>
+  </div>
+
+  <!-- Analysis Results -->
+  <div *ngIf="hasAnalysis()" class="analysis-results">
+    <div class="results-header">
+      <h5>Resultados del Análisis</h5>
+      <button class="btn btn-sm btn-outline-secondary" (click)="clearAnalysis()">
+        <i class="fas fa-times"></i>
+        Limpiar
+      </button>
+    </div>
+
+    <!-- Summary -->
+    <div class="summary-section">
+      <div class="summary-card">
+        <div class="summary-header">
+          <i class="fas fa-chart-line"></i>
+          <h6>Resumen Ejecutivo</h6>
+        </div>
+        <p class="summary-text">{{ analysis()?.summary }}</p>
+      </div>
+    </div>
+
+    <!-- Recommendations -->
+    <div class="recommendations-section">
+      <h6>Recomendaciones</h6>
+      <div class="recommendations-grid">
+        <div 
+          *ngFor="let rec of analysis()?.recommendations; trackBy: trackByRecommendation"
+          class="recommendation-card"
+          [class]="'priority-' + rec.priority">
+          <div class="rec-header">
+            <span class="rec-icon">{{ getCategoryIcon(rec.category) }}</span>
+            <span class="rec-title">{{ rec.title }}</span>
+            <span class="rec-priority" [class]="'badge-' + getPriorityColor(rec.priority)">
+              {{ rec.priority.toUpperCase() }}
+            </span>
+          </div>
+          <p class="rec-description">{{ rec.description }}</p>
+          <div class="rec-meta">
+            <span class="rec-category">{{ rec.category }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Analysis Stats -->
+    <div class="analysis-stats">
+      <div class="stat-item">
+        <i class="fas fa-tokens"></i>
+        <span>Tokens: {{ analysis()?.tokensUsed }}</span>
+      </div>
+      <div class="stat-item">
+        <i class="fas fa-clock"></i>
+        <span>Tiempo: {{ analysis()?.responseTime }}ms</span>
+      </div>
+      <div class="stat-item">
+        <i class="fas fa-lightbulb"></i>
+        <span>Recomendaciones: {{ analysis()?.recommendations.length }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- No Analysis State -->
+  <div *ngIf="!hasAnalysis() && !isAnalyzing() && !error()" class="no-analysis">
+    <div class="empty-state">
+      <i class="fas fa-robot"></i>
+      <h5>Asistente IA Listo</h5>
+      <p>Selecciona una pregunta rápida o escribe tu pregunta personalizada para comenzar el análisis.</p>
+    </div>
+  </div>
+</div>

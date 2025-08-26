@@ -29,6 +29,7 @@ import { CargasModule } from './modules/cargas/loads.module';
 import { ProjectsModule } from './modules/projects/projects.module';
 import { RulesAdminModule } from './modules/rules-admin/rules-admin.module';
 import { JwksModule } from './modules/jwks/jwks.module';
+import { AiModule } from './modules/ai/ai.module';
 import { CommonModule } from './common/common.module';
 import { APP_INTERCEPTOR, APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { TransformInterceptor } from './common/interceptors/transform.interceptor';
@@ -99,6 +100,7 @@ import { LoggerModule } from 'nestjs-pino';
     ProjectsModule,
     RulesAdminModule,
     JwksModule,
+    AiModule,
     CommonModule,
     MetricsModule,
     LoggerModule.forRoot({

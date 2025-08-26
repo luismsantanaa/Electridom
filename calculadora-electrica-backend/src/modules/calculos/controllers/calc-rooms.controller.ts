@@ -17,57 +17,145 @@ export class CalcRoomsController {
   })
   @ApiBody({
     type: CalcRoomsRequestDto,
-    description: 'Datos de surfaces y consumptions para el cálculo',
+    description: 'Datos de superficies y consumos para el cálculo',
     examples: {
-      ejemplo1: {
-        summary: 'Ejemplo de cálculo residencial',
-        description: 'Cálculo para una vivienda con sala, cocina, habitación y baño',
+      ejemplo_residencial: {
+        summary: 'Ejemplo Residencial - Vivienda Familiar',
+        description: 'Cálculo para una vivienda típica con sala, cocina, habitaciones y baños',
         value: {
           system: {
             voltage: 120,
             phases: 1,
             frequency: 60
           },
-          surfaces: [
-            { name: "Sala", area_m2: 18 },
-            { name: "Cocina", area_m2: 12 },
-            { name: "Habitación 1", area_m2: 12 },
-            { name: "Baño", area_m2: 5 }
+          superficies: [
+            { nombre: "Sala", area_m2: 18.5 },
+            { nombre: "Cocina", area_m2: 12.0 },
+            { nombre: "Habitación 1", area_m2: 12.0 },
+            { nombre: "Habitación 2", area_m2: 10.0 },
+            { nombre: "Baño Principal", area_m2: 6.0 },
+            { nombre: "Baño Secundario", area_m2: 4.5 }
           ],
-          consumptions: [
+          consumos: [
             {
-              name: "Nevera",
-              environment: "Cocina",
-              power_w: 200,
-              type: "electrodomestico",
+              nombre: "Refrigerador",
+              ambiente: "Cocina",
+              potencia_w: 350,
+              tipo: "electrodomestico",
+              fp: 0.85
+            },
+            {
+              nombre: "Microondas",
+              ambiente: "Cocina",
+              potencia_w: 1200,
+              tipo: "electrodomestico",
               fp: 0.95
             },
             {
-              name: "Microondas",
-              environment: "Cocina",
-              power_w: 1200,
-              type: "electrodomestico",
+              nombre: "Televisor LED",
+              ambiente: "Sala",
+              potencia_w: 120,
+              tipo: "electrodomestico",
+              fp: 0.9
+            },
+            {
+              nombre: "Aire Acondicionado 12k BTU",
+              ambiente: "Habitación 1",
+              potencia_w: 1100,
+              tipo: "climatizacion",
+              fp: 0.9
+            },
+            {
+              nombre: "Ventilador de Techo",
+              ambiente: "Habitación 2",
+              potencia_w: 75,
+              tipo: "climatizacion",
+              fp: 0.85
+            },
+            {
+              nombre: "Lavadora",
+              ambiente: "Baño Principal",
+              potencia_w: 500,
+              tipo: "electrodomestico",
+              fp: 0.9
+            }
+          ]
+        }
+      },
+      ejemplo_comercial: {
+        summary: 'Ejemplo Comercial - Oficina Pequeña',
+        description: 'Cálculo para una oficina con equipos de cómputo y climatización',
+        value: {
+          system: {
+            voltage: 208,
+            phases: 3,
+            frequency: 60
+          },
+          superficies: [
+            { nombre: "Oficina Principal", area_m2: 25.0 },
+            { nombre: "Sala de Reuniones", area_m2: 15.0 },
+            { nombre: "Área de Servicios", area_m2: 8.0 }
+          ],
+          consumos: [
+            {
+              nombre: "Computadora Principal",
+              ambiente: "Oficina Principal",
+              potencia_w: 400,
+              tipo: "especial",
+              fp: 0.9
+            },
+            {
+              nombre: "Monitor LED",
+              ambiente: "Oficina Principal",
+              potencia_w: 50,
+              tipo: "especial",
               fp: 0.95
             },
             {
-              name: "TV",
-              environment: "Sala",
-              power_w: 140,
-              type: "electrodomestico"
+              nombre: "Aire Acondicionado",
+              ambiente: "Oficina Principal",
+              potencia_w: 1800,
+              tipo: "climatizacion",
+              fp: 0.85
             },
             {
-              name: "A/C 12k BTU",
-              environment: "Habitación 1",
-              power_w: 1100,
-              type: "climatizacion",
+              nombre: "Proyector",
+              ambiente: "Sala de Reuniones",
+              potencia_w: 300,
+              tipo: "especial",
               fp: 0.9
             },
             {
-              name: "Lavadora",
-              environment: "Baño",
-              power_w: 500,
-              type: "electrodomestico",
+              nombre: "Servidor",
+              ambiente: "Área de Servicios",
+              potencia_w: 800,
+              tipo: "especial",
               fp: 0.9
+            }
+          ]
+        }
+      },
+      ejemplo_minimo: {
+        summary: 'Ejemplo Mínimo - Habitación Simple',
+        description: 'Cálculo básico para una habitación con cargas mínimas',
+        value: {
+          superficies: [
+            { nombre: "Habitación", area_m2: 12.0 }
+          ],
+          consumos: [
+            {
+              nombre: "Lámpara LED",
+              ambiente: "Habitación",
+              potencia_w: 15,
+              tipo: "iluminacion",
+              fp: 0.95
+            },
+            {
+              nombre: "Ventilador",
+              ambiente: "Habitación",
+              potencia_w: 75,
+              tipo: "climatizacion",
+              fp: 0.85
             }
           ]
         }
