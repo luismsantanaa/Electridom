@@ -132,7 +132,7 @@
     "@types/supertest": "^6.0.3",
     "@types/uuid": "^10.0.0",
     "dotenv": "^16.5.0",
-    "editorconfig-checker": "^6.0.1",
+    "editorconfig-checker": "^6.1.0",
     "eslint": "^9.18.0",
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-prettier": "^5.2.2",
