@@ -1,6 +1,6 @@
 export interface AnalyzeRequest {
-  input: any;
-  output: any;
+  input: { [key: string]: unknown };
+  output: { [key: string]: unknown };
   question?: string;
 }
 
@@ -20,7 +20,7 @@ export interface AnalyzeResponse {
 
 export interface IngestExcelResponse {
   success: boolean;
-  data?: any;
+  data?: { system: { voltage: number; phases: number; frequency: number }; superficies: Array<{ name: string; area: number; type: string }>; consumos: Array<{ name: string; power: number; quantity: number; type: string }> };
   message: string;
   errors?: string[];
   rowsProcessed: number;

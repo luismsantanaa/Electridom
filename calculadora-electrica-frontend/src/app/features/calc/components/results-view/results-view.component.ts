@@ -2,10 +2,6 @@ import { Component, input, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   CalculationResult,
-  DemandResult,
-  CircuitsResult,
-  FeederResult,
-  GroundingResult,
   FullCalculationResult,
   CalculationInput
 } from '../../services/calc-api.service';

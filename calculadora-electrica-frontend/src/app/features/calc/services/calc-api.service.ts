@@ -141,7 +141,7 @@ export class CalcApiService {
   }
 
   // Validación con schema
-  private validateInput(data: any): boolean {
+  private validateInput(data: unknown): boolean {
     const inputSchema = {
       type: 'object',
       required: ['superficies', 'consumos'],
@@ -223,8 +223,9 @@ export class CalcApiService {
   previewRooms(payload: CalculationInput): Observable<CalculationResult> {
     try {
       this.validateInput(payload);
-    } catch (error: any) {
-      this.lastError.set(error.message);
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Error de validación desconocido';
+      this.lastError.set(errorMessage);
       return throwError(() => error);
     }
 
@@ -246,8 +247,9 @@ export class CalcApiService {
   previewDemand(payload: CalculationInput): Observable<DemandResult> {
     try {
       this.validateInput(payload);
-    } catch (error: any) {
-      this.lastError.set(error.message);
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Error de validación desconocido';
+      this.lastError.set(errorMessage);
       return throwError(() => error);
     }
 
@@ -268,8 +270,9 @@ export class CalcApiService {
   previewCircuits(payload: CalculationInput): Observable<CircuitsResult> {
     try {
       this.validateInput(payload);
-    } catch (error: any) {
-      this.lastError.set(error.message);
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Error de validación desconocido';
+      this.lastError.set(errorMessage);
       return throwError(() => error);
     }
 
@@ -290,8 +293,9 @@ export class CalcApiService {
   previewFeeder(payload: CalculationInput): Observable<FeederResult> {
     try {
       this.validateInput(payload);
-    } catch (error: any) {
-      this.lastError.set(error.message);
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Error de validación desconocido';
+      this.lastError.set(errorMessage);
       return throwError(() => error);
     }
 
@@ -312,8 +316,9 @@ export class CalcApiService {
   previewGrounding(payload: CalculationInput): Observable<GroundingResult> {
     try {
       this.validateInput(payload);
-    } catch (error: any) {
-      this.lastError.set(error.message);
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Error de validación desconocido';
+      this.lastError.set(errorMessage);
       return throwError(() => error);
     }
 
@@ -377,8 +382,9 @@ export class CalcApiService {
   getReport(payload: CalculationInput, type: 'pdf' | 'xlsx'): Observable<Blob> {
     try {
       this.validateInput(payload);
-    } catch (error: any) {
-      this.lastError.set(error.message);
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Error de validación desconocido';
+      this.lastError.set(errorMessage);
       return throwError(() => error);
     }
 

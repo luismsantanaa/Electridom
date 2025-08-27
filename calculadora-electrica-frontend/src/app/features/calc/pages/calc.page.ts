@@ -274,13 +274,13 @@ export class CalcPage {
   }
 
   // Métodos de manejo de datos
-  onRoomsDataChange(data: any): void {
+  onRoomsDataChange(data: { system: { voltage: number; phases: number; frequency: number }; superficies: Environment[] } | null): void {
     this.roomsData.set(data);
     // Limpiar consumos cuando cambian los ambientes
     this.loadsData.set(null);
   }
 
-  onLoadsDataChange(data: any): void {
+  onLoadsDataChange(data: Consumption[] | null): void {
     if (Array.isArray(data)) {
       this.loadsData.set(data);
     }
@@ -355,7 +355,7 @@ export class CalcPage {
   /**
    * Maneja los datos cargados desde Excel
    */
-  onExcelDataLoaded(data: any): void {
+  onExcelDataLoaded(data: { system: { voltage: number; phases: number; frequency: number }; superficies: Array<{ name: string; area: number; type: string }>; consumos: Array<{ name: string; power: number; quantity: number; type: string }> }): void {
     console.log('Datos cargados desde Excel:', data);
     
     // Convertir datos de Excel al formato esperado
@@ -363,7 +363,7 @@ export class CalcPage {
       // Actualizar datos de ambientes
       this.roomsData.set({
         system: data.system,
-        superficies: data.superficies.map((s: any) => ({
+        superficies: data.superficies.map((s: { name: string; area: number; type: string }) => ({
           nombre: s.name,
           area_m2: s.area,
           tipo: s.type
@@ -371,11 +371,11 @@ export class CalcPage {
       });
 
       // Actualizar datos de consumos
-      this.loadsData.set(data.consumos.map((c: any) => ({
+      this.loadsData.set(data.consumos.map((c: { name: string; power: number; quantity: number; type: string }) => ({
         nombre: c.name,
+        ambiente: 'General', // Valor por defecto ya que Excel no especifica ambiente
         potencia_w: c.power,
-        cantidad: c.quantity,
-        tipo: c.type
+        tipo: c.type as 'iluminacion' | 'toma_general' | 'electrodomestico' | 'climatizacion' | 'especial'
       })));
     }
   }

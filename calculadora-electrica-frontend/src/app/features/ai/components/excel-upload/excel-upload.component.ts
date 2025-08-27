@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AiService } from '../../services/ai.service';
 import { IngestExcelResponse } from '../../interfaces/ai.interface';
@@ -246,19 +246,20 @@ import { IngestExcelResponse } from '../../interfaces/ai.interface';
   ]
 })
 export class ExcelUploadComponent {
-  @Output() dataLoaded = new EventEmitter<any>();
+  @Output() dataLoaded = new EventEmitter<{ system: { voltage: number; phases: number; frequency: number }; superficies: Array<{ name: string; area: number; type: string }>; consumos: Array<{ name: string; power: number; quantity: number; type: string }> }>();
 
   isUploading = false;
   uploadResult: IngestExcelResponse | null = null;
   error: string | null = null;
 
-  constructor(private aiService: AiService) {}
+  private aiService = inject(AiService);
 
   /**
    * Maneja la selección de archivo
    */
-  onFileSelected(event: any): void {
-    const file = event.target.files[0];
+  onFileSelected(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    const file = target.files?.[0];
     if (file) {
       this.uploadFile(file);
     }

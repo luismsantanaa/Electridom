@@ -290,7 +290,7 @@ export class LoadsFormComponent {
       const formValue = this.loadsForm.value;
       
       // Preparar datos para el servicio
-      const consumptions: Consumption[] = formValue.loads.map((load: any) => ({
+      const consumptions: Consumption[] = formValue.loads.map((load: { nombre: string; ambiente: string; potencia_w: number; fp: number; tipo: string }) => ({
         nombre: load.nombre,
         ambiente: load.ambiente,
         potencia_w: load.potencia_w,

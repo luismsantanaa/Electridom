@@ -256,7 +256,7 @@ export class RoomsFormComponent {
       const formValue = this.roomsForm.value;
       
       // Preparar datos para el servicio
-      const environments: Environment[] = formValue.rooms.map((room: any) => ({
+      const environments: Environment[] = formValue.rooms.map((room: { nombre: string; area_m2: number }) => ({
         nombre: room.nombre,
         area_m2: room.area_m2
       }));

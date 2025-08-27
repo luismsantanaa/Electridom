@@ -1,13 +1,26 @@
-import { Component, Input, OnInit, signal, computed } from '@angular/core';
+import { Component, Input, OnInit, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AiService } from '../../services/ai.service';
 import { 
   AnalyzeRequest, 
-  AnalyzeResponse, 
   QuickQuestion, 
   AiAnalysisState 
 } from '../../interfaces/ai.interface';
+
+// Interfaces para los datos de entrada y salida
+interface CalculationInput {
+  system?: { voltage?: number; phases?: number; frequency?: number };
+  superficies?: Array<{ nombre: string; area_m2: number }>;
+  consumos?: Array<{ nombre: string; ambiente: string; potencia_w: number; fp?: number; tipo?: string }>;
+  [key: string]: unknown;
+}
+
+interface CalculationOutput {
+  ambientes?: Array<{ nombre: string; area_m2: number; carga_va: number; fp: number; observaciones?: string }>;
+  totales?: { carga_total_va: number; carga_diversificada_va: number; corriente_total_a: number; tension_v: number; phases: number };
+  [key: string]: unknown;
+}
 
 @Component({
   selector: 'app-ai-panel',
@@ -80,8 +93,11 @@ import {
   `]
 })
 export class AiPanelComponent implements OnInit {
-  @Input() inputData: any;
-  @Input() outputData: any;
+  @Input() inputData: CalculationInput | null = null;
+  @Input() outputData: CalculationOutput | null = null;
+
+  // Inyección de dependencias moderna
+  private aiService = inject(AiService);
 
   // Signals
   state = signal<AiAnalysisState>({
@@ -139,8 +155,6 @@ export class AiPanelComponent implements OnInit {
       icon: '💰'
     }
   ];
-
-  constructor(private aiService: AiService) {}
 
   ngOnInit(): void {
     // Auto-analyze when data is available
@@ -246,7 +260,7 @@ export class AiPanelComponent implements OnInit {
   /**
    * TrackBy function para recomendaciones
    */
-  trackByRecommendation(index: number, rec: any): string {
+  trackByRecommendation(index: number, rec: { title: string }): string {
     return rec.title + index;
   }
 }

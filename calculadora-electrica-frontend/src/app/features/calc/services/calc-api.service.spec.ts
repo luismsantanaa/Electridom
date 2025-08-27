@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { CalcApiService, CalculationInput, Environment, Consumption, DemandResult, CircuitsResult, FeederResult, GroundingResult, FullCalculationResult } from './calc-api.service';
+import { CalcApiService, CalculationInput } from './calc-api.service';
 
 describe('CalcApiService', () => {
   let service: CalcApiService;
@@ -27,12 +27,8 @@ describe('CalcApiService', () => {
     it('should validate input data correctly', () => {
       const validInput: CalculationInput = {
         system: { voltage: 120, phases: 1, frequency: 60 },
-        superficies: [
-          { nombre: 'Sala', area_m2: 20 }
-        ],
-        consumos: [
-          { nombre: 'TV', ambiente: 'Sala', potencia_w: 100, fp: 0.9, tipo: 'electrodomestico' }
-        ]
+        superficies: [{ nombre: 'Sala', area_m2: 20 }],
+        consumos: [{ nombre: 'TV', ambiente: 'Sala', potencia_w: 100, fp: 0.9, tipo: 'electrodomestico' }]
       };
 
       service.previewRooms(validInput).subscribe();
@@ -44,7 +40,7 @@ describe('CalcApiService', () => {
     });
 
     it('should handle validation errors', () => {
-      const invalidInput: any = {
+      const invalidInput: unknown = {
         superficies: [],
         consumos: []
       };
@@ -209,18 +205,18 @@ describe('CalcApiService', () => {
     });
 
     it('should clear result correctly', () => {
-      service.lastResult.set({ ambientes: [], totales: {} as any });
+      service.lastResult.set({ ambientes: [], totales: {} as CalculationResult['totales'] });
       service.clearResult();
       expect(service.lastResult()).toBeNull();
     });
 
     it('should clear all results correctly', () => {
-      service.lastResult.set({ ambientes: [], totales: {} as any });
-      service.lastDemandResult.set({ ambientes: [], totales: {} as any });
-      service.lastCircuitsResult.set({ circuitos: [], totales: {} as any });
-      service.lastFeederResult.set({ alimentador: {} as any, totales: {} as any });
-      service.lastGroundingResult.set({ puesta_tierra: {} as any, totales: {} as any });
-      service.lastFullResult.set({} as any);
+      service.lastResult.set({ ambientes: [], totales: {} as CalculationResult['totales'] });
+      service.lastDemandResult.set({ ambientes: [], totales: {} as unknown });
+      service.lastCircuitsResult.set({ circuitos: [], totales: {} as unknown });
+      service.lastFeederResult.set({ alimentador: {} as unknown, totales: {} as unknown });
+      service.lastGroundingResult.set({ puesta_tierra: {} as unknown, totales: {} as unknown });
+      service.lastFullResult.set({} as unknown);
 
       service.clearAllResults();
 
@@ -235,7 +231,7 @@ describe('CalcApiService', () => {
 
   describe('validation', () => {
     it('should validate required fields', () => {
-      const invalidInput: any = {
+      const invalidInput: unknown = {
         superficies: [{ nombre: '', area_m2: 0 }],
         consumos: [{ nombre: '', ambiente: '', potencia_w: 0 }]
       };
@@ -248,7 +244,7 @@ describe('CalcApiService', () => {
     });
 
     it('should validate minimum values', () => {
-      const invalidInput: any = {
+      const invalidInput: unknown = {
         superficies: [{ nombre: 'Sala', area_m2: 0.05 }], // Less than 0.1
         consumos: [{ nombre: 'TV', ambiente: 'Sala', potencia_w: 0 }] // Less than 1
       };
@@ -261,7 +257,7 @@ describe('CalcApiService', () => {
     });
 
     it('should validate factor de potencia range', () => {
-      const invalidInput: any = {
+      const invalidInput: unknown = {
         superficies: [{ nombre: 'Sala', area_m2: 20 }],
         consumos: [{ nombre: 'TV', ambiente: 'Sala', potencia_w: 100, fp: 1.5 }] // Greater than 1.0
       };
@@ -306,7 +302,7 @@ describe('CalcApiService', () => {
     });
 
     it('should validate input before calling report endpoint', () => {
-      const invalidInput: any = {
+      const invalidInput: unknown = {
         superficies: [],
         consumos: []
       };
@@ -354,15 +350,15 @@ describe('CalcApiService', () => {
     it('should download report correctly', () => {
       const blob = new Blob(['test content'], { type: 'application/pdf' });
       const filename = 'test.pdf';
-      
+
       // Mock document methods
       const mockLink = {
         href: '',
         download: '',
         click: jasmine.createSpy('click')
       };
-      
-      spyOn(document, 'createElement').and.returnValue(mockLink as any);
+
+      spyOn(document, 'createElement').and.returnValue(mockLink as unknown);
       spyOn(document.body, 'appendChild');
       spyOn(document.body, 'removeChild');
       spyOn(window.URL, 'createObjectURL').and.returnValue('blob:test');

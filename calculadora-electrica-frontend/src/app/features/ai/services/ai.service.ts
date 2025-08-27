@@ -1,21 +1,27 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { environment } from '../../../../environments/environment';
 import { 
   AnalyzeRequest, 
   AnalyzeResponse, 
   IngestExcelResponse 
 } from '../interfaces/ai.interface';
 
+// Interfaces para manejo de errores
+interface ApiError {
+  message?: string;
+  error?: {
+    message?: string;
+  };
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class AiService {
   private readonly apiUrl = 'http://localhost:3000/api/ai';
-
-  constructor(private http: HttpClient) {}
+  private http = inject(HttpClient);
 
   /**
    * Analiza un cálculo eléctrico con IA
@@ -57,22 +63,23 @@ export class AiService {
   /**
    * Valida la respuesta del análisis
    */
-  private validateAnalyzeResponse(response: any): AnalyzeResponse {
-    if (!response || typeof response.summary !== 'string') {
+  private validateAnalyzeResponse(response: unknown): AnalyzeResponse {
+    if (!response || typeof (response as AnalyzeResponse).summary !== 'string') {
       throw new Error('Respuesta de análisis inválida');
     }
 
-    if (!Array.isArray(response.recommendations)) {
-      response.recommendations = [];
+    const analyzeResponse = response as AnalyzeResponse;
+    if (!Array.isArray(analyzeResponse.recommendations)) {
+      analyzeResponse.recommendations = [];
     }
 
-    return response as AnalyzeResponse;
+    return analyzeResponse;
   }
 
   /**
    * Maneja errores de la API
    */
-  private handleError(error: any, defaultMessage: string): Observable<never> {
+  private handleError(error: ApiError, defaultMessage: string): Observable<never> {
     let errorMessage = defaultMessage;
 
     if (error.error?.message) {
