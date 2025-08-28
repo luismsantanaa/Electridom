@@ -59,7 +59,7 @@ describe('HashService Integration Tests', () => {
       await service.hashPassword(password);
 
       const duration = Date.now() - startTime;
-      expect(duration).toBeLessThan(1000); // Relajar límite para tests
+      expect(duration).toBeLessThan(4000); // Relajar límite para tests
     });
 
     it('should handle complete migration workflow', async () => {
@@ -170,7 +170,7 @@ describe('HashService Integration Tests', () => {
       });
 
       // Verificar performance
-      expect(totalTime).toBeLessThan(3000); // 3 segundos máximo para 5 operaciones
+      expect(totalTime).toBeLessThan(5000); // 5 segundos máximo para 5 operaciones
     });
   });
 

@@ -1,4 +1,4 @@
-import { Injectable, Logger, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable, Logger, HttpException, HttpStatus, Inject } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { OpenAIClient } from './openai.client';
 import { AnalyzeRequestDto } from './dto/analyze-request.dto';
@@ -8,15 +8,12 @@ import { PromptBuilderHelper } from './helpers/prompt-builder.helper';
 @Injectable()
 export class AiService {
   private readonly logger = new Logger(AiService.name);
-  private readonly openaiClient: OpenAIClient;
-  private readonly promptBuilder: PromptBuilderHelper;
 
   constructor(
     private configService: ConfigService,
-  ) {
-    this.openaiClient = new OpenAIClient(configService);
-    this.promptBuilder = new PromptBuilderHelper();
-  }
+    @Inject('OpenAIClient') private openaiClient: OpenAIClient | null,
+    private promptBuilder: PromptBuilderHelper,
+  ) {}
 
 
 
@@ -25,6 +22,24 @@ export class AiService {
     
     try {
       this.logger.log('Iniciando análisis con IA');
+      
+      // Verificar si OpenAI está disponible
+      if (!this.openaiClient) {
+        this.logger.warn('OpenAI no está configurado, devolviendo respuesta simulada');
+        return {
+          summary: 'Análisis simulado - OpenAI no configurado',
+          recommendations: [
+            {
+              title: 'Configuración requerida',
+              description: 'Para usar análisis de IA, configure OPENAI_API_KEY en las variables de entorno',
+              priority: 'medium',
+              category: 'configuration'
+            }
+          ],
+          tokensUsed: 0,
+          responseTime: Date.now() - startTime,
+        };
+      }
       
       // Validar prompts
       if (!this.promptBuilder.validatePrompts()) {

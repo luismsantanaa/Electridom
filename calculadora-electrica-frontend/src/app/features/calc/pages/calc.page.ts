@@ -191,7 +191,7 @@ import { CalcApiService, Environment, Consumption, CalculationInput, Calculation
             <div class="col-12 mb-4" *ngIf="showResults()">
               <app-ai-panel 
                 [inputData]="getCurrentCalculationInput()"
-                [outputData]="apiService.lastFullResult() || apiService.lastResult()"
+                [outputData]="(apiService.lastFullResult() || apiService.lastResult())"
               />
             </div>
 
@@ -274,16 +274,14 @@ export class CalcPage {
   }
 
   // Métodos de manejo de datos
-  onRoomsDataChange(data: { system: { voltage: number; phases: number; frequency: number }; superficies: Environment[] } | null): void {
+  onRoomsDataChange(data: any): void {
     this.roomsData.set(data);
     // Limpiar consumos cuando cambian los ambientes
     this.loadsData.set(null);
   }
 
-  onLoadsDataChange(data: Consumption[] | null): void {
-    if (Array.isArray(data)) {
-      this.loadsData.set(data);
-    }
+  onLoadsDataChange(data: any): void {
+    this.loadsData.set(data);
   }
 
   // Métodos de acción

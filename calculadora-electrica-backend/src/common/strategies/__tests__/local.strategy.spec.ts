@@ -42,6 +42,9 @@ describe('LocalStrategy', () => {
       expect(mockAuthService.validateUser).toHaveBeenCalledWith(
         email,
         password,
+        'unknown',
+        'unknown',
+        'unknown',
       );
     });
 

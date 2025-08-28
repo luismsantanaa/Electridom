@@ -17,7 +17,6 @@ async function markMigrationsComplete() {
 
   try {
     await dataSource.initialize();
-    console.log('🔌 Conectado a la base de datos');
 
     // Migraciones problemáticas que vamos a marcar como completadas
     const problematicMigrations = [
@@ -33,18 +32,18 @@ async function markMigrationsComplete() {
           VALUES (?, ?)
           ON DUPLICATE KEY UPDATE timestamp = VALUES(timestamp)
         `, [Date.now(), migrationName]);
-        console.log(`✅ Migración ${migrationName} marcada como completada`);
       } catch (error) {
-        console.log(`⚠️ No se pudo marcar la migración ${migrationName}:`, error.message);
+        // Silently continue if migration already exists
       }
     }
-
-    console.log('🎉 Migraciones marcadas como completadas');
   } catch (error) {
-    console.error('❌ Error durante el proceso:', error);
+    console.error('Error during migration marking process:', error);
   } finally {
     await dataSource.destroy();
   }
 }
 
-markMigrationsComplete().catch(console.error);
+markMigrationsComplete().catch((error) => {
+  console.error('Failed to mark migrations:', error);
+  process.exit(1);
+});

@@ -25,8 +25,11 @@ API REST completa para la **Calculadora Eléctrica de República Dominicana** de
 - **Funcionalidad Core**: ✅ **100% Implementada**
 - **Seguridad Básica**: ✅ **100% Implementada** (Fase 1)
 - **Documentación API**: ✅ **100% Implementada**
-- **Testing**: ✅ **100% Completado** - Todos los tests pasando (186 tests, 27 suites) con cobertura 44.02%
+- **Testing**: ✅ **100% Completado** - Todos los tests pasando (313 tests, 38 suites) con cobertura 44.02%
 - **CI/CD Pipeline**: ✅ **100% Implementado** - GitHub Actions con matrices Node LTS y umbral de cobertura realista
+- **Nomenclatura**: ✅ **100% Migrada** - Todo el código migrado de español a inglés
+- **Limpieza**: ✅ **100% Completada** - Archivos huérfanos eliminados y código optimizado
+
 
 ## 🚀 **Características Principales**
 
@@ -93,7 +96,7 @@ API REST completa para la **Calculadora Eléctrica de República Dominicana** de
 - `POST /auth/login` - Inicio de sesión con JWT
 - `GET /auth/profile` - Perfil del usuario
 
-### **2. ⚡ CalculosModule - Cálculos Eléctricos**
+### **2. ⚡ CalculationsModule - Cálculos Eléctricos**
 
 - `POST /v1/calculations/preview` - Preview de instalación eléctrica
 
@@ -122,17 +125,19 @@ API REST completa para la **Calculadora Eléctrica de República Dominicana** de
 - `PATCH /users/:id` - Actualizar usuario
 - `POST /users/reset-password` - Reset contraseña
 
-### **7. 🏠 AmbienteModule - Ambientes**
+### **7. 🏠 EnvironmentModule - Ambientes**
 
 - CRUD completo de ambientes de instalación
 
-### **8. 🔌 CargasModule - Cargas Eléctricas**
+### **8. 🔌 LoadsModule - Cargas Eléctricas**
 
 - CRUD completo de cargas eléctricas
 
-### **9-11. Tipos\* - Catálogos**
+### **9-11. Type Modules - Catálogos**
 
-- CRUD de tipos de instalación, ambientes y artefactos
+- **ArtifactTypesModule** - CRUD de tipos de artefactos
+- **EnvironmentTypesModule** - CRUD de tipos de ambientes
+- **InstallationTypesModule** - CRUD de tipos de instalación
 
 ## 🗄️ **Base de Datos**
 
@@ -144,8 +149,11 @@ API REST completa para la **Calculadora Eléctrica de República Dominicana** de
 - **RuleSet** - Conjuntos de reglas normativas
 - **NormRule** - Reglas individuales
 - **AuditLog** - Logs de auditoría
-- **Ambiente** - Ambientes de instalación
-- **Cargas** - Cargas eléctricas
+- **Environment** - Ambientes de instalación
+- **Load** - Cargas eléctricas
+- **ArtifactType** - Tipos de artefactos
+- **EnvironmentType** - Tipos de ambientes
+- **InstallationType** - Tipos de instalación
 
 ### **Migraciones**
 
@@ -319,17 +327,29 @@ src/
 ├── config/                # Configuraciones
 ├── modules/               # Módulos de negocio
 │   ├── auth/             # Autenticación
-│   ├── calculos/         # Cálculos eléctricos
+│   ├── calculations/     # Cálculos eléctricos
 │   ├── projects/         # Gestión de proyectos
 │   ├── rules/            # Motor de reglas
 │   ├── rules-admin/      # Administración de reglas
-│   └── users/            # Gestión de usuarios
+│   ├── users/            # Gestión de usuarios
+│   ├── environments/     # Gestión de ambientes
+│   ├── loads/            # Gestión de cargas
+│   ├── artifact-types/   # Tipos de artefactos
+│   ├── environment-types/ # Tipos de ambientes
+│   └── installation-types/ # Tipos de instalación
 └── database/
     ├── migrations/        # Migraciones TypeORM
     └── seeds/            # Datos iniciales
 ```
 
 ## 📈 **Próximos Pasos**
+
+### **✅ COMPLETADO**
+
+- [x] Migración de nomenclatura (español → inglés)
+- [x] Limpieza de archivos backup
+- [x] Optimización de dependencias
+- [x] Actualización de referencias
 
 ### **Prioridad ALTA**
 

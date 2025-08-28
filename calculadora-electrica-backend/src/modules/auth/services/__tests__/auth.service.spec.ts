@@ -12,6 +12,8 @@ import {
 } from '../../../users/entities/user.entity';
 import { AuditService } from '../../../../common/services/audit.service';
 import { HashService } from '../../../../common/services/hash.service';
+import { JwtRs256Service } from '../../../jwks/services/jwt-rs256.service';
+import { SessionService } from '../session.service';
 import {
   createMockUser,
   createMockUserWithInvalidPassword,
@@ -49,6 +51,12 @@ describe('AuthService', () => {
     migrateFromBcrypt: jest.fn(),
   };
 
+  const mockSessionService = {
+    createSession: jest.fn(),
+    validateSession: jest.fn(),
+    invalidateSession: jest.fn(),
+  };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -72,6 +80,18 @@ describe('AuthService', () => {
         {
           provide: HashService,
           useValue: mockHashService,
+        },
+        {
+          provide: JwtRs256Service,
+          useValue: {
+            sign: jest.fn(),
+            verify: jest.fn(),
+            decode: jest.fn(),
+          },
+        },
+        {
+          provide: SessionService,
+          useValue: mockSessionService,
         },
       ],
     }).compile();
@@ -99,7 +119,13 @@ describe('AuthService', () => {
 
       mockUsersService.findByEmail.mockResolvedValue(mockUser);
 
-      const result = await service.validateUser(email, password);
+      const result = await service.validateUser(
+        email,
+        password,
+        '127.0.0.1',
+        'test-agent',
+        'test-trace-id',
+      );
 
       expect(usersService.findByEmail).toHaveBeenCalledWith(email);
       expect(mockUser.validatePassword).toHaveBeenCalledWith(password);
@@ -118,7 +144,13 @@ describe('AuthService', () => {
 
       mockUsersService.findByEmail.mockResolvedValue(null);
 
-      const result = await service.validateUser(email, password);
+      const result = await service.validateUser(
+        email,
+        password,
+        '127.0.0.1',
+        'test-agent',
+        'test-trace-id',
+      );
 
       expect(usersService.findByEmail).toHaveBeenCalledWith(email);
       expect(result).toBeNull();
@@ -132,7 +164,13 @@ describe('AuthService', () => {
 
       mockUsersService.findByEmail.mockResolvedValue(mockUser);
 
-      const result = await service.validateUser(email, password);
+      const result = await service.validateUser(
+        email,
+        password,
+        '127.0.0.1',
+        'test-agent',
+        'test-trace-id',
+      );
 
       expect(usersService.findByEmail).toHaveBeenCalledWith(email);
       expect(mockUser.validatePassword).toHaveBeenCalledWith(password);
@@ -147,8 +185,12 @@ describe('AuthService', () => {
 
       mockJwtService.sign.mockReturnValue(mockToken);
       mockConfigService.get.mockReturnValue('1h');
+      mockUsersService.findById.mockResolvedValue(mockUser);
+      mockSessionService.createSession.mockResolvedValue({
+        refreshToken: 'mock-refresh-token',
+      });
 
-      const result = service.login(mockUser);
+      const result = await service.login(mockUser, '127.0.0.1', 'test-agent');
 
       expect(jwtService.sign).toHaveBeenCalledWith({
         sub: mockUser.id,
@@ -157,6 +199,7 @@ describe('AuthService', () => {
       });
       expect(result).toEqual({
         access_token: mockToken,
+        refresh_token: 'mock-refresh-token',
         user: expect.objectContaining({
           id: mockUser.id,
           email: mockUser.email,

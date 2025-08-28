@@ -1,13 +1,17 @@
 ﻿import { DataSource } from 'typeorm';
-import { GroundingRules } from '../../modules/calculos/entities/grounding-rules.entity';
+import { GroundingRules } from '../../modules/calculations/entities/grounding-rules.entity';
 
-export async function seedGroundingRules(dataSource: DataSource): Promise<void> {
+export async function seedGroundingRules(
+  dataSource: DataSource,
+): Promise<void> {
   const groundingRulesRepository = dataSource.getRepository(GroundingRules);
 
   // Verificar si ya existen datos
   const existingCount = await groundingRulesRepository.count();
   if (existingCount > 0) {
-    console.log('✅ Datos de rules de puesta a tierra ya existen, saltando seed...');
+    console.log(
+      '✅ Datos de rules de puesta a tierra ya existen, saltando seed...',
+    );
     return;
   }
 
@@ -17,31 +21,31 @@ export async function seedGroundingRules(dataSource: DataSource): Promise<void> 
       mainBreakerAmp: 60,
       egcMm2: 6,
       gecMm2: 10,
-      notes: 'TODO_RIE: breaker hasta 60A - EGC 6mm², GEC 10mm²',
+      notes: 'RIE RD Art. 250.66: Breaker hasta 60A - EGC 6mm², GEC 10mm²',
     },
     {
       mainBreakerAmp: 100,
       egcMm2: 10,
       gecMm2: 16,
-      notes: 'TODO_RIE: breaker hasta 100A - EGC 10mm², GEC 16mm²',
+      notes: 'RIE RD Art. 250.66: Breaker hasta 100A - EGC 10mm², GEC 16mm²',
     },
     {
       mainBreakerAmp: 125,
       egcMm2: 16,
       gecMm2: 25,
-      notes: 'TODO_RIE: breaker hasta 125A - EGC 16mm², GEC 25mm²',
+      notes: 'RIE RD Art. 250.66: Breaker hasta 125A - EGC 16mm², GEC 25mm²',
     },
     {
       mainBreakerAmp: 150,
       egcMm2: 16,
       gecMm2: 25,
-      notes: 'TODO_RIE: breaker hasta 150A - EGC 16mm², GEC 25mm²',
+      notes: 'RIE RD Art. 250.66: Breaker hasta 150A - EGC 16mm², GEC 25mm²',
     },
     {
       mainBreakerAmp: 200,
       egcMm2: 25,
       gecMm2: 35,
-      notes: 'TODO_RIE: breaker hasta 200A - EGC 25mm², GEC 35mm²',
+      notes: 'RIE RD Art. 250.66: Breaker hasta 200A - EGC 25mm², GEC 35mm²',
     },
     {
       mainBreakerAmp: 225,
@@ -197,4 +201,3 @@ export async function seedGroundingRules(dataSource: DataSource): Promise<void> 
   await groundingRulesRepository.save(entities);
   console.log(`✅ ${entities.length} rules de puesta a tierra insertadas`);
 }
-

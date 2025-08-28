@@ -1,40 +1,46 @@
 ﻿import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { TipoInstalacion } from '../../modules/tipos-instalaciones/entities/type-installation.entity';
-import { TipoAmbiente } from '../../modules/tipos-ambientes/entities/type-environment.entity';
-import { TipoArtefacto } from '../../modules/tipos-artefactos/entities/type-artifact.entity';
-import { NormConst } from '../../modules/calculos/entities/norm-const.entity';
-import { DemandFactor } from '../../modules/calculos/entities/demand-factor.entity';
-import { Ampacity } from '../../modules/calculos/entities/ampacity.entity';
-import { BreakerCurve } from '../../modules/calculos/entities/breaker-curve.entity';
-import { Resistivity } from '../../modules/calculos/entities/resistivity.entity';
-import { GroundingRules } from '../../modules/calculos/entities/grounding-rules.entity';
+import { InstallationType } from '../../modules/installation-types/entities/installation-type.entity';
+import { EnvironmentType } from '../../modules/environment-types/entities/environment-type.entity';
+import { ArtifactType } from '../../modules/artifact-types/entities/artifact-type.entity';
+import { NormConst } from '../../modules/calculations/entities/norm-const.entity';
+import { DemandFactor } from '../../modules/calculations/entities/demand-factor.entity';
+import { Ampacity } from '../../modules/calculations/entities/ampacity.entity';
+import { BreakerCurve } from '../../modules/calculations/entities/breaker-curve.entity';
+import { Resistivity } from '../../modules/calculations/entities/resistivity.entity';
+import { GroundingRules } from '../../modules/calculations/entities/grounding-rules.entity';
 import * as fs from 'fs';
 import * as path from 'path';
 
-interface TipoInstalacionSeed {
-  id: number;
+interface InstallationTypeSeed {
+  id: string;
   name: string;
   description: string;
-  activo: boolean;
+  active: boolean;
+  usrCreate: string;
 }
 
-interface TipoAmbienteSeed {
-  id: number;
+interface EnvironmentTypeSeed {
+  id: string;
   name: string;
   description: string;
-  activo: boolean;
-  tipoInstalacion_Id: number;
+  active: boolean;
+  installationTypeId: string;
+  usrCreate: string;
+  usrUpdate: string;
 }
 
-interface TipoArtefactoSeed {
-  id: number;
+interface ArtifactTypeSeed {
+  id: string;
   name: string;
   description?: string;
-  activo: boolean;
-  EspacioId: number;
-  Potencia: number;
+  active: boolean;
+  environmentTypeId: string;
+  power: number;
+  voltage: number;
+  usrCreate: string;
+  usrUpdate: string;
 }
 
 function getSeedFilePath(filename: string): string {
@@ -56,27 +62,27 @@ function getSeedFilePath(filename: string): string {
   return fs.existsSync(distPath) ? distPath : srcPath;
 }
 
-const tiposInstalaciones = JSON.parse(
+const installationTypes = JSON.parse(
   fs.readFileSync(getSeedFilePath('InstallationTypes.json'), 'utf-8'),
-) as TipoInstalacionSeed[];
+) as InstallationTypeSeed[];
 
-const tiposAmbientes = JSON.parse(
+const environmentTypes = JSON.parse(
   fs.readFileSync(getSeedFilePath('EnvironmentTypes.json'), 'utf-8'),
-) as TipoAmbienteSeed[];
+) as EnvironmentTypeSeed[];
 
-const tiposArtefactos = JSON.parse(
+const artifactTypes = JSON.parse(
   fs.readFileSync(getSeedFilePath('ArtifactTypes.json'), 'utf-8'),
-) as TipoArtefactoSeed[];
+) as ArtifactTypeSeed[];
 
 @Injectable()
 export class SeedsService {
   constructor(
-    @InjectRepository(TipoInstalacion)
-    private readonly tipoInstalacionRepository: Repository<TipoInstalacion>,
-    @InjectRepository(TipoAmbiente)
-    private readonly tipoAmbienteRepository: Repository<TipoAmbiente>,
-    @InjectRepository(TipoArtefacto)
-    private readonly tipoArtefactoRepository: Repository<TipoArtefacto>,
+    @InjectRepository(InstallationType)
+    private readonly installationTypeRepository: Repository<InstallationType>,
+    @InjectRepository(EnvironmentType)
+    private readonly environmentTypeRepository: Repository<EnvironmentType>,
+    @InjectRepository(ArtifactType)
+    private readonly artifactTypeRepository: Repository<ArtifactType>,
     @InjectRepository(NormConst)
     private readonly normConstRepository: Repository<NormConst>,
     @InjectRepository(DemandFactor)
@@ -105,9 +111,9 @@ export class SeedsService {
         resistivityCount,
         groundingRulesCount,
       ] = await Promise.all([
-        this.tipoInstalacionRepository.count(),
-        this.tipoAmbienteRepository.count(),
-        this.tipoArtefactoRepository.count(),
+        this.installationTypeRepository.count(),
+        this.environmentTypeRepository.count(),
+        this.artifactTypeRepository.count(),
         this.normConstRepository.count(),
         this.demandFactorRepository.count(),
         this.ampacityRepository.count(),
@@ -117,15 +123,15 @@ export class SeedsService {
       ]);
 
       if (instalacionesCount === 0) {
-        await this.seedTiposInstalaciones();
+        await this.seedInstallationTypes();
       }
 
       if (ambientesCount === 0) {
-        await this.seedTiposAmbientes();
+        await this.seedEnvironmentTypes();
       }
 
       if (artefactosCount === 0) {
-        await this.seedTiposArtefactos();
+        await this.seedArtifactTypes();
       }
 
       if (normConstCount === 0) {
@@ -157,50 +163,50 @@ export class SeedsService {
     }
   }
 
-  private async seedTiposInstalaciones(): Promise<void> {
-    const installations = tiposInstalaciones.map((installation) => ({
-      id: installation.id.toString(),
+  private async seedInstallationTypes(): Promise<void> {
+    const installations = installationTypes.map((installation) => ({
+      id: installation.id,
       name: installation.name,
       description: installation.description,
-      activo: installation.activo,
-      creadoPor: 'SEED',
-      actualizadoPor: 'SEED',
+      active: installation.active,
+      usrCreate: installation.usrCreate,
+      usrUpdate: installation.usrCreate,
     }));
 
-    await this.tipoInstalacionRepository.save(installations);
-    console.log('Tipos de installations sembrados correctamente');
+    await this.installationTypeRepository.save(installations);
+    console.log('Installation types seeded successfully');
   }
 
-  private async seedTiposAmbientes(): Promise<void> {
-    const environments = tiposAmbientes.map((environment) => ({
-      id: environment.id.toString(),
+  private async seedEnvironmentTypes(): Promise<void> {
+    const environments = environmentTypes.map((environment) => ({
+      id: environment.id,
       name: environment.name,
       description: environment.description,
-      activo: environment.activo,
-      tipoInstalacion: { id: environment.tipoInstalacion_Id.toString() },
-      creadoPor: 'SEED',
-      actualizadoPor: 'SEED',
+      active: environment.active,
+      installationType: { id: environment.installationTypeId },
+      usrCreate: environment.usrCreate,
+      usrUpdate: environment.usrUpdate,
     }));
 
-    await this.tipoAmbienteRepository.save(environments);
-    console.log('Tipos de environments sembrados correctamente');
+    await this.environmentTypeRepository.save(environments);
+    console.log('Environment types seeded successfully');
   }
 
-  private async seedTiposArtefactos(): Promise<void> {
-    const artefactos = tiposArtefactos.map((artefacto) => ({
-      id: artefacto.id.toString(),
-      name: artefacto.name,
-      description: artefacto.description || '',
-      activo: artefacto.activo,
-      potencia: artefacto.Potencia,
-      voltaje: 120, // Voltaje estándar en RD
-      tipoAmbiente: { id: artefacto.EspacioId.toString() },
-      creadoPor: 'SEED',
-      actualizadoPor: 'SEED',
+  private async seedArtifactTypes(): Promise<void> {
+    const artifacts = artifactTypes.map((artifact) => ({
+      id: artifact.id,
+      name: artifact.name,
+      description: artifact.description || '',
+      active: artifact.active,
+      power: artifact.power,
+      voltage: artifact.voltage,
+      environmentType: { id: artifact.environmentTypeId },
+      usrCreate: artifact.usrCreate,
+      usrUpdate: artifact.usrUpdate,
     }));
 
-    await this.tipoArtefactoRepository.save(artefactos);
-    console.log('Tipos de artefactos sembrados correctamente');
+    await this.artifactTypeRepository.save(artifacts);
+    console.log('Artifact types seeded successfully');
   }
 
   private async seedNormConst(): Promise<void> {
@@ -974,34 +980,34 @@ export class SeedsService {
     try {
       console.log('Iniciando seeds...');
 
-      // Convertir IDs numéricos a strings para tipos_instalaciones
-      const tiposInstalacionesFormateados = tiposInstalaciones.map((type) => ({
+      // Convertir IDs numéricos a strings para installation_types
+      const installationTypesFormatted = installationTypes.map((type) => ({
         ...type,
-        id: type.id.toString(),
+        id: type.id,
       }));
-      await this.tipoInstalacionRepository.save(tiposInstalacionesFormateados);
-      console.log('Seeds de tipos_instalaciones completados.');
+      await this.installationTypeRepository.save(installationTypesFormatted);
+      console.log('Installation types seeds completed.');
 
-      // Convertir IDs numéricos a strings para tipos_ambientes
-      const tiposAmbientesFormateados = tiposAmbientes.map((type) => ({
+      // Convertir IDs numéricos a strings para environment_types
+      const environmentTypesFormatted = environmentTypes.map((type) => ({
         ...type,
-        id: type.id.toString(),
-        tipoInstalacion: { id: type.tipoInstalacion_Id.toString() },
+        id: type.id,
+        installationType: { id: type.installationTypeId },
       }));
-      await this.tipoAmbienteRepository.save(tiposAmbientesFormateados);
-      console.log('Seeds de tipos_ambientes completados.');
+      await this.environmentTypeRepository.save(environmentTypesFormatted);
+      console.log('Environment types seeds completed.');
 
-      // Convertir IDs numéricos a strings para tipos_artefactos
-      const tiposArtefactosFormateados = tiposArtefactos.map((type) => ({
+      // Convertir IDs numéricos a strings para artifact_types
+      const artifactTypesFormatted = artifactTypes.map((type) => ({
         ...type,
-        id: type.id.toString(),
+        id: type.id,
         name: type.name,
-        potencia: type.Potencia,
-        voltaje: 120, // Voltaje estándar en RD
-        tipoAmbiente: { id: type.EspacioId.toString() },
+        power: type.power,
+        voltage: type.voltage,
+        environmentType: { id: type.environmentTypeId },
       }));
-      await this.tipoArtefactoRepository.save(tiposArtefactosFormateados);
-      console.log('Seeds de tipos_artefactos completados.');
+      await this.artifactTypeRepository.save(artifactTypesFormatted);
+      console.log('Artifact types seeds completed.');
     } catch (error) {
       console.error('Error al ejecutar seeds:', error);
     }

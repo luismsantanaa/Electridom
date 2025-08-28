@@ -1,227 +1,238 @@
-# 🏗️ Calculadora Eléctrica RD - Monorepo
+# 🚀 Electridom - Calculadora Eléctrica RD
 
 Sistema completo para cálculos eléctricos residenciales, comerciales e industriales según normativas NEC 2023 y RIE RD.
 
 ## 📊 Estado del Proyecto
 
-![CI/CD Status](https://github.com/your-username/CalculadoraElectricaRD/workflows/CI%2FCD%20Pipeline%20-%20Monorepo/badge.svg)
-![Status Check](https://github.com/your-username/CalculadoraElectricaRD/workflows/Status%20Check/badge.svg)
-![Code Coverage](https://codecov.io/gh/your-username/CalculadoraElectricaRD/branch/main/graph/badge.svg)
+**✅ Sprint 1-5 Completados (100%)**
 
-## 🎯 Resumen General
+- Backend NestJS completo con motor de cálculos eléctricos
+- Frontend Angular 20 con template moderno
+- Integración de IA con OpenAI
+- Monorepo configurado y funcional
+- CI/CD pipeline operativo
+- Base de datos sincronizada
+- 186 tests pasando
 
-**Estado:** FUNCIONAL - Sprint 1 completado al 100% + Sprint 2 completado al 100% + Sprint 3 Frontend iniciado
-
-**Última Actualización:** 24 de Agosto 2025
-
-**Contexto del Proyecto:** Sistema completo para cálculos eléctricos residenciales, comerciales e industriales según normativas NEC 2023 y RIE RD. Backend con API RESTful completa, documentación Swagger, seguridad avanzada y observabilidad funcional. Frontend Angular 20 con template moderno y arquitectura monorepo.
-
-## 🚀 Arquitectura del Proyecto
-
-### Backend (NestJS)
-- **Framework:** NestJS 10.x con TypeScript 5.x
-- **Base de Datos:** MariaDB con TypeORM
-- **Autenticación:** JWT estándar + JWT RS256 + JWKS + Key Rotation
-- **Seguridad:** Argon2id, Rate Limiting, Helmet, CORS, Auditoría completa
-- **API:** RESTful con Swagger/OpenAPI
-- **Observabilidad:** Prometheus metrics con interceptor automático
-- **Health Checks:** Liveness y readiness probes con Terminus
-
-### Frontend (Angular)
-- **Framework:** Angular 20 con Standalone Components
-- **Template:** Datta Able (Lite) - Limpio y configurado
-- **Arquitectura:** Monorepo con backend y frontend
-- **Routing:** Lazy loading configurado
-- **Proxy:** Configuración para desarrollo (`/api` → `http://localhost:3000`)
-
-## 🏗️ Estructura del Monorepo
+## 🏗️ Arquitectura
 
 ```
-CalculadoraElectricaRD/
-├── calculadora-electrica-backend/     # Backend NestJS
-├── calculadora-electrica-frontend/    # Frontend Angular
-├── docs/                              # Documentación
-├── UserHistories/                     # Historias de usuario
-├── .github/                           # Configuración CI/CD
-└── ESTADO_PROYECTO.md                 # Estado detallado del proyecto
+Electridom/
+├── calculadora-electrica-backend/    # API NestJS
+├── calculadora-electrica-frontend/   # Angular 20
+├── docs/                            # Documentación
+├── scripts/                         # Scripts de utilidad
+└── docker-compose.yml              # Orquestación Docker
 ```
 
-## 🔄 CI/CD Pipeline
-
-### Workflows Implementados
-
-1. **`ci.yml`** - Pipeline principal de CI/CD para monorepo
-2. **`status.yml`** - Verificación rápida de estado
-3. **`dependabot.yml`** - Auto-merge para dependencias
-
-### Jobs del Pipeline
-
-#### Backend Jobs
-- **`backend-test`** - Tests completos con matrices Node.js 18.x, 20.x
-- **`backend-quick-check`** - Verificación rápida para PRs
-
-#### Frontend Jobs
-- **`frontend-test`** - Tests completos con matrices Node.js 18.x, 20.x
-- **`frontend-quick-check`** - Verificación rápida para PRs
-
-#### Jobs de Despliegue
-- **`build-and-deploy`** - Build y creación de artefactos
-- **`security-check`** - Verificación de seguridad
-
-### Métricas y Umbrales
-
-- **Cobertura de Código:** 40% mínimo (umbral realista)
-- **Tiempos de Ejecución:** < 8 minutos
-- **Optimizaciones:** Cache de dependencias, ejecución paralela
-
-## 🚀 Inicio Rápido
+## 🐳 Despliegue con Docker (Recomendado)
 
 ### Prerrequisitos
 
-- Node.js 18.x o 20.x
-- MariaDB 10.6+
-- Git
+- Docker Desktop
+- Docker Compose
 
-### Instalación
+### Instalación Rápida
+
+1. **Clonar el repositorio:**
 
 ```bash
-# Clonar el repositorio
-git clone https://github.com/your-username/CalculadoraElectricaRD.git
-cd CalculadoraElectricaRD
+git clone <repository-url>
+cd Electridom
+```
 
-# Backend
-cd calculadora-electrica-backend
-npm install
+2. **Ejecutar script de configuración:**
+
+```powershell
+# Windows PowerShell
+.\scripts\docker-setup.ps1
+```
+
+O manualmente:
+
+```bash
+# Crear archivo .env
 cp env.example .env
-# Configurar variables de entorno
-npm run migration:run
-npm run seed
-npm run start:dev
+# Editar .env y configurar OPENAI_API_KEY
 
-# Frontend (en otra terminal)
-cd calculadora-electrica-frontend
-npm install
-npm start
+# Construir y ejecutar
+docker-compose up -d
 ```
 
 ### URLs de Acceso
 
+- **Frontend:** http://localhost
 - **Backend API:** http://localhost:3000
-- **Swagger Docs:** http://localhost:3000/api/docs
-- **Health Check:** http://localhost:3000/api/health
-- **Métricas:** http://localhost:3000/api/metrics
-- **Frontend:** http://localhost:4200
+- **API Docs:** http://localhost:3000/api/docs
+- **Adminer (DB):** http://localhost:8080
+- **Prometheus:** http://localhost:9090
 
-## 📊 Funcionalidades Implementadas
-
-### ✅ Core Backend (100% Completado)
-- API RESTful completa con documentación Swagger
-- Sistema de autenticación JWT estándar y RS256
-- Gestión de usuarios con roles y auditoría
-- Base de datos con migraciones y seeds
-- Testing completo con cobertura realista
-- Observabilidad funcional con Prometheus metrics
-- Health checks con liveness y readiness probes
-- Session management con refresh tokens
-
-### ✅ Motor de Cálculos (100% Completado)
-- Cálculo de cargas por ambiente
-- Factores de demanda y carga diversificada
-- Agrupación de circuitos ramales y selección de conductores
-- Análisis de caída de tensión en alimentador
-- Dimensionamiento de puesta a tierra
-- Generación de reportes PDF y Excel
-
-### ✅ Frontend Angular (Fase Inicial Completada)
-- Angular 20 con Standalone Components
-- Template Datta Able integrado y limpio
-- Configuración de proxy para desarrollo
-- Routing con lazy loading configurado
-- Build exitoso y servidor funcional
-
-## 🧪 Testing
-
-### Cobertura Actual
-- **Cobertura Total:** 44.02%
-- **Tests Pasando:** 186 tests (27 suites)
-- **Umbral Mínimo:** 40% (statements/lines), 30% (functions), 15% (branches)
-
-### Comandos de Testing
+### Comandos Útiles
 
 ```bash
-# Backend
-cd calculadora-electrica-backend
-npm run test:unit          # Tests unitarios
-npm run test:e2e           # Tests end-to-end
-npm run test:unit:coverage # Tests con cobertura
+# Ver logs
+docker-compose logs -f
 
-# Frontend
-cd calculadora-electrica-frontend
-npm run test               # Tests unitarios
-npm run test:ci            # Tests en CI
+# Detener servicios
+docker-compose down
+
+# Reconstruir
+docker-compose build --no-cache
+
+# Verificar estado
+docker-compose ps
 ```
 
-## 🔧 Scripts de Utilidad
+## 🛠️ Desarrollo Local
 
-### Backend
+### Backend (NestJS)
+
 ```bash
 cd calculadora-electrica-backend
-npm run migration:run      # Ejecutar migraciones
-npm run seed               # Ejecutar seeds de datos
-npm run keys:rotate        # Rotar claves JWT
-npm run setup:test-db      # Configurar BD de test
+
+# Instalar dependencias
+npm install
+
+# Configurar variables de entorno
+cp env.example .env
+# Editar .env con tus configuraciones
+
+# Ejecutar migraciones
+npm run migration:run
+
+# Ejecutar seeds
+npm run seed
+
+# Iniciar en desarrollo
+npm run start:dev
 ```
 
-### Frontend
+### Frontend (Angular)
+
 ```bash
 cd calculadora-electrica-frontend
-npm start                  # Servidor de desarrollo
-npm run build              # Build de producción
-npm run lint               # Linting del código
+
+# Instalar dependencias
+npm install
+
+# Iniciar servidor de desarrollo
+npm start
+```
+
+## 🔧 Configuración
+
+### Variables de Entorno
+
+Crear archivo `.env` en la raíz del proyecto:
+
+```env
+# OpenAI Configuration
+OPENAI_API_KEY=your-openai-api-key-here
+OPENAI_MODEL=gpt-4o-mini
+
+# Database Configuration
+DATABASE_HOST=mariadb
+DATABASE_PORT=3306
+DATABASE_USERNAME=electridom
+DATABASE_PASSWORD=electridom
+DATABASE_NAME=electridom
+
+# JWT Configuration
+JWT_SECRET=your-super-secret-jwt-key-change-in-production
+JWT_EXPIRES_IN=900s
+
+# Application Configuration
+NODE_ENV=production
+PORT=3000
+CORS_ORIGIN=*
 ```
 
 ## 📚 Documentación
 
-- **[ESTADO_PROYECTO.md](ESTADO_PROYECTO.md)** - Estado detallado del proyecto
-- **[docs/CI_CD_PIPELINE.md](docs/CI_CD_PIPELINE.md)** - Documentación del pipeline CI/CD
-- **[docs/CONFIGURATION.md](docs/CONFIGURATION.md)** - Guía de configuración
-- **[docs/SECURITY_PASSWORD_POLICY.md](docs/SECURITY_PASSWORD_POLICY.md)** - Políticas de seguridad
-- **[docs/TESTING.md](docs/TESTING.md)** - Guía de testing
+- [API Documentation](http://localhost:3000/api/docs) - Swagger UI
+- [Estado del Proyecto](ESTADO_PROYECTO.md) - Estado detallado
+- [Configuración](docs/CONFIGURATION.md) - Guías de configuración
+- [Testing](docs/TESTING.md) - Guías de testing
+- [CI/CD](docs/CI_CD_PIPELINE.md) - Pipeline de integración continua
+
+## �� Testing
+
+```bash
+# Backend tests
+cd calculadora-electrica-backend
+npm run test:unit
+npm run test:e2e
+
+# Frontend tests
+cd calculadora-electrica-frontend
+npm run test
+```
+
+## 📊 Métricas y Monitoreo
+
+- **Prometheus:** http://localhost:9090
+- **Health Checks:** http://localhost:3000/api/health
+- **Métricas:** http://localhost:3000/api/metrics
 
 ## 🔒 Seguridad
 
-- **JWT RS256:** Firma asimétrica con claves RSA 2048-bit
-- **JWKS:** JSON Web Key Set público
-- **Key Rotation:** Rotación automática y manual de claves RSA
-- **Argon2id:** Hashing seguro de contraseñas (OWASP)
-- **Rate Limiting:** Protección contra ataques de fuerza bruta
-- **Auditoría:** Logging completo de eventos de seguridad
+- JWT RS256 con rotación de claves
+- Rate limiting configurado
+- CORS configurado
+- Headers de seguridad
+- Validación de entrada con AJV
 
-## 📈 Observabilidad
+## 🚀 Funcionalidades
 
-- **Prometheus Metrics:** Endpoint `/metrics` con formato Prometheus
-- **HTTP Metrics:** Contadores y histogramas automáticos de requests
-- **Custom Metrics:** Métricas específicas para cálculos eléctricos
-- **Health Checks:** Liveness y readiness probes funcionales
-- **Session Management:** Refresh tokens con auditoría completa
+### Backend
+
+- ✅ Motor de cálculos eléctricos completo
+- ✅ API RESTful con documentación Swagger
+- ✅ Autenticación JWT RS256 + JWKS
+- ✅ Integración con OpenAI
+- ✅ Base de datos MariaDB con migraciones
+- ✅ Métricas Prometheus
+- ✅ Health checks
+- ✅ Rate limiting
+- ✅ Auditoría completa
+
+### Frontend
+
+- ✅ Angular 20 con Standalone Components
+- ✅ Template Datta Able moderno
+- ✅ Componentes de IA integrados
+- ✅ Upload de archivos Excel
+- ✅ Validación client-side
+- ✅ Responsive design
+- ✅ Lazy loading
+
+### IA Integration
+
+- ✅ Análisis inteligente de cálculos
+- ✅ Procesamiento de archivos Excel
+- ✅ Prompts especializados
+- ✅ Guardrails de seguridad
 
 ## 🤝 Contribución
 
 1. Fork el proyecto
-2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
-3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
+2. Crear rama feature (`git checkout -b feature/AmazingFeature`)
+3. Commit cambios (`git commit -m 'Add AmazingFeature'`)
 4. Push a la rama (`git push origin feature/AmazingFeature`)
-5. Abre un Pull Request
+5. Abrir Pull Request
 
 ## 📄 Licencia
 
 Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más detalles.
 
-## 📞 Contacto
+## 🆘 Soporte
 
-- **Proyecto:** [Calculadora Eléctrica RD](https://github.com/your-username/CalculadoraElectricaRD)
-- **Issues:** [GitHub Issues](https://github.com/your-username/CalculadoraElectricaRD/issues)
+Para soporte técnico o preguntas:
+
+- Crear un issue en GitHub
+- Revisar la documentación en `/docs`
+- Verificar el estado del proyecto en `ESTADO_PROYECTO.md`
 
 ---
 
-**🎉 SPRINT 1 COMPLETADO AL 100% + SPRINT 2 COMPLETADO AL 100% + SPRINT 3 FRONTEND FASE INICIAL COMPLETADA - PROYECTO FUNCIONAL CON MONOREPO, BACKEND COMPLETO Y FRONTEND ANGULAR 20 INICIADO**
+**🎉 ¡Electridom está listo para producción!**

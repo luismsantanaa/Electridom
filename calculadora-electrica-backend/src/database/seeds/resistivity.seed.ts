@@ -1,5 +1,5 @@
 ﻿import { DataSource } from 'typeorm';
-import { Resistivity } from '../../modules/calculos/entities/resistivity.entity';
+import { Resistivity } from '../../modules/calculations/entities/resistivity.entity';
 
 export async function seedResistivity(dataSource: DataSource): Promise<void> {
   const resistivityRepository = dataSource.getRepository(Resistivity);

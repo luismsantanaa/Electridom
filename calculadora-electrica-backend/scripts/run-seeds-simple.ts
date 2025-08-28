@@ -22,29 +22,21 @@ async function runSeeds() {
 
   try {
     await dataSource.initialize();
-    console.log('🔌 Conectado a la base de datos');
 
     // Ejecutar seeds en orden
-    console.log('🌱 Ejecutando seeds...');
-
     await normConstSeed(dataSource);
-    console.log('✅ NormConst seed completado');
-
     await demandFactorSeed(dataSource);
-    console.log('✅ DemandFactor seed completado');
-
     await seedResistivity(dataSource);
-    console.log('✅ Resistivity seed completado');
-
     await seedGroundingRules(dataSource);
-    console.log('✅ GroundingRules seed completado');
-
-    console.log('🎉 Todos los seeds completados exitosamente');
   } catch (error) {
-    console.error('❌ Error durante la ejecución de seeds:', error);
+    console.error('Error during seeds execution:', error);
+    process.exit(1);
   } finally {
     await dataSource.destroy();
   }
 }
 
-runSeeds().catch(console.error);
+runSeeds().catch((error) => {
+  console.error('Failed to run seeds:', error);
+  process.exit(1);
+});

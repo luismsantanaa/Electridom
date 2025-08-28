@@ -46,7 +46,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
       return user;
     } catch (error) {
-      console.error('Error en JwtStrategy.validate:', error);
+      // Log error silently and return null for security
       return null;
     }
   }

@@ -1,5 +1,5 @@
 ﻿import { DataSource } from 'typeorm';
-import { DemandFactor } from '../../modules/calculos/entities/demand-factor.entity';
+import { DemandFactor } from '../../modules/calculations/entities/demand-factor.entity';
 
 export const demandFactorSeed = async (
   dataSource: DataSource,
@@ -20,7 +20,8 @@ export const demandFactorSeed = async (
       rangeMin: 0,
       rangeMax: 999999,
       factor: 1.0,
-      notes: 'TODO_RIE: Factor base para iluminación general',
+      notes:
+        'RIE RD Art. 220.12: Factor de demanda para iluminación general - 100%',
       usrCreate: 'SEED',
       usrUpdate: 'SEED',
       active: true,
@@ -32,7 +33,8 @@ export const demandFactorSeed = async (
       rangeMin: 0,
       rangeMax: 999999,
       factor: 1.0,
-      notes: 'TODO_RIE: Factor base para tomacorrientes generales',
+      notes:
+        'RIE RD Art. 220.14: Factor de demanda para tomacorrientes generales - 100%',
       usrCreate: 'SEED',
       usrUpdate: 'SEED',
       active: true,
@@ -44,7 +46,8 @@ export const demandFactorSeed = async (
       rangeMin: 0,
       rangeMax: 999999,
       factor: 0.85,
-      notes: 'TODO_RIE: Factor típico para electrodomésticos no simultáneos',
+      notes:
+        'RIE RD Art. 220.53: Factor de demanda para electrodomésticos - 85% (máximo 4)',
       usrCreate: 'SEED',
       usrUpdate: 'SEED',
       active: true,
@@ -56,7 +59,7 @@ export const demandFactorSeed = async (
       rangeMin: 0,
       rangeMax: 999999,
       factor: 1.0,
-      notes: 'TODO_RIE: Factor base para climatización - revisar según RIE',
+      notes: 'RIE RD Art. 220.82: Factor de demanda para climatización - 100%',
       usrCreate: 'SEED',
       usrUpdate: 'SEED',
       active: true,
@@ -68,7 +71,7 @@ export const demandFactorSeed = async (
       rangeMin: 0,
       rangeMax: 999999,
       factor: 1.0,
-      notes: 'TODO_RIE: Factor base para loads especiales',
+      notes: 'RIE RD Art. 220.87: Factor de demanda para loads especiales - 100%',
       usrCreate: 'SEED',
       usrUpdate: 'SEED',
       active: true,
@@ -85,4 +88,3 @@ export const demandFactorSeed = async (
     `✅ Factores de demanda cargados: ${demandFactors.length} registros`,
   );
 };
-

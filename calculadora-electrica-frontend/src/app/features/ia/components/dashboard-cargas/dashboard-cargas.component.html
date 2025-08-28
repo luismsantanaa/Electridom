@@ -1,0 +1,102 @@
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <h2>Dashboard de Cargas Eléctricas</h2>
+    <div class="header-actions">
+      <button class="btn btn-primary" (click)="generateCharts()" [disabled]="isLoading()">
+        <i class="fas fa-refresh"></i> Actualizar
+      </button>
+      <button class="btn btn-success" (click)="exportDataAsExcel()">
+        <i class="fas fa-file-excel"></i> Exportar Excel
+      </button>
+    </div>
+  </div>
+
+  @if (isLoading()) {
+    <div class="loading-container">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Cargando...</span>
+      </div>
+      <p>Cargando gráficos...</p>
+    </div>
+  } @else {
+    <div class="charts-grid">
+      <!-- Gráfico de Pastel -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <h3>Distribución por Tipo de Consumo</h3>
+          <button class="btn btn-sm btn-outline-primary" (click)="exportChartAsImage('pie')">
+            <i class="fas fa-download"></i>
+          </button>
+        </div>
+        <div class="chart-container">
+          @if (pieChartData()) {
+            <canvas baseChart
+              [data]="pieChartData()!"
+              [type]="'pie'"
+              [options]="pieChartOptions">
+            </canvas>
+          }
+        </div>
+      </div>
+
+      <!-- Gráfico de Barras -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <h3>Consumo por Ambiente</h3>
+          <button class="btn btn-sm btn-outline-primary" (click)="exportChartAsImage('bar')">
+            <i class="fas fa-download"></i>
+          </button>
+        </div>
+        <div class="chart-container">
+          @if (barChartData()) {
+            <canvas baseChart
+              [data]="barChartData()!"
+              [type]="'bar'"
+              [options]="barChartOptions">
+            </canvas>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabla de Resumen -->
+    <div class="summary-section">
+      <h3>Resumen de Consumos</h3>
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Dispositivo</th>
+              <th>Ambiente</th>
+              <th>Tipo</th>
+              <th>Potencia (W)</th>
+              <th>% del Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (consumption of sampleConsumptions; track consumption.nombre) {
+              <tr>
+                <td>{{ consumption.nombre }}</td>
+                <td>{{ consumption.ambiente }}</td>
+                <td>
+                  <span class="badge" [class]="getTypeBadgeClass(consumption.tipo)">
+                    {{ consumption.tipo }}
+                  </span>
+                </td>
+                <td>{{ consumption.potencia_w }} W</td>
+                <td>{{ getPercentage(consumption.potencia_w) }}%</td>
+              </tr>
+            }
+          </tbody>
+          <tfoot>
+            <tr class="table-info">
+              <td colspan="3"><strong>Total</strong></td>
+              <td><strong>{{ getTotalPower() }} W</strong></td>
+              <td><strong>100%</strong></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  }
+</div>

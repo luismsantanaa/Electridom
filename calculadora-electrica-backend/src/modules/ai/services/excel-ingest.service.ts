@@ -1,6 +1,6 @@
 import { Injectable, Logger, BadRequestException } from '@nestjs/common';
 import * as XLSX from 'xlsx';
-import * as Ajv from 'ajv';
+import Ajv from 'ajv';
 import * as fs from 'fs';
 import * as path from 'path';
 

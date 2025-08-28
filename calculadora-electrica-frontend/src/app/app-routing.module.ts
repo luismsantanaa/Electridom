@@ -18,6 +18,10 @@ const routes: Routes = [
       {
         path: 'dashboard',
         loadComponent: () => import('./features/calc/pages/calc.page').then((c) => c.CalcPage)
+      },
+      {
+        path: 'ia',
+        loadChildren: () => import('./features/ia/ia-module').then((m) => m.IaModule)
       }
     ]
   },

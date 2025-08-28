@@ -1,0 +1,132 @@
+<div class="export-container">
+  <div class="export-header">
+    <h2>Exportar Reportes</h2>
+    <p>Genera reportes profesionales en PDF o Excel con tus cálculos eléctricos</p>
+  </div>
+
+  <div class="export-content">
+    <!-- Configuración del Reporte -->
+    <div class="config-section">
+      <h3>Configuración del Reporte</h3>
+      
+      <div class="form-group">
+        <label for="format">Formato de Exportación:</label>
+        <select id="format" class="form-control" [value]="selectedFormat()" (change)="selectedFormat.set($any($event.target).value)">
+          <option value="pdf">PDF</option>
+          <option value="excel">Excel</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="checkbox-label">
+          <input type="checkbox" [checked]="includeCharts()" (change)="includeCharts.set($any($event.target).checked)">
+          Incluir gráficos y visualizaciones
+        </label>
+      </div>
+
+      <div class="form-group">
+        <label class="checkbox-label">
+          <input type="checkbox" [checked]="includeCalculations()" (change)="includeCalculations.set($any($event.target).checked)">
+          Incluir cálculos detallados
+        </label>
+      </div>
+    </div>
+
+    <!-- Vista Previa -->
+    <div class="preview-section">
+      <h3>Vista Previa del Reporte</h3>
+      
+      <div class="preview-card">
+        <div class="preview-header">
+          <h4>Datos del Proyecto</h4>
+        </div>
+        
+        <div class="preview-content">
+          <div class="preview-row">
+            <span class="label">Total de Ambientes:</span>
+            <span class="value">{{ sampleEnvironments.length }}</span>
+          </div>
+          
+          <div class="preview-row">
+            <span class="label">Total de Consumos:</span>
+            <span class="value">{{ sampleConsumptions.length }}</span>
+          </div>
+          
+          <div class="preview-row">
+            <span class="label">Potencia Total:</span>
+            <span class="value">{{ getTotalPower() }} W</span>
+          </div>
+          
+          <div class="preview-row">
+            <span class="label">Área Total:</span>
+            <span class="value">{{ getTotalArea() }} m²</span>
+          </div>
+          
+          <div class="preview-row">
+            <span class="label">Densidad de Carga:</span>
+            <span class="value">{{ getPowerDensity().toFixed(2) }} W/m²</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabla de Consumos -->
+      <div class="preview-table">
+        <h4>Consumos por Tipo</h4>
+        <div class="table-responsive">
+          <table class="table table-sm">
+            <thead>
+              <tr>
+                <th>Tipo</th>
+                <th>Potencia (W)</th>
+                <th>% del Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (type of Object.keys(getConsumptionByType()); track type) {
+                <tr>
+                  <td>{{ type }}</td>
+                  <td>{{ getConsumptionByType()[type] }} W</td>
+                  <td>{{ ((getConsumptionByType()[type] / getTotalPower()) * 100).toFixed(1) }}%</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Acciones -->
+    <div class="actions-section">
+      <button 
+        class="btn btn-primary btn-lg" 
+        (click)="generateReport()" 
+        [disabled]="isLoading()">
+        @if (isLoading()) {
+          <i class="fas fa-spinner fa-spin"></i>
+          Generando...
+        } @else {
+          <i class="fas fa-download"></i>
+          Generar Reporte {{ selectedFormat().toUpperCase() }}
+        }
+      </button>
+      
+      <button class="btn btn-secondary" (click)="prepareReportData()">
+        <i class="fas fa-refresh"></i>
+        Actualizar Datos
+      </button>
+    </div>
+  </div>
+
+  <!-- Información Adicional -->
+  <div class="info-section">
+    <div class="alert alert-info">
+      <h5><i class="fas fa-info-circle"></i> Información</h5>
+      <ul>
+        <li><strong>PDF:</strong> Incluye tablas, gráficos y cálculos detallados en formato profesional</li>
+        <li><strong>Excel:</strong> Múltiples hojas con datos estructurados y fórmulas</li>
+        <li>Los reportes incluyen fecha de generación y metadatos del proyecto</li>
+        <li>Puedes personalizar el contenido según tus necesidades</li>
+      </ul>
+    </div>
+  </div>
+</div>

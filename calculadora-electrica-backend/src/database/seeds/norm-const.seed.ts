@@ -1,5 +1,5 @@
 ﻿import { DataSource } from 'typeorm';
-import { NormConst } from '../../modules/calculos/entities/norm-const.entity';
+import { NormConst } from '../../modules/calculations/entities/norm-const.entity';
 
 export const normConstSeed = async (dataSource: DataSource): Promise<void> => {
   const normConstRepository = dataSource.getRepository(NormConst);
@@ -16,13 +16,13 @@ export const normConstSeed = async (dataSource: DataSource): Promise<void> => {
       key: 'lighting_va_per_m2',
       value: '32.3',
       unit: 'VA/m2',
-      notes: 'TODO_RIE: value base; origen NEC 3VA/ft2 aprox.',
+      notes: 'RIE RD Art. 220.12: Valor base para iluminación - 32.3 VA/m² (equivalente a NEC 3VA/ft²)',
     },
     {
       key: 'socket_max_va_per_circuit',
       value: '1800',
       unit: 'VA',
-      notes: 'TODO_RIE',
+      notes: 'RIE RD Art. 210.23: Máximo 1800 VA por circuito de tomacorrientes',
     },
     {
       key: 'circuit_max_utilization',

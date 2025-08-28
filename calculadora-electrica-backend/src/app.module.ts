@@ -19,17 +19,18 @@ import { AppService } from './app.service';
 import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { HealthModule } from './modules/health/health.module';
-import { TiposInstalacionesModule } from './modules/tipos-instalaciones/tipos-installations.module';
-import { TiposAmbientesModule } from './modules/tipos-ambientes/tipos-environments.module';
-import { TiposArtefactosModule } from './modules/tipos-artefactos/tipos-artifacts.module';
+import { InstallationTypesModule } from './modules/installation-types/installation-types.module';
+import { EnvironmentTypesModule } from './modules/environment-types/environment-types.module';
+import { ArtifactTypesModule } from './modules/artifact-types/artifact-types.module';
 import { RulesModule } from './modules/rules/rules.module';
-import { CalculosModule } from './modules/calculos/calculos.module';
-import { EnvironmentModule } from './modules/ambientes/environment.module';
-import { CargasModule } from './modules/cargas/loads.module';
+import { CalculationsModule } from './modules/calculations/calculations.module';
+import { EnvironmentModule } from './modules/environments/environment.module';
+import { LoadsModule } from './modules/loads/loads.module';
 import { ProjectsModule } from './modules/projects/projects.module';
 import { RulesAdminModule } from './modules/rules-admin/rules-admin.module';
 import { JwksModule } from './modules/jwks/jwks.module';
 import { AiModule } from './modules/ai/ai.module';
+import { LlmModule } from './modules/llm/llm.module';
 import { CommonModule } from './common/common.module';
 import { APP_INTERCEPTOR, APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { TransformInterceptor } from './common/interceptors/transform.interceptor';
@@ -90,17 +91,18 @@ import { LoggerModule } from 'nestjs-pino';
     UsersModule,
     AuthModule,
     HealthModule,
-    TiposInstalacionesModule,
-    TiposAmbientesModule,
-    TiposArtefactosModule,
+    InstallationTypesModule,
+    EnvironmentTypesModule,
+    ArtifactTypesModule,
     RulesModule,
-    CalculosModule,
+    CalculationsModule,
     EnvironmentModule,
-    CargasModule,
+    LoadsModule,
     ProjectsModule,
     RulesAdminModule,
     JwksModule,
     AiModule,
+    LlmModule,
     CommonModule,
     MetricsModule,
     LoggerModule.forRoot({
@@ -144,4 +146,3 @@ import { LoggerModule } from 'nestjs-pino';
   ],
 })
 export class AppModule {}
-

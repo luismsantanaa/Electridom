@@ -1,24 +1,24 @@
 ﻿import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SeedsService } from './seeds.service';
-import { TipoInstalacion } from '../../modules/tipos-instalaciones/entities/type-installation.entity';
-import { TipoAmbiente } from '../../modules/tipos-ambientes/entities/type-environment.entity';
-import { TipoArtefacto } from '../../modules/tipos-artefactos/entities/type-artifact.entity';
-import { NormConst } from '../../modules/calculos/entities/norm-const.entity';
-import { DemandFactor } from '../../modules/calculos/entities/demand-factor.entity';
-import { Ampacity } from '../../modules/calculos/entities/ampacity.entity';
-import { BreakerCurve } from '../../modules/calculos/entities/breaker-curve.entity';
-import { Resistivity } from '../../modules/calculos/entities/resistivity.entity';
-import { GroundingRules } from '../../modules/calculos/entities/grounding-rules.entity';
+import { InstallationType } from '../../modules/installation-types/entities/installation-type.entity';
+import { EnvironmentType } from '../../modules/environment-types/entities/environment-type.entity';
+import { ArtifactType } from '../../modules/artifact-types/entities/artifact-type.entity';
+import { NormConst } from '../../modules/calculations/entities/norm-const.entity';
+import { DemandFactor } from '../../modules/calculations/entities/demand-factor.entity';
+import { Ampacity } from '../../modules/calculations/entities/ampacity.entity';
+import { BreakerCurve } from '../../modules/calculations/entities/breaker-curve.entity';
+import { Resistivity } from '../../modules/calculations/entities/resistivity.entity';
+import { GroundingRules } from '../../modules/calculations/entities/grounding-rules.entity';
 import { AppDataSource } from '../data-source';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(AppDataSource.options),
     TypeOrmModule.forFeature([
-      TipoInstalacion,
-      TipoAmbiente,
-      TipoArtefacto,
+      InstallationType,
+      EnvironmentType,
+      ArtifactType,
       NormConst,
       DemandFactor,
       Ampacity,

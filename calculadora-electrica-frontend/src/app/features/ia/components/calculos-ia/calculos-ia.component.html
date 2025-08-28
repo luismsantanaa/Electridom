@@ -1,0 +1,260 @@
+<div class="calculos-container">
+  <div class="form-section">
+    <h2>Cálculos Eléctricos con IA</h2>
+
+    <form [formGroup]="calcForm" (ngSubmit)="calculate()">
+      <!-- Configuración del Sistema -->
+      <div class="form-card">
+        <h3>Configuración del Sistema</h3>
+        <div formGroupName="system" class="system-config">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="voltage">Tensión (V)</label>
+              <input type="number" id="voltage" formControlName="voltage" min="1" />
+            </div>
+            <div class="form-group">
+              <label for="phases">Fases</label>
+              <select id="phases" formControlName="phases">
+                <option value="1">1 Fase</option>
+                <option value="3">3 Fases</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="frequency">Frecuencia (Hz)</label>
+              <input type="number" id="frequency" formControlName="frequency" min="50" max="60" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ambientes -->
+      <div class="form-card">
+        <div class="card-header">
+          <h3>Ambientes</h3>
+          <button type="button" class="add-btn" (click)="addEnvironment()">
+            <i class="fas fa-plus"></i>
+            Agregar Ambiente
+          </button>
+        </div>
+
+        <div formArrayName="superficies" class="environments-list">
+          @for (environment of superficiesArray.controls; track $index; let i = $index) {
+            <div [formGroupName]="i" class="environment-item">
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Nombre del Ambiente</label>
+                  <input type="text" formControlName="nombre" placeholder="Ej: Sala de estar" />
+                </div>
+                <div class="form-group">
+                  <label>Área (m²)</label>
+                  <input type="number" formControlName="area_m2" min="0.1" step="0.1" />
+                </div>
+                <div class="form-group">
+                  <label>Tipo</label>
+                  <select formControlName="tipo">
+                    <option value="residencial">Residencial</option>
+                    <option value="comercial">Comercial</option>
+                    <option value="industrial">Industrial</option>
+                  </select>
+                </div>
+                <button type="button" class="remove-btn" (click)="removeEnvironment(i)" [disabled]="superficiesArray.length <= 1">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Consumos -->
+      <div class="form-card">
+        <div class="card-header">
+          <h3>Consumos</h3>
+          <button type="button" class="add-btn" (click)="addConsumption()">
+            <i class="fas fa-plus"></i>
+            Agregar Consumo
+          </button>
+        </div>
+
+        <div formArrayName="consumos" class="consumptions-list">
+          @for (consumption of consumosArray.controls; track $index; let i = $index) {
+            <div [formGroupName]="i" class="consumption-item">
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Nombre del Consumo</label>
+                  <input type="text" formControlName="nombre" placeholder="Ej: Lámpara LED" />
+                </div>
+                <div class="form-group">
+                  <label>Ambiente</label>
+                  <input type="text" formControlName="ambiente" placeholder="Ej: Sala de estar" />
+                </div>
+                <div class="form-group">
+                  <label>Potencia (W)</label>
+                  <input type="number" formControlName="potencia_w" min="0.1" step="0.1" />
+                </div>
+                <div class="form-group">
+                  <label>Tipo</label>
+                  <select formControlName="tipo">
+                    <option value="iluminacion">Iluminación</option>
+                    <option value="entretenimiento">Entretenimiento</option>
+                    <option value="cocina">Cocina</option>
+                    <option value="climatizacion">Climatización</option>
+                    <option value="otros">Otros</option>
+                  </select>
+                </div>
+                <button type="button" class="remove-btn" (click)="removeConsumption(i)" [disabled]="consumosArray.length <= 1">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Configuración IA -->
+      <div class="form-card">
+        <h3>Configuración IA</h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="temperature">Temperatura</label>
+            <input type="range" id="temperature" formControlName="temperature" min="0" max="1" step="0.1" />
+            <span class="range-value">{{ calcForm.get('temperature')?.value }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Botones -->
+      <div class="form-actions">
+        <button type="submit" class="calculate-btn" [disabled]="!canCalculate()" [class.loading]="isLoading()">
+          @if (isLoading()) {
+            <i class="fas fa-spinner fa-spin"></i>
+            Calculando...
+          } @else {
+            <i class="fas fa-calculator"></i>
+            Calcular
+          }
+        </button>
+        <button type="button" class="clear-btn" (click)="clearResults()" [disabled]="!result()">
+          <i class="fas fa-eraser"></i>
+          Limpiar
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Resultados -->
+  @if (error()) {
+    <div class="results-section">
+      <div class="error-card">
+        <h3>Error</h3>
+        <p>{{ error() }}</p>
+      </div>
+    </div>
+  }
+
+  @if (result()) {
+    <div class="results-section">
+      <h2>Resultados del Cálculo</h2>
+
+      <div class="result-card">
+        <h3>Resumen</h3>
+        <p>{{ result()?.summary }}</p>
+      </div>
+
+      <div class="result-card">
+        <h3>Cálculos</h3>
+        <div class="calculations-grid">
+          <div class="calc-item">
+            <label>Demanda Total:</label>
+            <span>{{ result()?.calculations.demand.total_va }}</span>
+          </div>
+          <div class="calc-item">
+            <label>Demanda Diversificada:</label>
+            <span>{{ result()?.calculations.demand.diversified_va }}</span>
+          </div>
+          <div class="calc-item">
+            <label>Corriente:</label>
+            <span>{{ result()?.calculations.demand.current_a }}</span>
+          </div>
+          <div class="calc-item">
+            <label>Conductor Principal:</label>
+            <span>{{ result()?.calculations.conductors.main_feeder }}</span>
+          </div>
+          <div class="calc-item">
+            <label>Interruptor Principal:</label>
+            <span>{{ result()?.calculations.protections.main_breaker }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="result-card">
+        <h3>Cumplimiento Normativo</h3>
+        <div class="compliance-status" [class]="getComplianceClass(result()?.compliance.status || '')">
+          <span class="status-badge">{{ result()?.compliance.status }}</span>
+        </div>
+
+        @if (result()?.compliance.issues && result()?.compliance.issues.length > 0) {
+          <div class="issues-list">
+            <h4>Problemas Detectados:</h4>
+            <ul>
+              @for (issue of result()?.compliance.issues; track $index) {
+                <li>{{ issue }}</li>
+              }
+            </ul>
+          </div>
+        }
+
+        @if (result()?.compliance.recommendations && result()?.compliance.recommendations.length > 0) {
+          <div class="recommendations-list">
+            <h4>Recomendaciones:</h4>
+            <ul>
+              @for (rec of result()?.compliance.recommendations; track $index) {
+                <li>{{ rec }}</li>
+              }
+            </ul>
+          </div>
+        }
+      </div>
+
+      <div class="result-card">
+        <h3>Seguridad</h3>
+        <div class="safety-status" [class]="getSafetyClass(result()?.safety.level || '')">
+          <span class="status-badge">{{ result()?.safety.level }}</span>
+        </div>
+
+        @if (result()?.safety.concerns && result()?.safety.concerns.length > 0) {
+          <div class="concerns-list">
+            <h4>Preocupaciones de Seguridad:</h4>
+            <ul>
+              @for (concern of result()?.safety.concerns; track $index) {
+                <li>{{ concern }}</li>
+              }
+            </ul>
+          </div>
+        }
+      </div>
+
+      <div class="result-card">
+        <h3>Metadatos</h3>
+        <div class="metadata-grid">
+          <div class="meta-item">
+            <label>Proveedor:</label>
+            <span>{{ result()?.metadata.provider }}</span>
+          </div>
+          <div class="meta-item">
+            <label>Modelo:</label>
+            <span>{{ result()?.metadata.model }}</span>
+          </div>
+          <div class="meta-item">
+            <label>Duración:</label>
+            <span>{{ result()?.metadata.duration }}ms</span>
+          </div>
+          <div class="meta-item">
+            <label>Tokens Usados:</label>
+            <span>{{ result()?.metadata.tokensUsed }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</div>

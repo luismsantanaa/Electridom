@@ -66,7 +66,7 @@ describe('JwtStrategy', () => {
   describe('validate', () => {
     it('should return user when token is valid', async () => {
       const payload = {
-        sub: 1,
+        sub: '1',
         email: 'test@example.com',
         role: UserRole.CLIENTE,
       };
@@ -93,7 +93,7 @@ describe('JwtStrategy', () => {
 
     it('should return null when user is not found', async () => {
       const payload = {
-        sub: 999,
+        sub: '999',
         email: 'nonexistent@example.com',
         role: UserRole.CLIENTE,
       };
@@ -110,7 +110,7 @@ describe('JwtStrategy', () => {
 
     it('should return null when user is inactive', async () => {
       const payload = {
-        sub: 1,
+        sub: '1',
         email: 'inactive@example.com',
         role: UserRole.CLIENTE,
       };

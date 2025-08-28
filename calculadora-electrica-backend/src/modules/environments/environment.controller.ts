@@ -1,0 +1,75 @@
+﻿import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+  Query,
+} from '@nestjs/common';
+import { EnvironmentService } from './environment.service';
+import { CreateEnvironmentDto } from './dto/create-environment.dto';
+import { UpdateEnvironmentDto } from './dto/update-environment.dto';
+import { JwtAuthGuard } from '../../common/guards';
+import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { User } from '../users/entities/user.entity';
+import { Paginate } from '../../common/decorators/paginate.decorator';
+import { PaginateQuery } from 'nestjs-paginate';
+import { BaseSpecification } from '../../common/specifications/base.specification';
+import { ActivoSpecification } from './specifications/activo.specification';
+import { NombreSpecification } from './specifications/nombre.specification';
+import { Environment } from './entities/environment.entity';
+
+@Controller('environments')
+@UseGuards(JwtAuthGuard)
+export class EnvironmentController {
+  constructor(private readonly EnvironmentService: EnvironmentService) {}
+
+  @Post()
+  create(
+    @Body() createEnvironmentDto: CreateEnvironmentDto,
+    @CurrentUser() user: User,
+  ) {
+    return this.EnvironmentService.create(createEnvironmentDto, user.username);
+  }
+
+  @Get()
+  findAll(
+    @Paginate() query: PaginateQuery,
+    @Query('name') name?: string,
+    @Query('activo') activo?: boolean,
+  ) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
+    let specification: BaseSpecification<Environment> = new ActivoSpecification(
+      activo ?? true,
+    );
+
+    if (name) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-call
+      specification = specification.and(new NombreSpecification(name));
+    }
+
+    return this.EnvironmentService.findAll(query, specification);
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.EnvironmentService.findOne(id);
+  }
+
+  @Patch(':id')
+  update(
+    @Param('id') id: string,
+    @Body() updateEnvironmentDto: UpdateEnvironmentDto,
+    @CurrentUser() user: User,
+  ) {
+    return this.EnvironmentService.update(id, updateEnvironmentDto, user.username);
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: string, @CurrentUser() user: User) {
+    return this.EnvironmentService.remove(id, user.username);
+  }
+}

@@ -1,94 +1,120 @@
-# Ejemplos de Usuario - Eléctridom
+# Ejemplos de Análisis de Cálculos Eléctricos
 
-## Ejemplo 1: Análisis de Alimentador
+## Ejemplo 1: Análisis de Factor de Demanda
 
-**Pregunta**: "Explica por qué el alimentador recomendado es #6 AWG con 20% más de longitud."
-
-**Respuesta esperada**:
-
+**Entrada:**
 ```json
 {
-	"summary": "El alimentador #6 AWG se selecciona basado en la corriente calculada y factores de corrección por temperatura y agrupación.",
-	"recommendations": [
-		{
-			"title": "Verificación de capacidad del conductor",
-			"description": "El conductor #6 AWG tiene capacidad de 65A a 75°C. Para 50A de carga, proporciona un margen de seguridad del 30%.",
-			"priority": "medium",
-			"category": "safety"
-		},
-		{
-			"title": "Optimización de longitud",
-			"description": "La longitud adicional del 20% considera rutas alternativas y futuras expansiones. Verificar que no exceda caída de tensión del 3%.",
-			"priority": "low",
-			"category": "efficiency"
-		}
-	]
+  "input": {
+    "cargas_por_categoria": [
+      { "categoria": "iluminacion_general", "carga_bruta_va": 1200 },
+      { "categoria": "tomacorrientes", "carga_bruta_va": 3000 }
+    ],
+    "parametros": { "tipo_instalacion": "residencial" }
+  },
+  "output": {
+    "cargas_diversificadas": [
+      { "categoria": "iluminacion_general", "carga_diversificada_va": 1200 },
+      { "categoria": "tomacorrientes", "carga_diversificada_va": 1500 }
+    ],
+    "total_diversificado_va": 2700,
+    "ahorro_va": 1500
+  }
 }
 ```
 
-## Ejemplo 2: Análisis de Demanda
-
-**Pregunta**: "¿Es correcto el factor de demanda aplicado para esta instalación residencial?"
-
-**Respuesta esperada**:
-
+**Respuesta Esperada:**
 ```json
 {
-	"summary": "El factor de demanda del 85% es apropiado para instalaciones residenciales según RIE RD Artículo 220.42.",
-	"recommendations": [
-		{
-			"title": "Verificación de cargas especiales",
-			"description": "Considerar cargas especiales como aires acondicionados, calentadores de agua y cocinas eléctricas que pueden requerir factores diferentes.",
-			"priority": "high",
-			"category": "compliance"
-		}
-	]
+  "summary": "El factor de demanda aplicado es correcto para una instalación residencial. Se aplicó 100% para iluminación general y 50% para tomacorrientes, resultando en un ahorro de 1500 VA.",
+  "recommendations": [
+    {
+      "priority": "medium",
+      "category": "efficiency",
+      "title": "Verificar factor de demanda para tomacorrientes",
+      "description": "El factor de 50% para tomacorrientes es apropiado para residencial, pero verificar si hay cargas especiales que requieran consideración adicional.",
+      "action": "Revisar si hay equipos de alta potencia que puedan operar simultáneamente",
+      "reference": "NEC 220.53"
+    }
+  ]
 }
 ```
 
-## Ejemplo 3: Selección de Protecciones
+## Ejemplo 2: Análisis de Caída de Tensión
 
-**Pregunta**: "¿Qué tipo de interruptor automático es más adecuado para esta aplicación?"
-
-**Respuesta esperada**:
-
+**Entrada:**
 ```json
 {
-	"summary": "Para cargas residenciales mixtas, se recomienda un interruptor termomagnético con características de disparo tipo C.",
-	"recommendations": [
-		{
-			"title": "Protección contra sobrecorriente",
-			"description": "El interruptor debe tener capacidad de interrupción mínima de 10kA según RIE RD. Verificar coordinación con interruptor principal.",
-			"priority": "high",
-			"category": "safety"
-		}
-	]
+  "input": {
+    "circuitos_ramales": [
+      { "id": "CIRC-001", "corriente_a": 15, "longitud_m": 25, "conductor": "Cu 14 AWG" }
+    ],
+    "sistema": { "tension_v": 120, "phases": 1 }
+  },
+  "output": {
+    "analisis_caida": [
+      {
+        "id": "CIRC-001",
+        "caida_porcentual": 2.8,
+        "limite_porcentual": 3.0,
+        "cumple_limite": true
+      }
+    ]
+  }
 }
 ```
 
-## Ejemplo 4: Puesta a Tierra
-
-**Pregunta**: "¿La resistencia de tierra calculada cumple con las normativas?"
-
-**Respuesta esperada**:
-
+**Respuesta Esperada:**
 ```json
 {
-	"summary": "La resistencia de tierra de 25 ohmios cumple con RIE RD que requiere máximo 25 ohmios para sistemas residenciales.",
-	"recommendations": [
-		{
-			"title": "Monitoreo de resistencia",
-			"description": "Implementar mediciones periódicas de resistencia de tierra, especialmente en épocas de sequía.",
-			"priority": "medium",
-			"category": "safety"
-		}
-	]
+  "summary": "La caída de tensión del 2.8% está dentro del límite del 3% para circuitos ramales. El conductor Cu 14 AWG es apropiado para la corriente y longitud especificadas.",
+  "recommendations": [
+    {
+      "priority": "low",
+      "category": "efficiency",
+      "title": "Considerar optimización de conductor",
+      "description": "Aunque cumple con el límite, se podría considerar Cu 12 AWG para mayor margen de seguridad y mejor eficiencia.",
+      "action": "Evaluar costo-beneficio de usar conductor de mayor calibre",
+      "reference": "NEC 210.19(A)(1)"
+    }
+  ]
 }
 ```
 
-## Restricciones de Respuesta
+## Ejemplo 3: Análisis de Puesta a Tierra
 
-- **Alcance**: Solo responder preguntas relacionadas con instalaciones eléctricas
-- **Concisión**: Proporcionar respuestas directas y esenciales
-- **Optimización**: Minimizar uso de tokens manteniendo claridad técnica
-- **Enfoque**: Priorizar información relevante sobre explicaciones extensas
+**Entrada:**
+```json
+{
+  "input": {
+    "sistema": { "tension_v": 120, "phases": 1 },
+    "alimentador": { "corriente_a": 100, "seccion_mm2": 35 },
+    "parametros": { "main_breaker_amp": 150, "tipo_instalacion": "comercial" }
+  },
+  "output": {
+    "dimensionamiento": {
+      "conductor_egc": "Cu 8 AWG",
+      "conductor_gec": "Cu 6 AWG",
+      "resistencia_maxima": 25,
+      "cumple_requisitos": true
+    }
+  }
+}
+```
+
+**Respuesta Esperada:**
+```json
+{
+  "summary": "El dimensionamiento de puesta a tierra es correcto. Cu 8 AWG para EGC y Cu 6 AWG para GEC cumplen con los requisitos para un breaker principal de 150A.",
+  "recommendations": [
+    {
+      "priority": "high",
+      "category": "safety",
+      "title": "Verificar resistencia de tierra",
+      "description": "Asegurar que la resistencia de tierra no exceda 25 ohmios según NEC 250.56.",
+      "action": "Realizar medición de resistencia de tierra en campo",
+      "reference": "NEC 250.56"
+    }
+  ]
+}
+```

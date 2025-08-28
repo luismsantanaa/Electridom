@@ -28,6 +28,7 @@ export interface CalculationInput {
   system?: SystemConfig;
   superficies: Environment[];
   consumos: Consumption[];
+  [key: string]: unknown;
 }
 
 export interface CalculationResult {
@@ -45,6 +46,7 @@ export interface CalculationResult {
     tension_v: number;
     phases: number;
   };
+  [key: string]: unknown;
 }
 
 // Interfaces para los resultados de cada endpoint
@@ -115,6 +117,7 @@ export interface FullCalculationResult {
   circuitsResult: CircuitsResult;
   feederResult: FeederResult;
   groundingResult: GroundingResult;
+  [key: string]: unknown;
 }
 
 @Injectable({ providedIn: 'root' })

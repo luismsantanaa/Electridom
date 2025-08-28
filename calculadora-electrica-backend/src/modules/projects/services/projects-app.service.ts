@@ -19,7 +19,7 @@ import {
   ProjectListResponseDto,
   ProjectExportDto,
 } from '../dtos/project-response.dto';
-import { CalculationAppService } from '../../calculos/services/calculation-app.service';
+import { CalculationAppService } from '../../calculations/services/calculation-app.service';
 import { RuleSignatureService } from '../../rules/services/rule-signature.service';
 import { ConfigService } from '@nestjs/config';
 

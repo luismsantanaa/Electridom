@@ -64,10 +64,16 @@ describe('AuthController', () => {
         },
       };
 
+      const mockResponse = {
+        cookie: jest.fn(),
+        clearCookie: jest.fn(),
+      };
+
       const result = await controller.login(
         loginDto,
         '127.0.0.1',
         mockRequest as any,
+        mockResponse as any,
       );
 
       expect(result).toEqual(mockToken);
@@ -78,7 +84,7 @@ describe('AuthController', () => {
         'test-agent',
         'test-trace-id',
       );
-      expect(mockAuthService.login).toHaveBeenCalledWith(mockUser);
+      expect(mockAuthService.login).toHaveBeenCalledWith(mockUser, '127.0.0.1', 'test-agent');
     });
 
     it('should throw UnauthorizedException on invalid credentials', async () => {
@@ -96,8 +102,13 @@ describe('AuthController', () => {
         },
       };
 
+      const mockResponse = {
+        cookie: jest.fn(),
+        clearCookie: jest.fn(),
+      };
+
       await expect(
-        controller.login(loginDto, '127.0.0.1', mockRequest as any),
+        controller.login(loginDto, '127.0.0.1', mockRequest as any, mockResponse as any),
       ).rejects.toThrow();
       expect(mockAuthService.validateUser).toHaveBeenCalledWith(
         loginDto.email,
