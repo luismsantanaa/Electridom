@@ -1,7 +1,7 @@
 import { Component, OnInit, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Chart, ChartConfiguration, ChartType } from 'chart.js';
-import { NgChartsModule } from 'ng2-charts';
+import { BaseChartDirective, provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { IaService, Consumption } from '../../services/ia.service';
 
 interface ChartData {
@@ -18,7 +18,8 @@ interface ChartData {
 @Component({
   selector: 'app-dashboard-cargas',
   standalone: true,
-  imports: [CommonModule, NgChartsModule],
+  imports: [CommonModule, BaseChartDirective],
+  providers: [provideCharts(withDefaultRegisterables())],
   templateUrl: './dashboard-cargas.component.html',
   styleUrls: ['./dashboard-cargas.component.scss']
 })

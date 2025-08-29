@@ -19,7 +19,7 @@ RUN npm run build
 FROM nginx:alpine AS production
 
 # Copy built application
-COPY --from=builder /app/dist/calculadora-electrica-frontend /usr/share/nginx/html
+COPY --from=builder /app/dist /usr/share/nginx/html
 
 # Copy nginx configuration
 COPY nginx.conf /etc/nginx/nginx.conf

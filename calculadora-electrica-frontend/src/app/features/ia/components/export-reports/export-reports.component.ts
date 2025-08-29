@@ -24,6 +24,9 @@ interface ReportData {
 })
 export class ExportReportsComponent implements OnInit {
   private iaService = inject(IaService);
+  
+  // Hacer Object disponible en el template
+  protected readonly Object = Object;
 
   // Signals
   isLoading = signal(false);

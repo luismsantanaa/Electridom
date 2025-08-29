@@ -7,7 +7,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "nest build --tsc",
-    "postbuild": "if exist src\\database\\seeds\\*.json (xcopy /E /I /Y src\\database\\seeds\\*.json dist\\src\\database\\seeds\\ 2>nul) || (echo No JSON files found to copy)",
+    "postbuild": "if [ -d src/database/seeds ] && [ \"$(ls -A src/database/seeds/*.json 2>/dev/null)\" ]; then cp -r src/database/seeds/*.json dist/src/database/seeds/ 2>/dev/null || echo 'No JSON files found to copy'; else echo 'No seeds directory or JSON files found'; fi",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
