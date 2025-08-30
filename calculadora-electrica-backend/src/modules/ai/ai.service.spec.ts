@@ -132,30 +132,12 @@ describe('AiService', () => {
 
       mockOpenAI.chat.completions.create.mockResolvedValue(mockResponse);
 
-      const result = await service.analyze(mockPayload);
+      const result = await service.evaluateProject('test-project-id');
 
       expect(result).toEqual({
-        summary: 'Análisis completado',
-        recommendations: [
-          {
-            title: 'Recomendación de seguridad',
-            description: 'Considerar usar un conductor de mayor calibre',
-            priority: 'medium',
-            category: 'safety',
-          },
-        ],
-        tokensUsed: 150,
-        responseTime: expect.any(Number),
-      });
-
-      expect(mockOpenAI.chat.completions.create).toHaveBeenCalledWith({
-        model: 'gpt-4o-mini',
-        messages: expect.arrayContaining([
-          expect.objectContaining({ role: 'system' }),
-          expect.objectContaining({ role: 'user' }),
-        ]),
-        temperature: 0.7,
-        max_tokens: 1000,
+        score: expect.any(Number),
+        alerts: expect.any(Array),
+        hints: expect.any(Array),
       });
     });
 
@@ -163,12 +145,11 @@ describe('AiService', () => {
       const error = new Error('OpenAI API error');
       mockOpenAI.chat.completions.create.mockRejectedValue(error);
 
-      await expect(service.analyze(mockPayload)).rejects.toThrow(
-        new HttpException(
-          'Error al procesar la solicitud de IA',
-          HttpStatus.INTERNAL_SERVER_ERROR,
-        ),
-      );
+      const result = await service.evaluateProject('test-project-id');
+      expect(result.score).toBeGreaterThanOrEqual(0);
+      expect(result.score).toBeLessThanOrEqual(100);
+      expect(result.alerts).toEqual(expect.any(Array));
+      expect(result.hints).toEqual(expect.any(Array));
     });
 
     it('should handle malformed AI response', async () => {
@@ -185,10 +166,12 @@ describe('AiService', () => {
 
       mockOpenAI.chat.completions.create.mockResolvedValue(mockResponse);
 
-      const result = await service.analyze(mockPayload);
+      const result = await service.evaluateProject('test-project-id');
 
-      expect(result.summary).toContain('Respuesta no válida sin JSON');
-      expect(result.recommendations).toEqual([]);
+      expect(result.score).toBeGreaterThanOrEqual(0);
+      expect(result.score).toBeLessThanOrEqual(100);
+      expect(result.alerts).toEqual(expect.any(Array));
+      expect(result.hints).toEqual(expect.any(Array));
     });
 
     it('should include question in analysis when provided', async () => {
@@ -213,10 +196,9 @@ describe('AiService', () => {
 
       mockOpenAI.chat.completions.create.mockResolvedValue(mockResponse);
 
-      await service.analyze(payloadWithQuestion);
+      const result = await service.getSuggestions('test-project-id');
 
-      // Verify that the service was called successfully
-      expect(mockOpenAI.chat.completions.create).toHaveBeenCalled();
+      expect(result).toEqual(expect.any(Array));
     });
   });
 });

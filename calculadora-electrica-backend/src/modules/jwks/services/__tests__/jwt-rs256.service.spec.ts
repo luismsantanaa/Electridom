@@ -79,7 +79,8 @@ AQ8AMIIBCgKCAQEAu1SU1LfVLPHCgQIBAAOC
       mockKeyStoreService.getActivePrivateKey.mockResolvedValue(mockJwksKey);
 
       // Mock the entire sign method to return a valid token
-      const mockToken = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAZXhhbXBsZS5jb20iLCJzdWIiOjEsInJvbGUiOiJhZG1pbiIsImlhdCI6MTYzNzQ5NjAwMCwiZXhwIjoxNjM3NTgyNDAwfQ.mock-signature';
+      const mockToken =
+        'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAZXhhbXBsZS5jb20iLCJzdWIiOjEsInJvbGUiOiJhZG1pbiIsImlhdCI6MTYzNzQ5NjAwMCwiZXhwIjoxNjM3NTgyNDAwfQ.mock-signature';
       jest.spyOn(service, 'sign').mockResolvedValue(mockToken);
 
       const result = await service.sign(payload);
@@ -93,15 +94,21 @@ AQ8AMIIBCgKCAQEAu1SU1LfVLPHCgQIBAAOC
       const payload = { email: 'test@example.com', sub: 1, role: 'admin' };
       mockKeyStoreService.getActivePrivateKey.mockResolvedValue(null);
 
-      await expect(service.sign(payload)).rejects.toThrow(UnauthorizedException);
+      await expect(service.sign(payload)).rejects.toThrow(
+        UnauthorizedException,
+      );
     });
 
     it('should throw UnauthorizedException when private key is missing', async () => {
       const payload = { email: 'test@example.com', sub: 1, role: 'admin' };
       const keyWithoutPrivate = { ...mockJwksKey, privatePem: null };
-      mockKeyStoreService.getActivePrivateKey.mockResolvedValue(keyWithoutPrivate);
+      mockKeyStoreService.getActivePrivateKey.mockResolvedValue(
+        keyWithoutPrivate,
+      );
 
-      await expect(service.sign(payload)).rejects.toThrow(UnauthorizedException);
+      await expect(service.sign(payload)).rejects.toThrow(
+        UnauthorizedException,
+      );
     });
   });
 
@@ -117,7 +124,11 @@ AQ8AMIIBCgKCAQEAu1SU1LfVLPHCgQIBAAOC
       mockKeyStoreService.getKeyByKid.mockResolvedValue(mockJwksKey);
 
       // Mock the entire verify method to return the decoded token
-      const mockDecodedToken = { email: 'test@example.com', sub: 1, role: 'admin' };
+      const mockDecodedToken = {
+        email: 'test@example.com',
+        sub: 1,
+        role: 'admin',
+      };
       jest.spyOn(service, 'verify').mockResolvedValue(mockDecodedToken);
 
       const result = await service.verify(mockToken);
@@ -132,7 +143,9 @@ AQ8AMIIBCgKCAQEAu1SU1LfVLPHCgQIBAAOC
 
       mockJwtService.decode.mockReturnValue(mockDecodedHeader);
 
-      await expect(service.verify(mockToken)).rejects.toThrow(UnauthorizedException);
+      await expect(service.verify(mockToken)).rejects.toThrow(
+        UnauthorizedException,
+      );
     });
 
     it('should throw UnauthorizedException when key not found', async () => {
@@ -145,7 +158,9 @@ AQ8AMIIBCgKCAQEAu1SU1LfVLPHCgQIBAAOC
       mockJwtService.decode.mockReturnValue(mockDecodedHeader);
       mockKeyStoreService.getKeyByKid.mockResolvedValue(null);
 
-      await expect(service.verify(mockToken)).rejects.toThrow(UnauthorizedException);
+      await expect(service.verify(mockToken)).rejects.toThrow(
+        UnauthorizedException,
+      );
     });
   });
 

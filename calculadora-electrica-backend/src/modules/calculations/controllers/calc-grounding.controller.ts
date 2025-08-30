@@ -246,4 +246,3 @@ export class CalcGroundingController {
     return this.groundingService.size(request);
   }
 }
-

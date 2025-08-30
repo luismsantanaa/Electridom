@@ -59,4 +59,3 @@ export class Ampacity extends BaseAuditEntity {
   })
   amp: number;
 }
-

@@ -24,4 +24,3 @@ export async function seedNormRules(dataSource: DataSource): Promise<void> {
     `✅ ${normRulesSeed.length} rules normativas sembradas exitosamente`,
   );
 }
-

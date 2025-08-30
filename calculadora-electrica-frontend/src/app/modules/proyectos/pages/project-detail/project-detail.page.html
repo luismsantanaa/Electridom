@@ -1,0 +1,205 @@
+<div class="project-detail-page">
+  <div class="container-fluid">
+    <!-- Loading State -->
+    <div *ngIf="loading" class="text-center py-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Cargando...</span>
+      </div>
+    </div>
+
+    <!-- Project Content -->
+    <div *ngIf="!loading && project" class="row">
+      <!-- Project Details -->
+      <div class="col-lg-8">
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <div>
+            <button class="btn btn-outline-secondary me-3" (click)="onBack()">
+              <i class="bi bi-arrow-left me-2"></i>
+              Volver
+            </button>
+            <h1 class="h3 mb-0">{{ project.name }}</h1>
+          </div>
+          <button class="btn btn-primary" (click)="onEdit()">
+            <i class="bi bi-pencil me-2"></i>
+            Editar
+          </button>
+        </div>
+
+        <!-- Project Info Card -->
+        <div class="card mb-4">
+          <div class="card-header">
+            <h5 class="card-title mb-0">
+              <i class="bi bi-info-circle me-2"></i>
+              Información del Proyecto
+            </h5>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label class="form-label fw-bold">Propietario:</label>
+                  <p class="mb-0">{{ project.owner }}</p>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label fw-bold">Potencia Aparente:</label>
+                  <p class="mb-0">{{ project.apparentPowerKVA }} kVA</p>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label class="form-label fw-bold">Circuitos:</label>
+                  <p class="mb-0">{{ project.circuits }}</p>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label fw-bold">Estado:</label>
+                  <span
+                    class="badge"
+                    [ngClass]="{
+                    'bg-success': project.status === 'active',
+                    'bg-warning': project.status === 'draft',
+                    'bg-secondary': project.status === 'archived'
+                  }"
+                  >
+                    {{ project.status === 'active' ? 'Activo' : project.status === 'draft' ? 'Borrador' : 'Archivado' }}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="project.description" class="mb-3">
+              <label class="form-label fw-bold">Descripción:</label>
+              <p class="mb-0">{{ project.description }}</p>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <small class="text-muted">
+                  <i class="bi bi-calendar me-1"></i>
+                  Creado: {{ project.createdAt | date:'dd/MM/yyyy HH:mm' }}
+                </small>
+              </div>
+              <div class="col-md-6">
+                <small class="text-muted">
+                  <i class="bi bi-clock me-1"></i>
+                  Actualizado: {{ project.updatedAt | date:'dd/MM/yyyy HH:mm' }}
+                </small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI Panel -->
+      <div class="col-lg-4">
+        <!-- AI Evaluation -->
+        <div class="card mb-4">
+          <div class="card-header">
+            <h5 class="card-title mb-0">
+              <i class="bi bi-robot me-2"></i>
+              Evaluación IA
+            </h5>
+          </div>
+          <div class="card-body">
+            <div *ngIf="aiLoading" class="text-center py-3">
+              <div class="spinner-border spinner-border-sm text-primary" role="status">
+                <span class="visually-hidden">Analizando...</span>
+              </div>
+              <p class="mt-2 mb-0 text-muted">Analizando proyecto...</p>
+            </div>
+
+            <div *ngIf="!aiLoading && aiEvaluation">
+              <!-- Score -->
+              <div class="text-center mb-4">
+                <div class="display-4" [ngClass]="getScoreColor(aiEvaluation.score)">
+                  <i [class]="getScoreIcon(aiEvaluation.score)"></i>
+                </div>
+                <h4 [ngClass]="getScoreColor(aiEvaluation.score)">{{ aiEvaluation.score }}/100</h4>
+                <p class="text-muted mb-0">Puntuación de calidad</p>
+              </div>
+
+              <!-- Alerts -->
+              <div *ngIf="aiEvaluation.alerts.length > 0" class="mb-3">
+                <h6 class="fw-bold mb-2">Alertas:</h6>
+                <div
+                  *ngFor="let alert of aiEvaluation.alerts"
+                  class="alert alert-sm"
+                  [ngClass]="{
+                  'alert-danger': alert.severity === 'error',
+                  'alert-warning': alert.severity === 'warn',
+                  'alert-info': alert.severity === 'info'
+                }"
+                >
+                  <i [class]="getAlertIcon(alert.severity) + ' me-2'"></i>
+                  {{ alert.message }}
+                </div>
+              </div>
+
+              <!-- Hints -->
+              <div *ngIf="aiEvaluation.hints.length > 0">
+                <h6 class="fw-bold mb-2">Consejos:</h6>
+                <ul class="list-unstyled">
+                  <li *ngFor="let hint of aiEvaluation.hints" class="mb-1">
+                    <i class="bi bi-lightbulb text-warning me-2"></i>
+                    {{ hint }}
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div *ngIf="!aiLoading && !aiEvaluation" class="text-center py-3">
+              <i class="bi bi-exclamation-triangle text-muted display-6"></i>
+              <p class="text-muted mb-0">No se pudo cargar la evaluación</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- AI Suggestions -->
+        <div class="card">
+          <div class="card-header">
+            <h5 class="card-title mb-0">
+              <i class="bi bi-lightbulb me-2"></i>
+              Sugerencias IA
+            </h5>
+          </div>
+          <div class="card-body">
+            <div *ngIf="aiLoading" class="text-center py-3">
+              <div class="spinner-border spinner-border-sm text-primary" role="status">
+                <span class="visually-hidden">Generando...</span>
+              </div>
+              <p class="mt-2 mb-0 text-muted">Generando sugerencias...</p>
+            </div>
+
+            <div *ngIf="!aiLoading && aiSuggestions.length > 0">
+              <div *ngFor="let suggestion of aiSuggestions" class="mb-3 p-3 border rounded">
+                <div class="d-flex align-items-start">
+                  <i [class]="getSuggestionIcon(suggestion.type) + ' me-2 mt-1'"></i>
+                  <div class="flex-grow-1">
+                    <h6 class="mb-1">{{ suggestion.title }}</h6>
+                    <p class="mb-2 text-muted small">{{ suggestion.description }}</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                      <span
+                        class="badge"
+                        [ngClass]="{
+                        'bg-danger': suggestion.priority === 'high',
+                        'bg-warning': suggestion.priority === 'medium',
+                        'bg-info': suggestion.priority === 'low'
+                      }"
+                      >
+                        {{ suggestion.priority === 'high' ? 'Alta' : suggestion.priority === 'medium' ? 'Media' : 'Baja' }}
+                      </span>
+                      <small class="text-muted">{{ suggestion.impact }}</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="!aiLoading && aiSuggestions.length === 0" class="text-center py-3">
+              <i class="bi bi-check-circle text-success display-6"></i>
+              <p class="text-muted mb-0">No hay sugerencias pendientes</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

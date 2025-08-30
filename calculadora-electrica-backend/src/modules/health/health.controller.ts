@@ -1,6 +1,10 @@
 import { Controller, Get } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { HealthCheck, HealthCheckService, HealthCheckResult } from '@nestjs/terminus';
+import {
+  HealthCheck,
+  HealthCheckService,
+  HealthCheckResult,
+} from '@nestjs/terminus';
 import { HealthService } from './health.service';
 
 @ApiTags('Health')
@@ -15,7 +19,8 @@ export class HealthController {
   @HealthCheck()
   @ApiOperation({
     summary: 'Health Check',
-    description: 'Verifica el estado de salud de la aplicación (liveness y readiness)',
+    description:
+      'Verifica el estado de salud de la aplicación (liveness y readiness)',
   })
   @ApiResponse({
     status: 200,

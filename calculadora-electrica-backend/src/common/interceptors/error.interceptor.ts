@@ -77,11 +77,11 @@ export class ErrorInterceptor implements NestInterceptor {
       ...baseError,
       error: {
         ...baseError.error,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+
         details,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+
         path: request.url,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+
         method: request.method,
         file: location.file,
         line: location.line,
@@ -100,7 +100,7 @@ export class ErrorInterceptor implements NestInterceptor {
         let errorCode = 'INTERNAL_SERVER_ERROR';
         let details = null;
         const location = this.getErrorLocation(error);
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+
         const request = context.switchToHttp().getRequest();
 
         if (error instanceof HttpException) {
@@ -110,7 +110,7 @@ export class ErrorInterceptor implements NestInterceptor {
           if (typeof response === 'object') {
             message = response.message || error.message;
             errorCode = response.error || 'HTTP_EXCEPTION';
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+
             details = response.details || null;
           } else {
             message = error.message;
@@ -121,7 +121,7 @@ export class ErrorInterceptor implements NestInterceptor {
           const dbError = error as DatabaseError;
           message = dbError.message || 'Error interno del servidor';
           errorCode = dbError.code || 'INTERNAL_SERVER_ERROR';
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+
           details = dbError.details || null;
         }
 

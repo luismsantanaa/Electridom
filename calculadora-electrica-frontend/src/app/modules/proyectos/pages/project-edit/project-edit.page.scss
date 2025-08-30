@@ -1,0 +1,31 @@
+.project-edit-page {
+  padding: 1.5rem 0;
+
+  .card {
+    border: none;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    border-radius: 0.5rem;
+  }
+
+  .card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+  }
+
+  .form-label {
+    font-weight: 500;
+  }
+
+  .btn-outline-secondary {
+    &:hover {
+      background-color: #6c757d;
+      border-color: #6c757d;
+    }
+  }
+
+  .btn-primary {
+    &:disabled {
+      opacity: 0.6;
+    }
+  }
+}

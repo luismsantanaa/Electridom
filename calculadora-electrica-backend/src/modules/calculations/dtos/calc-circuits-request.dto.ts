@@ -87,4 +87,3 @@ export class CalcCircuitsRequestDto {
     preferir_monofasico?: boolean;
   };
 }
-

@@ -60,4 +60,3 @@ export class CalcDemandRequestDto {
   @IsOptional()
   observaciones?: string[];
 }
-

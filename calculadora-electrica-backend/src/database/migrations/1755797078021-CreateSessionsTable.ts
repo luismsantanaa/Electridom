@@ -1,4 +1,11 @@
-import { MigrationInterface, QueryRunner, Table, Index, ForeignKey, TableIndex } from 'typeorm';
+import {
+  MigrationInterface,
+  QueryRunner,
+  Table,
+  Index,
+  ForeignKey,
+  TableIndex,
+} from 'typeorm';
 
 export class CreateSessionsTable1755797078021 implements MigrationInterface {
   name = 'CreateSessionsTable1755797078021';
@@ -90,26 +97,38 @@ export class CreateSessionsTable1755797078021 implements MigrationInterface {
     );
 
     // Crear índices
-    await queryRunner.createIndex('sessions', new TableIndex({
-      name: 'IDX_sessions_userId',
-      columnNames: ['userId'],
-    }));
+    await queryRunner.createIndex(
+      'sessions',
+      new TableIndex({
+        name: 'IDX_sessions_userId',
+        columnNames: ['userId'],
+      }),
+    );
 
-    await queryRunner.createIndex('sessions', new TableIndex({
-      name: 'IDX_sessions_refreshHash',
-      columnNames: ['refreshHash'],
-      isUnique: true,
-    }));
+    await queryRunner.createIndex(
+      'sessions',
+      new TableIndex({
+        name: 'IDX_sessions_refreshHash',
+        columnNames: ['refreshHash'],
+        isUnique: true,
+      }),
+    );
 
-    await queryRunner.createIndex('sessions', new TableIndex({
-      name: 'IDX_sessions_expiresAt',
-      columnNames: ['expiresAt'],
-    }));
+    await queryRunner.createIndex(
+      'sessions',
+      new TableIndex({
+        name: 'IDX_sessions_expiresAt',
+        columnNames: ['expiresAt'],
+      }),
+    );
 
-    await queryRunner.createIndex('sessions', new TableIndex({
-      name: 'IDX_sessions_revokedAt',
-      columnNames: ['revokedAt'],
-    }));
+    await queryRunner.createIndex(
+      'sessions',
+      new TableIndex({
+        name: 'IDX_sessions_revokedAt',
+        columnNames: ['revokedAt'],
+      }),
+    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {

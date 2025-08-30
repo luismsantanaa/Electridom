@@ -1,0 +1,3 @@
+-- Seeds ampliados Sprint 9
+-- Crear índices: ALTER TABLE projects ADD INDEX idx_projects_name_owner (name, owner);
+-- Generar 50k registros sintéticos para pruebas de paginación y rendimiento (usar script del ORM).

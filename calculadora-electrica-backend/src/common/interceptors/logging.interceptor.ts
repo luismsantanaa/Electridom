@@ -80,9 +80,14 @@ export class LoggingInterceptor implements NestInterceptor {
 
   private sanitizeHeaders(headers: any): any {
     const sanitized = { ...headers };
-    const sensitiveFields = ['authorization', 'cookie', 'x-api-key', 'x-metrics-token'];
+    const sensitiveFields = [
+      'authorization',
+      'cookie',
+      'x-api-key',
+      'x-metrics-token',
+    ];
 
-    sensitiveFields.forEach(field => {
+    sensitiveFields.forEach((field) => {
       if (sanitized[field]) {
         sanitized[field] = '[REDACTED]';
       }
@@ -97,7 +102,7 @@ export class LoggingInterceptor implements NestInterceptor {
     const sanitized = { ...body };
     const sensitiveFields = ['password', 'refreshToken', 'token', 'secret'];
 
-    sensitiveFields.forEach(field => {
+    sensitiveFields.forEach((field) => {
       if (sanitized[field]) {
         sanitized[field] = '[REDACTED]';
       }

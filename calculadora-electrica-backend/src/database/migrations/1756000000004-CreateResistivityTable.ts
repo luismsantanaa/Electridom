@@ -90,4 +90,3 @@ export class CreateResistivityTable1756000000004 implements MigrationInterface {
     await queryRunner.dropTable('resistivity');
   }
 }
-

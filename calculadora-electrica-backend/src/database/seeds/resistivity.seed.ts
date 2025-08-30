@@ -106,7 +106,7 @@ export async function seedResistivity(dataSource: DataSource): Promise<void> {
     {
       material: 'Cu',
       seccionMm2: 400,
-      ohmKm: 0.0470,
+      ohmKm: 0.047,
       notes: 'Cable de cobre 400mm² - resistivity estándar',
     },
     {
@@ -131,7 +131,7 @@ export async function seedResistivity(dataSource: DataSource): Promise<void> {
     {
       material: 'Al',
       seccionMm2: 10,
-      ohmKm: 2.90,
+      ohmKm: 2.9,
       notes: 'Cable de aluminio 10mm² - resistivity estándar',
     },
     {
@@ -143,7 +143,7 @@ export async function seedResistivity(dataSource: DataSource): Promise<void> {
     {
       material: 'Al',
       seccionMm2: 25,
-      ohmKm: 1.20,
+      ohmKm: 1.2,
       notes: 'Cable de aluminio 25mm² - resistivity estándar',
     },
     {
@@ -167,7 +167,7 @@ export async function seedResistivity(dataSource: DataSource): Promise<void> {
     {
       material: 'Al',
       seccionMm2: 95,
-      ohmKm: 0.320,
+      ohmKm: 0.32,
       notes: 'Cable de aluminio 95mm² - resistivity estándar',
     },
     {
@@ -197,7 +197,7 @@ export async function seedResistivity(dataSource: DataSource): Promise<void> {
     {
       material: 'Al',
       seccionMm2: 300,
-      ohmKm: 0.100,
+      ohmKm: 0.1,
       notes: 'Cable de aluminio 300mm² - resistivity estándar',
     },
     {
@@ -234,4 +234,3 @@ export async function seedResistivity(dataSource: DataSource): Promise<void> {
   await resistivityRepository.save(entities);
   console.log(`✅ ${entities.length} registros de resistivity insertados`);
 }
-

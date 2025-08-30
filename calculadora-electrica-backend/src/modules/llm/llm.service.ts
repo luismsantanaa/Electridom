@@ -26,7 +26,7 @@ export class LlmService {
     try {
       // Construir el prompt para el cálculo
       const userPrompt = this.buildCalcPrompt(request);
-      
+
       const promptInput: PromptInput = {
         systemPrompt: this.systemPrompt,
         userPrompt,
@@ -36,13 +36,15 @@ export class LlmService {
       };
 
       const response = await this.llmGateway.generate(promptInput);
-      
+
       // Intentar parsear la respuesta como JSON
       let result;
       try {
         result = JSON.parse(response.content);
       } catch (error) {
-        this.logger.warn(`[${correlationId}] Respuesta no es JSON válido, devolviendo texto`);
+        this.logger.warn(
+          `[${correlationId}] Respuesta no es JSON válido, devolviendo texto`,
+        );
         result = {
           summary: response.content,
           error: 'Respuesta no estructurada',
@@ -64,19 +66,21 @@ export class LlmService {
         },
       };
     } catch (error) {
-      this.logger.error(`[${correlationId}] Error en cálculo: ${error.message}`);
+      this.logger.error(
+        `[${correlationId}] Error en cálculo: ${error.message}`,
+      );
       throw error;
     }
   }
 
   async *explain(request: ExplainRequestDto): AsyncGenerator<StreamResponse> {
     const correlationId = this.generateCorrelationId();
-    
+
     this.logger.log(`[${correlationId}] Iniciando explicación técnica`);
 
     try {
       const userPrompt = this.buildExplainPrompt(request);
-      
+
       const promptInput: PromptInput = {
         systemPrompt: this.systemPrompt,
         userPrompt,
@@ -92,7 +96,9 @@ export class LlmService {
         } as StreamResponse & { correlationId: string };
       }
     } catch (error) {
-      this.logger.error(`[${correlationId}] Error en explicación: ${error.message}`);
+      this.logger.error(
+        `[${correlationId}] Error en explicación: ${error.message}`,
+      );
       yield {
         content: `Error: ${error.message}`,
         done: true,
@@ -111,13 +117,16 @@ Sistema eléctrico:
 - Frecuencia: ${request.system.frequency}Hz
 `;
 
-    const environmentsInfo = request.superficies.map(env => 
-      `- ${env.nombre}: ${env.area_m2}m² (${env.tipo})`
-    ).join('\n');
+    const environmentsInfo = request.superficies
+      .map((env) => `- ${env.nombre}: ${env.area_m2}m² (${env.tipo})`)
+      .join('\n');
 
-    const consumptionsInfo = request.consumos.map(cons => 
-      `- ${cons.nombre}: ${cons.potencia_w}W (${cons.tipo}) en ${cons.ambiente}`
-    ).join('\n');
+    const consumptionsInfo = request.consumos
+      .map(
+        (cons) =>
+          `- ${cons.nombre}: ${cons.potencia_w}W (${cons.tipo}) en ${cons.ambiente}`,
+      )
+      .join('\n');
 
     return `
 ${this.calcTemplate}
@@ -138,13 +147,13 @@ Por favor, realiza el análisis completo y responde en formato JSON estricto seg
 
   private buildExplainPrompt(request: ExplainRequestDto): string {
     let prompt = `Pregunta: ${request.question}`;
-    
+
     if (request.context) {
       prompt += `\n\nContexto adicional: ${request.context}`;
     }
-    
+
     prompt += `\n\nPor favor, proporciona una explicación técnica clara y detallada, incluyendo referencias a las normativas RIE-DO, NEC 2023 y REBT cuando sea apropiado.`;
-    
+
     return prompt;
   }
 
@@ -153,7 +162,9 @@ Por favor, realiza el análisis completo y responde en formato JSON estricto seg
       const promptPath = path.join(__dirname, 'prompts', 'system.md');
       return fs.readFileSync(promptPath, 'utf8');
     } catch (error) {
-      this.logger.warn('No se pudo cargar el system prompt, usando prompt por defecto');
+      this.logger.warn(
+        'No se pudo cargar el system prompt, usando prompt por defecto',
+      );
       return 'Eres Electridom, un asistente especializado en cálculos eléctricos para la República Dominicana.';
     }
   }
@@ -163,7 +174,9 @@ Por favor, realiza el análisis completo y responde en formato JSON estricto seg
       const templatePath = path.join(__dirname, 'prompts', 'calc_cargas.md');
       return fs.readFileSync(templatePath, 'utf8');
     } catch (error) {
-      this.logger.warn('No se pudo cargar la plantilla de cálculo, usando template por defecto');
+      this.logger.warn(
+        'No se pudo cargar la plantilla de cálculo, usando template por defecto',
+      );
       return 'Realiza un análisis completo de las cargas eléctricas proporcionadas.';
     }
   }

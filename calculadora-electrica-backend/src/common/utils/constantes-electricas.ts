@@ -240,4 +240,3 @@ export class CalculosElectricos {
     return Math.max(1, Math.ceil(area / 6) * factor);
   }
 }
-

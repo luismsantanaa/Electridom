@@ -11,7 +11,7 @@ describe('Metrics Simple E2E Tests', () => {
     process.env.METRICS_ENABLED = 'true';
     process.env.LOG_LEVEL = 'silent';
     delete process.env.METRICS_TOKEN;
-    
+
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();

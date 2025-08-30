@@ -52,11 +52,11 @@ describe('Calculations E2E Tests', () => {
     // Seed test data
     const ruleSetRepository = dataSource.getRepository(RuleSet);
     const normRuleRepository = dataSource.getRepository(NormRule);
-    
+
     // Limpiar datos existentes
     await normRuleRepository.clear();
     await ruleSetRepository.clear();
-    
+
     // Crear un RuleSet por defecto
     const defaultRuleSet = ruleSetRepository.create({
       name: 'Test Rules',
@@ -81,10 +81,10 @@ describe('Calculations E2E Tests', () => {
       // Limpiar datos de test
       const normRuleRepository = dataSource.getRepository(NormRule);
       const ruleSetRepository = dataSource.getRepository(RuleSet);
-      
+
       await normRuleRepository.clear();
       await ruleSetRepository.clear();
-      
+
       await app.close();
     }
   });
@@ -188,7 +188,9 @@ describe('Calculations E2E Tests', () => {
         .send(payloadWithFactorUso)
         .expect(200)
         .expect((res) => {
-          const sala = res.body.cargasPorAmbiente.find(c => c.environment === 'Sala');
+          const sala = res.body.cargasPorAmbiente.find(
+            (c) => c.environment === 'Sala',
+          );
           expect(sala.tomasVA).toBe(96); // 120 * 0.8
         });
     });
@@ -206,4 +208,3 @@ describe('Calculations E2E Tests', () => {
     });
   });
 });
-

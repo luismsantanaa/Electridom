@@ -78,4 +78,3 @@ export class CalcDemandController {
     return this.demandService.apply(request);
   }
 }
-

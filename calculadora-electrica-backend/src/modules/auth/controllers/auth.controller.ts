@@ -107,13 +107,13 @@ export class AuthController {
       userAgent,
       traceId,
     );
-    
+
     if (!user) {
       throw new UnauthorizedException('Credenciales inválidas');
     }
-    
+
     const result = await this.authService.login(user, ip, userAgent);
-    
+
     // Configurar cookie HttpOnly si está habilitado
     const cookieEnabled = process.env.REFRESH_COOKIE_ENABLED === 'true';
     if (cookieEnabled) {
@@ -124,7 +124,7 @@ export class AuthController {
         maxAge: 30 * 24 * 60 * 60 * 1000, // 30 días
       });
     }
-    
+
     return result;
   }
 
@@ -150,9 +150,13 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const userAgent = req.headers['user-agent'] || 'unknown';
-    
-    const result = await this.authService.refresh(refreshDto.refreshToken, ip, userAgent);
-    
+
+    const result = await this.authService.refresh(
+      refreshDto.refreshToken,
+      ip,
+      userAgent,
+    );
+
     // Configurar cookie HttpOnly si está habilitado
     const cookieEnabled = process.env.REFRESH_COOKIE_ENABLED === 'true';
     if (cookieEnabled) {
@@ -163,7 +167,7 @@ export class AuthController {
         maxAge: 30 * 24 * 60 * 60 * 1000, // 30 días
       });
     }
-    
+
     return result;
   }
 
@@ -181,9 +185,9 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const userAgent = req.headers['user-agent'] || 'unknown';
-    
+
     await this.authService.logout(refreshDto.refreshToken, ip, userAgent);
-    
+
     // Limpiar cookie si está habilitado
     const cookieEnabled = process.env.REFRESH_COOKIE_ENABLED === 'true';
     if (cookieEnabled) {
@@ -247,4 +251,3 @@ export class AuthController {
     return req.user;
   }
 }
-

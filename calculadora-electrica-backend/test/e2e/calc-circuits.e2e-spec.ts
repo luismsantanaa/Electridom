@@ -221,10 +221,7 @@ describe('CalcCircuitsController (e2e)', () => {
             const corrienteCalculada = circuit.corriente_total_a;
             const breakerAmp = circuit.breaker.amp;
             const utilizacionEsperada = (corrienteCalculada / breakerAmp) * 100;
-            expect(circuit.utilizacion_pct).toBeCloseTo(
-              utilizacionEsperada,
-              1,
-            );
+            expect(circuit.utilizacion_pct).toBeCloseTo(utilizacionEsperada, 1);
           });
         });
     });
@@ -407,4 +404,3 @@ describe('CalcCircuitsController (e2e)', () => {
     });
   });
 });
-

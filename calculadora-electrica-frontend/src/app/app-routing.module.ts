@@ -22,6 +22,34 @@ const routes: Routes = [
       {
         path: 'ia',
         loadChildren: () => import('./features/ia/ia-module').then((m) => m.IaModule)
+      },
+      {
+        path: 'proyectos',
+        loadChildren: () => import('./modules/proyectos/proyectos.module').then((m) => m.ProyectosModule)
+      },
+      {
+        path: 'calculos',
+        loadChildren: () => import('./modules/calculos/calculos.module').then((m) => m.CalculosModule)
+      },
+      {
+        path: 'planos',
+        loadChildren: () => import('./modules/planos/planos.module').then((m) => m.PlanosModule)
+      },
+      {
+        path: 'exportar',
+        loadChildren: () => import('./modules/exportar/exportar.module').then((m) => m.ExportarModule)
+      },
+      {
+        path: 'normativas',
+        loadChildren: () => import('./modules/normativas/normativas.module').then((m) => m.NormativasModule)
+      },
+      {
+        path: 'utilidades',
+        loadChildren: () => import('./modules/utilidades/utilidades.module').then((m) => m.UtilidadesModule)
+      },
+      {
+        path: 'ajustes',
+        loadChildren: () => import('./modules/ajustes/ajustes.module').then((m) => m.AjustesModule)
       }
     ]
   },

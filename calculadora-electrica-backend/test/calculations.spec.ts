@@ -25,12 +25,8 @@ describe('Calculations Unit Tests', () => {
 
     it('should validate calculation payload structure', () => {
       const validPayload = {
-        surfaces: [
-          { environment: 'Sala', areaM2: 18.5 },
-        ],
-        consumptions: [
-          { name: 'Televisor', environment: 'Sala', watts: 120 },
-        ],
+        surfaces: [{ environment: 'Sala', areaM2: 18.5 }],
+        consumptions: [{ name: 'Televisor', environment: 'Sala', watts: 120 }],
         opciones: { tensionV: 120, monofasico: true },
       };
 
@@ -77,4 +73,3 @@ describe('Calculations Unit Tests', () => {
     });
   });
 });
-

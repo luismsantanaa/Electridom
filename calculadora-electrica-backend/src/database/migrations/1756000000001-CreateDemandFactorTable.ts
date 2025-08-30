@@ -100,4 +100,3 @@ export class CreateDemandFactorTable1756000000001
     await queryRunner.dropTable('demand_factor');
   }
 }
-

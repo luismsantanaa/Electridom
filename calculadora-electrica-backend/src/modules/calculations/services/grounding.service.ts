@@ -26,7 +26,9 @@ export class GroundingService {
   /**
    * Dimensionar conductors de protección y system de tierra
    */
-  async size(request: CalcGroundingRequestDto): Promise<CalcGroundingResponseDto> {
+  async size(
+    request: CalcGroundingRequestDto,
+  ): Promise<CalcGroundingResponseDto> {
     const startTime = Date.now();
 
     try {
@@ -73,7 +75,9 @@ export class GroundingService {
       const duration = Date.now() - startTime;
       this.recordMetrics(resumen, duration);
 
-      this.logger.log(`Dimensionamiento de puesta a tierra completado en ${duration}ms`);
+      this.logger.log(
+        `Dimensionamiento de puesta a tierra completado en ${duration}ms`,
+      );
 
       return {
         conductor_proteccion: conductorProteccion,
@@ -89,7 +93,10 @@ export class GroundingService {
         },
       };
     } catch (error) {
-      this.logger.error('Error en dimensionamiento de puesta a tierra:', error.message);
+      this.logger.error(
+        'Error en dimensionamiento de puesta a tierra:',
+        error.message,
+      );
       throw error;
     }
   }
@@ -114,7 +121,8 @@ export class GroundingService {
     // Buscar la rule apropiada basada en el amperaje del breaker
     const rule = this.encontrarReglaApropiada(mainBreakerAmp, groundingRules);
 
-    const seccionMm2 = rule?.egcMm2 || this.calcularSeccionMinima(mainBreakerAmp);
+    const seccionMm2 =
+      rule?.egcMm2 || this.calcularSeccionMinima(mainBreakerAmp);
     const calibreAwg = this.convertirMm2ToAwg(seccionMm2);
 
     return {
@@ -140,7 +148,8 @@ export class GroundingService {
     // Buscar la rule apropiada basada en el amperaje del breaker
     const rule = this.encontrarReglaApropiada(mainBreakerAmp, groundingRules);
 
-    const seccionMm2 = rule?.gecMm2 || this.calcularSeccionMinima(mainBreakerAmp);
+    const seccionMm2 =
+      rule?.gecMm2 || this.calcularSeccionMinima(mainBreakerAmp);
     const calibreAwg = this.convertirMm2ToAwg(seccionMm2);
 
     return {
@@ -170,14 +179,18 @@ export class GroundingService {
     const resistenciaMaxima = this.determinarResistenciaMaxima(tipoInstalacion);
 
     // Determinar número de electrodos según type de system
-    const numeroElectrodos = this.determinarNumeroElectrodos(tipoSistema, tipoInstalacion);
+    const numeroElectrodos = this.determinarNumeroElectrodos(
+      tipoSistema,
+      tipoInstalacion,
+    );
 
     // Determinar type de electrodo
     const tipoElectrodo = this.determinarTipoElectrodo(tipoInstalacion);
 
     // Calcular longitudes y separaciones
     const longitudElectrodo = this.calcularLongitudElectrodo(tipoInstalacion);
-    const separacionElectrodos = this.calcularSeparacionElectrodos(numeroElectrodos);
+    const separacionElectrodos =
+      this.calcularSeparacionElectrodos(numeroElectrodos);
 
     return {
       tipo_sistema: tipoSistema,
@@ -202,15 +215,21 @@ export class GroundingService {
     groundingRules: GroundingRules[],
   ): GroundingRules | null {
     // Buscar la rule que coincida exactamente o la más cercana mayor
-    const reglaExacta = groundingRules.find(r => r.mainBreakerAmp === mainBreakerAmp);
+    const reglaExacta = groundingRules.find(
+      (r) => r.mainBreakerAmp === mainBreakerAmp,
+    );
     if (reglaExacta) return reglaExacta;
 
     // Buscar la rule con amperaje mayor más cercano
-    const reglaMayor = groundingRules.find(r => r.mainBreakerAmp > mainBreakerAmp);
+    const reglaMayor = groundingRules.find(
+      (r) => r.mainBreakerAmp > mainBreakerAmp,
+    );
     if (reglaMayor) return reglaMayor;
 
     // Si no hay rule mayor, usar la más grande disponible
-    return groundingRules.length > 0 ? groundingRules[groundingRules.length - 1] : null;
+    return groundingRules.length > 0
+      ? groundingRules[groundingRules.length - 1]
+      : null;
   }
 
   /**
@@ -286,7 +305,10 @@ export class GroundingService {
   /**
    * Determinar número de electrodos según type de system
    */
-  private determinarNumeroElectrodos(tipoSistema: string, tipoInstalacion: string): number {
+  private determinarNumeroElectrodos(
+    tipoSistema: string,
+    tipoInstalacion: string,
+  ): number {
     if (tipoSistema === 'TT' || tipoSistema === 'IT') {
       return tipoInstalacion === 'industrial' ? 3 : 2;
     }
@@ -343,7 +365,9 @@ export class GroundingService {
     sistemaTierra: SistemaTierraDto,
   ): ResumenGroundingDto {
     const estado = this.determinarEstado(sistemaTierra.resistencia_maxima_ohm);
-    const cumplimiento = this.determinarCumplimiento(parameters.tipo_instalacion);
+    const cumplimiento = this.determinarCumplimiento(
+      parameters.tipo_instalacion,
+    );
 
     return {
       main_breaker_amp: parameters.main_breaker_amp,
@@ -431,4 +455,3 @@ export class GroundingService {
     );
   }
 }
-

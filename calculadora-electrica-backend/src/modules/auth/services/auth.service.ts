@@ -164,7 +164,8 @@ export class AuthService {
     userAgent: string,
   ): Promise<RefreshResponseDto> {
     // Validar refresh token
-    const session = await this.sessionService.validateRefreshToken(refreshToken);
+    const session =
+      await this.sessionService.validateRefreshToken(refreshToken);
 
     // Verificar que el user agent coincida (opcional, para mayor seguridad)
     if (session.userAgent !== userAgent) {
@@ -192,22 +193,19 @@ export class AuthService {
 
     if (refreshRotate) {
       // Rotar la sesión (one-time-use)
-      const { refreshToken: rotatedToken } = await this.sessionService.rotateSession(
-        session,
-        user,
-        userAgent,
-        ip,
-        newJti,
-      );
+      const { refreshToken: rotatedToken } =
+        await this.sessionService.rotateSession(
+          session,
+          user,
+          userAgent,
+          ip,
+          newJti,
+        );
       newRefreshToken = rotatedToken;
     } else {
       // Crear nueva sesión sin rotar la anterior
-      const { refreshToken: newToken } = await this.sessionService.createSession(
-        user,
-        userAgent,
-        ip,
-        newJti,
-      );
+      const { refreshToken: newToken } =
+        await this.sessionService.createSession(user, userAgent, ip, newJti);
       newRefreshToken = newToken;
     }
 
@@ -297,4 +295,3 @@ export class AuthService {
     };
   }
 }
-

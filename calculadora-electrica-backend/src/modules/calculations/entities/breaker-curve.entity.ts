@@ -45,4 +45,3 @@ export class BreakerCurve extends BaseAuditEntity {
   })
   notes?: string;
 }
-

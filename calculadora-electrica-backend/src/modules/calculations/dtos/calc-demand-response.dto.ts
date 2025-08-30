@@ -69,4 +69,3 @@ export class CalcDemandResponseDto {
     duracion_calculo_ms: number;
   };
 }
-

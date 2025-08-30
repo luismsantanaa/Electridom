@@ -7,8 +7,8 @@ import * as fs from 'fs';
 jest.mock('xlsx', () => ({
   readFile: jest.fn(),
   utils: {
-    sheet_to_json: jest.fn()
-  }
+    sheet_to_json: jest.fn(),
+  },
 }));
 
 describe('ExcelIngestService', () => {
@@ -45,7 +45,9 @@ describe('ExcelIngestService', () => {
       const result = await service.processExcelFile(mockFilePath);
 
       expect(result.success).toBe(false);
-      expect(result.message).toContain('Error procesando archivo: File not found');
+      expect(result.message).toContain(
+        'Error procesando archivo: File not found',
+      );
     });
 
     it('should clean up temp file on error', async () => {
@@ -54,7 +56,9 @@ describe('ExcelIngestService', () => {
         throw new Error('File not found');
       });
 
-      const unlinkSpy = jest.spyOn(fs, 'unlinkSync').mockImplementation(() => {});
+      const unlinkSpy = jest
+        .spyOn(fs, 'unlinkSync')
+        .mockImplementation(() => {});
       jest.spyOn(fs, 'existsSync').mockReturnValue(true);
 
       await service.processExcelFile(mockFilePath);

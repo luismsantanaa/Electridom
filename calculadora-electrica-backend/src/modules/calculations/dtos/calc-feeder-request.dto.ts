@@ -122,4 +122,3 @@ export class CalcFeederRequestDto {
   @IsOptional()
   observaciones?: string[];
 }
-

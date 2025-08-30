@@ -1,0 +1,39 @@
+<div class="project-list-page">
+  <div class="container-fluid">
+    <!-- Header -->
+    <div class="row mb-4">
+      <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <h1 class="h3 mb-0">Proyectos</h1>
+            <p class="text-muted mb-0">Gestiona tus proyectos eléctricos</p>
+          </div>
+          <button 
+            class="btn btn-primary" 
+            (click)="onNewProject()"
+          >
+            <i class="bi bi-plus-circle me-2"></i>
+            Nuevo Proyecto
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Data Grid -->
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body p-0">
+            <app-data-grid
+              [columns]="columns"
+              [fetch]="fetch.bind(this)"
+              [actions]="actions"
+              [emptyState]="'No hay proyectos disponibles. Crea tu primer proyecto para comenzar.'"
+              (rowClick)="onRowClick($event)"
+            ></app-data-grid>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -100,4 +100,3 @@ export class CreateBreakerCurveTable1756000000003
     await queryRunner.dropTable('breaker_curve');
   }
 }
-

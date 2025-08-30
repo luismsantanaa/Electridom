@@ -2,7 +2,11 @@ import { Entity, Column, OneToMany } from 'typeorm';
 import { BaseAuditEntity } from '../../../common/entities/base-audit.entity';
 import { ProjectVersion } from './project-version.entity';
 
-export type ProjectStatus = 'ACTIVE' | 'ARCHIVED';
+export enum ProjectStatus {
+  ACTIVE = 'ACTIVE',
+  ARCHIVED = 'ARCHIVED',
+  DRAFT = 'DRAFT',
+}
 
 @Entity({ name: 'projects' })
 export class Project extends BaseAuditEntity {
@@ -17,6 +21,9 @@ export class Project extends BaseAuditEntity {
   @Column({ type: 'varchar', length: 16, default: 'ACTIVE' })
   status: ProjectStatus;
 
+  @Column({ type: 'json', nullable: true })
+  metadata?: Record<string, any>;
+
   @OneToMany(() => ProjectVersion, (version) => version.project)
   versions: ProjectVersion[];
 
@@ -26,4 +33,9 @@ export class Project extends BaseAuditEntity {
   // - updateDate
   // - usrCreate
   // - usrUpdate
+
+  // Alias para compatibilidad
+  get lastModifiedDate() {
+    return this.updateDate;
+  }
 }

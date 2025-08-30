@@ -17,11 +17,11 @@ export class RulesService {
       .where('rule.code = :code', { code })
       .andWhere('rule.ruleSetId IS NULL')
       .getOne();
-    
+
     if (legacyRule) {
       return legacyRule;
     }
-    
+
     // Si no hay rule legacy, buscar en RuleSets activos
     const activeRule = await this.normRuleRepository
       .createQueryBuilder('rule')
@@ -30,7 +30,7 @@ export class RulesService {
       .andWhere('ruleSet.status = :status', { status: 'ACTIVE' })
       .orderBy('ruleSet.effectiveFrom', 'DESC')
       .getOne();
-    
+
     return activeRule;
   }
 
@@ -56,4 +56,3 @@ export class RulesService {
     return this.normRuleRepository.count();
   }
 }
-

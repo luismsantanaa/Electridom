@@ -23,14 +23,14 @@ import {
 } from '@nestjs/swagger';
 import { RulesAdminService } from '../services/rules-admin.service';
 import { ApiKeyGuard } from '../../../common/guards/api-key.guard';
-import { 
-  CreateRuleSetDto, 
-  BulkUpsertRulesDto, 
-  RuleSetResponseDto, 
+import {
+  CreateRuleSetDto,
+  BulkUpsertRulesDto,
+  RuleSetResponseDto,
   RuleSetDetailResponseDto,
   RuleSetDiffResponseDto,
   RuleSetExportDto,
-  ImportRuleSetDto
+  ImportRuleSetDto,
 } from '../dtos/rule-set.dto';
 
 @ApiTags('Administración de rules Normativas')
@@ -75,7 +75,9 @@ export class RulesAdminController {
     status: 401,
     description: 'API Key inválida o faltante',
   })
-  async createRuleSet(@Body() request: CreateRuleSetDto): Promise<RuleSetResponseDto> {
+  async createRuleSet(
+    @Body() request: CreateRuleSetDto,
+  ): Promise<RuleSetResponseDto> {
     return this.rulesAdminService.createRuleSet(request);
   }
 
@@ -179,7 +181,9 @@ export class RulesAdminController {
     status: 401,
     description: 'API Key inválida o faltante',
   })
-  async publishRuleSet(@Param('ruleSetId') ruleSetId: string): Promise<RuleSetResponseDto> {
+  async publishRuleSet(
+    @Param('ruleSetId') ruleSetId: string,
+  ): Promise<RuleSetResponseDto> {
     return this.rulesAdminService.publishRuleSet(ruleSetId);
   }
 
@@ -213,7 +217,9 @@ export class RulesAdminController {
     status: 401,
     description: 'API Key inválida o faltante',
   })
-  async retireRuleSet(@Param('ruleSetId') ruleSetId: string): Promise<RuleSetResponseDto> {
+  async retireRuleSet(
+    @Param('ruleSetId') ruleSetId: string,
+  ): Promise<RuleSetResponseDto> {
     return this.rulesAdminService.retireRuleSet(ruleSetId);
   }
 
@@ -293,7 +299,9 @@ export class RulesAdminController {
     status: 404,
     description: 'RuleSet no encontrado',
   })
-  async getRuleSetDetail(@Param('ruleSetId') ruleSetId: string): Promise<RuleSetDetailResponseDto> {
+  async getRuleSetDetail(
+    @Param('ruleSetId') ruleSetId: string,
+  ): Promise<RuleSetDetailResponseDto> {
     return this.rulesAdminService.getRuleSetDetail(ruleSetId);
   }
 
@@ -347,7 +355,9 @@ export class RulesAdminController {
     status: 404,
     description: 'RuleSet no encontrado',
   })
-  async exportRuleSet(@Param('ruleSetId') ruleSetId: string): Promise<RuleSetExportDto> {
+  async exportRuleSet(
+    @Param('ruleSetId') ruleSetId: string,
+  ): Promise<RuleSetExportDto> {
     return this.rulesAdminService.exportRuleSet(ruleSetId);
   }
 
@@ -396,7 +406,9 @@ export class RulesAdminController {
     status: 401,
     description: 'API Key inválida o faltante',
   })
-  async importRuleSet(@Body() request: ImportRuleSetDto): Promise<RuleSetResponseDto> {
+  async importRuleSet(
+    @Body() request: ImportRuleSetDto,
+  ): Promise<RuleSetResponseDto> {
     return this.rulesAdminService.importRuleSet(request);
   }
 }
@@ -473,4 +485,3 @@ export class RulesResolverController {
     return this.rulesAdminService.getRuleSetById(ruleSetId);
   }
 }
-

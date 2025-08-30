@@ -1,131 +1,62 @@
-import { Injectable, Logger, HttpException, HttpStatus, Inject } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { OpenAIClient } from './openai.client';
-import { AnalyzeRequestDto } from './dto/analyze-request.dto';
-import { AnalyzeResponseDto, RecommendationDto } from './dto/analyze-response.dto';
-import { PromptBuilderHelper } from './helpers/prompt-builder.helper';
+import { Injectable } from '@nestjs/common';
+import { AiProvider } from './interfaces/ai-provider.interface';
+import { MockAiProvider } from './providers/mock-ai.provider';
+import { AiEvaluationDto } from './dto/ai-evaluation.dto';
+import { AiSuggestionDto } from './dto/ai-suggestion.dto';
 
 @Injectable()
 export class AiService {
-  private readonly logger = new Logger(AiService.name);
+  private provider: AiProvider;
 
-  constructor(
-    private configService: ConfigService,
-    @Inject('OpenAIClient') private openaiClient: OpenAIClient | null,
-    private promptBuilder: PromptBuilderHelper,
-  ) {}
+  constructor() {
+    // Por ahora usar el proveedor mock
+    this.provider = new MockAiProvider();
+  }
 
-
-
-  async analyze(payload: AnalyzeRequestDto): Promise<AnalyzeResponseDto> {
-    const startTime = Date.now();
-    
+  async evaluateProject(projectId: string): Promise<AiEvaluationDto> {
     try {
-      this.logger.log('Iniciando análisis con IA');
-      
-      // Verificar si OpenAI está disponible
-      if (!this.openaiClient) {
-        this.logger.warn('OpenAI no está configurado, devolviendo respuesta simulada');
-        return {
-          summary: 'Análisis simulado - OpenAI no configurado',
-          recommendations: [
-            {
-              title: 'Configuración requerida',
-              description: 'Para usar análisis de IA, configure OPENAI_API_KEY en las variables de entorno',
-              priority: 'medium',
-              category: 'configuration'
-            }
-          ],
-          tokensUsed: 0,
-          responseTime: Date.now() - startTime,
-        };
-      }
-      
-      // Validar prompts
-      if (!this.promptBuilder.validatePrompts()) {
-        throw new HttpException(
-          'Configuración de prompts incompleta',
-          HttpStatus.INTERNAL_SERVER_ERROR
-        );
-      }
-      
-      // Construir el mensaje para OpenAI usando el helper
-      const messages = this.buildMessages(payload);
-      
-      // Llamar a OpenAI
-      const response = await this.openaiClient.getClient().chat.completions.create({
-        model: this.openaiClient.getModel(),
-        messages,
-        temperature: 0.7,
-        max_tokens: 1000,
-      });
-
-      const responseTime = Date.now() - startTime;
-      const tokensUsed = response.usage?.total_tokens || 0;
-
-      // Parsear la respuesta
-      const content = response.choices[0]?.message?.content || '';
-      const parsedResponse = this.parseAIResponse(content);
-
-      this.logger.log(`Análisis completado en ${responseTime}ms, tokens: ${tokensUsed}, prompt hash: ${this.promptBuilder.getPromptHash()}`);
-
-      return {
-        summary: parsedResponse.summary,
-        recommendations: parsedResponse.recommendations,
-        tokensUsed,
-        responseTime,
-      };
-
+      return await this.provider.evaluateProject(projectId);
     } catch (error) {
-      this.logger.error(`Error en análisis de IA: ${error.message}`);
-      throw new HttpException(
-        'Error al procesar la solicitud de IA',
-        HttpStatus.INTERNAL_SERVER_ERROR
-      );
+      // En caso de error, devolver evaluación por defecto
+      console.error('Error evaluating project with AI:', error);
+      return {
+        score: 50,
+        alerts: [
+          {
+            code: 'AI_ERROR',
+            severity: 'warn',
+            message:
+              'No se pudo evaluar el proyecto con IA. Usando evaluación por defecto.',
+          },
+        ],
+        hints: ['Revisar la configuración del proyecto manualmente'],
+      };
     }
   }
 
-  private buildMessages(payload: AnalyzeRequestDto): any[] {
-    // Construir mensajes del sistema
-    const messages = this.promptBuilder.buildSystemMessages();
-    
-    // Construir contexto de análisis
-    const context = this.promptBuilder.buildAnalysisContext(
-      payload.input,
-      payload.output,
-      payload.question
-    );
-    
-    // Construir mensaje del usuario
-    const userMessage = this.promptBuilder.buildUserMessage(context);
-    messages.push(userMessage);
-    
-    return messages;
+  async getSuggestions(projectId: string): Promise<AiSuggestionDto[]> {
+    try {
+      return await this.provider.getSuggestions(projectId);
+    } catch (error) {
+      console.error('Error getting AI suggestions:', error);
+      return [];
+    }
   }
 
-  private parseAIResponse(content: string): { summary: string; recommendations: RecommendationDto[] } {
+  async isHealthy(): Promise<boolean> {
     try {
-      // Intentar extraer JSON de la respuesta
-      const jsonMatch = content.match(/\{[\s\S]*\}/);
-      if (jsonMatch) {
-        const parsed = JSON.parse(jsonMatch[0]);
-        return {
-          summary: parsed.summary || 'Análisis completado',
-          recommendations: parsed.recommendations || []
-        };
-      }
-
-      // Fallback: parsear manualmente
-      return {
-        summary: content.substring(0, 200) + '...',
-        recommendations: []
-      };
+      return await this.provider.isHealthy();
     } catch (error) {
-      this.logger.warn(`Error parseando respuesta de IA: ${error.message}`);
-      return {
-        summary: content,
-        recommendations: []
-      };
+      console.error('Error checking AI health:', error);
+      return false;
     }
+  }
+
+  getProviderInfo(): { provider: string; model?: string } {
+    const info = this.provider.getProviderInfo();
+    return {
+      provider: info.name,
+      model: info.model,
+    };
   }
 }

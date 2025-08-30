@@ -32,6 +32,8 @@ import { JwksModule } from './modules/jwks/jwks.module';
 import { AiModule } from './modules/ai/ai.module';
 import { LlmModule } from './modules/llm/llm.module';
 import { CommonModule } from './common/common.module';
+import { NormativesModule } from './modules/normatives/normatives.module';
+import { ExportsModule } from './modules/exports/exports.module';
 import { APP_INTERCEPTOR, APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { TransformInterceptor } from './common/interceptors/transform.interceptor';
 import { ErrorInterceptor } from './common/interceptors/error.interceptor';
@@ -42,6 +44,7 @@ import { MetricsModule } from './modules/metrics/metrics.module';
 import { MetricsInterceptor } from './common/interceptors/metrics.interceptor';
 import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 import { RequestIdMiddleware } from './common/middleware/request-id.middleware';
+import { JwtAuthMiddleware } from './common/middleware/jwt-auth.middleware';
 import { LoggerModule } from 'nestjs-pino';
 
 @Module({
@@ -104,6 +107,8 @@ import { LoggerModule } from 'nestjs-pino';
     AiModule,
     LlmModule,
     CommonModule,
+    NormativesModule,
+    ExportsModule,
     MetricsModule,
     LoggerModule.forRoot({
       pinoHttp: {
@@ -143,6 +148,7 @@ import { LoggerModule } from 'nestjs-pino';
       useClass: ThrottlerGuard,
     },
     RequestIdMiddleware,
+    JwtAuthMiddleware,
   ],
 })
 export class AppModule {}

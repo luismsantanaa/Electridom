@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthController } from '../auth.controller';
 import { AuthService } from '../../services/auth.service';
@@ -84,7 +83,11 @@ describe('AuthController', () => {
         'test-agent',
         'test-trace-id',
       );
-      expect(mockAuthService.login).toHaveBeenCalledWith(mockUser, '127.0.0.1', 'test-agent');
+      expect(mockAuthService.login).toHaveBeenCalledWith(
+        mockUser,
+        '127.0.0.1',
+        'test-agent',
+      );
     });
 
     it('should throw UnauthorizedException on invalid credentials', async () => {
@@ -108,7 +111,12 @@ describe('AuthController', () => {
       };
 
       await expect(
-        controller.login(loginDto, '127.0.0.1', mockRequest as any, mockResponse as any),
+        controller.login(
+          loginDto,
+          '127.0.0.1',
+          mockRequest as any,
+          mockResponse as any,
+        ),
       ).rejects.toThrow();
       expect(mockAuthService.validateUser).toHaveBeenCalledWith(
         loginDto.email,

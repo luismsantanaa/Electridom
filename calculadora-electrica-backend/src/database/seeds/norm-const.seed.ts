@@ -16,13 +16,15 @@ export const normConstSeed = async (dataSource: DataSource): Promise<void> => {
       key: 'lighting_va_per_m2',
       value: '32.3',
       unit: 'VA/m2',
-      notes: 'RIE RD Art. 220.12: Valor base para iluminación - 32.3 VA/m² (equivalente a NEC 3VA/ft²)',
+      notes:
+        'RIE RD Art. 220.12: Valor base para iluminación - 32.3 VA/m² (equivalente a NEC 3VA/ft²)',
     },
     {
       key: 'socket_max_va_per_circuit',
       value: '1800',
       unit: 'VA',
-      notes: 'RIE RD Art. 210.23: Máximo 1800 VA por circuito de tomacorrientes',
+      notes:
+        'RIE RD Art. 210.23: Máximo 1800 VA por circuito de tomacorrientes',
     },
     {
       key: 'circuit_max_utilization',
@@ -56,6 +58,7 @@ export const normConstSeed = async (dataSource: DataSource): Promise<void> => {
     await normConstRepository.save(normConst);
   }
 
-  console.log(`✅ Parámetros normativos cargados: ${normParams.length} registros`);
+  console.log(
+    `✅ Parámetros normativos cargados: ${normParams.length} registros`,
+  );
 };
-

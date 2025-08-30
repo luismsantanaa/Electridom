@@ -10,6 +10,9 @@
   HttpStatus,
   ValidationPipe,
   UsePipes,
+  Put,
+  Delete,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -18,14 +21,29 @@ import {
   ApiBody,
   ApiParam,
   ApiQuery,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 import { ProjectsAppService } from '../services/projects-app.service';
-import { CreateProjectRequestDto, CreateVersionRequestDto, UpdateProjectStatusDto } from '../dtos/create-project.dto';
-import { ProjectSummaryDto, ProjectVersionDetailDto, ProjectListResponseDto, ProjectExportDto } from '../dtos/project-response.dto';
+import {
+  CreateProjectRequestDto,
+  CreateVersionRequestDto,
+  UpdateProjectStatusDto,
+} from '../dtos/create-project.dto';
+import {
+  ProjectSummaryDto,
+  ProjectVersionDetailDto,
+  ProjectListResponseDto,
+  ProjectExportDto,
+} from '../dtos/project-response.dto';
+import { ProjectInputDto, ProjectResponseDto } from '../dtos/project-crud.dto';
+import { Roles, UserRole } from '../../../common/decorators/roles.decorator';
+import { RolesGuard } from '../../../common/guards/roles.guard';
 
 @ApiTags('projects Eléctricos')
 @Controller('v1/projects')
 @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
+@UseGuards(RolesGuard)
+@ApiBearerAuth()
 export class ProjectsController {
   constructor(private readonly projectsAppService: ProjectsAppService) {}
 
@@ -33,7 +51,8 @@ export class ProjectsController {
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({
     summary: 'Crear un nuevo project eléctrico',
-    description: 'Crea un nuevo project y opcionalmente ejecuta el cálculo inicial para generar la primera versión',
+    description:
+      'Crea un nuevo project y opcionalmente ejecuta el cálculo inicial para generar la primera versión',
   })
   @ApiBody({
     type: CreateProjectRequestDto,
@@ -83,7 +102,9 @@ export class ProjectsController {
     status: 409,
     description: 'Ya existe un project con ese name',
   })
-  async createProject(@Body() request: CreateProjectRequestDto): Promise<ProjectSummaryDto> {
+  async createProject(
+    @Body() request: CreateProjectRequestDto,
+  ): Promise<ProjectSummaryDto> {
     return this.projectsAppService.createProject(request);
   }
 
@@ -91,7 +112,8 @@ export class ProjectsController {
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({
     summary: 'Crear nueva versión de un project',
-    description: 'Crea una nueva versión de un project existente ejecutando el cálculo con los datos proporcionados',
+    description:
+      'Crea una nueva versión de un project existente ejecutando el cálculo con los datos proporcionados',
   })
   @ApiParam({
     name: 'projectId',
@@ -147,7 +169,8 @@ export class ProjectsController {
   @Get(':projectId')
   @ApiOperation({
     summary: 'Obtener project con resumen',
-    description: 'Obtiene los metadatos del project y información de la última versión',
+    description:
+      'Obtiene los metadatos del project y información de la última versión',
   })
   @ApiParam({
     name: 'projectId',
@@ -179,7 +202,8 @@ export class ProjectsController {
   @Get(':projectId/versions/:versionId')
   @ApiOperation({
     summary: 'Obtener versión específica',
-    description: 'Obtiene el detalle completo de una versión específica del project',
+    description:
+      'Obtiene el detalle completo de una versión específica del project',
   })
   @ApiParam({
     name: 'projectId',
@@ -227,7 +251,20 @@ export class ProjectsController {
     example: 20,
   })
   @ApiQuery({
-    name: 'query',
+    name: 'sort',
+    description: 'Campo para ordenar',
+    required: false,
+    type: String,
+  })
+  @ApiQuery({
+    name: 'order',
+    description: 'Orden ascendente o descendente',
+    required: false,
+    enum: ['asc', 'desc'],
+    example: 'asc',
+  })
+  @ApiQuery({
+    name: 'q',
     description: 'Término de búsqueda en name o descripción',
     required: false,
     type: String,
@@ -246,10 +283,19 @@ export class ProjectsController {
   async listProjects(
     @Query('page') page = 1,
     @Query('pageSize') pageSize = 20,
-    @Query('query') query?: string,
+    @Query('sort') sort?: string,
+    @Query('order') order: 'asc' | 'desc' = 'asc',
+    @Query('q') q?: string,
     @Query('includeArchived') includeArchived = false,
   ): Promise<ProjectListResponseDto> {
-    return this.projectsAppService.listProjects(page, pageSize, query, includeArchived);
+    return this.projectsAppService.listProjects(
+      page,
+      pageSize,
+      q,
+      includeArchived,
+      sort,
+      order,
+    );
   }
 
   @Patch(':projectId')
@@ -311,8 +357,100 @@ export class ProjectsController {
     status: 404,
     description: 'project no encontrado',
   })
-  async exportProject(@Param('projectId') projectId: string): Promise<ProjectExportDto> {
+  async exportProject(
+    @Param('projectId') projectId: string,
+  ): Promise<ProjectExportDto> {
     return this.projectsAppService.exportProject(projectId);
   }
-}
 
+  // ===== SPRINT 9: CRUD COMPLETO =====
+
+  @Post('simple')
+  @HttpCode(HttpStatus.CREATED)
+  @Roles(UserRole.ADMIN, UserRole.EDITOR)
+  @ApiOperation({
+    summary: 'Crear proyecto simple',
+    description: 'Crea un nuevo proyecto con datos básicos (Sprint 9)',
+  })
+  @ApiBody({
+    type: ProjectInputDto,
+    description: 'Datos del proyecto',
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'Proyecto creado exitosamente',
+    type: ProjectResponseDto,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Datos de entrada inválidos',
+  })
+  @ApiResponse({
+    status: 409,
+    description: 'Ya existe un proyecto con ese nombre',
+  })
+  async createSimpleProject(
+    @Body() request: ProjectInputDto,
+  ): Promise<ProjectResponseDto> {
+    return this.projectsAppService.createSimpleProject(request);
+  }
+
+  @Put(':id')
+  @Roles(UserRole.ADMIN, UserRole.EDITOR)
+  @ApiOperation({
+    summary: 'Editar proyecto',
+    description: 'Actualiza un proyecto existente (Sprint 9)',
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'ID del proyecto',
+    example: 'uuid',
+  })
+  @ApiBody({
+    type: ProjectInputDto,
+    description: 'Datos actualizados del proyecto',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Proyecto actualizado exitosamente',
+    type: ProjectResponseDto,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Proyecto no encontrado',
+  })
+  async updateProject(
+    @Param('id') id: string,
+    @Body() request: ProjectInputDto,
+  ): Promise<ProjectResponseDto> {
+    return this.projectsAppService.updateProject(id, request);
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @Roles(UserRole.ADMIN)
+  @ApiOperation({
+    summary: 'Eliminar proyecto',
+    description: 'Elimina un proyecto (solo admin, Sprint 9)',
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'ID del proyecto',
+    example: 'uuid',
+  })
+  @ApiResponse({
+    status: 204,
+    description: 'Proyecto eliminado exitosamente',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Proyecto no encontrado',
+  })
+  @ApiResponse({
+    status: 409,
+    description: 'No se puede eliminar proyecto con exportaciones activas',
+  })
+  async deleteProject(@Param('id') id: string): Promise<void> {
+    return this.projectsAppService.deleteProject(id);
+  }
+}

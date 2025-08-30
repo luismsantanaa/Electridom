@@ -323,7 +323,9 @@ describe('CalcEngineService', () => {
 
       const result = await service.calcByRoom(request);
 
-      expect(result.environments[0].observaciones).toContain('Iluminación base:');
+      expect(result.environments[0].observaciones).toContain(
+        'Iluminación base:',
+      );
       expect(result.environments[0].observaciones).toContain(
         'consumptions definidos:',
       );
@@ -372,4 +374,3 @@ describe('CalcEngineService', () => {
     });
   });
 });
-

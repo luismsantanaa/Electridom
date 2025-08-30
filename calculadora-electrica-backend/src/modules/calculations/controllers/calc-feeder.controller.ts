@@ -50,7 +50,8 @@ export class CalcFeederController {
     examples: {
       ejemplo1: {
         summary: 'Ejemplo con circuits residenciales',
-        description: 'Análisis de caída de tensión para instalación residencial',
+        description:
+          'Análisis de caída de tensión para instalación residencial',
         value: {
           circuitos_ramales: [
             {
@@ -244,4 +245,3 @@ export class CalcFeederController {
     return this.voltageDropService.selectFeeder(request);
   }
 }
-

@@ -67,7 +67,7 @@ describe('ArtifactTypesController', () => {
       const result = await controller.create(createDto, mockRequest);
 
       expect(result).toEqual(expectedTipoArtefacto);
-      // eslint-disable-next-line @typescript-eslint/unbound-method
+
       expect(service.create).toHaveBeenCalledWith(createDto, user.id);
     });
   });
@@ -109,7 +109,7 @@ describe('ArtifactTypesController', () => {
       const result = await controller.findAll(query);
 
       expect(result).toEqual(mockPaginateResult);
-      // eslint-disable-next-line @typescript-eslint/unbound-method
+
       expect(service.findAll).toHaveBeenCalledWith(query);
     });
   });
@@ -130,7 +130,7 @@ describe('ArtifactTypesController', () => {
       const result = await controller.findOne(id);
 
       expect(result).toEqual(expectedTipoArtefacto);
-      // eslint-disable-next-line @typescript-eslint/unbound-method
+
       expect(service.findOne).toHaveBeenCalledWith(id);
     });
   });
@@ -165,7 +165,7 @@ describe('ArtifactTypesController', () => {
       const result = await controller.update(id, updateDto, mockRequest);
 
       expect(result).toEqual(updatedTipoArtefacto);
-      // eslint-disable-next-line @typescript-eslint/unbound-method
+
       expect(service.update).toHaveBeenCalledWith(id, updateDto, user.id);
     });
   });
@@ -186,7 +186,6 @@ describe('ArtifactTypesController', () => {
       const mockRequest = { user: { id: user.id } };
       await controller.remove(id, mockRequest);
 
-      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(service.remove).toHaveBeenCalledWith(id, user.id);
     });
   });

@@ -1,8 +1,4 @@
-﻿import {
-  IsOptional,
-  IsString,
-  ValidateNested,
-} from 'class-validator';
+﻿import { IsOptional, IsString, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { CalcRoomsRequestDto } from './calc-rooms-request.dto';
@@ -82,4 +78,3 @@ export class CalcReportRequestDto {
   @IsString()
   electricalSystem?: string;
 }
-

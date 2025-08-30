@@ -19,4 +19,3 @@ export class OrdinarNumberPipe implements PipeTransform {
     return `${number}º`;
   }
 }
-

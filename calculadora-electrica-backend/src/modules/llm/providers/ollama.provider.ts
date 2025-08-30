@@ -1,6 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { ProviderStrategy, PromptInput, PromptResponse, StreamResponse } from '../interfaces/provider.interface';
+import {
+  ProviderStrategy,
+  PromptInput,
+  PromptResponse,
+  StreamResponse,
+} from '../interfaces/provider.interface';
 
 @Injectable()
 export class OllamaProvider implements ProviderStrategy {
@@ -9,13 +14,19 @@ export class OllamaProvider implements ProviderStrategy {
   private readonly defaultModel: string;
 
   constructor(private configService: ConfigService) {
-    this.baseUrl = this.configService.get<string>('OLLAMA_URL', 'http://localhost:11434');
-    this.defaultModel = this.configService.get<string>('OLLAMA_DEFAULT_MODEL', 'llama3.1:8b-instruct-q4_K_M');
+    this.baseUrl = this.configService.get<string>(
+      'OLLAMA_URL',
+      'http://localhost:11434',
+    );
+    this.defaultModel = this.configService.get<string>(
+      'OLLAMA_DEFAULT_MODEL',
+      'llama3.1:8b-instruct-q4_K_M',
+    );
   }
 
   async generate(prompt: PromptInput): Promise<PromptResponse> {
     const model = prompt.model || this.defaultModel;
-    
+
     try {
       const response = await fetch(`${this.baseUrl}/api/generate`, {
         method: 'POST',
@@ -34,11 +45,13 @@ export class OllamaProvider implements ProviderStrategy {
       });
 
       if (!response.ok) {
-        throw new Error(`Ollama API error: ${response.status} ${response.statusText}`);
+        throw new Error(
+          `Ollama API error: ${response.status} ${response.statusText}`,
+        );
       }
 
       const data = await response.json();
-      
+
       return {
         content: data.response,
         usage: {
@@ -57,7 +70,7 @@ export class OllamaProvider implements ProviderStrategy {
 
   async *generateStream(prompt: PromptInput): AsyncGenerator<StreamResponse> {
     const model = prompt.model || this.defaultModel;
-    
+
     try {
       const response = await fetch(`${this.baseUrl}/api/generate`, {
         method: 'POST',
@@ -76,7 +89,9 @@ export class OllamaProvider implements ProviderStrategy {
       });
 
       if (!response.ok) {
-        throw new Error(`Ollama API error: ${response.status} ${response.statusText}`);
+        throw new Error(
+          `Ollama API error: ${response.status} ${response.statusText}`,
+        );
       }
 
       const reader = response.body?.getReader();
@@ -89,9 +104,9 @@ export class OllamaProvider implements ProviderStrategy {
 
       while (true) {
         const { done, value } = await reader.read();
-        
+
         if (done) break;
-        
+
         buffer += decoder.decode(value, { stream: true });
         const lines = buffer.split('\n');
         buffer = lines.pop() || '';
@@ -100,7 +115,7 @@ export class OllamaProvider implements ProviderStrategy {
           if (line.trim()) {
             try {
               const data = JSON.parse(line);
-              
+
               yield {
                 content: data.response || '',
                 done: data.done || false,
@@ -129,7 +144,7 @@ export class OllamaProvider implements ProviderStrategy {
           'Content-Type': 'application/json',
         },
       });
-      
+
       return response.ok;
     } catch (error) {
       this.logger.warn(`Ollama not available: ${error.message}`);

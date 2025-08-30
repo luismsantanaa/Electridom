@@ -86,7 +86,9 @@ export class CalculationDomainService {
       const nombreNormalizado = surface.environment.trim().toLowerCase();
 
       if (environments.has(nombreNormalizado)) {
-        throw new Error(`El environment '${surface.environment}' está duplicado`);
+        throw new Error(
+          `El environment '${surface.environment}' está duplicado`,
+        );
       }
 
       environments.set(nombreNormalizado, surface.areaM2);
@@ -117,7 +119,8 @@ export class CalculationDomainService {
 
     for (const [nombreAmbiente, area] of environments) {
       const consumosDelAmbiente = consumptions.filter(
-        (consumption) => consumption.environment.trim().toLowerCase() === nombreAmbiente,
+        (consumption) =>
+          consumption.environment.trim().toLowerCase() === nombreAmbiente,
       );
 
       datosPorAmbiente.push({
@@ -180,7 +183,10 @@ export class CalculationDomainService {
   }
 
   private calcularTomas(consumptions: Array<{ watts: number }>): number {
-    return consumptions.reduce((total, consumption) => total + consumption.watts, 0);
+    return consumptions.reduce(
+      (total, consumption) => total + consumption.watts,
+      0,
+    );
   }
 
   // Métodos de cálculo de totales
@@ -285,4 +291,3 @@ export class CalculationDomainService {
     return circuits;
   }
 }
-

@@ -1,10 +1,4 @@
-﻿import {
-  Entity,
-  Column,
-  ManyToOne,
-  OneToMany,
-  JoinColumn,
-} from 'typeorm';
+﻿import { Entity, Column, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
 import { BaseAuditEntity } from '../../../common/entities/base-audit.entity';
 import { InstallationType } from '../../installation-types/entities/installation-type.entity';
 import { ArtifactType } from '../../artifact-types/entities/artifact-type.entity';
@@ -20,7 +14,10 @@ export class EnvironmentType extends BaseAuditEntity {
   description: string;
 
   // Relación con InstallationType
-  @ManyToOne(() => InstallationType, installationType => installationType.environmentTypes)
+  @ManyToOne(
+    () => InstallationType,
+    (installationType) => installationType.environmentTypes,
+  )
   @JoinColumn({ name: 'installation_type_id' })
   installationType: InstallationType;
 
@@ -28,7 +25,7 @@ export class EnvironmentType extends BaseAuditEntity {
   installationTypeId: string;
 
   // Relación con ArtifactType
-  @OneToMany(() => ArtifactType, artifactType => artifactType.environmentType)
+  @OneToMany(() => ArtifactType, (artifactType) => artifactType.environmentType)
   artifactTypes: ArtifactType[];
 
   // Los campos de auditoría ya vienen de BaseAuditEntity:
@@ -38,4 +35,3 @@ export class EnvironmentType extends BaseAuditEntity {
   // - usrCreate
   // - usrUpdate
 }
-

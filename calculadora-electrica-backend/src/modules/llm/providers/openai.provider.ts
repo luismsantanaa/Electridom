@@ -1,6 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { ProviderStrategy, PromptInput, PromptResponse, StreamResponse } from '../interfaces/provider.interface';
+import {
+  ProviderStrategy,
+  PromptInput,
+  PromptResponse,
+  StreamResponse,
+} from '../interfaces/provider.interface';
 
 @Injectable()
 export class OpenAiProvider implements ProviderStrategy {
@@ -11,8 +16,14 @@ export class OpenAiProvider implements ProviderStrategy {
 
   constructor(private configService: ConfigService) {
     this.apiKey = this.configService.get<string>('OPENAI_API_KEY', '');
-    this.baseUrl = this.configService.get<string>('OPENAI_BASE_URL', 'https://api.openai.com/v1');
-    this.defaultModel = this.configService.get<string>('OPENAI_MODEL', 'gpt-4o-mini');
+    this.baseUrl = this.configService.get<string>(
+      'OPENAI_BASE_URL',
+      'https://api.openai.com/v1',
+    );
+    this.defaultModel = this.configService.get<string>(
+      'OPENAI_MODEL',
+      'gpt-4o-mini',
+    );
   }
 
   async generate(prompt: PromptInput): Promise<PromptResponse> {
@@ -21,13 +32,13 @@ export class OpenAiProvider implements ProviderStrategy {
     }
 
     const model = prompt.model || this.defaultModel;
-    
+
     try {
       const response = await fetch(`${this.baseUrl}/chat/completions`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${this.apiKey}`,
+          Authorization: `Bearer ${this.apiKey}`,
         },
         body: JSON.stringify({
           model,
@@ -41,11 +52,13 @@ export class OpenAiProvider implements ProviderStrategy {
       });
 
       if (!response.ok) {
-        throw new Error(`OpenAI API error: ${response.status} ${response.statusText}`);
+        throw new Error(
+          `OpenAI API error: ${response.status} ${response.statusText}`,
+        );
       }
 
       const data = await response.json();
-      
+
       return {
         content: data.choices[0]?.message?.content || '',
         usage: {
@@ -68,13 +81,13 @@ export class OpenAiProvider implements ProviderStrategy {
     }
 
     const model = prompt.model || this.defaultModel;
-    
+
     try {
       const response = await fetch(`${this.baseUrl}/chat/completions`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${this.apiKey}`,
+          Authorization: `Bearer ${this.apiKey}`,
         },
         body: JSON.stringify({
           model,
@@ -89,7 +102,9 @@ export class OpenAiProvider implements ProviderStrategy {
       });
 
       if (!response.ok) {
-        throw new Error(`OpenAI API error: ${response.status} ${response.statusText}`);
+        throw new Error(
+          `OpenAI API error: ${response.status} ${response.statusText}`,
+        );
       }
 
       const reader = response.body?.getReader();
@@ -102,9 +117,9 @@ export class OpenAiProvider implements ProviderStrategy {
 
       while (true) {
         const { done, value } = await reader.read();
-        
+
         if (done) break;
-        
+
         buffer += decoder.decode(value, { stream: true });
         const lines = buffer.split('\n');
         buffer = lines.pop() || '';
@@ -112,7 +127,7 @@ export class OpenAiProvider implements ProviderStrategy {
         for (const line of lines) {
           if (line.startsWith('data: ')) {
             const data = line.slice(6);
-            
+
             if (data === '[DONE]') {
               yield {
                 content: '',
@@ -126,7 +141,7 @@ export class OpenAiProvider implements ProviderStrategy {
             try {
               const parsed = JSON.parse(data);
               const content = parsed.choices[0]?.delta?.content || '';
-              
+
               if (content) {
                 yield {
                   content,
@@ -160,7 +175,7 @@ export class OpenAiProvider implements ProviderStrategy {
       const response = await fetch(`${this.baseUrl}/models`, {
         method: 'GET',
         headers: {
-          'Authorization': `Bearer ${this.apiKey}`,
+          Authorization: `Bearer ${this.apiKey}`,
         },
       });
 

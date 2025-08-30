@@ -101,7 +101,9 @@ export class PreviewResponseDto {
 
   @ApiProperty({
     description: 'Advertencias del cálculo',
-    example: ['rule LUZ_VA_POR_M2 usa value por defecto. TODO validar con RIE RD.'],
+    example: [
+      'rule LUZ_VA_POR_M2 usa value por defecto. TODO validar con RIE RD.',
+    ],
     type: [String],
   })
   warnings: string[];
@@ -112,4 +114,3 @@ export class PreviewResponseDto {
   })
   traceId: string;
 }
-

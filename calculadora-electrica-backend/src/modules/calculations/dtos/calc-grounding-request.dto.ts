@@ -114,4 +114,3 @@ export class CalcGroundingRequestDto {
   @IsOptional()
   observaciones?: string[];
 }
-

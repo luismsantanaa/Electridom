@@ -58,7 +58,7 @@ describe('UsersController', () => {
       serviceMock.findAll.mockResolvedValue([userMock]);
       const result = await controller.findAll();
       expect(result).toEqual([userMock]);
-      // eslint-disable-next-line @typescript-eslint/unbound-method
+
       expect(service.findAll).toHaveBeenCalled();
     });
   });
@@ -68,7 +68,7 @@ describe('UsersController', () => {
       serviceMock.findById.mockResolvedValue(userMock);
       const result = await controller.findOne(userMock.id);
       expect(result).toEqual(userMock);
-      // eslint-disable-next-line @typescript-eslint/unbound-method
+
       expect(service.findById).toHaveBeenCalledWith(userMock.id);
     });
   });
@@ -80,7 +80,7 @@ describe('UsersController', () => {
       serviceMock.update.mockResolvedValue(updatedUser);
       const result = await controller.update(userMock.id, updateData);
       expect(result).toEqual(updatedUser);
-      // eslint-disable-next-line @typescript-eslint/unbound-method
+
       expect(service.update).toHaveBeenCalledWith(userMock.id, updateData);
     });
   });
@@ -89,9 +89,8 @@ describe('UsersController', () => {
     it('debería eliminar un user', async () => {
       serviceMock.remove.mockResolvedValue(undefined);
       await expect(controller.remove(userMock.id)).resolves.toBeUndefined();
-      // eslint-disable-next-line @typescript-eslint/unbound-method
+
       expect(service.remove).toHaveBeenCalledWith(userMock.id);
     });
   });
 });
-

@@ -17,23 +17,23 @@ export class ProjectVersion extends BaseAuditEntity {
   // Snapshot de entradas
   @Column('json')
   inputSuperficies: any;
-  
+
   @Column('json')
   inputConsumos: any;
-  
+
   @Column('json', { nullable: true })
   inputOpciones?: any;
 
   // Snapshot de salidas
   @Column('json')
   outputCargasPorAmbiente: any;
-  
+
   @Column('json')
   outputTotales: any;
-  
+
   @Column('json')
   outputPropuestaCircuitos: any;
-  
+
   @Column('json', { default: '[]' })
   outputWarnings: any;
 
@@ -52,4 +52,3 @@ export class ProjectVersion extends BaseAuditEntity {
   // - usrCreate
   // - usrUpdate
 }
-

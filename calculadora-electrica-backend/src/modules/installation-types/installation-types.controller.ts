@@ -78,4 +78,3 @@ export class InstallationTypesController {
     return this.installationTypesService.remove(id, user);
   }
 }
-

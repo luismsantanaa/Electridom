@@ -44,14 +44,19 @@ export class MetricsInterceptor implements NestInterceptor {
     const baseUrl = request.baseUrl || '';
     const path = request.route?.path || request.path || '';
     let route = `${baseUrl}${path}`.replace(/\/$/, '') || '/';
-    
+
     // Remover el prefijo /api para consistencia en métricas
     route = route.replace(/^\/api/, '') || '/';
-    
+
     return route;
   }
 
-  private recordMetrics(method: string, route: string, statusCode: number, startTime: number): void {
+  private recordMetrics(
+    method: string,
+    route: string,
+    statusCode: number,
+    startTime: number,
+  ): void {
     try {
       const duration = (Date.now() - startTime) / 1000; // Convertir a segundos
 
@@ -59,9 +64,16 @@ export class MetricsInterceptor implements NestInterceptor {
       this.metricsService.incrementHttpRequests(method, route, statusCode);
 
       // Observar duración
-      this.metricsService.observeHttpRequestDuration(method, route, statusCode, duration);
+      this.metricsService.observeHttpRequestDuration(
+        method,
+        route,
+        statusCode,
+        duration,
+      );
 
-      this.logger.debug(`Métricas registradas: ${method} ${route} ${statusCode} ${duration.toFixed(3)}s`);
+      this.logger.debug(
+        `Métricas registradas: ${method} ${route} ${statusCode} ${duration.toFixed(3)}s`,
+      );
     } catch (error) {
       this.logger.error('Error registrando métricas:', error.message);
     }

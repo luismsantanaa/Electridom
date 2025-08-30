@@ -104,4 +104,3 @@ export class CreateAmpacityTable1756000000002 implements MigrationInterface {
     await queryRunner.dropTable('ampacity');
   }
 }
-

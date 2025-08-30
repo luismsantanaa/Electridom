@@ -123,4 +123,3 @@ export class CalcFeederResponseDto {
     algoritmo_usado: string;
   };
 }
-

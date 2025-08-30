@@ -25,13 +25,21 @@ import { Session } from './entities/session.entity';
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
         secret: configService.get<string>('JWT_SECRET'),
-        signOptions: { expiresIn: configService.get<string>('JWT_EXPIRES_IN', '900s') },
+        signOptions: {
+          expiresIn: configService.get<string>('JWT_EXPIRES_IN', '900s'),
+        },
       }),
       inject: [ConfigService],
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, JwtStrategy, SessionService, SessionRepository],
+  providers: [
+    AuthService,
+    LocalStrategy,
+    JwtStrategy,
+    SessionService,
+    SessionRepository,
+  ],
   exports: [AuthService, SessionService],
 })
 export class AuthModule {}

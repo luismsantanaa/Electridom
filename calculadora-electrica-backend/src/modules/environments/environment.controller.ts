@@ -41,13 +41,11 @@ export class EnvironmentController {
     @Query('name') name?: string,
     @Query('activo') activo?: boolean,
   ) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
     let specification: BaseSpecification<Environment> = new ActivoSpecification(
       activo ?? true,
     );
 
     if (name) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-call
       specification = specification.and(new NombreSpecification(name));
     }
 
@@ -65,7 +63,11 @@ export class EnvironmentController {
     @Body() updateEnvironmentDto: UpdateEnvironmentDto,
     @CurrentUser() user: User,
   ) {
-    return this.EnvironmentService.update(id, updateEnvironmentDto, user.username);
+    return this.EnvironmentService.update(
+      id,
+      updateEnvironmentDto,
+      user.username,
+    );
   }
 
   @Delete(':id')

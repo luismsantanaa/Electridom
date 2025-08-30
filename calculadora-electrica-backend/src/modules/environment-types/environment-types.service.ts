@@ -49,7 +49,6 @@ export class EnvironmentTypesService {
       new ActivoSpecification().toQueryBuilder(queryBuilder);
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     const result = (await paginate<EnvironmentType>(query, queryBuilder, {
       sortableColumns: [
         'id',

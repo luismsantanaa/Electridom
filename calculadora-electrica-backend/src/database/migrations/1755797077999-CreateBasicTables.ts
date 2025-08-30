@@ -1,11 +1,11 @@
-import { MigrationInterface, QueryRunner } from "typeorm";
+import { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class CreateBasicTables1755797077999 implements MigrationInterface {
-    name = 'CreateBasicTables1755797077999'
+  name = 'CreateBasicTables1755797077999';
 
-    public async up(queryRunner: QueryRunner): Promise<void> {
-        // 1. Crear tabla users
-        await queryRunner.query(`
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    // 1. Crear tabla users
+    await queryRunner.query(`
             CREATE TABLE \`users\` (
                 \`id\` uuid NOT NULL,
                 \`email\` varchar(255) NOT NULL,
@@ -24,8 +24,8 @@ export class CreateBasicTables1755797077999 implements MigrationInterface {
             ) ENGINE=InnoDB
         `);
 
-        // 2. Crear tabla projects
-        await queryRunner.query(`
+    // 2. Crear tabla projects
+    await queryRunner.query(`
             CREATE TABLE \`projects\` (
                 \`id\` uuid NOT NULL,
                 \`name\` varchar(255) NOT NULL,
@@ -39,8 +39,8 @@ export class CreateBasicTables1755797077999 implements MigrationInterface {
             ) ENGINE=InnoDB
         `);
 
-        // 3. Crear tabla project_versions
-        await queryRunner.query(`
+    // 3. Crear tabla project_versions
+    await queryRunner.query(`
             CREATE TABLE \`project_versions\` (
                 \`id\` uuid NOT NULL,
                 \`version\` int NOT NULL,
@@ -55,8 +55,8 @@ export class CreateBasicTables1755797077999 implements MigrationInterface {
             ) ENGINE=InnoDB
         `);
 
-        // 4. Crear tabla rule_sets
-        await queryRunner.query(`
+    // 4. Crear tabla rule_sets
+    await queryRunner.query(`
             CREATE TABLE \`rule_sets\` (
                 \`id\` uuid NOT NULL,
                 \`name\` varchar(255) NOT NULL,
@@ -72,8 +72,8 @@ export class CreateBasicTables1755797077999 implements MigrationInterface {
             ) ENGINE=InnoDB
         `);
 
-        // 5. Crear tabla rule_change_logs
-        await queryRunner.query(`
+    // 5. Crear tabla rule_change_logs
+    await queryRunner.query(`
             CREATE TABLE \`rule_change_logs\` (
                 \`id\` uuid NOT NULL,
                 \`ruleSetId\` uuid NOT NULL,
@@ -89,8 +89,8 @@ export class CreateBasicTables1755797077999 implements MigrationInterface {
             ) ENGINE=InnoDB
         `);
 
-        // 6. Crear foreign keys
-        await queryRunner.query(`
+    // 6. Crear foreign keys
+    await queryRunner.query(`
             ALTER TABLE \`project_versions\` 
             ADD CONSTRAINT \`FK_project_versions_project\` 
             FOREIGN KEY (\`project_id\`) 
@@ -98,25 +98,29 @@ export class CreateBasicTables1755797077999 implements MigrationInterface {
             ON DELETE CASCADE ON UPDATE NO ACTION
         `);
 
-        await queryRunner.query(`
+    await queryRunner.query(`
             ALTER TABLE \`rule_change_logs\` 
             ADD CONSTRAINT \`FK_rule_change_logs_rule_set\` 
             FOREIGN KEY (\`ruleSetId\`) 
             REFERENCES \`rule_sets\`(\`id\`) 
             ON DELETE CASCADE ON UPDATE NO ACTION
         `);
-    }
+  }
 
-    public async down(queryRunner: QueryRunner): Promise<void> {
-        // Eliminar foreign keys en orden inverso
-        await queryRunner.query(`ALTER TABLE \`rule_change_logs\` DROP FOREIGN KEY \`FK_rule_change_logs_rule_set\``);
-        await queryRunner.query(`ALTER TABLE \`project_versions\` DROP FOREIGN KEY \`FK_project_versions_project\``);
-        
-        // Eliminar tablas en orden inverso
-        await queryRunner.query(`DROP TABLE \`rule_change_logs\``);
-        await queryRunner.query(`DROP TABLE \`rule_sets\``);
-        await queryRunner.query(`DROP TABLE \`project_versions\``);
-        await queryRunner.query(`DROP TABLE \`projects\``);
-        await queryRunner.query(`DROP TABLE \`users\``);
-    }
+  public async down(queryRunner: QueryRunner): Promise<void> {
+    // Eliminar foreign keys en orden inverso
+    await queryRunner.query(
+      `ALTER TABLE \`rule_change_logs\` DROP FOREIGN KEY \`FK_rule_change_logs_rule_set\``,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`project_versions\` DROP FOREIGN KEY \`FK_project_versions_project\``,
+    );
+
+    // Eliminar tablas en orden inverso
+    await queryRunner.query(`DROP TABLE \`rule_change_logs\``);
+    await queryRunner.query(`DROP TABLE \`rule_sets\``);
+    await queryRunner.query(`DROP TABLE \`project_versions\``);
+    await queryRunner.query(`DROP TABLE \`projects\``);
+    await queryRunner.query(`DROP TABLE \`users\``);
+  }
 }

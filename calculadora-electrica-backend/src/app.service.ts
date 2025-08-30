@@ -46,4 +46,3 @@ export class AppService {
     return `${hours}h ${minutes}m ${secs}s`;
   }
 }
-

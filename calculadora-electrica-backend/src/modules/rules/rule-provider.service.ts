@@ -30,15 +30,19 @@ export class RuleProviderService {
 
   async getNumber(
     code: string,
-    opts?: { 
-      fallback?: number; 
+    opts?: {
+      fallback?: number;
       warnings: string[];
       ruleSetId?: string;
       effectiveDate?: string;
     },
   ): Promise<number> {
-    const cacheKey = this.getCacheKey(code, opts?.ruleSetId, opts?.effectiveDate);
-    
+    const cacheKey = this.getCacheKey(
+      code,
+      opts?.ruleSetId,
+      opts?.effectiveDate,
+    );
+
     // Check cache first
     const cached = this.cache.get(cacheKey);
     if (cached && Date.now() - cached.timestamp < this.cacheTtl) {
@@ -50,26 +54,36 @@ export class RuleProviderService {
     // Try to get from specific RuleSet if provided
     if (opts?.ruleSetId) {
       try {
-        const { rules } = await this.rulesAdminService.getRuleSetById(opts.ruleSetId);
-        const rule = rules.find(r => r.code === code);
+        const { rules } = await this.rulesAdminService.getRuleSetById(
+          opts.ruleSetId,
+        );
+        const rule = rules.find((r) => r.code === code);
         if (rule) {
           ruleValue = rule.numericValue;
         }
       } catch (error) {
-        this.logger.warn(`Error obteniendo rule ${code} del RuleSet ${opts.ruleSetId}:`, error.message);
+        this.logger.warn(
+          `Error obteniendo rule ${code} del RuleSet ${opts.ruleSetId}:`,
+          error.message,
+        );
       }
     }
 
     // Try to get from active RuleSet for effective date if no specific RuleSet or rule not found
     if (ruleValue === undefined && opts?.effectiveDate) {
       try {
-        const { rules } = await this.rulesAdminService.getActiveRuleSet(opts.effectiveDate);
-        const rule = rules.find(r => r.code === code);
+        const { rules } = await this.rulesAdminService.getActiveRuleSet(
+          opts.effectiveDate,
+        );
+        const rule = rules.find((r) => r.code === code);
         if (rule) {
           ruleValue = rule.numericValue;
         }
       } catch (error) {
-        this.logger.warn(`Error obteniendo rule ${code} para fecha ${opts.effectiveDate}:`, error.message);
+        this.logger.warn(
+          `Error obteniendo rule ${code} para fecha ${opts.effectiveDate}:`,
+          error.message,
+        );
       }
     }
 
@@ -82,10 +96,10 @@ export class RuleProviderService {
     }
 
     if (ruleValue !== undefined) {
-      this.cache.set(cacheKey, { 
-        value: ruleValue, 
+      this.cache.set(cacheKey, {
+        value: ruleValue,
         timestamp: Date.now(),
-        ruleSetId: opts?.ruleSetId 
+        ruleSetId: opts?.ruleSetId,
       });
       return ruleValue;
     }
@@ -99,7 +113,9 @@ export class RuleProviderService {
     }
 
     // Throw error if no fallback
-    throw new Error(`rule ${code} no encontrada y no se proporcionó value por defecto`);
+    throw new Error(
+      `rule ${code} no encontrada y no se proporcionó value por defecto`,
+    );
   }
 
   /**
@@ -109,14 +125,17 @@ export class RuleProviderService {
     try {
       const { rules } = await this.rulesAdminService.getRuleSetById(ruleSetId);
       const rulesMap = new Map<string, number>();
-      
+
       for (const rule of rules) {
         rulesMap.set(rule.code, rule.numericValue);
       }
-      
+
       return rulesMap;
     } catch (error) {
-      this.logger.error(`Error obteniendo rules del RuleSet ${ruleSetId}:`, error);
+      this.logger.error(
+        `Error obteniendo rules del RuleSet ${ruleSetId}:`,
+        error,
+      );
       throw error;
     }
   }
@@ -126,21 +145,29 @@ export class RuleProviderService {
    */
   async getActiveRules(effectiveDate?: string): Promise<Map<string, number>> {
     try {
-      const { rules } = await this.rulesAdminService.getActiveRuleSet(effectiveDate);
+      const { rules } =
+        await this.rulesAdminService.getActiveRuleSet(effectiveDate);
       const rulesMap = new Map<string, number>();
-      
+
       for (const rule of rules) {
         rulesMap.set(rule.code, rule.numericValue);
       }
-      
+
       return rulesMap;
     } catch (error) {
-      this.logger.error(`Error obteniendo rules activas para fecha ${effectiveDate}:`, error);
+      this.logger.error(
+        `Error obteniendo rules activas para fecha ${effectiveDate}:`,
+        error,
+      );
       throw error;
     }
   }
 
-  private getCacheKey(code: string, ruleSetId?: string, effectiveDate?: string): string {
+  private getCacheKey(
+    code: string,
+    ruleSetId?: string,
+    effectiveDate?: string,
+  ): string {
     if (ruleSetId) {
       return `${code}:ruleset:${ruleSetId}`;
     }
@@ -158,4 +185,3 @@ export class RuleProviderService {
     return this.cache.size;
   }
 }
-

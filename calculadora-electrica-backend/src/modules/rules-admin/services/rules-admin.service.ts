@@ -59,8 +59,10 @@ export class RulesAdminService {
       effectiveFrom: savedRuleSet.effectiveFrom?.toISOString(),
       effectiveTo: savedRuleSet.effectiveTo?.toISOString(),
       rulesCount: 0,
-      createdAt: savedRuleSet.creationDate?.toISOString() || new Date().toISOString(),
-      updatedAt: savedRuleSet.updateDate?.toISOString() || new Date().toISOString(),
+      createdAt:
+        savedRuleSet.creationDate?.toISOString() || new Date().toISOString(),
+      updatedAt:
+        savedRuleSet.updateDate?.toISOString() || new Date().toISOString(),
     };
   }
 
@@ -601,7 +603,8 @@ export class RulesAdminService {
       effectiveFrom: ruleSet.effectiveFrom?.toISOString(),
       effectiveTo: ruleSet.effectiveTo?.toISOString(),
       rulesCount: ruleSet.rules?.length || 0,
-      createdAt: ruleSet.creationDate?.toISOString() || new Date().toISOString(),
+      createdAt:
+        ruleSet.creationDate?.toISOString() || new Date().toISOString(),
       updatedAt: ruleSet.updateDate?.toISOString() || new Date().toISOString(),
     };
   }
@@ -620,4 +623,3 @@ export class RulesAdminService {
     );
   }
 }
-

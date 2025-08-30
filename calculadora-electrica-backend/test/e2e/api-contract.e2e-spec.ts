@@ -38,7 +38,7 @@ describe('API Contract Tests (e2e)', () => {
         .set('Origin', 'http://localhost:4200')
         .send({
           superficies: [{ nombre: 'Sala', area_m2: 20 }],
-          consumos: [{ nombre: 'TV', ambiente: 'Sala', potencia_w: 100 }]
+          consumos: [{ nombre: 'TV', ambiente: 'Sala', potencia_w: 100 }],
         })
         .expect(200)
         .expect('Access-Control-Allow-Origin', 'http://localhost:4200')
@@ -53,16 +53,28 @@ describe('API Contract Tests (e2e)', () => {
           system: {
             voltage: 120,
             phases: 1,
-            frequency: 60
+            frequency: 60,
           },
           superficies: [
             { nombre: 'Sala', area_m2: 18.5 },
-            { nombre: 'Cocina', area_m2: 12.0 }
+            { nombre: 'Cocina', area_m2: 12.0 },
           ],
           consumos: [
-            { nombre: 'Refrigerador', ambiente: 'Cocina', potencia_w: 350, fp: 0.85, tipo: 'electrodomestico' },
-            { nombre: 'Televisor', ambiente: 'Sala', potencia_w: 120, fp: 0.9, tipo: 'electrodomestico' }
-          ]
+            {
+              nombre: 'Refrigerador',
+              ambiente: 'Cocina',
+              potencia_w: 350,
+              fp: 0.85,
+              tipo: 'electrodomestico',
+            },
+            {
+              nombre: 'Televisor',
+              ambiente: 'Sala',
+              potencia_w: 120,
+              fp: 0.9,
+              tipo: 'electrodomestico',
+            },
+          ],
         };
 
         return request(app.getHttpServer())
@@ -81,7 +93,7 @@ describe('API Contract Tests (e2e)', () => {
       it('should validate required fields', () => {
         const invalidPayload = {
           superficies: [],
-          consumos: []
+          consumos: [],
         };
 
         return request(app.getHttpServer())
@@ -97,14 +109,18 @@ describe('API Contract Tests (e2e)', () => {
           system: {
             voltage: 120,
             phases: 1,
-            frequency: 60
+            frequency: 60,
           },
-          superficies: [
-            { nombre: 'Sala', area_m2: 18.5 }
-          ],
+          superficies: [{ nombre: 'Sala', area_m2: 18.5 }],
           consumos: [
-            { nombre: 'Televisor', ambiente: 'Sala', potencia_w: 120, fp: 0.9, tipo: 'electrodomestico' }
-          ]
+            {
+              nombre: 'Televisor',
+              ambiente: 'Sala',
+              potencia_w: 120,
+              fp: 0.9,
+              tipo: 'electrodomestico',
+            },
+          ],
         };
 
         return request(app.getHttpServer())
@@ -125,14 +141,18 @@ describe('API Contract Tests (e2e)', () => {
           system: {
             voltage: 120,
             phases: 1,
-            frequency: 60
+            frequency: 60,
           },
-          superficies: [
-            { nombre: 'Sala', area_m2: 18.5 }
-          ],
+          superficies: [{ nombre: 'Sala', area_m2: 18.5 }],
           consumos: [
-            { nombre: 'Televisor', ambiente: 'Sala', potencia_w: 120, fp: 0.9, tipo: 'electrodomestico' }
-          ]
+            {
+              nombre: 'Televisor',
+              ambiente: 'Sala',
+              potencia_w: 120,
+              fp: 0.9,
+              tipo: 'electrodomestico',
+            },
+          ],
         };
 
         return request(app.getHttpServer())
@@ -153,14 +173,18 @@ describe('API Contract Tests (e2e)', () => {
           system: {
             voltage: 120,
             phases: 1,
-            frequency: 60
+            frequency: 60,
           },
-          superficies: [
-            { nombre: 'Sala', area_m2: 18.5 }
-          ],
+          superficies: [{ nombre: 'Sala', area_m2: 18.5 }],
           consumos: [
-            { nombre: 'Televisor', ambiente: 'Sala', potencia_w: 120, fp: 0.9, tipo: 'electrodomestico' }
-          ]
+            {
+              nombre: 'Televisor',
+              ambiente: 'Sala',
+              potencia_w: 120,
+              fp: 0.9,
+              tipo: 'electrodomestico',
+            },
+          ],
         };
 
         return request(app.getHttpServer())
@@ -182,14 +206,18 @@ describe('API Contract Tests (e2e)', () => {
           system: {
             voltage: 120,
             phases: 1,
-            frequency: 60
+            frequency: 60,
           },
-          superficies: [
-            { nombre: 'Sala', area_m2: 18.5 }
-          ],
+          superficies: [{ nombre: 'Sala', area_m2: 18.5 }],
           consumos: [
-            { nombre: 'Televisor', ambiente: 'Sala', potencia_w: 120, fp: 0.9, tipo: 'electrodomestico' }
-          ]
+            {
+              nombre: 'Televisor',
+              ambiente: 'Sala',
+              potencia_w: 120,
+              fp: 0.9,
+              tipo: 'electrodomestico',
+            },
+          ],
         };
 
         return request(app.getHttpServer())
@@ -211,14 +239,18 @@ describe('API Contract Tests (e2e)', () => {
           system: {
             voltage: 120,
             phases: 1,
-            frequency: 60
+            frequency: 60,
           },
-          superficies: [
-            { nombre: 'Sala', area_m2: 18.5 }
-          ],
+          superficies: [{ nombre: 'Sala', area_m2: 18.5 }],
           consumos: [
-            { nombre: 'Televisor', ambiente: 'Sala', potencia_w: 120, fp: 0.9, tipo: 'electrodomestico' }
-          ]
+            {
+              nombre: 'Televisor',
+              ambiente: 'Sala',
+              potencia_w: 120,
+              fp: 0.9,
+              tipo: 'electrodomestico',
+            },
+          ],
         };
 
         return request(app.getHttpServer())
@@ -233,21 +265,28 @@ describe('API Contract Tests (e2e)', () => {
           system: {
             voltage: 120,
             phases: 1,
-            frequency: 60
+            frequency: 60,
           },
-          superficies: [
-            { nombre: 'Sala', area_m2: 18.5 }
-          ],
+          superficies: [{ nombre: 'Sala', area_m2: 18.5 }],
           consumos: [
-            { nombre: 'Televisor', ambiente: 'Sala', potencia_w: 120, fp: 0.9, tipo: 'electrodomestico' }
-          ]
+            {
+              nombre: 'Televisor',
+              ambiente: 'Sala',
+              potencia_w: 120,
+              fp: 0.9,
+              tipo: 'electrodomestico',
+            },
+          ],
         };
 
         return request(app.getHttpServer())
           .post('/api/calc/report?type=xlsx')
           .send(validPayload)
           .expect(200)
-          .expect('Content-Type', /application\/vnd\.openxmlformats-officedocument\.spreadsheetml\.sheet/);
+          .expect(
+            'Content-Type',
+            /application\/vnd\.openxmlformats-officedocument\.spreadsheetml\.sheet/,
+          );
       });
     });
   });
@@ -269,7 +308,7 @@ describe('API Contract Tests (e2e)', () => {
     it('should handle validation errors properly', () => {
       const invalidPayload = {
         superficies: [{ nombre: '', area_m2: -1 }],
-        consumos: [{ nombre: '', ambiente: '', potencia_w: 0 }]
+        consumos: [{ nombre: '', ambiente: '', potencia_w: 0 }],
       };
 
       return request(app.getHttpServer())
@@ -290,7 +329,7 @@ describe('API Contract Tests (e2e)', () => {
         .post('/api/calc/rooms/preview')
         .send({
           superficies: [{ nombre: 'Sala', area_m2: 20 }],
-          consumos: [{ nombre: 'TV', ambiente: 'Sala', potencia_w: 100 }]
+          consumos: [{ nombre: 'TV', ambiente: 'Sala', potencia_w: 100 }],
         })
         .expect(200)
         .expect('Content-Type', /application\/json/)
@@ -301,4 +340,3 @@ describe('API Contract Tests (e2e)', () => {
     });
   });
 });
-

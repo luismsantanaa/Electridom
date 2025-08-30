@@ -30,11 +30,16 @@ export class NormParamService {
 
       // Guardar en cache
       this.cache.set(key, param.value);
-      this.logger.debug(`Parámetro normativo cargado: ${key} = ${param.value} ${param.unit}`);
+      this.logger.debug(
+        `Parámetro normativo cargado: ${key} = ${param.value} ${param.unit}`,
+      );
 
       return param.value;
     } catch (error) {
-      this.logger.error(`Error obteniendo parámetro normativo '${key}':`, error.message);
+      this.logger.error(
+        `Error obteniendo parámetro normativo '${key}':`,
+        error.message,
+      );
       throw error;
     }
   }
@@ -45,11 +50,13 @@ export class NormParamService {
   async getParamAsNumber(key: string): Promise<number> {
     const value = await this.getParam(key);
     const numValue = parseFloat(value);
-    
+
     if (isNaN(numValue)) {
-      throw new Error(`Parámetro normativo '${key}' no es un número válido: ${value}`);
+      throw new Error(
+        `Parámetro normativo '${key}' no es un número válido: ${value}`,
+      );
     }
-    
+
     return numValue;
   }
 
@@ -59,11 +66,13 @@ export class NormParamService {
   async getParamAsInteger(key: string): Promise<number> {
     const value = await this.getParam(key);
     const intValue = parseInt(value, 10);
-    
+
     if (isNaN(intValue)) {
-      throw new Error(`Parámetro normativo '${key}' no es un entero válido: ${value}`);
+      throw new Error(
+        `Parámetro normativo '${key}' no es un entero válido: ${value}`,
+      );
     }
-    
+
     return intValue;
   }
 
@@ -82,14 +91,19 @@ export class NormParamService {
     try {
       const params = await this.normConstRepository.find();
       this.cache.clear();
-      
+
       for (const param of params) {
         this.cache.set(param.key, param.value);
       }
-      
-      this.logger.log(`Cache precargado con ${params.length} parámetros normativos`);
+
+      this.logger.log(
+        `Cache precargado con ${params.length} parámetros normativos`,
+      );
     } catch (error) {
-      this.logger.error('Error precargando cache de parámetros:', error.message);
+      this.logger.error(
+        'Error precargando cache de parámetros:',
+        error.message,
+      );
       throw error;
     }
   }
@@ -101,4 +115,3 @@ export class NormParamService {
     return this.normConstRepository.find({ order: { key: 'ASC' } });
   }
 }
-

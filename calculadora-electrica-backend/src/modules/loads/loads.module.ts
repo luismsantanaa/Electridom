@@ -11,4 +11,3 @@ import { Load } from './entities/load.entity';
   exports: [LoadsService],
 })
 export class LoadsModule {}
-

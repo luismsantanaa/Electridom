@@ -11,7 +11,7 @@ describe('Metrics Protected E2E Tests', () => {
     process.env.METRICS_ENABLED = 'true';
     process.env.LOG_LEVEL = 'silent';
     process.env.METRICS_TOKEN = 'test_token';
-    
+
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();

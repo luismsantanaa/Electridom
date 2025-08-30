@@ -12,10 +12,10 @@ describe('Health E2E Tests', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
-    
+
     // Configurar prefijo global para tests
     app.setGlobalPrefix('api');
-    
+
     await app.init();
   });
 
@@ -35,7 +35,7 @@ describe('Health E2E Tests', () => {
       .expect(200);
 
     console.log('Health response:', JSON.stringify(response.body, null, 2));
-    
+
     // Verificar estructura de respuesta (envuelta en data)
     expect(response.body).toHaveProperty('success', true);
     expect(response.body).toHaveProperty('data');
@@ -43,12 +43,12 @@ describe('Health E2E Tests', () => {
     expect(response.body.data).toHaveProperty('info');
     expect(response.body.data).toHaveProperty('error');
     expect(response.body.data).toHaveProperty('details');
-    
+
     // Verificar que todos los health checks están presentes
     expect(response.body.data.info).toHaveProperty('liveness');
     expect(response.body.data.info).toHaveProperty('database');
     expect(response.body.data.info).toHaveProperty('disk');
-    
+
     // Verificar que todos están "up"
     expect(response.body.data.info.liveness.status).toBe('up');
     expect(response.body.data.info.database.status).toBe('up');

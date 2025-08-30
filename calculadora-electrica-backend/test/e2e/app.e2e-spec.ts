@@ -324,4 +324,3 @@ describe('Calculations E2E Tests', () => {
     coverageReporter.printReport();
   });
 });
-

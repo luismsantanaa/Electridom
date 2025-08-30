@@ -11,28 +11,36 @@ import { seedNormRules } from './database/seeds/norm-rules.seed';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
-  
+
   // Obtener configuración validada
   const port = configService.get<number>('env.port', 3000);
   const nodeEnv = configService.get<string>('env.nodeEnv', 'development');
   const logLevel = configService.get<string>('env.logLevel', 'info');
   const corsOrigin = configService.get<string>('security.corsOrigin', '*');
-  const swaggerTitle = configService.get<string>('swagger.title', 'Calculadora Eléctrica RD API');
-  const swaggerDescription = configService.get<string>('swagger.description', 'API para cálculos eléctricos según normativas dominicanas');
+  const swaggerTitle = configService.get<string>(
+    'swagger.title',
+    'Calculadora Eléctrica RD API',
+  );
+  const swaggerDescription = configService.get<string>(
+    'swagger.description',
+    'API para cálculos eléctricos según normativas dominicanas',
+  );
   const swaggerVersion = configService.get<string>('swagger.version', '2.0.0');
 
   // Configurar Helmet para seguridad
-  app.use(helmet({
-    contentSecurityPolicy: {
-      directives: {
-        defaultSrc: ["'self'"],
-        styleSrc: ["'self'", "'unsafe-inline'"],
-        scriptSrc: ["'self'"],
-        imgSrc: ["'self'", "data:", "https:"],
+  app.use(
+    helmet({
+      contentSecurityPolicy: {
+        directives: {
+          defaultSrc: ["'self'"],
+          styleSrc: ["'self'", "'unsafe-inline'"],
+          scriptSrc: ["'self'"],
+          imgSrc: ["'self'", 'data:', 'https:'],
+        },
       },
-    },
-    crossOriginEmbedderPolicy: false, // Necesario para Swagger
-  }));
+      crossOriginEmbedderPolicy: false, // Necesario para Swagger
+    }),
+  );
 
   // Global prefix for all routes
   app.setGlobalPrefix('api');
@@ -51,26 +59,26 @@ async function bootstrap() {
     origin: corsOrigin === '*' ? true : corsOrigin,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: [
-      'Content-Type', 
-      'Authorization', 
-      'x-api-key', 
+      'Content-Type',
+      'Authorization',
+      'x-api-key',
       'x-trace-id',
       'Accept',
       'Origin',
       'X-Requested-With',
       'Cache-Control',
-      'Pragma'
+      'Pragma',
     ],
     exposedHeaders: [
       'Content-Disposition',
       'Content-Length',
       'X-Total-Count',
-      'X-Page-Count'
+      'X-Page-Count',
     ],
     credentials: true,
     maxAge: 86400, // 24 hours
     preflightContinue: false,
-    optionsSuccessStatus: 204
+    optionsSuccessStatus: 204,
   });
 
   // Global exception filter
@@ -145,7 +153,9 @@ async function bootstrap() {
   console.log(`📖 Swagger UI available at http://localhost:${port}/api/docs`);
   console.log(`📋 API JSON schema at http://localhost:${port}/api/docs-json`);
   console.log(`⚡ API endpoints at http://localhost:${port}/api`);
-  console.log(`💾 Database: MariaDb (${configService.get('database.database')})`);
+  console.log(
+    `💾 Database: MariaDb (${configService.get('database.database')})`,
+  );
   console.log(`🔒 Security: Helmet + Rate Limiting + CORS enabled`);
   console.log(`🌍 Environment: ${nodeEnv.toUpperCase()}`);
   console.log(`📝 Log Level: ${logLevel.toUpperCase()}`);
@@ -154,4 +164,3 @@ bootstrap().catch((error) => {
   console.error('Error starting application:', error);
   process.exit(1);
 });
-

@@ -38,13 +38,11 @@ export class LoadsController {
     @Query('name') name?: string,
     @Query('active') active?: boolean,
   ) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
     let specification: BaseSpecification<Load> = new ActivoSpecification(
       active ?? true,
     );
 
     if (name) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-call
       specification = specification.and(new NombreSpecification(name));
     }
 

@@ -71,7 +71,8 @@ export const demandFactorSeed = async (
       rangeMin: 0,
       rangeMax: 999999,
       factor: 1.0,
-      notes: 'RIE RD Art. 220.87: Factor de demanda para loads especiales - 100%',
+      notes:
+        'RIE RD Art. 220.87: Factor de demanda para loads especiales - 100%',
       usrCreate: 'SEED',
       usrUpdate: 'SEED',
       active: true,

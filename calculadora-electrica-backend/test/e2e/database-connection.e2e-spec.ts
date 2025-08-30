@@ -26,7 +26,7 @@ describe('Database Connection E2E Test', () => {
   it('should connect to database successfully', async () => {
     expect(dataSource).toBeDefined();
     expect(dataSource.isInitialized).toBe(true);
-    
+
     // Verificar que podemos hacer una consulta simple
     const result = await dataSource.query('SELECT 1 as test');
     expect(result).toEqual([{ test: 1 }]);
@@ -45,13 +45,15 @@ describe('Database Connection E2E Test', () => {
   it('should have test user in database', async () => {
     const result = await dataSource.query(
       'SELECT COUNT(*) as count FROM users WHERE email = ?',
-      ['test@example.com']
+      ['test@example.com'],
     );
     expect(parseInt(result[0].count)).toBeGreaterThan(0);
   });
 
   it('should be able to query sessions table', async () => {
-    const result = await dataSource.query('SELECT COUNT(*) as count FROM sessions');
+    const result = await dataSource.query(
+      'SELECT COUNT(*) as count FROM sessions',
+    );
     expect(result[0].count).toBeDefined();
   });
 });

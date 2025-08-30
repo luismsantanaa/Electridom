@@ -265,11 +265,7 @@ export class CircuitService {
 
     for (const circuit of circuits) {
       // Seleccionar breaker
-      const breaker = this.seleccionarBreaker(
-        circuit,
-        breakers,
-        system.phases,
-      );
+      const breaker = this.seleccionarBreaker(circuit, breakers, system.phases);
 
       // Calcular corriente de diseño con margen 125% si aplica
       const corrienteDiseno = this.calcularCorrienteDiseno(circuit);
@@ -438,9 +434,7 @@ export class CircuitService {
   ): string[] {
     const observaciones: string[] = [];
 
-    observaciones.push(
-      `${resumen.total_circuitos} circuits ramales generados`,
-    );
+    observaciones.push(`${resumen.total_circuitos} circuits ramales generados`);
     observaciones.push(
       `Utilización promedio: ${resumen.utilizacion_promedio_pct}%`,
     );
@@ -476,4 +470,3 @@ export class CircuitService {
     );
   }
 }
-

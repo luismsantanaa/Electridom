@@ -20,14 +20,13 @@ export class TransformInterceptor implements NestInterceptor {
         }
 
         // Si la respuesta tiene metadata de paginación, usamos PaginatedResultDto
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+
         if (data?.meta) {
           return PaginatedResultDto.success(
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
             data.data,
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+
             Number(data.meta?.totalItems ?? 0),
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+
             data.meta,
           );
         }

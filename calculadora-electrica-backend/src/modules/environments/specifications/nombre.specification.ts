@@ -19,4 +19,3 @@ export class NombreSpecification extends BaseSpecification<Environment> {
     });
   }
 }
-

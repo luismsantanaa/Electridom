@@ -1,5 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsObject, IsOptional, IsString, IsNumber, IsArray } from 'class-validator';
+import {
+  IsObject,
+  IsOptional,
+  IsString,
+  IsNumber,
+  IsArray,
+} from 'class-validator';
 
 export class SystemConfigDto {
   @ApiProperty({ description: 'Tensión del sistema en voltios', example: 120 })
@@ -34,7 +40,10 @@ export class ConsumptionDto {
   @IsString()
   nombre: string;
 
-  @ApiProperty({ description: 'Ambiente donde se ubica', example: 'Sala de estar' })
+  @ApiProperty({
+    description: 'Ambiente donde se ubica',
+    example: 'Sala de estar',
+  })
   @IsString()
   ambiente: string;
 
@@ -65,7 +74,11 @@ export class CalcRequestDto {
   @IsString()
   model?: string;
 
-  @ApiProperty({ description: 'Temperatura para la generación', required: false, default: 0.7 })
+  @ApiProperty({
+    description: 'Temperatura para la generación',
+    required: false,
+    default: 0.7,
+  })
   @IsOptional()
   @IsNumber()
   temperature?: number;

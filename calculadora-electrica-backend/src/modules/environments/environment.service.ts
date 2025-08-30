@@ -52,11 +52,9 @@ export class EnvironmentService {
     if (specification) {
       specification.toQueryBuilder(queryBuilder);
     } else {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
       new ActivoSpecification(true).toQueryBuilder(queryBuilder);
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     const result = (await paginate<Environment>(query, queryBuilder, {
       sortableColumns: [
         'id',

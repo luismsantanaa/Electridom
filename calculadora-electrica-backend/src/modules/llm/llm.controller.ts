@@ -1,4 +1,12 @@
-import { Controller, Post, Get, Body, Res, HttpStatus, HttpException } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Get,
+  Body,
+  Res,
+  HttpStatus,
+  HttpException,
+} from '@nestjs/common';
 import { Response } from 'express';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
 import { LlmService } from './llm.service';
@@ -44,11 +52,11 @@ export class LlmController {
       res.setHeader('Access-Control-Allow-Origin', '*');
 
       const stream = this.llmService.explain(request);
-      
+
       for await (const chunk of stream) {
         res.write(`data: ${JSON.stringify(chunk)}\n\n`);
       }
-      
+
       res.write('data: [DONE]\n\n');
       res.end();
     } catch (error) {
@@ -64,7 +72,7 @@ export class LlmController {
     try {
       const provider = await this.llmGateway.getCurrentProvider();
       const availableProviders = await this.llmGateway.getAvailableProviders();
-      
+
       return {
         current: provider,
         available: availableProviders,
@@ -80,14 +88,17 @@ export class LlmController {
 
   @Get('health')
   @ApiOperation({ summary: 'Verificar estado del servicio LLM' })
-  @ApiResponse({ status: 200, description: 'Servicio funcionando correctamente' })
+  @ApiResponse({
+    status: 200,
+    description: 'Servicio funcionando correctamente',
+  })
   async health() {
     try {
       const provider = await this.llmGateway.getCurrentProvider();
       const availableProviders = await this.llmGateway.getAvailableProviders();
-      
-      const hasAvailableProvider = availableProviders.some(p => p.available);
-      
+
+      const hasAvailableProvider = availableProviders.some((p) => p.available);
+
       return {
         status: hasAvailableProvider ? 'healthy' : 'degraded',
         currentProvider: provider.name,

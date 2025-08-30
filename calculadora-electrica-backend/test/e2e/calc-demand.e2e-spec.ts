@@ -22,7 +22,7 @@ describe('CalcDemandController (e2e)', () => {
   beforeEach(async () => {
     // Limpiar y sembrar datos de prueba
     await dataSource.query('DELETE FROM demand_factor');
-    
+
     // Insertar factores de demanda de prueba
     const demandFactorRepository = dataSource.getRepository(DemandFactor);
     await demandFactorRepository.save([
@@ -110,7 +110,7 @@ describe('CalcDemandController (e2e)', () => {
           expect(res.body).toHaveProperty('metadata');
 
           expect(res.body.cargas_diversificadas).toHaveLength(4);
-          
+
           // Verificar iluminación (factor 1.0)
           const lighting = res.body.cargas_diversificadas.find(
             (c: any) => c.category === 'lighting_general',
@@ -126,8 +126,12 @@ describe('CalcDemandController (e2e)', () => {
           expect(appliances.carga_diversificada_va).toBe(1252.65);
 
           // Verificar totales
-          expect(res.body.totales_diversificados.carga_total_original_va).toBe(4949.4);
-          expect(res.body.totales_diversificados.carga_total_diversificada_va).toBe(4728.05);
+          expect(res.body.totales_diversificados.carga_total_original_va).toBe(
+            4949.4,
+          );
+          expect(
+            res.body.totales_diversificados.carga_total_diversificada_va,
+          ).toBe(4728.05);
           expect(res.body.totales_diversificados.ahorro_carga_va).toBe(221.35);
         });
     });
@@ -155,8 +159,12 @@ describe('CalcDemandController (e2e)', () => {
         .expect(200)
         .expect((res) => {
           expect(res.body.cargas_diversificadas[0].demand_factor).toBe(1.0);
-          expect(res.body.cargas_diversificadas[0].carga_diversificada_va).toBe(500);
-          expect(res.body.cargas_diversificadas[0].rango_aplicado).toBe('Sin factor definido');
+          expect(res.body.cargas_diversificadas[0].carga_diversificada_va).toBe(
+            500,
+          );
+          expect(res.body.cargas_diversificadas[0].rango_aplicado).toBe(
+            'Sin factor definido',
+          );
         });
     });
 
@@ -177,8 +185,12 @@ describe('CalcDemandController (e2e)', () => {
         .expect(200)
         .expect((res) => {
           expect(res.body.cargas_diversificadas).toHaveLength(0);
-          expect(res.body.totales_diversificados.carga_total_original_va).toBe(0);
-          expect(res.body.totales_diversificados.carga_total_diversificada_va).toBe(0);
+          expect(res.body.totales_diversificados.carga_total_original_va).toBe(
+            0,
+          );
+          expect(
+            res.body.totales_diversificados.carga_total_diversificada_va,
+          ).toBe(0);
         });
     });
 
@@ -248,7 +260,7 @@ describe('CalcDemandController (e2e)', () => {
           expect(res.body.observaciones_generales).toBeDefined();
           expect(Array.isArray(res.body.observaciones_generales)).toBe(true);
           expect(res.body.observaciones_generales.length).toBeGreaterThan(0);
-          
+
           // Verificar que contenga información sobre factores aplicados
           const observationsText = res.body.observaciones_generales.join(' ');
           expect(observationsText).toContain('Factores de demanda aplicados');
@@ -256,4 +268,3 @@ describe('CalcDemandController (e2e)', () => {
     });
   });
 });
-

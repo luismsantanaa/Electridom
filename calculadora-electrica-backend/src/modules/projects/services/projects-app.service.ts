@@ -19,6 +19,7 @@ import {
   ProjectListResponseDto,
   ProjectExportDto,
 } from '../dtos/project-response.dto';
+import { ProjectInputDto, ProjectResponseDto } from '../dtos/project-crud.dto';
 import { CalculationAppService } from '../../calculations/services/calculation-app.service';
 import { RuleSignatureService } from '../../rules/services/rule-signature.service';
 import { ConfigService } from '@nestjs/config';
@@ -182,8 +183,8 @@ export class ProjectsAppService {
       projectId: project.id,
       projectName: project.name,
       status: project.status,
-              createdAt: project.creationDate.toISOString(),
-              updatedAt: project.updateDate.toISOString(),
+      createdAt: project.creationDate.toISOString(),
+      updatedAt: project.updateDate.toISOString(),
       latestVersion: latestVersion
         ? {
             versionId: latestVersion.id,
@@ -232,14 +233,27 @@ export class ProjectsAppService {
     pageSize = 20,
     query?: string,
     includeArchived = false,
+    sort?: string,
+    order: 'asc' | 'desc' = 'asc',
   ): Promise<ProjectListResponseDto> {
     const skip = (page - 1) * pageSize;
 
     // Construir query builder
     const queryBuilder = this.projectRepository
       .createQueryBuilder('project')
-      .leftJoinAndSelect('project.versions', 'versions')
-      .orderBy('project.createdAt', 'DESC');
+      .leftJoinAndSelect('project.versions', 'versions');
+
+    // Aplicar ordenamiento
+    if (sort) {
+      const validSortFields = ['name', 'createdAt', 'updatedAt', 'status'];
+      if (validSortFields.includes(sort)) {
+        queryBuilder.orderBy(`project.${sort}`, order.toUpperCase() as 'ASC' | 'DESC');
+      } else {
+        queryBuilder.orderBy('project.createdAt', 'DESC');
+      }
+    } else {
+      queryBuilder.orderBy('project.createdAt', 'DESC');
+    }
 
     // Aplicar filtros
     if (!includeArchived) {
@@ -248,7 +262,7 @@ export class ProjectsAppService {
 
     if (query) {
       queryBuilder.andWhere(
-        'project.projectName LIKE :query OR project.description LIKE :query',
+        'project.name LIKE :query OR project.description LIKE :query',
         {
           query: `%${query}%`,
         },
@@ -271,12 +285,25 @@ export class ProjectsAppService {
               )[0]
             : null;
 
+        // Extraer datos para el grid del frontend
+        const apparentPowerKVA =
+          latestVersion?.outputTotales?.demanda?.totalDemand || 0;
+        const circuits =
+          latestVersion?.outputTotales?.circuitos?.totalCircuits || 0;
+
         return {
+          id: project.id,
+          name: project.name,
+          owner: project.description || 'Sin propietario',
+          apparentPowerKVA: Math.round(apparentPowerKVA * 100) / 100, // Redondear a 2 decimales
+          circuits: circuits,
+          updatedAt: project.updateDate.toISOString(),
+          createdAt: project.creationDate.toISOString(),
+          description: project.description,
+          status: project.status,
+          // Datos adicionales para compatibilidad
           projectId: project.id,
           projectName: project.name,
-          status: project.status,
-          createdAt: project.creationDate.toISOString(),
-          updatedAt: project.updateDate.toISOString(),
           latestVersion: latestVersion
             ? {
                 versionId: latestVersion.id,
@@ -366,7 +393,7 @@ export class ProjectsAppService {
 
     // Generar firma de rules basada en el RuleSet usado
     let currentRulesSignature: string;
-    let warnings = [...(calculationResult.warnings || [])];
+    const warnings = [...(calculationResult.warnings || [])];
 
     if (dto.opciones?.ruleSetId) {
       // Usar firma del RuleSet específico
@@ -478,5 +505,134 @@ export class ProjectsAppService {
       traceId: 'unknown', // Se puede obtener del contexto de la request
     };
   }
-}
 
+  // ===== SPRINT 9: CRUD COMPLETO =====
+
+  /**
+   * Crea un proyecto simple (Sprint 9)
+   */
+  async createSimpleProject(dto: ProjectInputDto): Promise<ProjectResponseDto> {
+    // Validar que no exista un proyecto con el mismo nombre
+    const existingProject = await this.projectRepository.findOne({
+      where: { name: dto.name },
+    });
+
+    if (existingProject) {
+      throw new ConflictException(
+        `Ya existe un proyecto con el nombre "${dto.name}"`,
+      );
+    }
+
+    // Crear el proyecto
+    const project = new Project();
+    project.name = dto.name;
+    project.description = dto.notes || '';
+    project.status = ProjectStatus.ACTIVE;
+    project.metadata = {
+      owner: dto.owner,
+      location: dto.location,
+      voltage: dto.voltage,
+      frequency: dto.frequency,
+    };
+
+    const savedProject = await this.projectRepository.save(project);
+
+    return this.mapProjectToResponseDto(savedProject);
+  }
+
+  /**
+   * Actualiza un proyecto existente (Sprint 9)
+   */
+  async updateProject(
+    id: string,
+    dto: ProjectInputDto,
+  ): Promise<ProjectResponseDto> {
+    const project = await this.projectRepository.findOne({
+      where: { id },
+    });
+
+    if (!project) {
+      throw new NotFoundException(`Proyecto con ID "${id}" no encontrado`);
+    }
+
+    // Validar que no exista otro proyecto con el mismo nombre
+    if (dto.name !== project.name) {
+      const existingProject = await this.projectRepository.findOne({
+        where: { name: dto.name },
+      });
+
+      if (existingProject) {
+        throw new ConflictException(
+          `Ya existe un proyecto con el nombre "${dto.name}"`,
+        );
+      }
+    }
+
+    // Actualizar el proyecto
+    project.name = dto.name;
+    project.description = dto.notes || '';
+    project.metadata = {
+      ...project.metadata,
+      owner: dto.owner,
+      location: dto.location,
+      voltage: dto.voltage,
+      frequency: dto.frequency,
+    };
+
+    const updatedProject = await this.projectRepository.save(project);
+
+    return this.mapProjectToResponseDto(updatedProject);
+  }
+
+  /**
+   * Elimina un proyecto (Sprint 9)
+   */
+  async deleteProject(id: string): Promise<void> {
+    const project = await this.projectRepository.findOne({
+      where: { id },
+      relations: ['versions'],
+    });
+
+    if (!project) {
+      throw new NotFoundException(`Proyecto con ID "${id}" no encontrado`);
+    }
+
+    // Verificar si tiene exportaciones activas (regla de negocio)
+    const hasActiveExports = await this.checkActiveExports(id);
+    if (hasActiveExports) {
+      throw new ConflictException(
+        'No se puede eliminar el proyecto porque tiene exportaciones activas',
+      );
+    }
+
+    // Eliminar el proyecto (cascade eliminará las versiones)
+    await this.projectRepository.remove(project);
+  }
+
+  /**
+   * Verifica si un proyecto tiene exportaciones activas
+   */
+  private async checkActiveExports(projectId: string): Promise<boolean> {
+    // TODO: Implementar verificación real cuando se tenga el módulo de exportaciones
+    // Por ahora retornamos false para permitir eliminación
+    return false;
+  }
+
+  /**
+   * Mapea un proyecto a su DTO de respuesta
+   */
+  private mapProjectToResponseDto(project: Project): ProjectResponseDto {
+    return {
+      id: project.id,
+      name: project.name,
+      owner: project.metadata?.owner,
+      location: project.metadata?.location,
+      voltage: project.metadata?.voltage,
+      frequency: project.metadata?.frequency,
+      notes: project.description,
+      createdAt: project.creationDate.toISOString(),
+      updatedAt: project.lastModifiedDate.toISOString(),
+      status: project.status,
+    };
+  }
+}

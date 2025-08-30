@@ -126,7 +126,7 @@ describe('CalcReportController (e2e)', () => {
           expect(res.body).toHaveProperty('excelBase64');
           expect(res.body).toHaveProperty('metadata');
           expect(res.body).toHaveProperty('message');
-          
+
           expect(res.body.metadata).toHaveProperty('pdfHash');
           expect(res.body.metadata).toHaveProperty('excelHash');
           expect(res.body.metadata).toHaveProperty('calculationDate');
@@ -139,13 +139,13 @@ describe('CalcReportController (e2e)', () => {
           expect(res.body.metadata).toHaveProperty('circuitCount');
           expect(res.body.metadata).toHaveProperty('generalStatus');
           expect(res.body.metadata).toHaveProperty('observations');
-          
+
           expect(res.body.metadata.installationType).toBe('residencial');
           expect(res.body.metadata.electricalSystem).toBe('Monofásico 120V');
           expect(res.body.metadata.normsVersion).toBe('NEC 2023 + RIE RD');
           expect(res.body.metadata.systemVersion).toBe('1.0.0');
           expect(res.body.message).toBe('Reporte generado exitosamente');
-          
+
           expect(res.headers['x-pdf-hash']).toBeDefined();
           expect(res.headers['x-excel-hash']).toBeDefined();
           expect(res.headers['x-report-date']).toBeDefined();
@@ -167,7 +167,7 @@ describe('CalcReportController (e2e)', () => {
           expect(res.body).toHaveProperty('excelBase64');
           expect(res.body).toHaveProperty('metadata');
           expect(res.body).toHaveProperty('message');
-          
+
           expect(res.body.metadata.installationType).toBe('comercial');
           expect(res.body.metadata.electricalSystem).toBe('Trifásico 208V');
           expect(res.body.metadata.totalCurrent).toBe(0);
@@ -192,7 +192,7 @@ describe('CalcReportController (e2e)', () => {
           expect(res.body).toHaveProperty('excelBase64');
           expect(res.body).toHaveProperty('metadata');
           expect(res.body).toHaveProperty('message');
-          
+
           expect(res.body.metadata.installationType).toBe('industrial');
           expect(res.body.metadata.electricalSystem).toBe('Trifásico 480V');
         });
@@ -210,7 +210,7 @@ describe('CalcReportController (e2e)', () => {
           expect(res.body).toHaveProperty('excelBase64');
           expect(res.body).toHaveProperty('metadata');
           expect(res.body).toHaveProperty('message');
-          
+
           expect(res.body.metadata.totalCurrent).toBe(0);
           expect(res.body.metadata.totalLoad).toBe(0);
           expect(res.body.metadata.circuitCount).toBe(0);
@@ -285,7 +285,7 @@ describe('CalcReportController (e2e)', () => {
           expect(res.body).toHaveProperty('excelBase64');
           expect(res.body).toHaveProperty('metadata');
           expect(res.body).toHaveProperty('message');
-          
+
           expect(res.body.metadata.installationType).toBe('residencial');
           expect(res.body.metadata.roomLoads).toBeDefined();
         });
@@ -316,7 +316,7 @@ describe('CalcReportController (e2e)', () => {
           expect(res.body).toHaveProperty('excelBase64');
           expect(res.body).toHaveProperty('metadata');
           expect(res.body).toHaveProperty('message');
-          
+
           expect(res.body.metadata.installationType).toBe('comercial');
           expect(res.body.metadata.demandAnalysis).toBeDefined();
         });
@@ -351,7 +351,7 @@ describe('CalcReportController (e2e)', () => {
           expect(res.body).toHaveProperty('excelBase64');
           expect(res.body).toHaveProperty('metadata');
           expect(res.body).toHaveProperty('message');
-          
+
           expect(res.body.metadata.installationType).toBe('industrial');
           expect(res.body.metadata.circuits).toBeDefined();
         });
@@ -394,7 +394,7 @@ describe('CalcReportController (e2e)', () => {
           expect(res.body).toHaveProperty('excelBase64');
           expect(res.body).toHaveProperty('metadata');
           expect(res.body).toHaveProperty('message');
-          
+
           expect(res.body.metadata.installationType).toBe('residencial');
           expect(res.body.metadata.voltageDropAnalysis).toBeDefined();
         });
@@ -434,7 +434,7 @@ describe('CalcReportController (e2e)', () => {
           expect(res.body).toHaveProperty('excelBase64');
           expect(res.body).toHaveProperty('metadata');
           expect(res.body).toHaveProperty('message');
-          
+
           expect(res.body.metadata.installationType).toBe('comercial');
           expect(res.body.metadata.groundingStatus).toBeDefined();
         });
@@ -479,8 +479,12 @@ describe('CalcReportController (e2e)', () => {
         .send(requestData2)
         .expect(200);
 
-      expect(response1.body.metadata.pdfHash).not.toBe(response2.body.metadata.pdfHash);
-      expect(response1.body.metadata.excelHash).not.toBe(response2.body.metadata.excelHash);
+      expect(response1.body.metadata.pdfHash).not.toBe(
+        response2.body.metadata.pdfHash,
+      );
+      expect(response1.body.metadata.excelHash).not.toBe(
+        response2.body.metadata.excelHash,
+      );
     });
   });
 
@@ -498,7 +502,9 @@ describe('CalcReportController (e2e)', () => {
         .expect((res) => {
           expect(res.headers['content-type']).toContain('application/zip');
           expect(res.headers['content-disposition']).toContain('attachment');
-          expect(res.headers['content-disposition']).toContain('reporte-electrico-');
+          expect(res.headers['content-disposition']).toContain(
+            'reporte-electrico-',
+          );
           expect(res.headers['x-pdf-hash']).toBeDefined();
           expect(res.headers['x-excel-hash']).toBeDefined();
         });
@@ -520,4 +526,3 @@ describe('CalcReportController (e2e)', () => {
     });
   });
 });
-

@@ -92,4 +92,3 @@ export class CalcCircuitsController {
     return this.circuitService.groupIntoCircuits(request);
   }
 }
-

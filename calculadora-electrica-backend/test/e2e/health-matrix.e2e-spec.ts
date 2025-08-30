@@ -12,10 +12,10 @@ describe('Health Matrix E2E Tests (Story3_TestMatrix.csv)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
-    
+
     // Configurar prefijo global para tests
     app.setGlobalPrefix('api');
-    
+
     await app.init();
   });
 
@@ -62,16 +62,22 @@ describe('Health Matrix E2E Tests (Story3_TestMatrix.csv)', () => {
     it('debe devolver 503 readiness failure (db)', async () => {
       // Nota: Este test simula el comportamiento cuando la DB está down
       // En un entorno real, se detendría MariaDB
-      
+
       // Por ahora, verificamos que el endpoint responde correctamente
       const response = await request(app.getHttpServer())
         .get('/api/health')
         .expect(200);
 
-      console.log('H2 Response (DB simulado):', JSON.stringify(response.body, null, 2));
+      console.log(
+        'H2 Response (DB simulado):',
+        JSON.stringify(response.body, null, 2),
+      );
 
       // Verificar que el health check está marcado como simulado
-      expect(response.body.data.info.database).toHaveProperty('note', 'simulado');
+      expect(response.body.data.info.database).toHaveProperty(
+        'note',
+        'simulado',
+      );
     });
   });
 
@@ -79,16 +85,19 @@ describe('Health Matrix E2E Tests (Story3_TestMatrix.csv)', () => {
     it('debe devolver 503 readiness failure (disk)', async () => {
       // Nota: Este test simula el comportamiento cuando el espacio es insuficiente
       // En un entorno real, se configuraría HEALTH_DISK_MIN_BYTES muy alto
-      
+
       const response = await request(app.getHttpServer())
         .get('/api/health')
         .expect(200);
 
-      console.log('H3 Response (Disk simulado):', JSON.stringify(response.body, null, 2));
+      console.log(
+        'H3 Response (Disk simulado):',
+        JSON.stringify(response.body, null, 2),
+      );
 
       // Verificar que el health check está marcado como simulado
       expect(response.body.data.info.disk).toHaveProperty('note', 'simulado');
-      
+
       // Verificar que muestra información de espacio
       expect(response.body.data.info.disk).toHaveProperty('freeSpace');
       expect(response.body.data.info.disk).toHaveProperty('minRequired');
@@ -109,10 +118,10 @@ describe('Health Matrix E2E Tests (Story3_TestMatrix.csv)', () => {
       expect(response.body.data).toHaveProperty('info');
       expect(response.body.data).toHaveProperty('error');
       expect(response.body.data).toHaveProperty('details');
-      
+
       // Verificar que el status es "ok"
       expect(response.body.data.status).toBe('ok');
-      
+
       // Verificar que no hay errores
       expect(response.body.data.error).toEqual({});
     });

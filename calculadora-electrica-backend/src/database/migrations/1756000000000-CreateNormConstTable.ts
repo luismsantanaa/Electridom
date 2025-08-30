@@ -75,4 +75,3 @@ export class CreateNormConstTable1756000000000 implements MigrationInterface {
     await queryRunner.dropTable('norm_const');
   }
 }
-

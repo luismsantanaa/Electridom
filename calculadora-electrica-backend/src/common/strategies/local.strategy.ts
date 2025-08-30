@@ -17,7 +17,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
       'unknown', // userAgent
       'unknown', // traceId
     );
-    
+
     if (!user) {
       throw new UnauthorizedException();
     }

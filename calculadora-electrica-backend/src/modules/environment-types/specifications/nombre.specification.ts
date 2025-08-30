@@ -22,4 +22,3 @@ export class NombreSpecification extends BaseSpecification<EnvironmentType> {
     );
   }
 }
-

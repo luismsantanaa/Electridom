@@ -7,13 +7,15 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "nest build --tsc",
-    "postbuild": "if [ -d src/database/seeds ] && [ \"$(ls -A src/database/seeds/*.json 2>/dev/null)\" ]; then cp -r src/database/seeds/*.json dist/src/database/seeds/ 2>/dev/null || echo 'No JSON files found to copy'; else echo 'No seeds directory or JSON files found'; fi",
+    "postbuild": "powershell -Command \"if (Test-Path 'dist/src/database/seeds') { if (Test-Path 'src/database/seeds/*.json') { Copy-Item 'src/database/seeds/*.json' 'dist/src/database/seeds/' -ErrorAction SilentlyContinue } }\"",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
-    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+    "lint": "eslint \"src/**/*.ts\" --fix",
+    "lint:test": "eslint \"test/**/*.ts\" --fix",
+    "lint:all": "eslint \"{src,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
@@ -43,7 +45,7 @@
     "migration:generate": "typeorm-ts-node-commonjs migration:generate -d src/config/typeorm.config.ts",
     "migration:run": "typeorm-ts-node-commonjs migration:run -d src/config/typeorm.config.ts",
     "migration:revert": "typeorm-ts-node-commonjs migration:revert -d src/config/typeorm.config.ts",
-    "seed": "ts-node scripts/run-seeds.ts",
+    "seed": "ts-node src/database/run-seeds.ts",
     "migrate": "ts-node -r tsconfig-paths/register scripts/run-migrations.ts"
   },
   "dependencies": {

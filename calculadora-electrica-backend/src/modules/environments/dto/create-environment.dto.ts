@@ -47,4 +47,3 @@ export class CreateEnvironmentDto {
   @IsUUID()
   projectId: string;
 }
-

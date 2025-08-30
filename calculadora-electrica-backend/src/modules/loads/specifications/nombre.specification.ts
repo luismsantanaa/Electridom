@@ -21,4 +21,3 @@ export class NombreSpecification extends BaseSpecification<Load> {
     });
   }
 }
-

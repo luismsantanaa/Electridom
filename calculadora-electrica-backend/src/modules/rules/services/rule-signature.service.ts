@@ -25,7 +25,7 @@ export class RuleSignatureService {
     });
 
     // Crear objeto canónico ordenado por código
-    const canonicalRules = rules.map(rule => ({
+    const canonicalRules = rules.map((rule) => ({
       code: rule.code,
       numericValue: rule.numericValue,
       updatedAt: rule.updateDate.toISOString(),
@@ -33,11 +33,11 @@ export class RuleSignatureService {
 
     // Generar JSON canónico (sin espacios extra)
     const canonicalJson = JSON.stringify(canonicalRules);
-    
+
     // Generar hash SHA-256
     const hash = crypto.createHash('sha256');
     hash.update(canonicalJson);
-    
+
     return `sha256:${hash.digest('hex')}`;
   }
 
@@ -48,24 +48,26 @@ export class RuleSignatureService {
    */
   async getRuleSetSignature(ruleSetId: string): Promise<string> {
     const { rules } = await this.rulesAdminService.getRuleSetById(ruleSetId);
-    
+
     // Crear objeto canónico ordenado por código
-    const canonicalRules = rules.map(rule => ({
-      code: rule.code,
-      numericValue: rule.numericValue,
-      unit: rule.unit,
-      category: rule.category,
-      source: rule.source,
-      isDefault: rule.isDefault,
-    })).sort((a, b) => a.code.localeCompare(b.code));
+    const canonicalRules = rules
+      .map((rule) => ({
+        code: rule.code,
+        numericValue: rule.numericValue,
+        unit: rule.unit,
+        category: rule.category,
+        source: rule.source,
+        isDefault: rule.isDefault,
+      }))
+      .sort((a, b) => a.code.localeCompare(b.code));
 
     // Generar JSON canónico (sin espacios extra)
     const canonicalJson = JSON.stringify(canonicalRules);
-    
+
     // Generar hash SHA-256
     const hash = crypto.createHash('sha256');
     hash.update(canonicalJson);
-    
+
     return `sha256:${hash.digest('hex')}`;
   }
 
@@ -75,25 +77,28 @@ export class RuleSignatureService {
    * @returns Firma SHA-256 de las rules activas
    */
   async getActiveRulesSignature(effectiveDate?: string): Promise<string> {
-    const { rules } = await this.rulesAdminService.getActiveRuleSet(effectiveDate);
-    
+    const { rules } =
+      await this.rulesAdminService.getActiveRuleSet(effectiveDate);
+
     // Crear objeto canónico ordenado por código
-    const canonicalRules = rules.map(rule => ({
-      code: rule.code,
-      numericValue: rule.numericValue,
-      unit: rule.unit,
-      category: rule.category,
-      source: rule.source,
-      isDefault: rule.isDefault,
-    })).sort((a, b) => a.code.localeCompare(b.code));
+    const canonicalRules = rules
+      .map((rule) => ({
+        code: rule.code,
+        numericValue: rule.numericValue,
+        unit: rule.unit,
+        category: rule.category,
+        source: rule.source,
+        isDefault: rule.isDefault,
+      }))
+      .sort((a, b) => a.code.localeCompare(b.code));
 
     // Generar JSON canónico (sin espacios extra)
     const canonicalJson = JSON.stringify(canonicalRules);
-    
+
     // Generar hash SHA-256
     const hash = crypto.createHash('sha256');
     hash.update(canonicalJson);
-    
+
     return `sha256:${hash.digest('hex')}`;
   }
 
@@ -107,4 +112,3 @@ export class RuleSignatureService {
     return signature1 !== signature2;
   }
 }
-

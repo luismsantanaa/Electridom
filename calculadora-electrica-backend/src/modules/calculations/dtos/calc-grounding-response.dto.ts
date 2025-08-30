@@ -105,4 +105,3 @@ export class CalcGroundingResponseDto {
     algoritmo_usado: string;
   };
 }
-

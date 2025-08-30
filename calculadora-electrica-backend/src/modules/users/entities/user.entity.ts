@@ -175,4 +175,3 @@ export class User extends BaseAuditEntity {
     return result;
   }
 }
-

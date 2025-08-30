@@ -1,39 +1,51 @@
-﻿import { IsString, IsNotEmpty, MaxLength, IsOptional, IsBoolean, ValidateNested, IsArray } from 'class-validator';
+﻿import {
+  IsString,
+  IsNotEmpty,
+  MaxLength,
+  IsOptional,
+  IsBoolean,
+  ValidateNested,
+  IsArray,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
+import { ProjectStatus } from '../entities/project.entity';
 
 // DTOs base reutilizables
 export class SurfaceDto {
   @ApiProperty({ example: 'Sala', description: 'name del environment' })
-  @IsString() @IsNotEmpty() 
+  @IsString()
+  @IsNotEmpty()
   environment: string;
 
   @ApiProperty({ example: 18.5, description: 'Área en metros cuadrados' })
-  @IsNotEmpty() 
+  @IsNotEmpty()
   areaM2: number;
 }
 
 export class ConsumptionDto {
   @ApiProperty({ example: 'Televisor', description: 'name del artefacto' })
-  @IsString() @IsNotEmpty() 
+  @IsString()
+  @IsNotEmpty()
   name: string;
 
   @ApiProperty({ example: 'Sala', description: 'environment donde se ubica' })
-  @IsString() @IsNotEmpty() 
+  @IsString()
+  @IsNotEmpty()
   environment: string;
 
   @ApiProperty({ example: 120, description: 'Potencia en watts' })
-  @IsNotEmpty() 
+  @IsNotEmpty()
   watts: number;
 }
 
 export class OpcionesDto {
   @ApiProperty({ example: 120, description: 'Tensión en voltios' })
-  @IsOptional() 
+  @IsOptional()
   tensionV?: number;
 
   @ApiProperty({ example: true, description: 'Si es monofásico' })
-  @IsOptional() 
+  @IsOptional()
   monofasico?: boolean;
 
   @ApiProperty({
@@ -41,7 +53,8 @@ export class OpcionesDto {
     example: 'uuid',
     required: false,
   })
-  @IsOptional() @IsString() 
+  @IsOptional()
+  @IsString()
   ruleSetId?: string;
 
   @ApiProperty({
@@ -49,112 +62,132 @@ export class OpcionesDto {
     example: '2025-09-10T00:00:00Z',
     required: false,
   })
-  @IsOptional() @IsString() 
+  @IsOptional()
+  @IsString()
   effectiveDate?: string;
 }
 
 // DTO base para crear project
 export class CreateProjectBaseDto {
-  @ApiProperty({ 
-    example: 'Residencia García', 
+  @ApiProperty({
+    example: 'Residencia García',
     description: 'name del project',
-    maxLength: 120 
+    maxLength: 120,
   })
-  @IsString() @IsNotEmpty() @MaxLength(120) 
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(120)
   projectName: string;
 
-  @ApiProperty({ 
-    example: 'Unifamiliar 2 plantas', 
+  @ApiProperty({
+    example: 'Unifamiliar 2 plantas',
     description: 'Descripción del project',
     required: false,
-    maxLength: 500 
+    maxLength: 500,
   })
-  @IsOptional() @IsString() @MaxLength(500) 
+  @IsOptional()
+  @IsString()
+  @MaxLength(500)
   description?: string;
 }
 
 // DTO para crear project con datos de cálculo
 export class CreateProjectRequestDto extends CreateProjectBaseDto {
-  @ApiProperty({ 
+  @ApiProperty({
     type: [SurfaceDto],
     example: [{ environment: 'Sala', areaM2: 18.5 }],
-    description: 'Lista de surfaces por environment'
+    description: 'Lista de surfaces por environment',
   })
-  @IsArray() @ValidateNested({ each: true }) @Type(() => SurfaceDto) 
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => SurfaceDto)
   surfaces: SurfaceDto[];
 
-  @ApiProperty({ 
+  @ApiProperty({
     type: [ConsumptionDto],
     example: [{ name: 'Televisor', environment: 'Sala', watts: 120 }],
-    description: 'Lista de consumptions por environment'
+    description: 'Lista de consumptions por environment',
   })
-  @IsArray() @ValidateNested({ each: true }) @Type(() => ConsumptionDto) 
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ConsumptionDto)
   consumptions: ConsumptionDto[];
 
-  @ApiProperty({ 
+  @ApiProperty({
     type: OpcionesDto,
     example: { tensionV: 120, monofasico: true },
     description: 'Opciones de cálculo',
-    required: false
+    required: false,
   })
-  @ValidateNested() @Type(() => OpcionesDto) @IsOptional() 
+  @ValidateNested()
+  @Type(() => OpcionesDto)
+  @IsOptional()
   opciones?: OpcionesDto;
 
-  @ApiProperty({ 
-    example: true, 
+  @ApiProperty({
+    example: true,
     description: 'Si ejecutar cálculo inmediatamente',
     default: true,
-    required: false
+    required: false,
   })
-  @IsOptional() @IsBoolean() 
+  @IsOptional()
+  @IsBoolean()
   computeNow?: boolean;
 }
 
 // DTO para crear nueva versión
 export class CreateVersionRequestDto {
-  @ApiProperty({ 
+  @ApiProperty({
     type: [SurfaceDto],
     example: [{ environment: 'Sala', areaM2: 18.5 }],
-    description: 'Lista de surfaces por environment'
+    description: 'Lista de surfaces por environment',
   })
-  @IsArray() @ValidateNested({ each: true }) @Type(() => SurfaceDto) 
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => SurfaceDto)
   surfaces: SurfaceDto[];
 
-  @ApiProperty({ 
+  @ApiProperty({
     type: [ConsumptionDto],
     example: [{ name: 'Televisor', environment: 'Sala', watts: 120 }],
-    description: 'Lista de consumptions por environment'
+    description: 'Lista de consumptions por environment',
   })
-  @IsArray() @ValidateNested({ each: true }) @Type(() => ConsumptionDto) 
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ConsumptionDto)
   consumptions: ConsumptionDto[];
 
-  @ApiProperty({ 
+  @ApiProperty({
     type: OpcionesDto,
     example: { tensionV: 120, monofasico: true },
     description: 'Opciones de cálculo',
-    required: false
+    required: false,
   })
-  @ValidateNested() @Type(() => OpcionesDto) @IsOptional() 
+  @ValidateNested()
+  @Type(() => OpcionesDto)
+  @IsOptional()
   opciones?: OpcionesDto;
 
-  @ApiProperty({ 
-    example: 'Ajuste de consumptions cocina', 
+  @ApiProperty({
+    example: 'Ajuste de consumptions cocina',
     description: 'Nota opcional para la versión',
     required: false,
-    maxLength: 240
+    maxLength: 240,
   })
-  @IsOptional() @IsString() @MaxLength(240) 
+  @IsOptional()
+  @IsString()
+  @MaxLength(240)
   note?: string;
 }
 
 // DTO para actualizar estado del project
 export class UpdateProjectStatusDto {
-  @ApiProperty({ 
+  @ApiProperty({
     enum: ['ACTIVE', 'ARCHIVED'],
     example: 'ARCHIVED',
-    description: 'Nuevo estado del project'
+    description: 'Nuevo estado del project',
   })
-  @IsString() @IsNotEmpty() 
-  status: 'ACTIVE' | 'ARCHIVED';
+  @IsString()
+  @IsNotEmpty()
+  status: ProjectStatus;
 }
-

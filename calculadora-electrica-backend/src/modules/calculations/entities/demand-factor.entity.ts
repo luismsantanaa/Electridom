@@ -48,4 +48,3 @@ export class DemandFactor extends BaseAuditEntity {
   })
   notes?: string;
 }
-

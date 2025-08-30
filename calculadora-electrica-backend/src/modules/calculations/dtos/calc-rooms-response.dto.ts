@@ -35,19 +35,25 @@ export class TotalesDto {
 }
 
 export class CalcRoomsResponseDto {
-  @ApiProperty({ type: [AmbienteResultDto], description: 'Resultados por environment' })
+  @ApiProperty({
+    type: [AmbienteResultDto],
+    description: 'Resultados por environment',
+  })
   environments: AmbienteResultDto[];
 
   @ApiProperty({ type: TotalesDto, description: 'Totales del cálculo' })
   totales: TotalesDto;
 
-  @ApiPropertyOptional({ description: 'circuit ramales (para futuras historias)' })
+  @ApiPropertyOptional({
+    description: 'circuit ramales (para futuras historias)',
+  })
   circuits?: any[];
 
   @ApiPropertyOptional({ description: 'feeder (para futuras historias)' })
   feeder?: any;
 
-  @ApiPropertyOptional({ description: 'Puesta a tierra (para futuras historias)' })
+  @ApiPropertyOptional({
+    description: 'Puesta a tierra (para futuras historias)',
+  })
   grounding?: any;
 }
-

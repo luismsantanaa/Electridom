@@ -1,13 +1,16 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { HealthCheckService, HealthIndicatorResult, HealthCheckError, HealthCheckResult } from '@nestjs/terminus';
+import {
+  HealthCheckService,
+  HealthIndicatorResult,
+  HealthCheckError,
+  HealthCheckResult,
+} from '@nestjs/terminus';
 
 @Injectable()
 export class HealthService {
   private readonly logger = new Logger(HealthService.name);
 
-  constructor(
-    private readonly health: HealthCheckService,
-  ) {}
+  constructor(private readonly health: HealthCheckService) {}
 
   /**
    * Health check completo con liveness y readiness
@@ -42,15 +45,12 @@ export class HealthService {
       };
     } catch (error) {
       this.logger.error('Liveness health check failed:', error.message);
-      throw new HealthCheckError(
-        'Liveness check failed',
-        {
-          liveness: {
-            status: 'down',
-            error: error.message,
-          },
+      throw new HealthCheckError('Liveness check failed', {
+        liveness: {
+          status: 'down',
+          error: error.message,
         },
-      );
+      });
     }
   }
 
@@ -70,15 +70,12 @@ export class HealthService {
       };
     } catch (error) {
       this.logger.error('Database health check failed:', error.message);
-      throw new HealthCheckError(
-        'Database check failed',
-        {
-          database: {
-            status: 'down',
-            error: error.message,
-          },
+      throw new HealthCheckError('Database check failed', {
+        database: {
+          status: 'down',
+          error: error.message,
         },
-      );
+      });
     }
   }
 
@@ -100,15 +97,12 @@ export class HealthService {
       };
     } catch (error) {
       this.logger.error('Disk health check failed:', error.message);
-      throw new HealthCheckError(
-        'Disk check failed',
-        {
-          disk: {
-            status: 'down',
-            error: error.message,
-          },
+      throw new HealthCheckError('Disk check failed', {
+        disk: {
+          status: 'down',
+          error: error.message,
         },
-      );
+      });
     }
   }
 }

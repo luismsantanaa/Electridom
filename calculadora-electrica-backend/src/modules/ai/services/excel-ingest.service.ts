@@ -54,23 +54,26 @@ export class ExcelIngestService {
       const worksheet = workbook.Sheets[sheetName];
 
       // Convertir a JSON
-      const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 }) as any[][];
-      
+      const jsonData = XLSX.utils.sheet_to_json(worksheet, {
+        header: 1,
+      });
+
       if (!jsonData || jsonData.length < 2) {
-        throw new BadRequestException('El archivo Excel debe tener al menos una fila de encabezados y una fila de datos');
+        throw new BadRequestException(
+          'El archivo Excel debe tener al menos una fila de encabezados y una fila de datos',
+        );
       }
 
       // Procesar los datos
-      const result = this.processExcelData(jsonData);
+      const result = this.processExcelData(jsonData as any[][]);
 
       // Limpiar archivo temporal
       this.cleanupTempFile(filePath);
 
       return result;
-
     } catch (error) {
       this.logger.error(`Error procesando archivo Excel: ${error.message}`);
-      
+
       // Limpiar archivo temporal en caso de error
       this.cleanupTempFile(filePath);
 
@@ -79,7 +82,7 @@ export class ExcelIngestService {
         message: `Error procesando archivo: ${error.message}`,
         errors: [error.message],
         rowsProcessed: 0,
-        rowsWithErrors: 0
+        rowsWithErrors: 0,
       };
     }
   }
@@ -102,15 +105,15 @@ export class ExcelIngestService {
 
     // Validar estructura de encabezados
     const requiredHeaders = ['name', 'type', 'value', 'unit'];
-    const missingHeaders = requiredHeaders.filter(h => !headers.includes(h));
-    
+    const missingHeaders = requiredHeaders.filter((h) => !headers.includes(h));
+
     if (missingHeaders.length > 0) {
       return {
         success: false,
         message: `Encabezados requeridos faltantes: ${missingHeaders.join(', ')}`,
         errors: [`Encabezados requeridos: ${requiredHeaders.join(', ')}`],
         rowsProcessed: 0,
-        rowsWithErrors: 0
+        rowsWithErrors: 0,
       };
     }
 
@@ -118,15 +121,15 @@ export class ExcelIngestService {
     const processedData: ProcessedData = {
       system: { voltage: 120, phases: 1, frequency: 60 }, // Valores por defecto
       superficies: [],
-      consumos: []
+      consumos: [],
     };
 
     dataRows.forEach((row, index) => {
       const rowNumber = index + 2; // +2 porque empezamos desde la fila 2 (después de encabezados)
-      
+
       try {
         const rowData = this.parseRow(headers, row);
-        
+
         if (rowData) {
           this.addToProcessedData(processedData, rowData, rowNumber, errors);
         }
@@ -144,7 +147,7 @@ export class ExcelIngestService {
     }
 
     const success = errors.length === 0;
-    const message = success 
+    const message = success
       ? `Archivo procesado exitosamente. ${dataRows.length} filas procesadas.`
       : `Procesamiento completado con ${errors.length} errores.`;
 
@@ -154,7 +157,7 @@ export class ExcelIngestService {
       message,
       errors: errors.length > 0 ? errors : undefined,
       rowsProcessed: dataRows.length,
-      rowsWithErrors
+      rowsWithErrors,
     };
   }
 
@@ -163,9 +166,13 @@ export class ExcelIngestService {
    */
   private parseRow(headers: string[], row: any[]): any {
     const rowData: any = {};
-    
+
     headers.forEach((header, index) => {
-      if (row[index] !== undefined && row[index] !== null && row[index] !== '') {
+      if (
+        row[index] !== undefined &&
+        row[index] !== null &&
+        row[index] !== ''
+      ) {
         rowData[header] = row[index];
       }
     });
@@ -182,27 +189,50 @@ export class ExcelIngestService {
    * Agrega datos procesados a la estructura final
    */
   private addToProcessedData(
-    processedData: ProcessedData, 
-    rowData: any, 
-    rowNumber: number, 
-    errors: string[]
+    processedData: ProcessedData,
+    rowData: any,
+    rowNumber: number,
+    errors: string[],
   ): void {
     const { name, type, value, unit } = rowData;
 
     switch (type.toLowerCase()) {
       case 'system':
-        this.processSystemData(processedData, name, value, unit, rowNumber, errors);
+        this.processSystemData(
+          processedData,
+          name,
+          value,
+          unit,
+          rowNumber,
+          errors,
+        );
         break;
       case 'superficie':
       case 'ambiente':
-        this.processSuperficieData(processedData, name, value, unit, rowNumber, errors);
+        this.processSuperficieData(
+          processedData,
+          name,
+          value,
+          unit,
+          rowNumber,
+          errors,
+        );
         break;
       case 'consumo':
       case 'carga':
-        this.processConsumoData(processedData, name, value, unit, rowNumber, errors);
+        this.processConsumoData(
+          processedData,
+          name,
+          value,
+          unit,
+          rowNumber,
+          errors,
+        );
         break;
       default:
-        errors.push(`Fila ${rowNumber}: Tipo desconocido "${type}". Tipos válidos: system, superficie, consumo`);
+        errors.push(
+          `Fila ${rowNumber}: Tipo desconocido "${type}". Tipos válidos: system, superficie, consumo`,
+        );
     }
   }
 
@@ -215,7 +245,7 @@ export class ExcelIngestService {
     value: any,
     unit: string,
     rowNumber: number,
-    errors: string[]
+    errors: string[],
   ): void {
     const numValue = this.parseNumber(value, rowNumber, errors);
     if (numValue === null) return;
@@ -231,14 +261,16 @@ export class ExcelIngestService {
           errors.push(`Fila ${rowNumber}: Fases debe ser 1 o 3`);
           return;
         }
-        processedData.system.phases = numValue as 1 | 3;
+        processedData.system.phases = numValue;
         break;
       case 'frequency':
       case 'frecuencia':
         processedData.system.frequency = numValue;
         break;
       default:
-        errors.push(`Fila ${rowNumber}: Propiedad de sistema desconocida "${name}"`);
+        errors.push(
+          `Fila ${rowNumber}: Propiedad de sistema desconocida "${name}"`,
+        );
     }
   }
 
@@ -251,7 +283,7 @@ export class ExcelIngestService {
     value: any,
     unit: string,
     rowNumber: number,
-    errors: string[]
+    errors: string[],
   ): void {
     const area = this.parseNumber(value, rowNumber, errors);
     if (area === null) return;
@@ -259,7 +291,7 @@ export class ExcelIngestService {
     processedData.superficies.push({
       name: name,
       area: area,
-      type: 'residencial' // Valor por defecto
+      type: 'residencial', // Valor por defecto
     });
   }
 
@@ -272,7 +304,7 @@ export class ExcelIngestService {
     value: any,
     unit: string,
     rowNumber: number,
-    errors: string[]
+    errors: string[],
   ): void {
     const power = this.parseNumber(value, rowNumber, errors);
     if (power === null) return;
@@ -281,14 +313,18 @@ export class ExcelIngestService {
       name: name,
       power: power,
       quantity: 1, // Valor por defecto
-      type: 'iluminacion' // Valor por defecto
+      type: 'iluminacion', // Valor por defecto
     });
   }
 
   /**
    * Parsea un valor numérico
    */
-  private parseNumber(value: any, rowNumber: number, errors: string[]): number | null {
+  private parseNumber(
+    value: any,
+    rowNumber: number,
+    errors: string[],
+  ): number | null {
     const num = Number(value);
     if (isNaN(num)) {
       errors.push(`Fila ${rowNumber}: Valor "${value}" no es un número válido`);
@@ -300,7 +336,10 @@ export class ExcelIngestService {
   /**
    * Valida los datos procesados contra el schema
    */
-  private validateProcessedData(data: ProcessedData): { isValid: boolean; errors: string[] } {
+  private validateProcessedData(data: ProcessedData): {
+    isValid: boolean;
+    errors: string[];
+  } {
     const errors: string[] = [];
 
     // Validaciones básicas
@@ -339,7 +378,7 @@ export class ExcelIngestService {
 
     return {
       isValid: errors.length === 0,
-      errors
+      errors,
     };
   }
 
@@ -353,7 +392,9 @@ export class ExcelIngestService {
         this.logger.log(`Archivo temporal eliminado: ${filePath}`);
       }
     } catch (error) {
-      this.logger.warn(`No se pudo eliminar archivo temporal ${filePath}: ${error.message}`);
+      this.logger.warn(
+        `No se pudo eliminar archivo temporal ${filePath}: ${error.message}`,
+      );
     }
   }
 }

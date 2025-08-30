@@ -1,0 +1,140 @@
+<div class="app-data-grid">
+  <!-- Search Bar -->
+  <div class="search-bar mb-3">
+    <div class="input-group">
+      <span class="input-group-text">
+        <i class="bi bi-search"></i>
+      </span>
+      <input 
+        type="text" 
+        class="form-control" 
+        placeholder="Buscar..."
+        (input)="onSearchChange($event)"
+      >
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="text-center py-4">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+  </div>
+
+  <!-- Data Table -->
+  <div *ngIf="!loading" class="table-responsive">
+    <table class="table table-hover">
+      <thead class="table-light">
+        <tr>
+          <th 
+            *ngFor="let column of columns" 
+            [style.width]="column.width"
+            [class.sortable]="column.sortable"
+            (click)="onSort(column)"
+          >
+            <div class="d-flex align-items-center">
+              <span>{{ column.header }}</span>
+              <i 
+                *ngIf="column.sortable" 
+                [class]="'bi ms-1 ' + getSortIcon(column)"
+              ></i>
+            </div>
+          </th>
+          <th *ngIf="actions.length > 0" class="text-end" style="width: 120px">
+            Acciones
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr 
+          *ngFor="let row of data; trackBy: trackByFn" 
+          (click)="onRowClick(row)"
+          class="cursor-pointer"
+        >
+          <td *ngFor="let column of columns">
+            {{ getCellValue(row, column) }}
+          </td>
+          <td *ngIf="actions.length > 0" class="text-end">
+            <div class="btn-group btn-group-sm">
+              <button 
+                *ngFor="let action of actions"
+                type="button" 
+                class="btn btn-outline-secondary"
+                [disabled]="action.disabled && action.disabled(row)"
+                (click)="onActionClick(action, row, $event)"
+                [title]="action.label"
+              >
+                <i [class]="'bi bi-' + action.icon"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Empty State -->
+    <div *ngIf="data.length === 0" class="text-center py-4 text-muted">
+      <i class="bi bi-inbox display-4"></i>
+      <p class="mt-2">{{ emptyState }}</p>
+    </div>
+  </div>
+
+  <!-- Pagination -->
+  <div *ngIf="!loading && total > 0" class="d-flex justify-content-between align-items-center mt-3">
+    <div class="d-flex align-items-center">
+      <span class="me-2">Mostrar:</span>
+      <select 
+        class="form-select form-select-sm" 
+        style="width: auto"
+        [value]="pageSize"
+        (change)="onPageSizeChangeEvent($event)"
+      >
+        <option value="5">5</option>
+        <option value="10">10</option>
+        <option value="20">20</option>
+        <option value="50">50</option>
+      </select>
+      <span class="ms-2">de {{ total }} registros</span>
+    </div>
+
+    <nav>
+      <ul class="pagination pagination-sm mb-0">
+        <!-- Previous -->
+        <li class="page-item" [class.disabled]="page === 1">
+          <button 
+            class="page-link" 
+            (click)="onPageChange(page - 1)"
+            [disabled]="page === 1"
+          >
+            <i class="bi bi-chevron-left"></i>
+          </button>
+        </li>
+
+        <!-- Page Numbers -->
+        <li 
+          *ngFor="let pageNum of pageNumbers" 
+          class="page-item"
+          [class.active]="pageNum === page"
+        >
+          <button 
+            class="page-link" 
+            (click)="onPageChange(pageNum)"
+          >
+            {{ pageNum }}
+          </button>
+        </li>
+
+        <!-- Next -->
+        <li class="page-item" [class.disabled]="page === totalPages">
+          <button 
+            class="page-link" 
+            (click)="onPageChange(page + 1)"
+            [disabled]="page === totalPages"
+          >
+            <i class="bi bi-chevron-right"></i>
+          </button>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</div>

@@ -45,7 +45,6 @@ export class InstallationTypesService {
       new ActivoSpecification().toQueryBuilder(queryBuilder);
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     const result = (await paginate<InstallationType>(query, queryBuilder, {
       sortableColumns: ['id', 'name', 'description', 'creationDate'],
       searchableColumns: ['name', 'description'],
@@ -67,9 +66,7 @@ export class InstallationTypesService {
       where: { id, active: true },
     });
     if (!installationType) {
-      throw new NotFoundException(
-        `Installation type with ID ${id} not found`,
-      );
+      throw new NotFoundException(`Installation type with ID ${id} not found`);
     }
     return installationType;
   }

@@ -174,8 +174,12 @@ describe('CalcFeederController (e2e)', () => {
           expect(res.body.feeder.material).toBe('Cu');
           expect(res.body.feeder.section_mm2).toBeGreaterThan(0);
           expect(res.body.feeder.resistencia_ohm_km).toBeGreaterThan(0);
-          expect(res.body.feeder.caida_tension_alimentador_v).toBeGreaterThan(0);
-          expect(res.body.feeder.caida_tension_alimentador_pct).toBeGreaterThan(0);
+          expect(res.body.feeder.caida_tension_alimentador_v).toBeGreaterThan(
+            0,
+          );
+          expect(res.body.feeder.caida_tension_alimentador_pct).toBeGreaterThan(
+            0,
+          );
           expect(res.body.feeder.longitud_critica_m).toBeGreaterThan(0);
           expect(['OK', 'WARNING', 'ERROR']).toContain(res.body.feeder.estado);
 
@@ -185,9 +189,15 @@ describe('CalcFeederController (e2e)', () => {
           expect(res.body.resumen.limite_caida_ramal_pct).toBe(3);
           expect(res.body.resumen.limite_caida_total_pct).toBe(5);
           expect(res.body.resumen.caida_total_maxima_pct).toBeGreaterThan(0);
-          expect(res.body.resumen.circuitos_fuera_limite).toBeGreaterThanOrEqual(0);
-          expect(['OK', 'WARNING', 'ERROR']).toContain(res.body.resumen.estado_general);
-          expect(res.body.resumen.calibre_minimo_recomendado_mm2).toBeGreaterThan(0);
+          expect(
+            res.body.resumen.circuitos_fuera_limite,
+          ).toBeGreaterThanOrEqual(0);
+          expect(['OK', 'WARNING', 'ERROR']).toContain(
+            res.body.resumen.estado_general,
+          );
+          expect(
+            res.body.resumen.calibre_minimo_recomendado_mm2,
+          ).toBeGreaterThan(0);
 
           // Verificar metadata
           expect(res.body.metadata.version).toBeDefined();
@@ -257,7 +267,7 @@ describe('CalcFeederController (e2e)', () => {
         {
           material: 'Al',
           seccionMm2: 10,
-          ohmKm: 2.90,
+          ohmKm: 2.9,
           notes: 'Cable de aluminio 10mm² - resistivity estándar',
           usrCreate: 'TEST',
           usrUpdate: 'TEST',
@@ -288,7 +298,7 @@ describe('CalcFeederController (e2e)', () => {
         .expect(200)
         .expect((res) => {
           expect(res.body.feeder.material).toBe('Al');
-          expect(res.body.feeder.resistencia_ohm_km).toBe(2.90);
+          expect(res.body.feeder.resistencia_ohm_km).toBe(2.9);
         });
     });
 
@@ -377,7 +387,9 @@ describe('CalcFeederController (e2e)', () => {
         .expect(200)
         .expect((res) => {
           expect(res.body.circuitos_analisis[0].length_m).toBe(20); // value por defecto
-          expect(res.body.circuitos_analisis[0].caida_tension_ramal_pct).toBeGreaterThan(0);
+          expect(
+            res.body.circuitos_analisis[0].caida_tension_ramal_pct,
+          ).toBeGreaterThan(0);
         });
     });
 
@@ -480,7 +492,9 @@ describe('CalcFeederController (e2e)', () => {
         .send(shortLengthRequest)
         .expect(200)
         .expect((res) => {
-          expect(res.body.circuitos_analisis[0].caida_tension_ramal_pct).toBeLessThan(1);
+          expect(
+            res.body.circuitos_analisis[0].caida_tension_ramal_pct,
+          ).toBeLessThan(1);
           expect(res.body.feeder.caida_tension_alimentador_pct).toBeLessThan(2);
         });
     });
@@ -512,4 +526,3 @@ describe('CalcFeederController (e2e)', () => {
     });
   });
 });
-

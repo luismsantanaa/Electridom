@@ -1,0 +1,157 @@
+<div class="project-edit-page">
+  <div class="container-fluid">
+    <!-- Loading State -->
+    <div *ngIf="loading" class="text-center py-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Cargando...</span>
+      </div>
+    </div>
+
+    <!-- Edit Form -->
+    <div *ngIf="!loading && project" class="row justify-content-center">
+      <div class="col-lg-8">
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <div>
+            <button class="btn btn-outline-secondary me-3" (click)="onCancel()">
+              <i class="bi bi-arrow-left me-2"></i>
+              Volver
+            </button>
+            <h1 class="h3 mb-0">Editar Proyecto</h1>
+          </div>
+        </div>
+
+        <!-- Form Card -->
+        <div class="card">
+          <div class="card-header">
+            <h5 class="card-title mb-0">
+              <i class="bi bi-pencil-square me-2"></i>
+              Información del Proyecto
+            </h5>
+          </div>
+          <div class="card-body">
+            <form [formGroup]="projectForm" (ngSubmit)="onSubmit()">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label for="name" class="form-label">Nombre del Proyecto *</label>
+                    <input 
+                      type="text" 
+                      class="form-control" 
+                      id="name"
+                      formControlName="name"
+                      [class.is-invalid]="projectForm.get('name')?.invalid && projectForm.get('name')?.touched"
+                    >
+                    <div *ngIf="projectForm.get('name')?.invalid && projectForm.get('name')?.touched" class="invalid-feedback">
+                      {{ getErrorMessage('name') }}
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label for="owner" class="form-label">Propietario *</label>
+                    <input 
+                      type="text" 
+                      class="form-control" 
+                      id="owner"
+                      formControlName="owner"
+                      [class.is-invalid]="projectForm.get('owner')?.invalid && projectForm.get('owner')?.touched"
+                    >
+                    <div *ngIf="projectForm.get('owner')?.invalid && projectForm.get('owner')?.touched" class="invalid-feedback">
+                      {{ getErrorMessage('owner') }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label for="apparentPowerKVA" class="form-label">Potencia Aparente (kVA) *</label>
+                    <input 
+                      type="number" 
+                      class="form-control" 
+                      id="apparentPowerKVA"
+                      formControlName="apparentPowerKVA"
+                      step="0.1"
+                      min="0.1"
+                      [class.is-invalid]="projectForm.get('apparentPowerKVA')?.invalid && projectForm.get('apparentPowerKVA')?.touched"
+                    >
+                    <div *ngIf="projectForm.get('apparentPowerKVA')?.invalid && projectForm.get('apparentPowerKVA')?.touched" class="invalid-feedback">
+                      {{ getErrorMessage('apparentPowerKVA') }}
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label for="circuits" class="form-label">Número de Circuitos *</label>
+                    <input 
+                      type="number" 
+                      class="form-control" 
+                      id="circuits"
+                      formControlName="circuits"
+                      min="1"
+                      [class.is-invalid]="projectForm.get('circuits')?.invalid && projectForm.get('circuits')?.touched"
+                    >
+                    <div *ngIf="projectForm.get('circuits')?.invalid && projectForm.get('circuits')?.touched" class="invalid-feedback">
+                      {{ getErrorMessage('circuits') }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label for="description" class="form-label">Descripción</label>
+                <textarea 
+                  class="form-control" 
+                  id="description"
+                  formControlName="description"
+                  rows="3"
+                  placeholder="Descripción opcional del proyecto..."
+                ></textarea>
+              </div>
+
+              <div class="mb-3">
+                <label for="status" class="form-label">Estado *</label>
+                <select 
+                  class="form-select" 
+                  id="status"
+                  formControlName="status"
+                  [class.is-invalid]="projectForm.get('status')?.invalid && projectForm.get('status')?.touched"
+                >
+                  <option value="active">Activo</option>
+                  <option value="draft">Borrador</option>
+                  <option value="archived">Archivado</option>
+                </select>
+                <div *ngIf="projectForm.get('status')?.invalid && projectForm.get('status')?.touched" class="invalid-feedback">
+                  {{ getErrorMessage('status') }}
+                </div>
+              </div>
+
+              <!-- Form Actions -->
+              <div class="d-flex justify-content-end gap-2">
+                <button 
+                  type="button" 
+                  class="btn btn-secondary" 
+                  (click)="onCancel()"
+                  [disabled]="saving"
+                >
+                  Cancelar
+                </button>
+                <button 
+                  type="submit" 
+                  class="btn btn-primary" 
+                  [disabled]="projectForm.invalid || saving"
+                >
+                  <span *ngIf="saving" class="spinner-border spinner-border-sm me-2" role="status"></span>
+                  <i *ngIf="!saving" class="bi bi-check-circle me-2"></i>
+                  {{ saving ? 'Guardando...' : 'Guardar Cambios' }}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

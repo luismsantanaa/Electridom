@@ -19,4 +19,3 @@ export class SquareMeterPipe implements PipeTransform {
     return `${number.toFixed(2)} m²`;
   }
 }
-

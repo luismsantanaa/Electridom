@@ -59,7 +59,7 @@ export class JwtRs256Service {
       // Extraer el kid del header del token
       const decodedHeader = this.nestJwtService.decode(token, {
         complete: true,
-      }) as any;
+      });
       const kid = decodedHeader?.header?.kid;
 
       if (!kid) {
@@ -92,7 +92,7 @@ export class JwtRs256Service {
    */
   decode(token: string): JwtPayload | null {
     try {
-      return this.nestJwtService.decode(token) as JwtPayload;
+      return this.nestJwtService.decode(token);
     } catch (error) {
       this.logger.error('Error al decodificar token JWT:', error);
       return null;

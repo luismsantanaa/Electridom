@@ -25,7 +25,9 @@ import { EnvironmentType } from './entities/environment-type.entity';
 @Controller('environment-types')
 @UseGuards(JwtAuthGuard)
 export class EnvironmentTypesController {
-  constructor(private readonly environmentTypesService: EnvironmentTypesService) {}
+  constructor(
+    private readonly environmentTypesService: EnvironmentTypesService,
+  ) {}
 
   @Post()
   create(
@@ -77,4 +79,3 @@ export class EnvironmentTypesController {
     return this.environmentTypesService.remove(id, user.username);
   }
 }
-

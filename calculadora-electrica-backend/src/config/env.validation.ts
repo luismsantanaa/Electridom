@@ -1,5 +1,11 @@
 import { plainToClass } from 'class-transformer';
-import { IsEnum, IsNumber, IsOptional, IsString, validateSync } from 'class-validator';
+import {
+  IsEnum,
+  IsNumber,
+  IsOptional,
+  IsString,
+  validateSync,
+} from 'class-validator';
 
 export enum Environment {
   Development = 'development',
@@ -95,13 +101,13 @@ export function validate(config: Record<string, unknown>) {
   });
 
   if (errors.length > 0) {
-    const missingVars = errors.map(error => 
-      Object.values(error.constraints || {}).join(', ')
-    ).join('; ');
-    
+    const missingVars = errors
+      .map((error) => Object.values(error.constraints || {}).join(', '))
+      .join('; ');
+
     throw new Error(
       `❌ Configuración de entorno inválida:\n${missingVars}\n\n` +
-      '💡 Asegúrate de que todas las variables requeridas estén definidas en tu archivo .env'
+        '💡 Asegúrate de que todas las variables requeridas estén definidas en tu archivo .env',
     );
   }
 

@@ -23,6 +23,6 @@ export class RuleSet extends BaseAuditEntity {
   @Column({ type: 'datetime', nullable: true })
   effectiveTo?: Date;
 
-  @OneToMany(() => NormRule, rule => rule.ruleSet)
+  @OneToMany(() => NormRule, (rule) => rule.ruleSet)
   rules: NormRule[];
 }

@@ -1,0 +1,66 @@
+openapi: 3.0.3
+info:
+  title: Calculadora Eléctrica RD - Sprint 9 API
+  version: 0.2.0
+paths:
+  /projects:
+    post:
+      summary: Crear proyecto
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ProjectInput' }
+      responses: { '201': { description: Created } }
+  /projects/{id}:
+    put:
+      summary: Editar proyecto
+      parameters: [ { in: path, name: id, schema: { type: string }, required: true } ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ProjectInput' }
+      responses: { '200': { description: OK } }
+    delete:
+      summary: Eliminar proyecto
+      parameters: [ { in: path, name: id, schema: { type: string }, required: true } ]
+      responses: { '204': { description: No Content } }
+  /exports:
+    get:
+      summary: Listar exportaciones
+      parameters:
+        - in: query; name: page; schema: { type: integer, default: 1 }
+        - in: query; name: pageSize; schema: { type: integer, default: 10 }
+      responses: { '200': { description: OK } }
+  /exports/{id}/download:
+    get:
+      summary: Descargar exportación
+      parameters: [ { in: path, name: id, schema: { type: string }, required: true } ]
+      responses: { '200': { description: OK } }
+  /exports/{id}:
+    delete:
+      summary: Eliminar registro de exportación
+      parameters: [ { in: path, name: id, schema: { type: string }, required: true } ]
+      responses: { '204': { description: No Content } }
+  /normatives:
+    get:
+      summary: Listar normativas
+      parameters:
+        - in: query; name: page; schema: { type: integer, default: 1 }
+        - in: query; name: pageSize; schema: { type: integer, default: 10 }
+        - in: query; name: q; schema: { type: string }
+        - in: query; name: source; schema: { type: string, enum: [RIE, NEC, REBT] }
+      responses: { '200': { description: OK } }
+components:
+  schemas:
+    ProjectInput:
+      type: object
+      properties:
+        name: { type: string }
+        owner: { type: string }
+        location: { type: string }
+        voltage: { type: number }
+        frequency: { type: number }
+        notes: { type: string }
+      required: [name]

@@ -71,7 +71,9 @@ describe('CalculationDomainService', () => {
       const warnings: string[] = [];
       const result = await service.calcularPreview(mockRequest, warnings);
 
-      const sala = result.cargasPorAmbiente.find((c) => c.environment === 'Sala')!;
+      const sala = result.cargasPorAmbiente.find(
+        (c) => c.environment === 'Sala',
+      )!;
       const dormitorio = result.cargasPorAmbiente.find(
         (c) => c.environment === 'Dormitorio 1',
       )!;
@@ -117,7 +119,12 @@ describe('CalculationDomainService', () => {
       const requestWithFactorUso = {
         ...mockRequest,
         consumptions: [
-          { name: 'Televisor', environment: 'Sala', watts: 120, factorUso: 0.8 },
+          {
+            name: 'Televisor',
+            environment: 'Sala',
+            watts: 120,
+            factorUso: 0.8,
+          },
         ],
       };
 
@@ -127,7 +134,9 @@ describe('CalculationDomainService', () => {
         warnings,
       );
 
-      const sala = result.cargasPorAmbiente.find((c) => c.environment === 'Sala')!;
+      const sala = result.cargasPorAmbiente.find(
+        (c) => c.environment === 'Sala',
+      )!;
       expect(sala.tomasVA).toBe(96); // 120 * 0.8
     });
   });
@@ -149,4 +158,3 @@ describe('CalculationDomainService', () => {
     });
   });
 });
-

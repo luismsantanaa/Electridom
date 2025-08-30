@@ -45,10 +45,10 @@ describe('Auth Simple E2E Test', () => {
       'JWT_EXPIRES_IN',
       'REFRESH_TTL',
       'REFRESH_ROTATE',
-      'REFRESH_SALT'
+      'REFRESH_SALT',
     ];
 
-    requiredVars.forEach(varName => {
+    requiredVars.forEach((varName) => {
       expect(process.env[varName]).toBeDefined();
     });
   });

@@ -8,7 +8,7 @@ export class NormRule extends BaseAuditEntity {
   @Column('uuid', { nullable: true })
   ruleSetId?: string;
 
-  @ManyToOne(() => RuleSet, ruleSet => ruleSet.rules, { onDelete: 'CASCADE' })
+  @ManyToOne(() => RuleSet, (ruleSet) => ruleSet.rules, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'ruleSetId' })
   ruleSet?: RuleSet;
 

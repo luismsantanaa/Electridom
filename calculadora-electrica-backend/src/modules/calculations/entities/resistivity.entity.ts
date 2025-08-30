@@ -40,4 +40,3 @@ export class Resistivity extends BaseAuditEntity {
   })
   notes?: string;
 }
-

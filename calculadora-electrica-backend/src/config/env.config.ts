@@ -126,4 +126,3 @@ export const getConfig = () => ({
   swagger: swaggerConfig(),
   environment: getEnvironmentConfig(),
 });
-

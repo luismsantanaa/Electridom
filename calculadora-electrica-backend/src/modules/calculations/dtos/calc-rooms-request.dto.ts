@@ -1,15 +1,31 @@
-﻿import { IsArray, IsNumber, IsOptional, IsString, Min, ValidateNested, IsEnum, MinLength } from 'class-validator';
+﻿import {
+  IsArray,
+  IsNumber,
+  IsOptional,
+  IsString,
+  Min,
+  ValidateNested,
+  IsEnum,
+  MinLength,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class SystemConfigDto {
-  @ApiPropertyOptional({ default: 120, description: 'Tensión del system en voltios' })
+  @ApiPropertyOptional({
+    default: 120,
+    description: 'Tensión del system en voltios',
+  })
   @IsOptional()
   @IsNumber()
   @Min(1)
   voltage?: number = 120;
 
-  @ApiPropertyOptional({ enum: [1, 3], default: 1, description: 'Número de fases' })
+  @ApiPropertyOptional({
+    enum: [1, 3],
+    default: 1,
+    description: 'Número de fases',
+  })
   @IsOptional()
   @IsNumber()
   phases?: number = 1;
@@ -47,39 +63,63 @@ export class ConsumptionDto {
   @Min(1)
   power_w: number;
 
-  @ApiPropertyOptional({ description: 'Factor de potencia', minimum: 0.1, maximum: 1.0 })
+  @ApiPropertyOptional({
+    description: 'Factor de potencia',
+    minimum: 0.1,
+    maximum: 1.0,
+  })
   @IsOptional()
   @IsNumber()
   @Min(0.1)
   fp?: number;
 
-  @ApiPropertyOptional({ 
-    enum: ['iluminacion', 'toma_general', 'electrodomestico', 'climatizacion', 'especial'],
+  @ApiPropertyOptional({
+    enum: [
+      'iluminacion',
+      'toma_general',
+      'electrodomestico',
+      'climatizacion',
+      'especial',
+    ],
     default: 'electrodomestico',
-    description: 'type de load'
+    description: 'type de load',
   })
   @IsOptional()
-  @IsEnum(['iluminacion', 'toma_general', 'electrodomestico', 'climatizacion', 'especial'])
+  @IsEnum([
+    'iluminacion',
+    'toma_general',
+    'electrodomestico',
+    'climatizacion',
+    'especial',
+  ])
   type?: string = 'electrodomestico';
 }
 
 export class CalcRoomsRequestDto {
-  @ApiPropertyOptional({ type: SystemConfigDto, description: 'Configuración del system' })
+  @ApiPropertyOptional({
+    type: SystemConfigDto,
+    description: 'Configuración del system',
+  })
   @IsOptional()
   @ValidateNested()
   @Type(() => SystemConfigDto)
   system?: SystemConfigDto;
 
-  @ApiProperty({ type: [SurfaceDto], description: 'Lista de environments y sus áreas' })
+  @ApiProperty({
+    type: [SurfaceDto],
+    description: 'Lista de environments y sus áreas',
+  })
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => SurfaceDto)
   surfaces: SurfaceDto[];
 
-  @ApiProperty({ type: [ConsumptionDto], description: 'Lista de consumptions por environment' })
+  @ApiProperty({
+    type: [ConsumptionDto],
+    description: 'Lista de consumptions por environment',
+  })
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => ConsumptionDto)
   consumptions: ConsumptionDto[];
 }
-

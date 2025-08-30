@@ -1,4 +1,5 @@
 ﻿import { ApiProperty } from '@nestjs/swagger';
+import { ProjectStatus } from '../entities/project.entity';
 
 // DTO para resumen de project
 export class ProjectSummaryDto {
@@ -16,7 +17,7 @@ export class ProjectSummaryDto {
     example: 'ACTIVE',
     description: 'Estado del project',
   })
-  status: 'ACTIVE' | 'ARCHIVED';
+  status: ProjectStatus;
 
   @ApiProperty({
     example: '2025-08-19T18:00:00Z',
@@ -32,7 +33,7 @@ export class ProjectSummaryDto {
 
   @ApiProperty({
     description: 'Información de la última versión',
-    required: false
+    required: false,
   })
   latestVersion?: {
     versionId: string;
@@ -182,4 +183,3 @@ export class ProjectExportDto {
   })
   versions: ProjectVersionDetailDto[];
 }
-

@@ -1,4 +1,11 @@
-import { Controller, Get, Res, HttpStatus, Headers, UnauthorizedException } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Res,
+  HttpStatus,
+  Headers,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiHeader } from '@nestjs/swagger';
 import { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
@@ -15,7 +22,8 @@ export class MetricsController {
   @Get()
   @ApiOperation({
     summary: 'Prometheus Metrics',
-    description: 'Endpoint para exponer métricas en formato Prometheus (text/plain)',
+    description:
+      'Endpoint para exponer métricas en formato Prometheus (text/plain)',
   })
   @ApiHeader({
     name: 'X-Metrics-Token',
@@ -29,7 +37,8 @@ export class MetricsController {
       'text/plain': {
         schema: {
           type: 'string',
-          example: '# HELP http_requests_total Total number of HTTP requests\n# TYPE http_requests_total counter\nhttp_requests_total{method="GET",route="/health",status_code="200"} 1',
+          example:
+            '# HELP http_requests_total Total number of HTTP requests\n# TYPE http_requests_total counter\nhttp_requests_total{method="GET",route="/health",status_code="200"} 1',
         },
       },
     },
@@ -48,7 +57,7 @@ export class MetricsController {
   ): Promise<void> {
     // Verificar si las métricas están habilitadas
     const metricsEnabled = this.configService.get<boolean>('metrics.enabled');
-    
+
     if (!metricsEnabled) {
       res.status(HttpStatus.FORBIDDEN).send('Métricas deshabilitadas');
       return;
@@ -56,7 +65,7 @@ export class MetricsController {
 
     // Verificar token si está configurado
     const configuredToken = this.configService.get<string>('metrics.token');
-    
+
     if (configuredToken && token !== configuredToken) {
       throw new UnauthorizedException('Token de métricas inválido');
     }
@@ -66,7 +75,9 @@ export class MetricsController {
       res.setHeader('Content-Type', 'text/plain');
       res.status(HttpStatus.OK).send(metrics);
     } catch (error) {
-      res.status(HttpStatus.INTERNAL_SERVER_ERROR).send('Error generando métricas');
+      res
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .send('Error generando métricas');
     }
   }
 }

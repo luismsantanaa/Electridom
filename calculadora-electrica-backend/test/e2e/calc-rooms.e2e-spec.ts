@@ -25,7 +25,7 @@ describe('CalcRoomsController (e2e)', () => {
   beforeEach(async () => {
     // Limpiar base de datos antes de cada test
     await dataSource.query('DELETE FROM norm_const');
-    
+
     // Insertar parámetros normativos necesarios
     await dataSource.query(`
       INSERT INTO norm_const (key, value, unit, notes, created_at, updated_at) VALUES
@@ -107,7 +107,9 @@ describe('CalcRoomsController (e2e)', () => {
         .expect(200)
         .expect((res) => {
           expect(res.body.environments[0].carga_va).toBeCloseTo(484.5, 1); // 15 * 32.3
-          expect(res.body.environments[0].observaciones).toContain('Solo load base de iluminación');
+          expect(res.body.environments[0].observaciones).toContain(
+            'Solo load base de iluminación',
+          );
         });
     });
 
@@ -189,7 +191,10 @@ describe('CalcRoomsController (e2e)', () => {
         .expect((res) => {
           const cargaTotal = 10 * 32.3 + 8 * 32.3 + 100 / 0.9;
           expect(res.body.totales.carga_total_va).toBeCloseTo(cargaTotal, 1);
-          expect(res.body.totales.corriente_total_a).toBeCloseTo(cargaTotal / 120, 1);
+          expect(res.body.totales.corriente_total_a).toBeCloseTo(
+            cargaTotal / 120,
+            1,
+          );
         });
     });
 
@@ -250,7 +255,7 @@ describe('CalcRoomsController (e2e)', () => {
           expect(res.body.environments[1].name).toBe('Cocina');
           expect(res.body.environments[2].name).toBe('Habitación 1');
           expect(res.body.environments[3].name).toBe('Baño');
-          
+
           // Verificar que todos los environments tienen load calculada
           res.body.environments.forEach((environment: any) => {
             expect(environment.carga_va).toBeGreaterThan(0);
@@ -261,4 +266,3 @@ describe('CalcRoomsController (e2e)', () => {
     });
   });
 });
-

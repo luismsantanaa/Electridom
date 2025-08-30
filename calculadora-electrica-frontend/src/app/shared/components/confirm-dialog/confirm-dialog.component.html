@@ -1,0 +1,38 @@
+<div *ngIf="show" class="modal-backdrop fade show" (click)="onCancel()"></div>
+<div *ngIf="show" class="modal fade show d-block" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i [class]="'bi ' + getIconClass() + ' me-2'"></i>
+          {{ title }}
+        </h5>
+        <button 
+          type="button" 
+          class="btn-close" 
+          (click)="onCancel()"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <p class="mb-0">{{ message }}</p>
+      </div>
+      <div class="modal-footer">
+        <button 
+          type="button" 
+          class="btn btn-secondary" 
+          (click)="onCancel()"
+        >
+          {{ cancelText }}
+        </button>
+        <button 
+          type="button" 
+          [class]="'btn ' + getButtonClass()" 
+          (click)="onConfirm()"
+        >
+          {{ confirmText }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

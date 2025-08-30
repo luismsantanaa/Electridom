@@ -636,4 +636,3 @@ describe('Projects E2E Tests', () => {
     coverageReporter.printReport();
   });
 });
-

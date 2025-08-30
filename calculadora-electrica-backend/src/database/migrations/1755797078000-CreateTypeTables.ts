@@ -1,11 +1,11 @@
-import { MigrationInterface, QueryRunner } from "typeorm";
+import { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class CreateTypeTables1755797078000 implements MigrationInterface {
-    name = 'CreateTypeTables1755797078000'
+  name = 'CreateTypeTables1755797078000';
 
-    public async up(queryRunner: QueryRunner): Promise<void> {
-        // 1. Crear tabla tipos_instalaciones primero (sin dependencias)
-        await queryRunner.query(`
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    // 1. Crear tabla tipos_instalaciones primero (sin dependencias)
+    await queryRunner.query(`
             CREATE TABLE \`tipos_instalaciones\` (
                 \`id\` uuid NOT NULL,
                 \`name\` varchar(100) NOT NULL,
@@ -19,8 +19,8 @@ export class CreateTypeTables1755797078000 implements MigrationInterface {
             ) ENGINE=InnoDB
         `);
 
-        // 2. Crear tabla tipos_ambientes (depende de tipos_instalaciones)
-        await queryRunner.query(`
+    // 2. Crear tabla tipos_ambientes (depende de tipos_instalaciones)
+    await queryRunner.query(`
             CREATE TABLE \`tipos_ambientes\` (
                 \`id\` uuid NOT NULL,
                 \`name\` varchar(100) NOT NULL,
@@ -35,8 +35,8 @@ export class CreateTypeTables1755797078000 implements MigrationInterface {
             ) ENGINE=InnoDB
         `);
 
-        // 3. Crear tabla tipos_artefactos (depende de tipos_ambientes)
-        await queryRunner.query(`
+    // 3. Crear tabla tipos_artefactos (depende de tipos_ambientes)
+    await queryRunner.query(`
             CREATE TABLE \`tipos_artefactos\` (
                 \`id\` uuid NOT NULL,
                 \`name\` varchar(100) NOT NULL,
@@ -53,8 +53,8 @@ export class CreateTypeTables1755797078000 implements MigrationInterface {
             ) ENGINE=InnoDB
         `);
 
-        // 4. Crear foreign keys
-        await queryRunner.query(`
+    // 4. Crear foreign keys
+    await queryRunner.query(`
             ALTER TABLE \`tipos_ambientes\` 
             ADD CONSTRAINT \`FK_tipos_ambientes_installation_type\` 
             FOREIGN KEY (\`installation_type_id\`) 
@@ -62,23 +62,27 @@ export class CreateTypeTables1755797078000 implements MigrationInterface {
             ON DELETE NO ACTION ON UPDATE NO ACTION
         `);
 
-        await queryRunner.query(`
+    await queryRunner.query(`
             ALTER TABLE \`tipos_artefactos\` 
             ADD CONSTRAINT \`FK_tipos_artefactos_environment_type\` 
             FOREIGN KEY (\`environment_type_id\`) 
             REFERENCES \`tipos_ambientes\`(\`id\`) 
             ON DELETE NO ACTION ON UPDATE NO ACTION
         `);
-    }
+  }
 
-    public async down(queryRunner: QueryRunner): Promise<void> {
-        // Eliminar foreign keys en orden inverso
-        await queryRunner.query(`ALTER TABLE \`tipos_artefactos\` DROP FOREIGN KEY \`FK_tipos_artefactos_environment_type\``);
-        await queryRunner.query(`ALTER TABLE \`tipos_ambientes\` DROP FOREIGN KEY \`FK_tipos_ambientes_installation_type\``);
-        
-        // Eliminar tablas en orden inverso
-        await queryRunner.query(`DROP TABLE \`tipos_artefactos\``);
-        await queryRunner.query(`DROP TABLE \`tipos_ambientes\``);
-        await queryRunner.query(`DROP TABLE \`tipos_instalaciones\``);
-    }
+  public async down(queryRunner: QueryRunner): Promise<void> {
+    // Eliminar foreign keys en orden inverso
+    await queryRunner.query(
+      `ALTER TABLE \`tipos_artefactos\` DROP FOREIGN KEY \`FK_tipos_artefactos_environment_type\``,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`tipos_ambientes\` DROP FOREIGN KEY \`FK_tipos_ambientes_installation_type\``,
+    );
+
+    // Eliminar tablas en orden inverso
+    await queryRunner.query(`DROP TABLE \`tipos_artefactos\``);
+    await queryRunner.query(`DROP TABLE \`tipos_ambientes\``);
+    await queryRunner.query(`DROP TABLE \`tipos_instalaciones\``);
+  }
 }

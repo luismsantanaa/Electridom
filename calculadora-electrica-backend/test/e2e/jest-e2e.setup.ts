@@ -34,10 +34,15 @@ process.env.THROTTLE_LIMIT = '1000';
 try {
   config({ path: join(__dirname, '.env.test') });
 } catch (error) {
-  console.log('No se encontró archivo .env.test, usando configuración por defecto');
+  console.log(
+    'No se encontró archivo .env.test, usando configuración por defecto',
+  );
 }
 
-console.log('🧪 Configurando tests E2E con base de datos:', process.env.DATABASE_NAME);
+console.log(
+  '🧪 Configurando tests E2E con base de datos:',
+  process.env.DATABASE_NAME,
+);
 console.log('🧪 NODE_ENV configurado como:', process.env.NODE_ENV);
 console.log('🧪 DATABASE_HOST:', process.env.DATABASE_HOST);
 console.log('🧪 DATABASE_PORT:', process.env.DATABASE_PORT);
@@ -46,7 +51,7 @@ console.log('🧪 DATABASE_PORT:', process.env.DATABASE_PORT);
 beforeAll(async () => {
   // Configuraciones adicionales si son necesarias
   jest.setTimeout(30000);
-  
+
   // Verificar que las variables críticas estén configuradas
   const criticalVars = [
     'DATABASE_HOST',
@@ -54,10 +59,10 @@ beforeAll(async () => {
     'DATABASE_USERNAME',
     'DATABASE_PASSWORD',
     'DATABASE_NAME',
-    'JWT_SECRET'
+    'JWT_SECRET',
   ];
-  
-  criticalVars.forEach(varName => {
+
+  criticalVars.forEach((varName) => {
     if (!process.env[varName]) {
       throw new Error(`Variable crítica no configurada: ${varName}`);
     }

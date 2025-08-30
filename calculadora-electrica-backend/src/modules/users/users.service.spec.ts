@@ -80,9 +80,9 @@ describe('UsersService', () => {
       repository.save.mockResolvedValue(userMock);
       const result = await service.create(userMock);
       expect(result).toEqual(userMock);
-      // eslint-disable-next-line @typescript-eslint/unbound-method
+
       expect(repository.create).toHaveBeenCalledWith(userMock);
-      // eslint-disable-next-line @typescript-eslint/unbound-method
+
       expect(repository.save).toHaveBeenCalledWith(userMock);
     });
 
@@ -101,7 +101,7 @@ describe('UsersService', () => {
       repository.findOne.mockResolvedValue(userMock);
       const result = await service.findByEmail(userMock.email);
       expect(result).toEqual(userMock);
-      // eslint-disable-next-line @typescript-eslint/unbound-method
+
       expect(repository.findOne).toHaveBeenCalledWith({
         where: { email: userMock.email },
       });
@@ -117,7 +117,7 @@ describe('UsersService', () => {
       repository.findOne.mockResolvedValue(userMock);
       const result = await service.findById(userMock.id);
       expect(result).toEqual(userMock);
-      // eslint-disable-next-line @typescript-eslint/unbound-method
+
       expect(repository.findOne).toHaveBeenCalledWith({
         where: { id: userMock.id },
       });
@@ -140,7 +140,7 @@ describe('UsersService', () => {
         name: 'NuevoNombre',
       });
       expect(result).toEqual(updatedUser);
-      // eslint-disable-next-line @typescript-eslint/unbound-method
+
       expect(repository.update).toHaveBeenCalledWith(userMock.id, {
         name: 'NuevoNombre',
       });
@@ -152,7 +152,7 @@ describe('UsersService', () => {
       repository.findOne.mockResolvedValue(userMock);
       repository.remove.mockResolvedValue(userMock);
       await expect(service.remove(userMock.id)).resolves.toBeUndefined();
-      // eslint-disable-next-line @typescript-eslint/unbound-method
+
       expect(repository.remove).toHaveBeenCalledWith(userMock);
     });
   });
@@ -162,9 +162,8 @@ describe('UsersService', () => {
       repository.find.mockResolvedValue([userMock]);
       const result = await service.findAll();
       expect(result).toEqual([userMock]);
-      // eslint-disable-next-line @typescript-eslint/unbound-method
+
       expect(repository.find).toHaveBeenCalled();
     });
   });
 });
-

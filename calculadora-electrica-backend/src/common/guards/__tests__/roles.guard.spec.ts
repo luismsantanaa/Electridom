@@ -29,13 +29,13 @@ describe('RolesGuard', () => {
   });
 
   describe('canActivate', () => {
-    function createMockContext(role: string) {
+    function createMockContext(roles: string[]) {
       return {
         getHandler: () => {},
         getClass: () => {},
         switchToHttp: () => ({
           getRequest: () => ({
-            user: { role },
+            user: { roles },
           }),
         }),
       } as unknown as ExecutionContext;
@@ -43,23 +43,22 @@ describe('RolesGuard', () => {
 
     it('should return true when no roles are required', () => {
       mockReflector.getAllAndOverride.mockReturnValue(null);
-      const mockContext = createMockContext('admin');
+      const mockContext = createMockContext(['admin']);
       const result = guard.canActivate(mockContext);
       expect(result).toBe(true);
     });
 
     it('should return true when user has required role', () => {
       mockReflector.getAllAndOverride.mockReturnValue(['admin']);
-      const mockContext = createMockContext('admin');
+      const mockContext = createMockContext(['admin']);
       const result = guard.canActivate(mockContext);
       expect(result).toBe(true);
     });
 
-    it('should return false when user does not have required role', () => {
+    it('should throw ForbiddenException when user does not have required role', () => {
       mockReflector.getAllAndOverride.mockReturnValue(['admin']);
-      const mockContext = createMockContext('cliente');
-      const result = guard.canActivate(mockContext);
-      expect(result).toBe(false);
+      const mockContext = createMockContext(['cliente']);
+      expect(() => guard.canActivate(mockContext)).toThrow('Acceso denegado. Roles requeridos: admin');
     });
   });
 });

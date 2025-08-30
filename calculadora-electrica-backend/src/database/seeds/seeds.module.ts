@@ -31,4 +31,3 @@ import { AppDataSource } from '../data-source';
   exports: [SeedsService],
 })
 export class SeedsModule {}
-

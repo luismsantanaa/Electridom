@@ -10,11 +10,14 @@ export class RequestIdMiddleware implements NestMiddleware {
   constructor(private readonly configService: ConfigService) {}
 
   use(req: Request, res: Response, next: NextFunction): void {
-    const requestIdHeader = this.configService.get<string>('logger.requestIdHeader', 'X-Request-Id');
-    
+    const requestIdHeader = this.configService.get<string>(
+      'logger.requestIdHeader',
+      'X-Request-Id',
+    );
+
     // Obtener requestId del header o generar uno nuevo
     let requestId = req.headers[requestIdHeader.toLowerCase()] as string;
-    
+
     if (!requestId) {
       requestId = uuidv4();
       this.logger.debug(`RequestId generado: ${requestId}`);

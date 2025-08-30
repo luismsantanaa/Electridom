@@ -44,7 +44,7 @@ export class SessionService {
       }
 
       const decoded = Buffer.from(refreshToken, 'base64url').toString('utf-8');
-      
+
       if (!decoded || !decoded.includes('.')) {
         throw new Error('Formato de refresh token inválido');
       }
@@ -56,7 +56,8 @@ export class SessionService {
       }
 
       // Validar que sessionId sea un UUID válido
-      const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+      const uuidRegex =
+        /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
       if (!uuidRegex.test(sessionId)) {
         throw new Error('SessionId no es un UUID válido');
       }
@@ -99,7 +100,7 @@ export class SessionService {
     jti: string,
   ): Promise<{ session: Session; refreshToken: string }> {
     const refreshTtl = this.configService.get<string>('REFRESH_TTL', '30d');
-    
+
     // Convertir TTL a milisegundos
     const ttlMs = this.parseTtl(refreshTtl);
     const expiresAt = new Date(Date.now() + ttlMs);
@@ -116,10 +117,10 @@ export class SessionService {
     });
 
     const savedSession = await this.sessionRepository.save(session);
-    
+
     // Generar refresh token opaco usando el ID de la sesión
     const refreshToken = this.generateRefreshToken(savedSession.id);
-    
+
     // Actualizar el hash del refresh token
     const refreshHash = this.hashRefreshToken(refreshToken);
     await this.sessionRepository.update(savedSession.id, { refreshHash });
@@ -134,7 +135,7 @@ export class SessionService {
     try {
       // Decodificar el token opaco
       const { sessionId } = this.decodeRefreshToken(refreshToken);
-      
+
       // Buscar la sesión por ID
       const session = await this.sessionRepository.findOne({
         where: { id: sessionId },
@@ -159,7 +160,10 @@ export class SessionService {
           try {
             await this.sessionRepository.revokeById(sessionId);
           } catch (revokeError) {
-            this.logger.warn('Error al revocar sesión expirada:', revokeError.message);
+            this.logger.warn(
+              'Error al revocar sesión expirada:',
+              revokeError.message,
+            );
           }
         }
         throw new UnauthorizedException(`Sesión ${status}`);
@@ -296,4 +300,3 @@ export class SessionService {
     }
   }
 }
-

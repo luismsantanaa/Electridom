@@ -1,4 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, Index } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  Index,
+} from 'typeorm';
 import { BaseAuditEntity } from '../../../common/entities/base-audit.entity';
 
 export enum JwksKeyType {
@@ -9,7 +16,6 @@ export enum JwksKeyType {
 @Index(['kid'], { unique: true })
 @Index(['isActive'], { where: '"isActive" = true' })
 export class JwksKey extends BaseAuditEntity {
-
   @Column({ type: 'varchar', length: 255, unique: true })
   kid: string;
 

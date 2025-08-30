@@ -56,4 +56,3 @@ export const normRulesSeed: Partial<NormRule>[] = [
     isDefault: true,
   },
 ];
-

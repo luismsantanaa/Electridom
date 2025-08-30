@@ -87,4 +87,3 @@ export class RegisterDto {
   @IsString({ message: 'La cédula debe ser una cadena de texto' })
   cedula?: string;
 }
-

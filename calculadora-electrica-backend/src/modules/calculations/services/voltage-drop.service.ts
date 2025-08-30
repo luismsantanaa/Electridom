@@ -167,8 +167,7 @@ export class VoltageDropService {
         resistividades[0]?.ohmKm || 7.41, // resistivity por defecto
       );
 
-      const caidaPorcentajeRamal =
-        (caidaTensionRamal / system.voltage_v) * 100;
+      const caidaPorcentajeRamal = (caidaTensionRamal / system.voltage_v) * 100;
 
       // Determinar estado
       let estado = 'OK';
@@ -219,8 +218,9 @@ export class VoltageDropService {
       resistividades,
     );
 
-    const resistividadSeleccionada =
-      resistividades.find((r) => r.seccionMm2 === seccionSeleccionada) ||
+    const resistividadSeleccionada = resistividades.find(
+      (r) => r.seccionMm2 === seccionSeleccionada,
+    ) ||
       resistividades[0] || {
         material: 'Cu',
         seccionMm2: 10,
@@ -437,4 +437,3 @@ export class VoltageDropService {
     );
   }
 }
-

@@ -1,8 +1,4 @@
-﻿import {
-  Entity,
-  Column,
-  OneToMany,
-} from 'typeorm';
+﻿import { Entity, Column, OneToMany } from 'typeorm';
 import { BaseAuditEntity } from '../../../common/entities/base-audit.entity';
 import { EnvironmentType } from '../../environment-types/entities/environment-type.entity';
 
@@ -17,7 +13,10 @@ export class InstallationType extends BaseAuditEntity {
   description: string;
 
   // Relación con EnvironmentType
-  @OneToMany(() => EnvironmentType, environmentType => environmentType.installationType)
+  @OneToMany(
+    () => EnvironmentType,
+    (environmentType) => environmentType.installationType,
+  )
   environmentTypes: EnvironmentType[];
 
   // Los campos de auditoría ya vienen de BaseAuditEntity:
@@ -27,4 +26,3 @@ export class InstallationType extends BaseAuditEntity {
   // - usrCreate (antes creadoPor)
   // - usrUpdate (antes actualizadoPor)
 }
-

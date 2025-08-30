@@ -159,4 +159,3 @@ export const authFixtures = {
     password: 'AdminPassword123!',
   },
 };
-

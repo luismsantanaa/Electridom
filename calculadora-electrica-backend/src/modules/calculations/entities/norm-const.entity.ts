@@ -4,7 +4,6 @@ import { BaseAuditEntity } from '../../../common/entities/base-audit.entity';
 @Entity('norm_const')
 @Index('IDX_NORM_CONST_KEY', ['key'], { unique: true })
 export class NormConst extends BaseAuditEntity {
-
   @Column({
     type: 'varchar',
     length: 100,
@@ -26,4 +25,3 @@ export class NormConst extends BaseAuditEntity {
   })
   notes?: string;
 }
-

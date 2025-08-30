@@ -147,4 +147,3 @@ export class CalcCircuitsResponseDto {
     algoritmo_usado: string;
   };
 }
-
