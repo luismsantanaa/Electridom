@@ -1,5 +1,5 @@
 # Multi-stage build
-FROM node:20-alpine AS builder
+FROM node:24-alpine AS builder
 
 WORKDIR /app
 
@@ -21,7 +21,7 @@ RUN npx nest build --tsc
 RUN mkdir -p dist/src/database/seeds && cp -r src/database/seeds/*.json dist/src/database/seeds/ 2>/dev/null || true
 
 # Production stage
-FROM node:20-alpine AS production
+FROM node:24-alpine AS production
 
 WORKDIR /app
 
