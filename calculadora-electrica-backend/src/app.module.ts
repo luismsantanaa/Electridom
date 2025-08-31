@@ -44,7 +44,6 @@ import { MetricsModule } from './modules/metrics/metrics.module';
 import { MetricsInterceptor } from './common/interceptors/metrics.interceptor';
 import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 import { RequestIdMiddleware } from './common/middleware/request-id.middleware';
-import { JwtAuthMiddleware } from './common/middleware/jwt-auth.middleware';
 import { LoggerModule } from 'nestjs-pino';
 
 @Module({
@@ -148,7 +147,6 @@ import { LoggerModule } from 'nestjs-pino';
       useClass: ThrottlerGuard,
     },
     RequestIdMiddleware,
-    JwtAuthMiddleware,
   ],
 })
 export class AppModule {}
