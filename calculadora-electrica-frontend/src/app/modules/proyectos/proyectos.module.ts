@@ -9,13 +9,14 @@ import { ProjectListPage } from './pages/project-list/project-list.page';
 import { ProjectDetailPage } from './pages/project-detail/project-detail.page';
 import { ProjectEditPage } from './pages/project-edit/project-edit.page';
 
+
 // Guards
 import { AuthGuard } from '../../core/guards/auth.guard';
 
 const routes: Routes = [
   {
     path: '',
-    component: ProjectListPage,
+    loadComponent: () => import('../../features/proyectos/proyectos-list.component').then((c) => c.ProyectosListComponent),
     canActivate: [AuthGuard]
   },
   {

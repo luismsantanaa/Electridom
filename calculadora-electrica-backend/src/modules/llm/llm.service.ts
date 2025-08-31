@@ -159,7 +159,7 @@ Por favor, realiza el análisis completo y responde en formato JSON estricto seg
 
   private loadSystemPrompt(): string {
     try {
-      const promptPath = path.join(__dirname, 'prompts', 'system.md');
+      const promptPath = path.join(process.cwd(), 'prompts', 'ai', 'system.md');
       return fs.readFileSync(promptPath, 'utf8');
     } catch (error) {
       this.logger.warn(
@@ -171,7 +171,7 @@ Por favor, realiza el análisis completo y responde en formato JSON estricto seg
 
   private loadCalcTemplate(): string {
     try {
-      const templatePath = path.join(__dirname, 'prompts', 'calc_cargas.md');
+      const templatePath = path.join(process.cwd(), 'prompts', 'ai', 'calc_cargas.md');
       return fs.readFileSync(templatePath, 'utf8');
     } catch (error) {
       this.logger.warn(

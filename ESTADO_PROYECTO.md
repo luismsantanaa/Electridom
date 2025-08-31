@@ -2,11 +2,11 @@
 
 ## 🎯 RESUMEN GENERAL
 
-**Estado:** PRODUCCIÓN READY - Sprint 1 completado al 100% + Sprint 2 completado al 100% + Sprint 3 Frontend completado al 100% + Sprint 4 AI Integration completado al 100% + Testing y Compilación completados al 100%
+**Estado:** PRODUCCIÓN DESPLEGADA - Sprint 1 completado al 100% + Sprint 2 completado al 100% + Sprint 3 Frontend completado al 100% + Sprint 4 AI Integration completado al 100% + Testing y Compilación completados al 100% + Docker Despliegue completado al 100%
 
-**Última Actualización:** 30 de Agosto 2025
+**Última Actualización:** 31 de Agosto 2025
 
-**Contexto del Proyecto:** Sistema completo para cálculos eléctricos residenciales, comerciales e industriales según normativas NEC 2023 y RIE RD. Backend con API RESTful completa, documentación Swagger, seguridad avanzada, observabilidad funcional e integración de IA. Frontend Angular 20 con template moderno, arquitectura monorepo e interfaz de asistente IA.
+**Contexto del Proyecto:** Sistema completo para cálculos eléctricos residenciales, comerciales e industriales según normativas NEC 2023 y RIE RD. Backend con API RESTful completa, documentación Swagger, seguridad avanzada, observabilidad funcional e integración de IA. Frontend Angular 20 con template moderno, arquitectura monorepo e interfaz de asistente IA. **DESPLEGADO EN DOCKER** con todos los servicios funcionando correctamente.
 
 ## 🚀 FUNCIONALIDADES IMPLEMENTADAS
 
@@ -52,7 +52,7 @@
 - **E2E Tests:** Supertest con base de datos de prueba
 - **Coverage:** Umbral realista de 40% (statements/lines), 30% (functions), 15% (branches)
 - **Estado:** Todos los tests pasando, compilación exitosa
-- **Problemas Resueltos:** 
+- **Problemas Resueltos:**
   - Scripts de build corregidos
   - Tests de RolesGuard, AuthService y AiService actualizados
   - Componentes Angular standalone configurados
@@ -97,6 +97,22 @@
 - **Service Health:** Monitoreo de servicios críticos
 - **Terminus Integration:** Framework de health checks de NestJS
 - **Readiness Probes:** Verificación de disponibilidad del servicio
+
+### ✅ Docker Despliegue (100% Completado - 31 Agosto 2025)
+
+- **Contenedores Desplegados:** Backend API, Frontend Angular, Prometheus, MariaDB, Adminer, Ollama, OpenWebUI
+- **Red Docker:** `electridom-network` configurada y funcional
+- **Puertos Configurados:**
+  - Frontend: http://localhost:8082
+  - API Backend: http://localhost:3000
+  - Prometheus: http://localhost:9090
+  - Adminer (DB): http://localhost:8080
+  - OpenWebUI: http://localhost:3001
+- **Dockerfiles Optimizados:** Multi-stage builds para backend y frontend
+- **Volúmenes Persistentes:** MariaDB, Ollama, Prometheus
+- **Health Checks:** Configurados para todos los servicios críticos
+- **Dependencias:** Orden de inicio correcto (MariaDB → API → Frontend → Prometheus)
+- **Estado:** Todos los contenedores funcionando correctamente
 
 ## 🎯 SPRINT 4 - AI INTEGRATION (4/4 HISTORIAS COMPLETADAS)
 
@@ -297,7 +313,7 @@
 - **Tests AI:** Implementados y pasando
 - **Servicios AI:** 3 servicios implementados (AiService, ExcelIngestService, PromptBuilderHelper)
 - **Componentes Frontend AI:** 2 componentes principales (AI Panel, Excel Upload)
-- **Prompts:** 3 archivos especializados (system.md, user_examples.md, guardrails.md)
+- **Prompts:** 3 archivos especializados (system.md, examples.md, guardrails.md)
 
 ### Sprint 2 - Funcionalidades de Cálculo (Backend)
 
@@ -679,7 +695,7 @@ Authorization: Bearer <jwt_token>
 
 - **ESTADO_PROYECTO.md:** Este archivo con estado completo del proyecto
 - **UserHistories/:** Carpeta con historias de usuario y especificaciones
-- **UserHistories/prompts/:** Prompts especializados para IA
+- **prompts/ai/:** Prompts especializados para IA
 - **calculadora-electrica-backend/src/modules/calculos/:** Módulo principal de cálculos eléctricos
 - **calculadora-electrica-backend/src/modules/ai/:** Módulo de integración con IA
 - **calculadora-electrica-backend/src/database/:** Migraciones, seeds y configuración de base de datos
@@ -690,6 +706,7 @@ Authorization: Bearer <jwt_token>
 ### Scripts de Utilidad
 
 **Backend (calculadora-electrica-backend/):**
+
 - **npm run migration:run:** Ejecutar migraciones
 - **npm run seed:** Ejecutar seeds de datos
 - **npm run test:unit:** Ejecutar pruebas unitarias
@@ -697,6 +714,7 @@ Authorization: Bearer <jwt_token>
 - **npm run start:dev:** Iniciar servidor en modo desarrollo
 
 **Frontend (calculadora-electrica-frontend/):**
+
 - **npm start:** Iniciar servidor de desarrollo con proxy
 - **npm run build:** Build de producción
 - **npm run test:** Ejecutar pruebas unitarias

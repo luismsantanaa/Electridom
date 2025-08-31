@@ -34,6 +34,7 @@ import { LlmModule } from './modules/llm/llm.module';
 import { CommonModule } from './common/common.module';
 import { NormativesModule } from './modules/normatives/normatives.module';
 import { ExportsModule } from './modules/exports/exports.module';
+import { ModeladoModule } from './modules/modelado/modelado.module';
 import { APP_INTERCEPTOR, APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { TransformInterceptor } from './common/interceptors/transform.interceptor';
 import { ErrorInterceptor } from './common/interceptors/error.interceptor';
@@ -108,6 +109,7 @@ import { LoggerModule } from 'nestjs-pino';
     CommonModule,
     NormativesModule,
     ExportsModule,
+    ModeladoModule,
     MetricsModule,
     LoggerModule.forRoot({
       pinoHttp: {

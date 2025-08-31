@@ -1,0 +1,11 @@
+version: "3.8"
+services:
+  backend:
+    environment:
+      - DB_HOST=mariadb
+      - DB_PORT=3306
+      - DB_USER=calculadora_user
+      - DB_PASS=superseguro
+      - DB_NAME=calculadora_electrica
+    depends_on:
+      - mariadb

@@ -17,7 +17,7 @@ const routes: Routes = [
       },
       {
         path: 'dashboard',
-        loadComponent: () => import('./features/calc/pages/calc.page').then((c) => c.CalcPage)
+        loadComponent: () => import('./features/dashboard/dashboard.component').then((c) => c.DashboardComponent)
       },
       {
         path: 'ia',
@@ -38,6 +38,10 @@ const routes: Routes = [
       {
         path: 'exportar',
         loadChildren: () => import('./modules/exportar/exportar.module').then((m) => m.ExportarModule)
+      },
+      {
+        path: 'proyectos/:id/resultados',
+        loadComponent: () => import('./features/exportaciones/resultados.component').then((c) => c.ResultadosComponent)
       },
       {
         path: 'normativas',

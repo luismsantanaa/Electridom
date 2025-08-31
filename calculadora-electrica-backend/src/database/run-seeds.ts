@@ -1,6 +1,7 @@
 import { DataSource } from 'typeorm';
 import { ProjectsSeed } from './seeds/projects.seed';
 import { Sprint9PerformanceSeed } from './seeds/sprint-9-performance.seed';
+import { ModeladoElectricoSeed } from './seeds/modelado-electrico.seed';
 
 async function runSeeds() {
   const dataSource = new DataSource({
@@ -28,6 +29,10 @@ async function runSeeds() {
       const performanceSeed = new Sprint9PerformanceSeed(dataSource);
       await performanceSeed.run();
     }
+
+    // Sprint 10: Seed de modelado eléctrico
+    const modeladoElectricoSeed = new ModeladoElectricoSeed(dataSource);
+    await modeladoElectricoSeed.run();
 
     console.log('✅ Todas las semillas ejecutadas exitosamente');
   } catch (error) {

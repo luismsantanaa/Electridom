@@ -23,11 +23,7 @@ export interface MessageBuilder {
 @Injectable()
 export class PromptBuilderHelper implements MessageBuilder {
   private readonly logger = new Logger(PromptBuilderHelper.name);
-  private readonly promptsPath = path.join(
-    process.cwd(),
-    'UserHistories',
-    'prompts',
-  );
+  private readonly promptsPath = path.join(process.cwd(), 'prompts', 'ai');
 
   constructor() {}
 
@@ -62,7 +58,7 @@ export class PromptBuilderHelper implements MessageBuilder {
    * Construye el mensaje del usuario con contexto completo
    */
   buildUserMessage(context: PromptContext): any {
-    const userExamples = this.loadPrompt('user_examples.md');
+    const userExamples = this.loadPrompt('examples.md');
 
     let content = `# Análisis de Cálculo Eléctrico - Eléctridom
 
@@ -142,7 +138,7 @@ Responde ÚNICAMENTE en formato JSON válido con la siguiente estructura:
    * Valida que todos los prompts necesarios estén disponibles
    */
   validatePrompts(): boolean {
-    const requiredPrompts = ['system.md', 'guardrails.md', 'user_examples.md'];
+    const requiredPrompts = ['system.md', 'guardrails.md', 'examples.md'];
 
     for (const prompt of requiredPrompts) {
       if (!this.loadPrompt(prompt)) {
@@ -161,7 +157,7 @@ Responde ÚNICAMENTE en formato JSON válido con la siguiente estructura:
     const prompts = [
       this.loadPrompt('system.md'),
       this.loadPrompt('guardrails.md'),
-      this.loadPrompt('user_examples.md'),
+      this.loadPrompt('examples.md'),
     ].join('|');
 
     return crypto
@@ -199,7 +195,7 @@ Responde ÚNICAMENTE en formato JSON válido con la siguiente estructura:
   ): PromptContext {
     return {
       systemPrompt: this.loadPrompt('system.md'),
-      userExamples: this.loadPrompt('user_examples.md'),
+      userExamples: this.loadPrompt('examples.md'),
       guardrails: this.loadPrompt('guardrails.md'),
       inputData,
       outputData,
