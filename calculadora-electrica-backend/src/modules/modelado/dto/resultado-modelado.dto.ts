@@ -68,11 +68,11 @@ export class CircuitoDto {
   @ApiProperty({ description: 'Observaciones' })
   observaciones?: string;
 
-  @ApiProperty({ type: ProteccionDto, description: 'Protección asignada' })
-  proteccion: ProteccionDto;
+  @ApiProperty({ type: ProteccionDto, description: 'Protección asignada', nullable: true })
+  proteccion: ProteccionDto | null;
 
-  @ApiProperty({ type: ConductorDto, description: 'Conductor asignado' })
-  conductor: ConductorDto;
+  @ApiProperty({ type: ConductorDto, description: 'Conductor asignado', nullable: true })
+  conductor: ConductorDto | null;
 }
 
 export class ResultadoModeladoDto {

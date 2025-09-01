@@ -47,7 +47,7 @@ export interface UpdateProjectRequest {
   providedIn: 'root'
 })
 export class ProjectsService {
-  private readonly apiUrl = `${environment.apiUrl}/projects`;
+  private readonly apiUrl = `${environment.apiUrl}/v1/projects`;
 
   constructor(private http: HttpClient) {}
 

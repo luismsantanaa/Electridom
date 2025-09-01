@@ -1,0 +1,7 @@
+{
+  "nombre": "Proyecto Test",
+  "descripcion": "Proyecto de prueba",
+  "tipo_instalacion": "residencial",
+  "tension_v": 120,
+  "monofasico": true
+}

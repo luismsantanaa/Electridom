@@ -1,0 +1,347 @@
+/* Planos Container */
+.planos-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Page Header */
+.page-header {
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.page-header h2 {
+  color: #2c3e50;
+  margin-bottom: 10px;
+}
+
+/* Loading State */
+.loading-container {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+/* Error State */
+.error-container {
+  margin-bottom: 20px;
+}
+
+/* Upload Section */
+.upload-section {
+  margin-bottom: 30px;
+}
+
+.upload-area {
+  border: 3px dashed #dee2e6;
+  border-radius: 10px;
+  padding: 40px 20px;
+  text-align: center;
+  transition: all 0.3s ease;
+  background-color: #f8f9fa;
+}
+
+.upload-area.drag-over {
+  border-color: #007bff;
+  background-color: #e3f2fd;
+  transform: scale(1.02);
+}
+
+.upload-content {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.upload-content h5 {
+  color: #495057;
+  margin-bottom: 10px;
+}
+
+/* Plano Preview */
+.plano-preview {
+  margin-bottom: 30px;
+}
+
+.plano-container {
+  position: relative;
+  overflow: auto;
+  max-height: 500px;
+  border: 1px solid #dee2e6;
+  border-radius: 5px;
+  background-color: #f8f9fa;
+}
+
+.plano-image {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.plano-pdf {
+  width: 100%;
+  height: 500px;
+  border: none;
+}
+
+/* Plano Info */
+.plano-info {
+  margin-bottom: 30px;
+}
+
+.plano-info .card-body p {
+  margin-bottom: 8px;
+}
+
+/* Annotations Section */
+.annotations-section {
+  margin-bottom: 30px;
+}
+
+.annotations-tools {
+  border-bottom: 1px solid #dee2e6;
+  padding-bottom: 15px;
+}
+
+.annotations-tools .btn {
+  margin-bottom: 5px;
+}
+
+.annotations-list {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.annotation-item {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  border: 1px solid #dee2e6;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  background-color: #fff;
+  transition: all 0.2s ease;
+}
+
+.annotation-item:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transform: translateY(-1px);
+}
+
+.annotation-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 15px;
+  font-size: 16px;
+}
+
+.annotation-item:nth-child(4n+1) .annotation-icon {
+  background-color: #e3f2fd;
+  color: #1976d2;
+}
+
+.annotation-item:nth-child(4n+2) .annotation-icon {
+  background-color: #e8f5e8;
+  color: #388e3c;
+}
+
+.annotation-item:nth-child(4n+3) .annotation-icon {
+  background-color: #fff3e0;
+  color: #f57c00;
+}
+
+.annotation-item:nth-child(4n+4) .annotation-icon {
+  background-color: #f3e5f5;
+  color: #7b1fa2;
+}
+
+.annotation-content {
+  flex: 1;
+  margin-right: 15px;
+}
+
+.annotation-content strong {
+  color: #2c3e50;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.annotation-actions {
+  display: flex;
+  gap: 5px;
+}
+
+.annotation-actions .btn {
+  padding: 4px 8px;
+  font-size: 12px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .planos-container {
+    padding: 15px;
+  }
+  
+  .upload-area {
+    padding: 30px 15px;
+  }
+  
+  .upload-content h5 {
+    font-size: 18px;
+  }
+  
+  .annotation-item {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .annotation-icon {
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+  
+  .annotation-content {
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+  
+  .annotation-actions {
+    justify-content: center;
+  }
+  
+  .annotations-tools .btn {
+    margin-bottom: 8px;
+    width: 100%;
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .planos-container {
+    background-color: #1a1a1a;
+    color: #ffffff;
+  }
+  
+  .upload-area {
+    background-color: #2d2d2d;
+    border-color: #404040;
+  }
+  
+  .upload-area.drag-over {
+    background-color: #1e3a5f;
+    border-color: #007bff;
+  }
+  
+  .plano-container {
+    background-color: #2d2d2d;
+    border-color: #404040;
+  }
+  
+  .annotation-item {
+    background-color: #2d2d2d;
+    border-color: #404040;
+  }
+  
+  .annotation-item:hover {
+    background-color: #3d3d3d;
+  }
+  
+  .page-header h2 {
+    color: #ffffff;
+  }
+  
+  .upload-content h5 {
+    color: #ffffff;
+  }
+}
+
+/* Animation for loading states */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.planos-content > * {
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* Custom scrollbar for annotations list */
+.annotations-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.annotations-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.annotations-list::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.annotations-list::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Zoom controls styling */
+.btn-group .btn {
+  border-radius: 0;
+}
+
+.btn-group .btn:first-child {
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+
+.btn-group .btn:last-child {
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+
+/* File upload progress indicator */
+.upload-area.processing {
+  position: relative;
+}
+
+.upload-area.processing::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 123, 255, 0.1);
+  border-radius: 10px;
+  pointer-events: none;
+}
+
+/* Tooltip styles for annotation buttons */
+.btn[title] {
+  position: relative;
+}
+
+.btn[title]:hover::after {
+  content: attr(title);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #333;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 1000;
+}

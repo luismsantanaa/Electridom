@@ -1,0 +1,1 @@
+- Dashboard avanzado, unifilar avanzado, carga de planos, mejorar UX

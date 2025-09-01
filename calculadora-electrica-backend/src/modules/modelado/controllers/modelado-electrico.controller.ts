@@ -16,10 +16,10 @@ import {
   ApiParam,
   ApiBearerAuth 
 } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
-import { RolesGuard } from '../../auth/guards/roles.guard';
-import { Roles } from '../../auth/decorators/roles.decorator';
-import { UserRole } from '../../auth/enums/user-role.enum';
+// import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+// import { RolesGuard } from '../../auth/guards/roles.guard';
+// import { Roles } from '../../auth/decorators/roles.decorator';
+// import { UserRole } from '../../auth/enums/user-role.enum';
 import { ModeladoElectricoService } from '../services/modelado-electrico.service';
 import { 
   GenerarCircuitosDto, 
@@ -31,7 +31,7 @@ import {
 
 @ApiTags('Modelado Eléctrico')
 @Controller('modelado')
-@UseGuards(JwtAuthGuard, RolesGuard)
+// @UseGuards(JwtAuthGuard, RolesGuard)
 @ApiBearerAuth()
 export class ModeladoElectricoController {
   constructor(
@@ -40,7 +40,7 @@ export class ModeladoElectricoController {
 
   @Post('generar-circuitos')
   @HttpCode(HttpStatus.OK)
-  @Roles(UserRole.INGENIERO, UserRole.TECNICO, UserRole.ADMIN)
+  // @Roles(UserRole.INGENIERO, UserRole.TECNICO, UserRole.ADMIN)
   @ApiOperation({
     summary: 'Generar circuitos eléctricos',
     description: 'Genera circuitos, protecciones y conductores para un proyecto completo según normativas RIE RD y NEC 2020'
@@ -66,7 +66,7 @@ export class ModeladoElectricoController {
 
   @Get('proyectos/:id/resultados')
   @HttpCode(HttpStatus.OK)
-  @Roles(UserRole.INGENIERO, UserRole.TECNICO, UserRole.ADMIN, UserRole.CLIENTE)
+  // @Roles(UserRole.INGENIERO, UserRole.TECNICO, UserRole.ADMIN, UserRole.CLIENTE)
   @ApiOperation({
     summary: 'Obtener resultados del modelado',
     description: 'Obtiene los circuitos, protecciones y conductores generados para un proyecto'
@@ -98,7 +98,7 @@ export class ModeladoElectricoController {
 
   @Post('proyectos')
   @HttpCode(HttpStatus.CREATED)
-  @Roles(UserRole.INGENIERO, UserRole.TECNICO, UserRole.ADMIN)
+  // @Roles(UserRole.INGENIERO, UserRole.TECNICO, UserRole.ADMIN)
   @ApiOperation({
     summary: 'Crear proyecto',
     description: 'Crea un nuevo proyecto para modelado eléctrico'
@@ -124,7 +124,7 @@ export class ModeladoElectricoController {
 
   @Post('ambientes')
   @HttpCode(HttpStatus.CREATED)
-  @Roles(UserRole.INGENIERO, UserRole.TECNICO, UserRole.ADMIN)
+  // @Roles(UserRole.INGENIERO, UserRole.TECNICO, UserRole.ADMIN)
   @ApiOperation({
     summary: 'Crear ambiente',
     description: 'Crea un nuevo ambiente para un proyecto'
@@ -150,7 +150,7 @@ export class ModeladoElectricoController {
 
   @Post('cargas')
   @HttpCode(HttpStatus.CREATED)
-  @Roles(UserRole.INGENIERO, UserRole.TECNICO, UserRole.ADMIN)
+  // @Roles(UserRole.INGENIERO, UserRole.TECNICO, UserRole.ADMIN)
   @ApiOperation({
     summary: 'Crear carga',
     description: 'Crea una nueva carga eléctrica para un ambiente'

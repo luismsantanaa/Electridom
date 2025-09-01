@@ -1,0 +1,4 @@
+- [ ] Dashboard métricas
+- [ ] Unifilar exporta SVG
+- [ ] Subir plano
+- [ ] Responsive + tooltips

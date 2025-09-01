@@ -1,0 +1,186 @@
+<div class="resultados-container">
+  <!-- Header -->
+  <div class="page-header">
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <h1 class="page-title">
+          <i class="fas fa-chart-bar me-2"></i>
+          Resultados del Proyecto
+        </h1>
+        <p class="page-subtitle" *ngIf="resultado()">
+          {{ resultado()?.proyecto.nombre }} - {{ resultado()?.proyecto.tipo_instalacion }}
+        </p>
+      </div>
+             <div class="header-actions">
+         <button 
+           class="btn btn-warning me-2" 
+           (click)="verValidaciones()"
+           [disabled]="!resultado()"
+         >
+           <i class="fas fa-shield-alt me-2"></i>
+           Validaciones
+         </button>
+         <button 
+           class="btn btn-success me-2" 
+           (click)="exportarPDF()"
+           [disabled]="!resultado() || exportando()"
+         >
+           <i class="fas fa-file-pdf me-2"></i>
+           Exportar PDF
+         </button>
+         <button 
+           class="btn btn-primary me-2" 
+           (click)="exportarExcel()"
+           [disabled]="!resultado() || exportando()"
+         >
+           <i class="fas fa-file-excel me-2"></i>
+           Exportar Excel
+         </button>
+         <button 
+           class="btn btn-info" 
+           (click)="exportarUnifilar()"
+           [disabled]="!resultado() || !unifilarSvg() || exportando()"
+         >
+           <i class="fas fa-download me-2"></i>
+           Descargar Unifilar
+         </button>
+       </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div class="loading-container" *ngIf="loading()">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+    <p class="mt-3">Cargando resultados del proyecto...</p>
+  </div>
+
+  <!-- Error State -->
+  <div class="error-container" *ngIf="error()">
+    <div class="alert alert-danger">
+      <i class="fas fa-exclamation-triangle me-2"></i>
+      {{ error() }}
+    </div>
+    <button class="btn btn-primary" (click)="cargarResultados()">
+      <i class="fas fa-redo me-2"></i>
+      Reintentar
+    </button>
+  </div>
+
+  <!-- Content -->
+  <div class="resultados-content" *ngIf="resultado() && !loading()">
+    <!-- Resumen Cards -->
+    <div class="row g-4 mb-4">
+      <div class="col-xl-3 col-md-6">
+        <div class="card stat-card stat-card-primary">
+          <div class="card-body">
+            <div class="d-flex align-items-center">
+              <div class="stat-icon">
+                <i class="fas fa-bolt"></i>
+              </div>
+              <div class="stat-content">
+                <h3 class="stat-number">{{ estadisticas().totalCircuitos }}</h3>
+                <p class="stat-label">Circuitos Totales</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xl-3 col-md-6">
+        <div class="card stat-card stat-card-success">
+          <div class="card-body">
+            <div class="d-flex align-items-center">
+              <div class="stat-icon">
+                <i class="fas fa-tachometer-alt"></i>
+              </div>
+              <div class="stat-content">
+                <h3 class="stat-number">{{ estadisticas().potenciaTotal | number:'1.0-0' }}</h3>
+                <p class="stat-label">Potencia Total (VA)</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xl-3 col-md-6">
+        <div class="card stat-card stat-card-warning">
+          <div class="card-body">
+            <div class="d-flex align-items-center">
+              <div class="stat-icon">
+                <i class="fas fa-plug"></i>
+              </div>
+              <div class="stat-content">
+                <h3 class="stat-number">{{ estadisticas().corrienteTotal | number:'1.1-1' }}</h3>
+                <p class="stat-label">Corriente Total (A)</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xl-3 col-md-6">
+        <div class="card stat-card stat-card-info">
+          <div class="card-body">
+            <div class="d-flex align-items-center">
+              <div class="stat-icon">
+                <i class="fas fa-home"></i>
+              </div>
+              <div class="stat-content">
+                <h3 class="stat-number">{{ estadisticas().ambientesCount }}</h3>
+                <p class="stat-label">Ambientes</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Diagrama Unifilar -->
+    <div class="row mb-4">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="card-title mb-0">
+              <i class="fas fa-project-diagram me-2"></i>
+              Diagrama Unifilar
+            </h5>
+          </div>
+          <div class="card-body">
+            <div class="unifilar-container" *ngIf="unifilarSvg()">
+              <div class="unifilar-svg" [innerHTML]="unifilarSvg()"></div>
+            </div>
+            <div class="text-center text-muted" *ngIf="!unifilarSvg()">
+              <i class="fas fa-image fa-3x mb-3"></i>
+              <p>No se pudo generar el diagrama unifilar</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabla de Circuitos -->
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="card-title mb-0">
+              <i class="fas fa-list me-2"></i>
+              Circuitos del Proyecto
+            </h5>
+          </div>
+          <div class="card-body">
+            <app-data-grid
+              [dataSourceFn]="circuitosDataSource"
+              [columns]="circuitosColumns"
+              [actions]="circuitosActions"
+              [pageSize]="10"
+              [showSearch]="true"
+            ></app-data-grid>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -8,13 +8,27 @@ interface DashboardStats {
   activeProjects: number;
   totalCalculations: number;
   totalExports: number;
+  // Métricas avanzadas para HU15.1
+  totalPowerVA: number;
+  totalCurrentA: number;
+  averageCircuitCount: number;
+  validationIssues: number;
   recentActivity: Array<{
     id: string;
-    type: 'project' | 'calculation' | 'export';
+    type: 'project' | 'calculation' | 'export' | 'validation';
     title: string;
     timestamp: string;
     status: string;
+    details?: string;
   }>;
+  // Gráficos y métricas
+  projectsByType: Array<{type: string, count: number}>;
+  powerDistribution: Array<{range: string, count: number}>;
+  validationSummary: {
+    valid: number;
+    warnings: number;
+    errors: number;
+  };
 }
 
 @Component({
@@ -94,6 +108,171 @@ interface DashboardStats {
                 <div class="stat-content">
                   <h3 class="stat-number">{{ stats().totalExports }}</h3>
                   <p class="stat-label">Exportaciones</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Métricas Avanzadas HU15.1 -->
+      <div class="row g-4 mb-4">
+        <div class="col-xl-3 col-md-6">
+          <div class="card stat-card stat-card-info">
+            <div class="card-body">
+              <div class="d-flex align-items-center">
+                <div class="stat-icon">
+                  <i class="fas fa-bolt"></i>
+                </div>
+                <div class="stat-content">
+                  <h3 class="stat-number">{{ stats().totalPowerVA | number:'1.0-0' }}</h3>
+                  <p class="stat-label">Potencia Total (VA)</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+          <div class="card stat-card stat-card-success">
+            <div class="card-body">
+              <div class="d-flex align-items-center">
+                <div class="stat-icon">
+                  <i class="fas fa-plug"></i>
+                </div>
+                <div class="stat-content">
+                  <h3 class="stat-number">{{ stats().totalCurrentA | number:'1.1-1' }}</h3>
+                  <p class="stat-label">Corriente Total (A)</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+          <div class="card stat-card stat-card-primary">
+            <div class="card-body">
+              <div class="d-flex align-items-center">
+                <div class="stat-icon">
+                  <i class="fas fa-sitemap"></i>
+                </div>
+                <div class="stat-content">
+                  <h3 class="stat-number">{{ stats().averageCircuitCount | number:'1.1-1' }}</h3>
+                  <p class="stat-label">Promedio Circuitos</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+          <div class="card stat-card stat-card-danger">
+            <div class="card-body">
+              <div class="d-flex align-items-center">
+                <div class="stat-icon">
+                  <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="stat-content">
+                  <h3 class="stat-number">{{ stats().validationIssues }}</h3>
+                  <p class="stat-label">Problemas Validación</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gráficos y Métricas Visuales -->
+      <div class="row g-4 mb-4">
+        <div class="col-lg-6">
+          <div class="card">
+            <div class="card-header">
+              <h5 class="card-title mb-0">
+                <i class="fas fa-chart-pie me-2"></i>
+                Proyectos por Tipo
+              </h5>
+            </div>
+            <div class="card-body">
+              <div class="chart-container">
+                <div class="chart-item" *ngFor="let item of stats().projectsByType">
+                  <div class="chart-label">{{ item.type }}</div>
+                  <div class="chart-bar">
+                    <div class="chart-fill" [style.width.%]="getPercentage(item.count, stats().totalProjects)"></div>
+                  </div>
+                  <div class="chart-value">{{ item.count }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="card">
+            <div class="card-header">
+              <h5 class="card-title mb-0">
+                <i class="fas fa-chart-bar me-2"></i>
+                Distribución de Potencia
+              </h5>
+            </div>
+            <div class="card-body">
+              <div class="chart-container">
+                <div class="chart-item" *ngFor="let item of stats().powerDistribution">
+                  <div class="chart-label">{{ item.range }}</div>
+                  <div class="chart-bar">
+                    <div class="chart-fill" [style.width.%]="getPercentage(item.count, stats().totalProjects)"></div>
+                  </div>
+                  <div class="chart-value">{{ item.count }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resumen de Validaciones -->
+      <div class="row g-4 mb-4">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h5 class="card-title mb-0">
+                <i class="fas fa-shield-alt me-2"></i>
+                Resumen de Validaciones
+              </h5>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="validation-item validation-valid">
+                    <div class="validation-icon">
+                      <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="validation-content">
+                      <h4>{{ stats().validationSummary.valid }}</h4>
+                      <p>Proyectos Válidos</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="validation-item validation-warning">
+                    <div class="validation-icon">
+                      <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="validation-content">
+                      <h4>{{ stats().validationSummary.warnings }}</h4>
+                      <p>Con Advertencias</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="validation-item validation-error">
+                    <div class="validation-icon">
+                      <i class="fas fa-times-circle"></i>
+                    </div>
+                    <div class="validation-content">
+                      <h4>{{ stats().validationSummary.errors }}</h4>
+                      <p>Con Errores</p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -363,6 +542,19 @@ export class DashboardComponent implements OnInit {
     activeProjects: 0,
     totalCalculations: 0,
     totalExports: 0,
+    // Métricas avanzadas HU15.1
+    totalPowerVA: 0,
+    totalCurrentA: 0,
+    averageCircuitCount: 0,
+    validationIssues: 0,
+    // Gráficos y métricas
+    projectsByType: [],
+    powerDistribution: [],
+    validationSummary: {
+      valid: 0,
+      warnings: 0,
+      errors: 0
+    },
     recentActivity: []
   });
 
@@ -370,6 +562,11 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     this.loadDashboardStats();
+  }
+
+  getPercentage(value: number, total: number): number {
+    if (total === 0) return 0;
+    return Math.round((value / total) * 100);
   }
 
   private loadDashboardStats() {
@@ -387,32 +584,58 @@ export class DashboardComponent implements OnInit {
       }
     });
 
-    // Mock data para cálculos y exportaciones (en un caso real vendría de servicios específicos)
+    // Mock data para cálculos y exportaciones con métricas avanzadas HU15.1
     this.stats.update(current => ({
       ...current,
       totalCalculations: 156,
       totalExports: 23,
+      // Métricas avanzadas
+      totalPowerVA: 45600,
+      totalCurrentA: 380.5,
+      averageCircuitCount: 8.2,
+      validationIssues: 7,
+      // Gráficos y métricas
+      projectsByType: [
+        { type: 'Residencial', count: 12 },
+        { type: 'Comercial', count: 8 },
+        { type: 'Industrial', count: 3 },
+        { type: 'Institucional', count: 2 }
+      ],
+      powerDistribution: [
+        { range: '0-5kVA', count: 8 },
+        { range: '5-15kVA', count: 10 },
+        { range: '15-30kVA', count: 5 },
+        { range: '30kVA+', count: 2 }
+      ],
+      validationSummary: {
+        valid: 18,
+        warnings: 5,
+        errors: 2
+      },
       recentActivity: [
         {
           id: '1',
           type: 'project',
           title: 'Proyecto Residencial San Juan',
           timestamp: new Date().toISOString(),
-          status: 'Completado'
+          status: 'Completado',
+          details: 'Proyecto completado con 12 circuitos'
         },
         {
           id: '2',
-          type: 'calculation',
-          title: 'Cálculo de Cargas Eléctricas',
+          type: 'validation',
+          title: 'Validación normativa completada',
           timestamp: new Date(Date.now() - 3600000).toISOString(),
-          status: 'En Proceso'
+          status: 'Advertencia',
+          details: '3 advertencias detectadas'
         },
         {
           id: '3',
           type: 'export',
-          title: 'Exportación de Planos',
+          title: 'Exportación PDF con unifilar',
           timestamp: new Date(Date.now() - 7200000).toISOString(),
-          status: 'Completado'
+          status: 'Completado',
+          details: 'Reporte con diagrama SVG'
         }
       ]
     }));

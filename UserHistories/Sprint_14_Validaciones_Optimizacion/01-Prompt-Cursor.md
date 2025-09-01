@@ -1,0 +1,1 @@
+- Validaciones: tomas, luminarias, caída de tensión, simultaneidad

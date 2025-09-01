@@ -63,7 +63,7 @@ export class ModeladoElectricoService {
     // Limpiar circuitos existentes del proyecto
     await this.limpiarCircuitosExistentes(dto.proyecto_id);
 
-    const circuitosGenerados = [];
+    const circuitosGenerados: Circuito[] = [];
 
     // Procesar cada ambiente
     for (const ambiente of proyecto.ambientes) {
@@ -140,7 +140,7 @@ export class ModeladoElectricoService {
     tipoAislamiento: string,
     temperaturaAmbiente: number
   ): Promise<Circuito[]> {
-    const circuitos = [];
+    const circuitos: Circuito[] = [];
     let numeroCircuito = 1;
 
     // Agrupar cargas por tipo
@@ -196,7 +196,7 @@ export class ModeladoElectricoService {
     temperaturaAmbiente: number,
     numeroCircuitoInicial: number
   ): Promise<Circuito[]> {
-    const circuitos = [];
+    const circuitos: Circuito[] = [];
     let numeroCircuito = numeroCircuitoInicial;
 
     // Calcular potencia total del tipo
@@ -240,7 +240,9 @@ export class ModeladoElectricoService {
       relations: ['protecciones', 'conductores']
     });
 
-    circuitos.push(circuitoCompleto);
+    if (circuitoCompleto) {
+      circuitos.push(circuitoCompleto);
+    }
     return circuitos;
   }
 

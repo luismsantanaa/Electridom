@@ -1,0 +1,4 @@
+- [ ] Exceso tomas → advertencia
+- [ ] Demasiadas luminarias
+- [ ] Longitud conductor
+- [ ] Simultaneidad ACs

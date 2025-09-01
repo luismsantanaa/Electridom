@@ -1,0 +1,48 @@
+
+
+## Rule 1 – Status Summaries
+
+Do not provide status summaries for any story, feature, functionality, or request unless it is **100% completed and error-free**.
+Summaries should only be delivered once the task has been fully implemented and validated.
+
+**Exception:** If the developer or assistant wants to suggest leaving the task as-is, they must explicitly ask whether I agree to finalize it in its current state. I will then confirm with a clear “yes” or “no.”
+
+---
+
+## Rule 2 – Error Detection and Corrections
+
+When detecting errors and applying corrections, you must first **analyze the code in question along with its relationships to other classes, methods, functions, or services**.
+This contextual understanding is essential to ensure that any fix is effective, non-disruptive, and aligned with the overall architecture of the project.
+
+---
+
+## Rule 3 – Data and Code Restoration
+
+When performing bug fixes and modifying data or code to simplify and identify errors, always aim to **restore the modified data, fields, or code to their original format once the issue has been resolved**—provided this does not affect the application's functionality.
+
+This practice helps prevent unintended data loss and ensures the integrity and consistency of the program.
+
+---
+
+## Rule 4 – SOLID and Clean Code
+
+All applications must be developed in alignment with the **SOLID principles** and **Clean Code standards**.
+Developers should strive to apply these principles as closely as possible throughout the entire development process—from architecture design to implementation and refactoring.
+
+This ensures that the codebase remains maintainable, scalable, readable, and easy to test, while promoting long-term project sustainability.
+
+---
+
+## Rule 5 – Operating System Environment
+
+Always note that we are working on the **Windows 10 64-bit operating system**.
+This environment may affect certain console commands, scripts, or tools, potentially causing errors or unexpected behavior.
+Always test and adjust accordingly to maintain compatibility.
+
+---
+
+### Rule 6 - Language of responses
+
+Always respond in Spanish.
+
+---

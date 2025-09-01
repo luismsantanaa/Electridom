@@ -640,14 +640,14 @@ export class CreateModeladoElectricoTables1704067200000 implements MigrationInte
     );
 
     // Crear índices
-    await queryRunner.createIndex('proyectos', { name: 'IDX_proyectos_nombre', columnNames: ['nombre'] });
-    await queryRunner.createIndex('ambientes', { name: 'IDX_ambientes_proyecto_nombre', columnNames: ['proyecto_id', 'nombre'] });
-    await queryRunner.createIndex('cargas', { name: 'IDX_cargas_ambiente_tipo', columnNames: ['ambiente_id', 'tipo'] });
-    await queryRunner.createIndex('circuitos', { name: 'IDX_circuitos_proyecto_ambiente_tipo', columnNames: ['proyecto_id', 'ambiente_id', 'tipo'] });
-    await queryRunner.createIndex('protecciones', { name: 'IDX_protecciones_circuito', columnNames: ['circuito_id'] });
-    await queryRunner.createIndex('conductores', { name: 'IDX_conductores_circuito', columnNames: ['circuito_id'] });
-    await queryRunner.createIndex('normativas_ampacidad', { name: 'IDX_normativas_ampacidad_calibre_material', columnNames: ['calibre_awg', 'material'] });
-    await queryRunner.createIndex('normativas_breakers', { name: 'IDX_normativas_breakers_capacidad_curva', columnNames: ['capacidad_a', 'curva'] });
+    await queryRunner.createIndex('proyectos', new TableIndex({ name: 'IDX_proyectos_nombre', columnNames: ['nombre'] }));
+    await queryRunner.createIndex('ambientes', new TableIndex({ name: 'IDX_ambientes_proyecto_nombre', columnNames: ['proyecto_id', 'nombre'] }));
+    await queryRunner.createIndex('cargas', new TableIndex({ name: 'IDX_cargas_ambiente_tipo', columnNames: ['ambiente_id', 'tipo'] }));
+    await queryRunner.createIndex('circuitos', new TableIndex({ name: 'IDX_circuitos_proyecto_ambiente_tipo', columnNames: ['proyecto_id', 'ambiente_id', 'tipo'] }));
+    await queryRunner.createIndex('protecciones', new TableIndex({ name: 'IDX_protecciones_circuito', columnNames: ['circuito_id'] }));
+    await queryRunner.createIndex('conductores', new TableIndex({ name: 'IDX_conductores_circuito', columnNames: ['circuito_id'] }));
+    await queryRunner.createIndex('normativas_ampacidad', new TableIndex({ name: 'IDX_normativas_ampacidad_calibre_material', columnNames: ['calibre_awg', 'material'] }));
+    await queryRunner.createIndex('normativas_breakers', new TableIndex({ name: 'IDX_normativas_breakers_capacidad_curva', columnNames: ['capacidad_a', 'curva'] }));
 
     // Crear foreign keys
     await queryRunner.createForeignKey(
@@ -714,27 +714,49 @@ export class CreateModeladoElectricoTables1704067200000 implements MigrationInte
   public async down(queryRunner: QueryRunner): Promise<void> {
     // Eliminar foreign keys
     const table = await queryRunner.getTable('conductores');
-    const foreignKey = table.foreignKeys.find(fk => fk.columnNames.indexOf('circuito_id') !== -1);
-    await queryRunner.dropForeignKey('conductores', foreignKey);
+    if (table) {
+      const foreignKey = table.foreignKeys.find(fk => fk.columnNames.indexOf('circuito_id') !== -1);
+      if (foreignKey) {
+        await queryRunner.dropForeignKey('conductores', foreignKey);
+      }
+    }
 
     const table2 = await queryRunner.getTable('protecciones');
-    const foreignKey2 = table2.foreignKeys.find(fk => fk.columnNames.indexOf('circuito_id') !== -1);
-    await queryRunner.dropForeignKey('protecciones', foreignKey2);
+    if (table2) {
+      const foreignKey2 = table2.foreignKeys.find(fk => fk.columnNames.indexOf('circuito_id') !== -1);
+      if (foreignKey2) {
+        await queryRunner.dropForeignKey('protecciones', foreignKey2);
+      }
+    }
 
     const table3 = await queryRunner.getTable('circuitos');
-    const foreignKey3 = table3.foreignKeys.find(fk => fk.columnNames.indexOf('ambiente_id') !== -1);
-    await queryRunner.dropForeignKey('circuitos', foreignKey3);
+    if (table3) {
+      const foreignKey3 = table3.foreignKeys.find(fk => fk.columnNames.indexOf('ambiente_id') !== -1);
+      if (foreignKey3) {
+        await queryRunner.dropForeignKey('circuitos', foreignKey3);
+      }
 
-    const foreignKey4 = table3.foreignKeys.find(fk => fk.columnNames.indexOf('proyecto_id') !== -1);
-    await queryRunner.dropForeignKey('circuitos', foreignKey4);
+      const foreignKey4 = table3.foreignKeys.find(fk => fk.columnNames.indexOf('proyecto_id') !== -1);
+      if (foreignKey4) {
+        await queryRunner.dropForeignKey('circuitos', foreignKey4);
+      }
+    }
 
     const table4 = await queryRunner.getTable('cargas');
-    const foreignKey5 = table4.foreignKeys.find(fk => fk.columnNames.indexOf('ambiente_id') !== -1);
-    await queryRunner.dropForeignKey('cargas', foreignKey5);
+    if (table4) {
+      const foreignKey5 = table4.foreignKeys.find(fk => fk.columnNames.indexOf('ambiente_id') !== -1);
+      if (foreignKey5) {
+        await queryRunner.dropForeignKey('cargas', foreignKey5);
+      }
+    }
 
     const table5 = await queryRunner.getTable('ambientes');
-    const foreignKey6 = table5.foreignKeys.find(fk => fk.columnNames.indexOf('proyecto_id') !== -1);
-    await queryRunner.dropForeignKey('ambientes', foreignKey6);
+    if (table5) {
+      const foreignKey6 = table5.foreignKeys.find(fk => fk.columnNames.indexOf('proyecto_id') !== -1);
+      if (foreignKey6) {
+        await queryRunner.dropForeignKey('ambientes', foreignKey6);
+      }
+    }
 
     // Eliminar tablas
     await queryRunner.dropTable('normativas_breakers');

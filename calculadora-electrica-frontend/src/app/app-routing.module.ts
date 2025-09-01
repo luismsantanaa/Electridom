@@ -44,6 +44,18 @@ const routes: Routes = [
         loadComponent: () => import('./features/exportaciones/resultados.component').then((c) => c.ResultadosComponent)
       },
       {
+        path: 'integration',
+        loadComponent: () => import('./features/integration/integration-flow.component').then((c) => c.IntegrationFlowComponent)
+      },
+      {
+        path: 'proyectos/:id/validaciones',
+        loadComponent: () => import('./features/validaciones/validaciones.component').then((c) => c.ValidacionesComponent)
+      },
+      {
+        path: 'planos',
+        loadComponent: () => import('./features/planos/planos.component').then((c) => c.PlanosComponent)
+      },
+      {
         path: 'normativas',
         loadChildren: () => import('./modules/normativas/normativas.module').then((m) => m.NormativasModule)
       },
