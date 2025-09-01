@@ -83,7 +83,7 @@ export class ProjectsAppService {
     // Si se solicita calcular inmediatamente, crear la primera versión
     if (dto.computeNow !== false) {
       const version = await this.createVersionInternal(
-        savedProject[0].id,
+        savedProject.id,
         {
           surfaces: dto.surfaces,
           consumptions: dto.consumptions,
@@ -102,11 +102,11 @@ export class ProjectsAppService {
     }
 
     return {
-      projectId: savedProject[0].id,
-      projectName: savedProject[0].name,
-      status: savedProject[0].status,
-      createdAt: savedProject[0].creationDate.toISOString(),
-      updatedAt: savedProject[0].updateDate.toISOString(),
+      projectId: savedProject.id,
+      projectName: savedProject.name,
+      status: savedProject.status,
+      createdAt: savedProject.creationDate.toISOString(),
+      updatedAt: savedProject.updateDate.toISOString(),
       latestVersion,
     };
   }
@@ -247,7 +247,10 @@ export class ProjectsAppService {
     if (sort) {
       const validSortFields = ['name', 'createdAt', 'updatedAt', 'status'];
       if (validSortFields.includes(sort)) {
-        queryBuilder.orderBy(`project.${sort}`, order.toUpperCase() as 'ASC' | 'DESC');
+        queryBuilder.orderBy(
+          `project.${sort}`,
+          order.toUpperCase() as 'ASC' | 'DESC',
+        );
       } else {
         queryBuilder.orderBy('project.createdAt', 'DESC');
       }

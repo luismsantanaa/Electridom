@@ -1,16 +1,16 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AuditLog } from '../entities/audit-log.entity';
-import { AuditAction, AuditLogData } from '../types/audit.types';
+import { AuditLogData, AuditAction } from '../types/audit.types';
+import { AppLoggerService } from './logger.service';
 
 @Injectable()
 export class AuditService {
-  private readonly logger = new Logger(AuditService.name);
-
   constructor(
     @InjectRepository(AuditLog)
     private readonly auditLogRepository: Repository<AuditLog>,
+    private readonly logger: AppLoggerService,
   ) {}
 
   async log(data: AuditLogData): Promise<void> {
@@ -28,27 +28,38 @@ export class AuditService {
 
       // Log crítico para eventos de seguridad
       if (this.isSecurityCritical(data.action)) {
-        this.logger.warn(`Security Event: ${data.action}`, {
-          userId: data.userId,
-          ip: data.ip,
-          traceId: data.traceId,
-          detail: data.detail,
-        });
+        this.logger.logSecurity(
+          data.userId || 'unknown',
+          data.action,
+          data.ip || 'unknown',
+          {
+            traceId: data.traceId,
+            detail: data.detail,
+            type: 'security_audit'
+          }
+        );
       }
     } catch (error) {
       // No fallar la aplicación si la auditoría falla
-      this.logger.error('Error logging audit event', error);
+      this.logger.error('Error logging audit event', error.stack, {
+        userId: data.userId,
+        action: data.action,
+        ip: data.ip,
+        type: 'audit_error'
+      });
     }
   }
 
   private isSecurityCritical(action: AuditAction): boolean {
     return [
-      AuditAction.LOGIN_FAILED,
-      AuditAction.ACCOUNT_LOCKED,
-      AuditAction.RATE_LIMIT_EXCEEDED,
-      AuditAction.SUSPICIOUS_ACTIVITY,
-      AuditAction.ROLE_CHANGE,
-      AuditAction.PERMISSION_CHANGE,
+      'USER_LOGIN',
+      'USER_LOGOUT',
+      'USER_PASSWORD_CHANGE',
+      'USER_ROLE_CHANGE',
+      'ADMIN_ACCESS',
+      'SENSITIVE_DATA_ACCESS',
+      'API_KEY_GENERATED',
+      'API_KEY_REVOKED',
     ].includes(action);
   }
 

@@ -14,9 +14,12 @@ import {
   HttpErrorResponse,
   ErrorResponseProduction,
 } from '../interfaces/error.interface';
+import { AppLoggerService } from '../services/logger.service';
 
 @Injectable()
 export class ErrorInterceptor implements NestInterceptor {
+  constructor(private readonly logger: AppLoggerService) {}
+
   private getErrorLocation(error: Error): {
     file?: string;
     method?: string;
@@ -60,70 +63,80 @@ export class ErrorInterceptor implements NestInterceptor {
     location: { file?: string; method?: string; line?: number; stack?: string },
     isProduction: boolean,
   ): ErrorResponse | ErrorResponseProduction {
-    const baseError = {
-      success: false,
-      error: {
-        code: errorCode,
-        message,
-        timestamp: new Date().toISOString(),
-      },
-    };
-
     if (isProduction) {
-      return baseError as ErrorResponseProduction;
+      return {
+        success: false,
+        error: {
+          code: errorCode,
+          message: message,
+          timestamp: new Date().toISOString(),
+        },
+      };
     }
 
     return {
-      ...baseError,
+      success: false,
       error: {
-        ...baseError.error,
-
-        details,
-
-        path: request.url,
-
-        method: request.method,
+        code: errorCode,
+        message: message,
+        details: details,
+        timestamp: new Date().toISOString(),
+        path: request?.url || 'unknown',
         file: location.file,
+        method: location.method,
         line: location.line,
         stack: location.stack,
       },
-    } as ErrorResponse;
+    };
   }
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const isProduction = process.env.NODE_ENV === 'production';
+    const request = context.switchToHttp().getRequest();
+    const requestId = request?.requestId || 'unknown';
 
     return next.handle().pipe(
       catchError((error) => {
+        // Si es un HttpException, NO lo interceptamos, dejamos que pase
+        if (error instanceof HttpException) {
+          // Solo log del error para debugging, pero no lo modificamos
+          this.logger.warn(`HTTP Exception passed through: ${error.message}`, {
+            requestId,
+            statusCode: error.getStatus(),
+            path: request?.url,
+            method: request?.method,
+            type: 'http_exception_passed'
+          });
+          
+          // Re-lanzar el error original sin modificación
+          return throwError(() => error);
+        }
+
+        // Solo interceptamos errores NO HTTP (como errores de base de datos, etc.)
         let status = HttpStatus.INTERNAL_SERVER_ERROR;
         let message = 'Error interno del servidor';
         let errorCode = 'INTERNAL_SERVER_ERROR';
         let details = null;
         const location = this.getErrorLocation(error);
 
-        const request = context.switchToHttp().getRequest();
+        // Para errores no HTTP (como errores de base de datos)
+        const dbError = error as DatabaseError;
+        message = dbError.message || 'Error interno del servidor';
+        errorCode = dbError.code || 'INTERNAL_SERVER_ERROR';
+        details = dbError.details || null;
 
-        if (error instanceof HttpException) {
-          status = error.getStatus();
-          const response = error.getResponse() as HttpErrorResponse;
-
-          if (typeof response === 'object') {
-            message = response.message || error.message;
-            errorCode = response.error || 'HTTP_EXCEPTION';
-
-            details = response.details || null;
-          } else {
-            message = error.message;
-            errorCode = 'HTTP_EXCEPTION';
-          }
-        } else {
-          // Para errores no HTTP (como errores de base de datos)
-          const dbError = error as DatabaseError;
-          message = dbError.message || 'Error interno del servidor';
-          errorCode = dbError.code || 'INTERNAL_SERVER_ERROR';
-
-          details = dbError.details || null;
-        }
+        // Log del error usando el nuevo servicio
+        this.logger.error(`Application Error: ${message}`, error.stack, {
+          requestId,
+          errorCode,
+          statusCode: status,
+          path: request?.url,
+          method: request?.method,
+          ip: request?.ip,
+          file: location.file,
+          line: location.line,
+          type: 'application_error',
+        });
 
         const errorResponse = this.createErrorResponse(
           errorCode,

@@ -6,9 +6,16 @@ export class CreateRuleSetsAndChangeLog1755803944721
   name = 'CreateRuleSetsAndChangeLog1755803944721';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query(
-      `DROP INDEX \`IDX_81229b6937ad7be4bac537b312\` ON \`norm_rules\``,
-    );
+    // Verificar si el índice existe antes de intentar eliminarlo
+    const table = await queryRunner.getTable('norm_rules');
+    if (table) {
+      const index = table.indices.find(idx => idx.name === 'IDX_81229b6937ad7be4bac537b312');
+      if (index) {
+        await queryRunner.query(
+          `DROP INDEX \`IDX_81229b6937ad7be4bac537b312\` ON \`norm_rules\``,
+        );
+      }
+    }
     await queryRunner.query(
       `CREATE TABLE \`rule_sets\` (\`id\` uuid NOT NULL, \`name\` varchar(200) NOT NULL, \`description\` text NULL, \`status\` varchar(16) NOT NULL DEFAULT 'DRAFT', \`effectiveFrom\` datetime NULL, \`effectiveTo\` datetime NULL, \`createdAt\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), \`updatedAt\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), INDEX \`IDX_d6295046fbd05aa5a70283caac\` (\`effectiveFrom\`, \`effectiveTo\`), INDEX \`IDX_0cc73966e03f28e2bbc9588c6f\` (\`status\`, \`effectiveFrom\`), PRIMARY KEY (\`id\`)) ENGINE=InnoDB`,
     );

@@ -8,41 +8,26 @@ async function testSprint15UIUX() {
 		// 1. Crear proyecto de prueba para validar funcionalidades
 		const projectData = {
 			projectName: 'Proyecto UI/UX Avanzada',
-			projectType: 'RESIDENCIAL',
-			voltage: 220,
-			ambientes: [
-				{
-					nombre: 'Sala de Estar',
-					areaM2: 25,
-					tomas: 8,
-					luminarias: 4,
-					equipos: [
-						{ tipo: 'TV', cantidad: 1, potenciaUnitaria: 150 },
-						{ tipo: 'Ventilador', cantidad: 1, potenciaUnitaria: 80 },
-					],
-				},
-				{
-					nombre: 'Cocina',
-					areaM2: 15,
-					tomas: 6,
-					luminarias: 3,
-					equipos: [
-						{ tipo: 'Refrigerador', cantidad: 1, potenciaUnitaria: 800 },
-						{ tipo: 'Microondas', cantidad: 1, potenciaUnitaria: 1200 },
-						{ tipo: 'Licuadora', cantidad: 1, potenciaUnitaria: 300 },
-					],
-				},
-				{
-					nombre: 'Dormitorio Principal',
-					areaM2: 18,
-					tomas: 6,
-					luminarias: 2,
-					equipos: [
-						{ tipo: 'Aire Acondicionado', cantidad: 1, potenciaUnitaria: 1500 },
-						{ tipo: 'Lámpara de Mesa', cantidad: 2, potenciaUnitaria: 60 },
-					],
-				},
+			description: 'Proyecto de prueba para Sprint 15',
+			surfaces: [
+				{ environment: 'Sala de Estar', areaM2: 25 },
+				{ environment: 'Cocina', areaM2: 15 },
+				{ environment: 'Dormitorio Principal', areaM2: 18 },
 			],
+			consumptions: [
+				{ name: 'TV', environment: 'Sala de Estar', watts: 150 },
+				{ name: 'Ventilador', environment: 'Sala de Estar', watts: 80 },
+				{ name: 'Refrigerador', environment: 'Cocina', watts: 800 },
+				{ name: 'Microondas', environment: 'Cocina', watts: 1200 },
+				{ name: 'Licuadora', environment: 'Cocina', watts: 300 },
+				{ name: 'Aire Acondicionado', environment: 'Dormitorio Principal', watts: 1500 },
+				{ name: 'Lámpara de Mesa', environment: 'Dormitorio Principal', watts: 60 },
+			],
+			opciones: {
+				tensionV: 220,
+				monofasico: true,
+			},
+			computeNow: true,
 		};
 
 		console.log('📋 Creando proyecto de prueba...');

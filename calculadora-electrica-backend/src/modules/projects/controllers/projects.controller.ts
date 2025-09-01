@@ -42,8 +42,8 @@ import { RolesGuard } from '../../../common/guards/roles.guard';
 @ApiTags('projects Eléctricos')
 @Controller('v1/projects')
 @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
-@UseGuards(RolesGuard)
-@ApiBearerAuth()
+// @UseGuards(RolesGuard)
+// @ApiBearerAuth()
 export class ProjectsController {
   constructor(private readonly projectsAppService: ProjectsAppService) {}
 

@@ -1,7 +1,22 @@
 {
-  "nombre": "Proyecto Test",
-  "descripcion": "Proyecto de prueba",
-  "tipo_instalacion": "residencial",
-  "tension_v": 120,
-  "monofasico": true
+  "projectName": "Proyecto Test Error 500 Solucionado Final",
+  "description": "Proyecto de prueba para debug",
+  "surfaces": [
+    {
+      "environment": "Sala",
+      "areaM2": 10
+    }
+  ],
+  "consumptions": [
+    {
+      "name": "Luz",
+      "environment": "Sala",
+      "watts": 60
+    }
+  ],
+  "opciones": {
+    "tensionV": 120,
+    "monofasico": true
+  },
+  "computeNow": false
 }

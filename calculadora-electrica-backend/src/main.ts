@@ -5,6 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import helmet from 'helmet';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
+import { AppLoggerService } from './common/services/logger.service';
 import { DataSource } from 'typeorm';
 import { seedNormRules } from './database/seeds/norm-rules.seed';
 
@@ -82,7 +83,7 @@ async function bootstrap() {
   });
 
   // Global exception filter
-  app.useGlobalFilters(new HttpExceptionFilter());
+  app.useGlobalFilters(new HttpExceptionFilter(app.get(AppLoggerService)));
 
   // Ejecutar seeds solo en desarrollo
   if (nodeEnv === 'development') {

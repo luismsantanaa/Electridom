@@ -46,6 +46,7 @@ import { MetricsInterceptor } from './common/interceptors/metrics.interceptor';
 import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 import { RequestIdMiddleware } from './common/middleware/request-id.middleware';
 import { LoggerModule } from 'nestjs-pino';
+import { AppLoggerService } from './common/services/logger.service';
 
 @Module({
   imports: [
@@ -111,15 +112,49 @@ import { LoggerModule } from 'nestjs-pino';
     ExportsModule,
     ModeladoModule,
     MetricsModule,
-    LoggerModule.forRoot({
-      pinoHttp: {
-        level: 'silent',
+    LoggerModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        const loggerConfig = configService.get('logger');
+        if (!loggerConfig || !loggerConfig.pino) {
+          return {
+            pinoHttp: {
+              level: 'info',
+              transport: process.env.NODE_ENV === 'development' ? {
+                target: 'pino-pretty',
+                options: {
+                  colorize: true,
+                  levelFirst: true,
+                  translateTime: 'SYS:standard',
+                  ignore: 'pid,hostname',
+                },
+              } : undefined,
+            },
+          };
+        }
+        return {
+          pinoHttp: {
+            level: loggerConfig.pino.level,
+            transport: loggerConfig.pino.transport,
+            formatters: loggerConfig.pino.formatters,
+            serializers: loggerConfig.pino.serializers,
+            // Configuración de archivos si está habilitado
+            ...(loggerConfig.pino.file && loggerConfig.pino.file.enabled && {
+              streams: [
+                { stream: require('pino').destination(loggerConfig.pino.file.path) },
+                { stream: process.stdout }
+              ]
+            })
+          },
+        };
       },
     }),
   ],
   controllers: [AppController],
   providers: [
     AppService,
+    AppLoggerService,
     {
       provide: APP_INTERCEPTOR,
       useClass: TransformInterceptor,
