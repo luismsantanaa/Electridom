@@ -1,7 +1,7 @@
 import { DataSource } from 'typeorm';
-import { ProjectsSeed } from './seeds/projects.seed';
-import { Sprint9PerformanceSeed } from './seeds/sprint-9-performance.seed';
-import { ModeladoElectricoSeed } from './seeds/modelado-electrico.seed';
+import { ProjectsSeed } from './seeds/_archive/projects.seed';
+import { Sprint9PerformanceSeed } from './seeds/_archive/sprint-9-performance.seed';
+import { ModeladoElectricoSeed } from './seeds/_archive/modelado-electrico.seed';
 
 async function runSeeds() {
   const dataSource = new DataSource({

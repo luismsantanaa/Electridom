@@ -1,0 +1,43 @@
+[
+  {
+    "environment": "SALA",
+    "allowedInstallations": [
+      "EMBUTIDO_PARED",
+      "APARENTE_CONDUIT"
+    ]
+  },
+  {
+    "environment": "COCINA",
+    "allowedInstallations": [
+      "EMBUTIDO_PARED",
+      "APARENTE_CONDUIT"
+    ]
+  },
+  {
+    "environment": "DORMITORIO",
+    "allowedInstallations": [
+      "EMBUTIDO_PARED",
+      "APARENTE_CONDUIT"
+    ]
+  },
+  {
+    "environment": "BANIO",
+    "allowedInstallations": [
+      "EMBUTIDO_PARED",
+      "APARENTE_CONDUIT"
+    ]
+  },
+  {
+    "environment": "LAVANDERIA",
+    "allowedInstallations": [
+      "APARENTE_CONDUIT"
+    ]
+  },
+  {
+    "environment": "EXTERIOR",
+    "allowedInstallations": [
+      "APARENTE_CONDUIT",
+      "BANDEJA"
+    ]
+  }
+]

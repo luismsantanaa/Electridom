@@ -1,5 +1,44 @@
-﻿import { ApiProperty } from '@nestjs/swagger';
+﻿import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { ProjectStatus } from '../entities/project.entity';
+
+// Interfaces específicas para mejorar type safety
+interface SurfaceData {
+  environment: string;
+  areaM2: number;
+}
+
+interface ConsumptionData {
+  environment: string;
+  name: string;
+  watts: number;
+  factorUso?: number;
+}
+
+interface ProjectOptions {
+  tensionV?: number;
+  monofasico?: boolean;
+}
+
+interface CargaPorAmbiente {
+  environment: string;
+  iluminacionVA: number;
+  tomasVA: number;
+  cargasFijasVA: number;
+  totalVA: number;
+}
+
+interface TotalesCalculo {
+  totalConectadaVA: number;
+  demandaEstimadaVA: number;
+}
+
+interface CircuitoPropuesto {
+  type: 'ILU' | 'TOM';
+  cargaAsignadaVA: number;
+  ambientesIncluidos: string[];
+  breakerSugerido: string;
+  calibreSugerido: string;
+}
 
 // DTO para resumen de project
 export class ProjectSummaryDto {
@@ -99,9 +138,9 @@ export class ProjectVersionDetailDto {
     },
   })
   input: {
-    surfaces: any[];
-    consumptions: any[];
-    opciones?: any;
+    surfaces: SurfaceData[];
+    consumptions: ConsumptionData[];
+    opciones?: ProjectOptions;
   };
 
   @ApiProperty({
@@ -125,9 +164,9 @@ export class ProjectVersionDetailDto {
     },
   })
   output: {
-    cargasPorAmbiente: any[];
-    totales: any;
-    propuestaCircuitos: any[];
+    cargasPorAmbiente: CargaPorAmbiente[];
+    totales: TotalesCalculo;
+    propuestaCircuitos: CircuitoPropuesto[];
     warnings: string[];
   };
 

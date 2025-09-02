@@ -1,0 +1,1118 @@
+﻿import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository, DataSource } from 'typeorm';
+import { InstallationType } from '../../modules/installation-types/entities/installation-type.entity';
+import { EnvironmentType } from '../../modules/environment-types/entities/environment-type.entity';
+import { ArtifactType } from '../../modules/artifact-types/entities/artifact-type.entity';
+import { NormConst } from '../../modules/calculations/entities/norm-const.entity';
+import { DemandFactor } from '../../modules/calculations/entities/demand-factor.entity';
+import { Ampacity } from '../../modules/calculations/entities/ampacity.entity';
+import { BreakerCurve } from '../../modules/calculations/entities/breaker-curve.entity';
+import { Resistivity } from '../../modules/calculations/entities/resistivity.entity';
+import { GroundingRules } from '../../modules/calculations/entities/grounding-rules.entity';
+import { UnifilarConfigSeeder } from './unifilar-config.seed';
+import * as fs from 'fs';
+import * as path from 'path';
+
+interface InstallationTypeSeed {
+  id: string;
+  name: string;
+  description: string;
+  active: boolean;
+  usrCreate: string;
+}
+
+interface EnvironmentTypeSeed {
+  id: string;
+  name: string;
+  description: string;
+  active: boolean;
+  installationTypeId: string;
+  usrCreate: string;
+  usrUpdate: string;
+}
+
+interface ArtifactTypeSeed {
+  id: string;
+  name: string;
+  description?: string;
+  active: boolean;
+  environmentTypeId: string;
+  power: number;
+  voltage: number;
+  usrCreate: string;
+  usrUpdate: string;
+}
+
+function getSeedFilePath(filename: string): string {
+  const distPath = path.join(
+    process.cwd(),
+    'dist',
+    'src',
+    'database',
+    'seeds',
+    filename,
+  );
+  const srcPath = path.join(
+    process.cwd(),
+    'src',
+    'database',
+    'seeds',
+    filename,
+  );
+  return fs.existsSync(distPath) ? distPath : srcPath;
+}
+
+const installationTypes = JSON.parse(
+  fs.readFileSync(getSeedFilePath('InstallationTypes.json'), 'utf-8'),
+) as InstallationTypeSeed[];
+
+const environmentTypes = JSON.parse(
+  fs.readFileSync(getSeedFilePath('EnvironmentTypes.json'), 'utf-8'),
+) as EnvironmentTypeSeed[];
+
+const artifactTypes = JSON.parse(
+  fs.readFileSync(getSeedFilePath('ArtifactTypes.json'), 'utf-8'),
+) as ArtifactTypeSeed[];
+
+@Injectable()
+export class SeedsService {
+  constructor(
+    @InjectRepository(InstallationType)
+    private readonly installationTypeRepository: Repository<InstallationType>,
+    @InjectRepository(EnvironmentType)
+    private readonly environmentTypeRepository: Repository<EnvironmentType>,
+    @InjectRepository(ArtifactType)
+    private readonly artifactTypeRepository: Repository<ArtifactType>,
+    @InjectRepository(NormConst)
+    private readonly normConstRepository: Repository<NormConst>,
+    @InjectRepository(DemandFactor)
+    private readonly demandFactorRepository: Repository<DemandFactor>,
+    @InjectRepository(Ampacity)
+    private readonly ampacityRepository: Repository<Ampacity>,
+    @InjectRepository(BreakerCurve)
+    private readonly breakerCurveRepository: Repository<BreakerCurve>,
+    @InjectRepository(Resistivity)
+    private readonly resistivityRepository: Repository<Resistivity>,
+    @InjectRepository(GroundingRules)
+    private readonly groundingRulesRepository: Repository<GroundingRules>,
+    private readonly dataSource: DataSource,
+  ) {}
+
+  async seed(): Promise<void> {
+    try {
+      // Verificar si ya existen datos
+      const [
+        instalacionesCount,
+        ambientesCount,
+        artefactosCount,
+        normConstCount,
+        demandFactorCount,
+        ampacityCount,
+        breakerCurveCount,
+        resistivityCount,
+        groundingRulesCount,
+      ] = await Promise.all([
+        this.installationTypeRepository.count(),
+        this.environmentTypeRepository.count(),
+        this.artifactTypeRepository.count(),
+        this.normConstRepository.count(),
+        this.demandFactorRepository.count(),
+        this.ampacityRepository.count(),
+        this.breakerCurveRepository.count(),
+        this.resistivityRepository.count(),
+        this.groundingRulesRepository.count(),
+      ]);
+
+      if (instalacionesCount === 0) {
+        await this.seedInstallationTypes();
+      }
+
+      if (ambientesCount === 0) {
+        await this.seedEnvironmentTypes();
+      }
+
+      if (artefactosCount === 0) {
+        await this.seedArtifactTypes();
+      }
+
+      if (normConstCount === 0) {
+        await this.seedNormConst();
+      }
+
+      if (demandFactorCount === 0) {
+        await this.seedDemandFactor();
+      }
+
+      if (ampacityCount === 0) {
+        await this.seedAmpacity();
+      }
+
+      if (breakerCurveCount === 0) {
+        await this.seedBreakerCurve();
+      }
+
+      if (resistivityCount === 0) {
+        await this.seedResistivity();
+      }
+
+      if (groundingRulesCount === 0) {
+        await this.seedGroundingRules();
+      }
+
+      // Sembrar configuración de IA
+      await this.seedIAConfig();
+
+      // Sembrar configuración unifilar
+      await this.seedUnifilarConfig();
+    } catch (error) {
+      console.error('Error al realizar el seed:', error);
+      throw error;
+    }
+  }
+
+  private async seedInstallationTypes(): Promise<void> {
+    const installations = installationTypes.map((installation) => ({
+      id: installation.id,
+      name: installation.name,
+      description: installation.description,
+      active: installation.active,
+      usrCreate: installation.usrCreate,
+      usrUpdate: installation.usrCreate,
+    }));
+
+    await this.installationTypeRepository.save(installations);
+    console.log('Installation types seeded successfully');
+  }
+
+  private async seedEnvironmentTypes(): Promise<void> {
+    const environments = environmentTypes.map((environment) => ({
+      id: environment.id,
+      name: environment.name,
+      description: environment.description,
+      active: environment.active,
+      installationType: { id: environment.installationTypeId },
+      usrCreate: environment.usrCreate,
+      usrUpdate: environment.usrUpdate,
+    }));
+
+    await this.environmentTypeRepository.save(environments);
+    console.log('Environment types seeded successfully');
+  }
+
+  private async seedArtifactTypes(): Promise<void> {
+    const artifacts = artifactTypes.map((artifact) => ({
+      id: artifact.id,
+      name: artifact.name,
+      description: artifact.description || '',
+      active: artifact.active,
+      power: artifact.power,
+      voltage: artifact.voltage,
+      environmentType: { id: artifact.environmentTypeId },
+      usrCreate: artifact.usrCreate,
+      usrUpdate: artifact.usrUpdate,
+    }));
+
+    await this.artifactTypeRepository.save(artifacts);
+    console.log('Artifact types seeded successfully');
+  }
+
+  private async seedNormConst(): Promise<void> {
+    const normParams = [
+      {
+        key: 'lighting_va_per_m2',
+        value: '32.3',
+        unit: 'VA/m2',
+        notes: 'TODO_RIE: value base; origen NEC 3VA/ft2 aprox.',
+        creadoPor: 'SEED',
+        actualizadoPor: 'SEED',
+      },
+      {
+        key: 'socket_max_va_per_circuit',
+        value: '1800',
+        unit: 'VA',
+        notes: 'TODO_RIE',
+        creadoPor: 'SEED',
+        actualizadoPor: 'SEED',
+      },
+      {
+        key: 'circuit_max_utilization',
+        value: '0.8',
+        unit: 'ratio',
+        notes: '80%',
+        creadoPor: 'SEED',
+        actualizadoPor: 'SEED',
+      },
+      {
+        key: 'vd_branch_limit_pct',
+        value: '3',
+        unit: '%',
+        notes: 'Límite recomendado',
+        creadoPor: 'SEED',
+        actualizadoPor: 'SEED',
+      },
+      {
+        key: 'vd_total_limit_pct',
+        value: '5',
+        unit: '%',
+        notes: 'Límite recomendado',
+        creadoPor: 'SEED',
+        actualizadoPor: 'SEED',
+      },
+      {
+        key: 'system_type',
+        value: '1',
+        unit: 'ph',
+        notes: '1=monofásico,3=trifásico',
+        creadoPor: 'SEED',
+        actualizadoPor: 'SEED',
+      },
+    ];
+
+    await this.normConstRepository.save(normParams);
+    console.log('Parámetros normativos sembrados correctamente');
+  }
+
+  private async seedDemandFactor(): Promise<void> {
+    const demandFactors = [
+      {
+        category: 'lighting_general',
+        rangeMin: 0,
+        rangeMax: 999999,
+        factor: 1.0,
+        notes: 'TODO_RIE: Factor base para iluminación general',
+        usrCreate: 'SEED',
+        usrUpdate: 'SEED',
+        active: true,
+      },
+      {
+        category: 'tomas_generales',
+        rangeMin: 0,
+        rangeMax: 999999,
+        factor: 1.0,
+        notes: 'TODO_RIE: Factor base para tomacorrientes generales',
+        usrCreate: 'SEED',
+        usrUpdate: 'SEED',
+        active: true,
+      },
+      {
+        category: 'electrodomesticos',
+        rangeMin: 0,
+        rangeMax: 999999,
+        factor: 0.85,
+        notes: 'TODO_RIE: Factor típico para electrodomésticos no simultáneos',
+        usrCreate: 'SEED',
+        usrUpdate: 'SEED',
+        active: true,
+      },
+      {
+        category: 'climatizacion',
+        rangeMin: 0,
+        rangeMax: 999999,
+        factor: 1.0,
+        notes: 'TODO_RIE: Factor base para climatización - revisar según RIE',
+        usrCreate: 'SEED',
+        usrUpdate: 'SEED',
+        active: true,
+      },
+      {
+        category: 'especiales',
+        rangeMin: 0,
+        rangeMax: 999999,
+        factor: 1.0,
+        notes: 'TODO_RIE: Factor base para loads especiales',
+        usrCreate: 'SEED',
+        usrUpdate: 'SEED',
+        active: true,
+      },
+    ];
+
+    await this.demandFactorRepository.save(demandFactors);
+    console.log('Factores de demanda sembrados correctamente');
+  }
+
+  private async seedAmpacity(): Promise<void> {
+    const ampacities = [
+      {
+        material: 'Cu',
+        insulation: 'THHN',
+        tempC: 75,
+        calibreAwg: 12,
+        seccionMm2: 3.31,
+        amp: 20,
+        usrCreate: 'SEED',
+        usrUpdate: 'SEED',
+        active: true,
+      },
+      {
+        material: 'Cu',
+        insulation: 'THHN',
+        tempC: 75,
+        calibreAwg: 10,
+        seccionMm2: 5.26,
+        amp: 30,
+        usrCreate: 'SEED',
+        usrUpdate: 'SEED',
+        active: true,
+      },
+      {
+        material: 'Cu',
+        insulation: 'THHN',
+        tempC: 75,
+        calibreAwg: 8,
+        seccionMm2: 8.37,
+        amp: 55,
+        usrCreate: 'SEED',
+        usrUpdate: 'SEED',
+        active: true,
+      },
+      {
+        material: 'Cu',
+        insulation: 'THHN',
+        tempC: 75,
+        calibreAwg: 6,
+        seccionMm2: 13.3,
+        amp: 65,
+        usrCreate: 'SEED',
+        usrUpdate: 'SEED',
+        active: true,
+      },
+      {
+        material: 'Cu',
+        insulation: 'THHN',
+        tempC: 75,
+        calibreAwg: 4,
+        seccionMm2: 21.15,
+        amp: 85,
+        usrCreate: 'SEED',
+        usrUpdate: 'SEED',
+        active: true,
+      },
+    ];
+
+    await this.ampacityRepository.save(ampacities);
+    console.log('Ampacidades sembradas correctamente');
+  }
+
+  private async seedBreakerCurve(): Promise<void> {
+    const breakerCurves = [
+      {
+        amp: 15,
+        poles: 1,
+        curve: 'C',
+        useCase: 'iluminacion',
+        notes: 'TODO_RIE: breaker estándar para iluminación',
+        usrCreate: 'SEED',
+        usrUpdate: 'SEED',
+        active: true,
+      },
+      {
+        amp: 20,
+        poles: 1,
+        curve: 'C',
+        useCase: 'tomas generales',
+        notes: 'TODO_RIE: breaker estándar para tomas',
+        usrCreate: 'SEED',
+        usrUpdate: 'SEED',
+        active: true,
+      },
+      {
+        amp: 30,
+        poles: 2,
+        curve: 'C',
+        useCase: 'electrodomestico',
+        notes: 'TODO_RIE: breaker para electrodomésticos 240V',
+        usrCreate: 'SEED',
+        usrUpdate: 'SEED',
+        active: true,
+      },
+      {
+        amp: 40,
+        poles: 2,
+        curve: 'C',
+        useCase: 'climatizacion',
+        notes: 'TODO_RIE: breaker para aires acondicionados',
+        usrCreate: 'SEED',
+        usrUpdate: 'SEED',
+        active: true,
+      },
+      {
+        amp: 25,
+        poles: 1,
+        curve: 'C',
+        useCase: 'tomas generales',
+        notes: 'TODO_RIE: breaker para loads mayores',
+        usrCreate: 'SEED',
+        usrUpdate: 'SEED',
+        active: true,
+      },
+    ];
+
+    await this.breakerCurveRepository.save(breakerCurves);
+    console.log('breaker curves sembrados correctamente');
+  }
+
+  private async seedResistivity(): Promise<void> {
+    const resistividades = [
+      // Cobre (Cu)
+      {
+        material: 'Cu',
+        seccionMm2: 2.5,
+        ohmKm: 7.41,
+        notes: 'Cable de cobre 2.5mm² - resistivity estándar',
+        usrCreate: 'SEED',
+        usrUpdate: 'SEED',
+        active: true,
+      },
+      {
+        material: 'Cu',
+        seccionMm2: 4,
+        ohmKm: 4.61,
+        notes: 'Cable de cobre 4mm² - resistivity estándar',
+        usrCreate: 'SEED',
+        usrUpdate: 'SEED',
+        active: true,
+      },
+      {
+        material: 'Cu',
+        seccionMm2: 6,
+        ohmKm: 3.08,
+        notes: 'Cable de cobre 6mm² - resistivity estándar',
+        usrCreate: 'SEED',
+        usrUpdate: 'SEED',
+        active: true,
+      },
+      {
+        material: 'Cu',
+        seccionMm2: 10,
+        ohmKm: 1.83,
+        notes: 'Cable de cobre 10mm² - resistivity estándar',
+        usrCreate: 'SEED',
+        usrUpdate: 'SEED',
+        active: true,
+      },
+      {
+        material: 'Cu',
+        seccionMm2: 16,
+        ohmKm: 1.15,
+        notes: 'Cable de cobre 16mm² - resistivity estándar',
+        usrCreate: 'SEED',
+        usrUpdate: 'SEED',
+        active: true,
+      },
+      {
+        material: 'Cu',
+        seccionMm2: 25,
+        ohmKm: 0.727,
+        notes: 'Cable de cobre 25mm² - resistivity estándar',
+        usrCreate: 'SEED',
+        usrUpdate: 'SEED',
+        active: true,
+      },
+      {
+        material: 'Cu',
+        seccionMm2: 35,
+        ohmKm: 0.524,
+        notes: 'Cable de cobre 35mm² - resistivity estándar',
+        usrCreate: 'SEED',
+        usrUpdate: 'SEED',
+        active: true,
+      },
+      {
+        material: 'Cu',
+        seccionMm2: 50,
+        ohmKm: 0.387,
+        notes: 'Cable de cobre 50mm² - resistivity estándar',
+        usrCreate: 'SEED',
+        usrUpdate: 'SEED',
+        active: true,
+      },
+      {
+        material: 'Cu',
+        seccionMm2: 70,
+        ohmKm: 0.268,
+        notes: 'Cable de cobre 70mm² - resistivity estándar',
+        usrCreate: 'SEED',
+        usrUpdate: 'SEED',
+        active: true,
+      },
+      {
+        material: 'Cu',
+        seccionMm2: 95,
+        ohmKm: 0.193,
+        notes: 'Cable de cobre 95mm² - resistivity estándar',
+        usrCreate: 'SEED',
+        usrUpdate: 'SEED',
+        active: true,
+      },
+      {
+        material: 'Cu',
+        seccionMm2: 120,
+        ohmKm: 0.153,
+        notes: 'Cable de cobre 120mm² - resistivity estándar',
+        usrCreate: 'SEED',
+        usrUpdate: 'SEED',
+        active: true,
+      },
+      {
+        material: 'Cu',
+        seccionMm2: 150,
+        ohmKm: 0.124,
+        notes: 'Cable de cobre 150mm² - resistivity estándar',
+        usrCreate: 'SEED',
+        usrUpdate: 'SEED',
+        active: true,
+      },
+      {
+        material: 'Cu',
+        seccionMm2: 185,
+        ohmKm: 0.0991,
+        notes: 'Cable de cobre 185mm² - resistivity estándar',
+        usrCreate: 'SEED',
+        usrUpdate: 'SEED',
+        active: true,
+      },
+      {
+        material: 'Cu',
+        seccionMm2: 240,
+        ohmKm: 0.0754,
+        notes: 'Cable de cobre 240mm² - resistivity estándar',
+        usrCreate: 'SEED',
+        usrUpdate: 'SEED',
+        active: true,
+      },
+      {
+        material: 'Cu',
+        seccionMm2: 300,
+        ohmKm: 0.0601,
+        notes: 'Cable de cobre 300mm² - resistivity estándar',
+        usrCreate: 'SEED',
+        usrUpdate: 'SEED',
+        active: true,
+      },
+      {
+        material: 'Cu',
+        seccionMm2: 400,
+        ohmKm: 0.047,
+        notes: 'Cable de cobre 400mm² - resistivity estándar',
+        usrCreate: 'SEED',
+        usrUpdate: 'SEED',
+        active: true,
+      },
+      {
+        material: 'Cu',
+        seccionMm2: 500,
+        ohmKm: 0.0366,
+        notes: 'Cable de cobre 500mm² - resistivity estándar',
+        usrCreate: 'SEED',
+        usrUpdate: 'SEED',
+        active: true,
+      },
+      {
+        material: 'Cu',
+        seccionMm2: 630,
+        ohmKm: 0.0283,
+        notes: 'Cable de cobre 630mm² - resistivity estándar',
+        usrCreate: 'SEED',
+        usrUpdate: 'SEED',
+        active: true,
+      },
+      // Aluminio (Al)
+      {
+        material: 'Al',
+        seccionMm2: 6,
+        ohmKm: 4.84,
+        notes: 'Cable de aluminio 6mm² - resistivity estándar',
+        usrCreate: 'SEED',
+        usrUpdate: 'SEED',
+        active: true,
+      },
+      {
+        material: 'Al',
+        seccionMm2: 10,
+        ohmKm: 2.9,
+        notes: 'Cable de aluminio 10mm² - resistivity estándar',
+        usrCreate: 'SEED',
+        usrUpdate: 'SEED',
+        active: true,
+      },
+      {
+        material: 'Al',
+        seccionMm2: 16,
+        ohmKm: 1.91,
+        notes: 'Cable de aluminio 16mm² - resistivity estándar',
+        usrCreate: 'SEED',
+        usrUpdate: 'SEED',
+        active: true,
+      },
+      {
+        material: 'Al',
+        seccionMm2: 25,
+        ohmKm: 1.2,
+        notes: 'Cable de aluminio 25mm² - resistivity estándar',
+        usrCreate: 'SEED',
+        usrUpdate: 'SEED',
+        active: true,
+      },
+      {
+        material: 'Al',
+        seccionMm2: 35,
+        ohmKm: 0.868,
+        notes: 'Cable de aluminio 35mm² - resistivity estándar',
+        usrCreate: 'SEED',
+        usrUpdate: 'SEED',
+        active: true,
+      },
+      {
+        material: 'Al',
+        seccionMm2: 50,
+        ohmKm: 0.641,
+        notes: 'Cable de aluminio 50mm² - resistivity estándar',
+        usrCreate: 'SEED',
+        usrUpdate: 'SEED',
+        active: true,
+      },
+      {
+        material: 'Al',
+        seccionMm2: 70,
+        ohmKm: 0.443,
+        notes: 'Cable de aluminio 70mm² - resistivity estándar',
+        usrCreate: 'SEED',
+        usrUpdate: 'SEED',
+        active: true,
+      },
+      {
+        material: 'Al',
+        seccionMm2: 95,
+        ohmKm: 0.32,
+        notes: 'Cable de aluminio 95mm² - resistivity estándar',
+        usrCreate: 'SEED',
+        usrUpdate: 'SEED',
+        active: true,
+      },
+      {
+        material: 'Al',
+        seccionMm2: 120,
+        ohmKm: 0.253,
+        notes: 'Cable de aluminio 120mm² - resistivity estándar',
+        usrCreate: 'SEED',
+        usrUpdate: 'SEED',
+        active: true,
+      },
+      {
+        material: 'Al',
+        seccionMm2: 150,
+        ohmKm: 0.206,
+        notes: 'Cable de aluminio 150mm² - resistivity estándar',
+        usrCreate: 'SEED',
+        usrUpdate: 'SEED',
+        active: true,
+      },
+      {
+        material: 'Al',
+        seccionMm2: 185,
+        ohmKm: 0.164,
+        notes: 'Cable de aluminio 185mm² - resistivity estándar',
+        usrCreate: 'SEED',
+        usrUpdate: 'SEED',
+        active: true,
+      },
+      {
+        material: 'Al',
+        seccionMm2: 240,
+        ohmKm: 0.125,
+        notes: 'Cable de aluminio 240mm² - resistivity estándar',
+        usrCreate: 'SEED',
+        usrUpdate: 'SEED',
+        active: true,
+      },
+      {
+        material: 'Al',
+        seccionMm2: 300,
+        ohmKm: 0.1,
+        notes: 'Cable de aluminio 300mm² - resistivity estándar',
+        usrCreate: 'SEED',
+        usrUpdate: 'SEED',
+        active: true,
+      },
+      {
+        material: 'Al',
+        seccionMm2: 400,
+        ohmKm: 0.0778,
+        notes: 'Cable de aluminio 400mm² - resistivity estándar',
+        usrCreate: 'SEED',
+        usrUpdate: 'SEED',
+        active: true,
+      },
+      {
+        material: 'Al',
+        seccionMm2: 500,
+        ohmKm: 0.0607,
+        notes: 'Cable de aluminio 500mm² - resistivity estándar',
+        usrCreate: 'SEED',
+        usrUpdate: 'SEED',
+        active: true,
+      },
+      {
+        material: 'Al',
+        seccionMm2: 630,
+        ohmKm: 0.0469,
+        notes: 'Cable de aluminio 630mm² - resistivity estándar',
+        usrCreate: 'SEED',
+        usrUpdate: 'SEED',
+        active: true,
+      },
+    ];
+
+    await this.resistivityRepository.save(resistividades);
+    console.log('Resistividades sembradas correctamente');
+  }
+
+  private async seedGroundingRules(): Promise<void> {
+    const groundingRulesData = [
+      // rules básicas según NEC 250.66 y prácticas estándar
+      {
+        mainBreakerAmp: 60,
+        egcMm2: 6,
+        gecMm2: 10,
+        notes: 'TODO_RIE: breaker hasta 60A - EGC 6mm², GEC 10mm²',
+        usrCreate: 'SEED',
+      },
+      {
+        mainBreakerAmp: 100,
+        egcMm2: 10,
+        gecMm2: 16,
+        notes: 'TODO_RIE: breaker hasta 100A - EGC 10mm², GEC 16mm²',
+        usrCreate: 'SEED',
+      },
+      {
+        mainBreakerAmp: 125,
+        egcMm2: 16,
+        gecMm2: 25,
+        notes: 'TODO_RIE: breaker hasta 125A - EGC 16mm², GEC 25mm²',
+        usrCreate: 'SEED',
+      },
+      {
+        mainBreakerAmp: 150,
+        egcMm2: 16,
+        gecMm2: 25,
+        notes: 'TODO_RIE: breaker hasta 150A - EGC 16mm², GEC 25mm²',
+        usrCreate: 'SEED',
+      },
+      {
+        mainBreakerAmp: 200,
+        egcMm2: 25,
+        gecMm2: 35,
+        notes: 'TODO_RIE: breaker hasta 200A - EGC 25mm², GEC 35mm²',
+        usrCreate: 'SEED',
+      },
+      {
+        mainBreakerAmp: 225,
+        egcMm2: 25,
+        gecMm2: 35,
+        notes: 'TODO_RIE: breaker hasta 225A - EGC 25mm², GEC 35mm²',
+        usrCreate: 'SEED',
+      },
+      {
+        mainBreakerAmp: 250,
+        egcMm2: 35,
+        gecMm2: 50,
+        notes: 'TODO_RIE: breaker hasta 250A - EGC 35mm², GEC 50mm²',
+        usrCreate: 'SEED',
+      },
+      {
+        mainBreakerAmp: 300,
+        egcMm2: 35,
+        gecMm2: 50,
+        notes: 'TODO_RIE: breaker hasta 300A - EGC 35mm², GEC 50mm²',
+        usrCreate: 'SEED',
+      },
+      {
+        mainBreakerAmp: 350,
+        egcMm2: 50,
+        gecMm2: 70,
+        notes: 'TODO_RIE: breaker hasta 350A - EGC 50mm², GEC 70mm²',
+        usrCreate: 'SEED',
+      },
+      {
+        mainBreakerAmp: 400,
+        egcMm2: 50,
+        gecMm2: 70,
+        notes: 'TODO_RIE: breaker hasta 400A - EGC 50mm², GEC 70mm²',
+        usrCreate: 'SEED',
+      },
+      {
+        mainBreakerAmp: 450,
+        egcMm2: 70,
+        gecMm2: 95,
+        notes: 'TODO_RIE: breaker hasta 450A - EGC 70mm², GEC 95mm²',
+        usrCreate: 'SEED',
+      },
+      {
+        mainBreakerAmp: 500,
+        egcMm2: 70,
+        gecMm2: 95,
+        notes: 'TODO_RIE: breaker hasta 500A - EGC 70mm², GEC 95mm²',
+        usrCreate: 'SEED',
+      },
+      {
+        mainBreakerAmp: 600,
+        egcMm2: 95,
+        gecMm2: 120,
+        notes: 'TODO_RIE: breaker hasta 600A - EGC 95mm², GEC 120mm²',
+        usrCreate: 'SEED',
+      },
+      {
+        mainBreakerAmp: 700,
+        egcMm2: 95,
+        gecMm2: 120,
+        notes: 'TODO_RIE: breaker hasta 700A - EGC 95mm², GEC 120mm²',
+        usrCreate: 'SEED',
+      },
+      {
+        mainBreakerAmp: 800,
+        egcMm2: 120,
+        gecMm2: 150,
+        notes: 'TODO_RIE: breaker hasta 800A - EGC 120mm², GEC 150mm²',
+        usrCreate: 'SEED',
+      },
+      {
+        mainBreakerAmp: 900,
+        egcMm2: 120,
+        gecMm2: 150,
+        notes: 'TODO_RIE: breaker hasta 900A - EGC 120mm², GEC 150mm²',
+        usrCreate: 'SEED',
+      },
+      {
+        mainBreakerAmp: 1000,
+        egcMm2: 150,
+        gecMm2: 185,
+        notes: 'TODO_RIE: breaker hasta 1000A - EGC 150mm², GEC 185mm²',
+        usrCreate: 'SEED',
+      },
+      {
+        mainBreakerAmp: 1200,
+        egcMm2: 150,
+        gecMm2: 185,
+        notes: 'TODO_RIE: breaker hasta 1200A - EGC 150mm², GEC 185mm²',
+        usrCreate: 'SEED',
+      },
+      {
+        mainBreakerAmp: 1400,
+        egcMm2: 185,
+        gecMm2: 240,
+        notes: 'TODO_RIE: breaker hasta 1400A - EGC 185mm², GEC 240mm²',
+        usrCreate: 'SEED',
+      },
+      {
+        mainBreakerAmp: 1600,
+        egcMm2: 185,
+        gecMm2: 240,
+        notes: 'TODO_RIE: breaker hasta 1600A - EGC 185mm², GEC 240mm²',
+        usrCreate: 'SEED',
+      },
+      {
+        mainBreakerAmp: 1800,
+        egcMm2: 240,
+        gecMm2: 300,
+        notes: 'TODO_RIE: breaker hasta 1800A - EGC 240mm², GEC 300mm²',
+        usrCreate: 'SEED',
+      },
+      {
+        mainBreakerAmp: 2000,
+        egcMm2: 240,
+        gecMm2: 300,
+        notes: 'TODO_RIE: breaker hasta 2000A - EGC 240mm², GEC 300mm²',
+        usrCreate: 'SEED',
+      },
+      {
+        mainBreakerAmp: 2500,
+        egcMm2: 300,
+        gecMm2: 400,
+        notes: 'TODO_RIE: breaker hasta 2500A - EGC 300mm², GEC 400mm²',
+        usrCreate: 'SEED',
+      },
+      {
+        mainBreakerAmp: 3000,
+        egcMm2: 300,
+        gecMm2: 400,
+        notes: 'TODO_RIE: breaker hasta 3000A - EGC 300mm², GEC 400mm²',
+        usrCreate: 'SEED',
+      },
+      {
+        mainBreakerAmp: 3500,
+        egcMm2: 400,
+        gecMm2: 500,
+        notes: 'TODO_RIE: breaker hasta 3500A - EGC 400mm², GEC 500mm²',
+        usrCreate: 'SEED',
+      },
+      {
+        mainBreakerAmp: 4000,
+        egcMm2: 400,
+        gecMm2: 500,
+        notes: 'TODO_RIE: breaker hasta 4000A - EGC 400mm², GEC 500mm²',
+        usrCreate: 'SEED',
+      },
+      {
+        mainBreakerAmp: 4500,
+        egcMm2: 500,
+        gecMm2: 630,
+        notes: 'TODO_RIE: breaker hasta 4500A - EGC 500mm², GEC 630mm²',
+        usrCreate: 'SEED',
+      },
+      {
+        mainBreakerAmp: 5000,
+        egcMm2: 500,
+        gecMm2: 630,
+        notes: 'TODO_RIE: breaker hasta 5000A - EGC 500mm², GEC 630mm²',
+        usrCreate: 'SEED',
+      },
+    ];
+
+    const entities = groundingRulesData.map((data) => {
+      const entity = new GroundingRules();
+      entity.mainBreakerAmp = data.mainBreakerAmp;
+      entity.egcMm2 = data.egcMm2;
+      entity.gecMm2 = data.gecMm2;
+      entity.notes = data.notes;
+      entity.usrCreate = data.usrCreate;
+      entity.active = true;
+      return entity;
+    });
+
+    await this.groundingRulesRepository.save(entities);
+    console.log(`✅ ${entities.length} rules de puesta a tierra insertadas`);
+  }
+
+  private async seedIAConfig(): Promise<void> {
+    try {
+      console.log('🌐 Sembrando configuración de IA...');
+
+      // Crear tabla de configuración de IA si no existe
+      await this.dataSource.query(`
+        CREATE TABLE IF NOT EXISTS ia_config (
+          id INT PRIMARY KEY AUTO_INCREMENT,
+          config_key VARCHAR(100) UNIQUE NOT NULL,
+          config_value TEXT NOT NULL,
+          description VARCHAR(255),
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        )
+      `);
+
+      // Insertar configuración por defecto
+      const configs = [
+        {
+          key: 'IA_ENDPOINT',
+          value: 'http://localhost:11434/api/generate',
+          description: 'Endpoint de la API de IA (Ollama por defecto)',
+        },
+        {
+          key: 'IA_MODEL',
+          value: 'electridom-v1',
+          description: 'Modelo de IA a utilizar',
+        },
+        {
+          key: 'IA_TEMPERATURE',
+          value: '0.2',
+          description: 'Temperatura para la generación de respuestas',
+        },
+        {
+          key: 'IA_TOP_P',
+          value: '0.9',
+          description: 'Parámetro top_p para la generación',
+        },
+        {
+          key: 'IA_MAX_TOKENS',
+          value: '1200',
+          description: 'Máximo número de tokens en la respuesta',
+        },
+        {
+          key: 'IA_TIMEOUT_MS',
+          value: '20000',
+          description: 'Timeout en milisegundos para las peticiones',
+        },
+        {
+          key: 'IA_RETRY_MAX_ATTEMPTS',
+          value: '2',
+          description: 'Número máximo de reintentos',
+        },
+        {
+          key: 'IA_RETRY_BACKOFF_MS',
+          value: '1500',
+          description: 'Tiempo de espera entre reintentos en ms',
+        },
+      ];
+
+      for (const config of configs) {
+        await this.dataSource.query(
+          `
+          INSERT INTO ia_config (config_key, config_value, description)
+          VALUES (?, ?, ?)
+          ON DUPLICATE KEY UPDATE
+            config_value = VALUES(config_value),
+            description = VALUES(description),
+            updated_at = CURRENT_TIMESTAMP
+        `,
+          [config.key, config.value, config.description],
+        );
+      }
+
+      console.log('✅ Configuración de IA sembrada exitosamente');
+    } catch (error) {
+      console.error('❌ Error sembrando configuración de IA:', error);
+      throw error;
+    }
+  }
+
+  private async seedUnifilarConfig(): Promise<void> {
+    try {
+      console.log('🔌 Sembrando configuración unifilar...');
+
+      const unifilarSeeder = new UnifilarConfigSeeder(this.dataSource);
+      await unifilarSeeder.seed();
+
+      console.log('✅ Configuración unifilar sembrada exitosamente');
+    } catch (error) {
+      console.error('❌ Error sembrando configuración unifilar:', error);
+      throw error;
+    }
+  }
+
+  async onModuleInit() {
+    try {
+      console.log('Iniciando seeds...');
+
+      // Convertir IDs numéricos a strings para installation_types
+      const installationTypesFormatted = installationTypes.map((type) => ({
+        ...type,
+        id: type.id,
+      }));
+      await this.installationTypeRepository.save(installationTypesFormatted);
+      console.log('Installation types seeds completed.');
+
+      // Convertir IDs numéricos a strings para environment_types
+      const environmentTypesFormatted = environmentTypes.map((type) => ({
+        ...type,
+        id: type.id,
+        installationType: { id: type.installationTypeId },
+      }));
+      await this.environmentTypeRepository.save(environmentTypesFormatted);
+      console.log('Environment types seeds completed.');
+
+      // Convertir IDs numéricos a strings para artifact_types
+      const artifactTypesFormatted = artifactTypes.map((type) => ({
+        ...type,
+        id: type.id,
+        name: type.name,
+        power: type.power,
+        voltage: type.voltage,
+        environmentType: { id: type.environmentTypeId },
+      }));
+      await this.artifactTypeRepository.save(artifactTypesFormatted);
+      console.log('Artifact types seeds completed.');
+    } catch (error) {
+      console.error('Error al ejecutar seeds:', error);
+    }
+  }
+}

@@ -1,0 +1,14 @@
+[
+  {
+    "key": "default_voltage_general",
+    "value": "120V"
+  },
+  {
+    "key": "va_por_toma_general",
+    "value": 180
+  },
+  {
+    "key": "va_max_circuito_general",
+    "value": 1800
+  }
+]

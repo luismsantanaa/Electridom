@@ -7,7 +7,7 @@ import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { AppLoggerService } from './common/services/logger.service';
 import { DataSource } from 'typeorm';
-import { seedNormRules } from './database/seeds/norm-rules.seed';
+import { seedNormRules } from './database/seeds/_archive/norm-rules.seed';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

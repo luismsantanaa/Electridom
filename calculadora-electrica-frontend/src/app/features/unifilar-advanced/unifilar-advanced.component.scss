@@ -1,0 +1,465 @@
+.unifilar-advanced-container {
+  padding: 1rem;
+
+  // Header
+  .card-header {
+    h4 {
+      color: #2c3e50;
+      font-weight: 600;
+    }
+
+    p {
+      font-size: 0.95rem;
+    }
+  }
+
+  // Cards
+  .card {
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    border: 1px solid rgba(0, 0, 0, 0.125);
+    margin-bottom: 1.5rem;
+
+    .card-header {
+      background-color: #f8f9fa;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+      padding: 1rem 1.25rem;
+
+      h5, h6 {
+        color: #495057;
+        font-weight: 600;
+        margin: 0;
+      }
+    }
+
+    .card-body {
+      padding: 1.25rem;
+    }
+  }
+
+  // Formularios
+  .form-label {
+    font-weight: 500;
+    color: #495057;
+    margin-bottom: 0.5rem;
+  }
+
+  .form-control, .form-select {
+    border: 1px solid #ced4da;
+    border-radius: 0.375rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.9rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+
+    &:focus {
+      border-color: #86b7fe;
+      box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    }
+
+    &.is-invalid {
+      border-color: #dc3545;
+      box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+    }
+  }
+
+  .form-check {
+    margin-bottom: 0.5rem;
+
+    .form-check-input {
+      &:checked {
+        background-color: #0d6efd;
+        border-color: #0d6efd;
+      }
+
+      &:focus {
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+      }
+    }
+
+    .form-check-label {
+      font-weight: 500;
+      color: #495057;
+      cursor: pointer;
+    }
+  }
+
+  .invalid-feedback {
+    display: block;
+    font-size: 0.875rem;
+    color: #dc3545;
+    margin-top: 0.25rem;
+  }
+
+  // Botones
+  .btn {
+    border-radius: 0.375rem;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    transition: all 0.15s ease-in-out;
+
+    &.btn-sm {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.875rem;
+    }
+
+    &.btn-lg {
+      padding: 0.75rem 1.5rem;
+      font-size: 1.125rem;
+    }
+
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.15);
+    }
+
+    &:disabled {
+      transform: none;
+      box-shadow: none;
+    }
+  }
+
+  // Pestañas
+  .nav-tabs {
+    border-bottom: 1px solid #dee2e6;
+
+    .nav-link {
+      border: 1px solid transparent;
+      border-radius: 0.375rem 0.375rem 0 0;
+      color: #6c757d;
+      font-weight: 500;
+      padding: 0.75rem 1rem;
+      transition: all 0.15s ease-in-out;
+
+      &:hover {
+        border-color: #e9ecef #e9ecef #dee2e6;
+        color: #495057;
+      }
+
+      &.active {
+        color: #495057;
+        background-color: #fff;
+        border-color: #dee2e6 #dee2e6 #fff;
+      }
+    }
+  }
+
+  .tab-content {
+    padding-top: 1rem;
+  }
+
+  .tab-pane {
+    &.show.active {
+      display: block;
+    }
+  }
+
+  // Estadísticas y métricas
+  .h2, .h3, .h4, .h5 {
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+
+  .text-primary {
+    color: #0d6efd !important;
+  }
+
+  .text-info {
+    color: #0dcaf0 !important;
+  }
+
+  .text-success {
+    color: #198754 !important;
+  }
+
+  .text-warning {
+    color: #ffc107 !important;
+  }
+
+  .text-danger {
+    color: #dc3545 !important;
+  }
+
+  .text-muted {
+    color: #6c757d !important;
+    font-size: 0.875rem;
+  }
+
+  // Badges
+  .badge {
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 0.35em 0.65em;
+    border-radius: 0.375rem;
+  }
+
+  .bg-primary {
+    background-color: #0d6efd !important;
+  }
+
+  .bg-success {
+    background-color: #198754 !important;
+  }
+
+  .bg-warning {
+    background-color: #ffc107 !important;
+    color: #000 !important;
+  }
+
+  .bg-danger {
+    background-color: #dc3545 !important;
+  }
+
+  // Tablas
+  .table {
+    margin-bottom: 0;
+
+    th {
+      background-color: #f8f9fa;
+      border-bottom: 2px solid #dee2e6;
+      font-weight: 600;
+      color: #495057;
+      padding: 0.75rem;
+    }
+
+    td {
+      padding: 0.75rem;
+      vertical-align: middle;
+      border-bottom: 1px solid #dee2e6;
+    }
+
+    tbody tr:hover {
+      background-color: rgba(0, 0, 0, 0.02);
+    }
+  }
+
+  // Tarjetas de fases
+  .card.border-primary {
+    border-width: 2px !important;
+    transition: transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    }
+
+    .card-header {
+      background-color: #0d6efd !important;
+      border-bottom: none;
+      color: white;
+    }
+
+    .card-body {
+      text-align: center;
+    }
+  }
+
+  // Alertas
+  .alert {
+    border-radius: 0.375rem;
+    border: 1px solid transparent;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1rem;
+
+    &.alert-danger {
+      color: #721c24;
+      background-color: #f8d7da;
+      border-color: #f5c6cb;
+    }
+
+    .btn-close {
+      padding: 0.5rem;
+      margin: -0.5rem -0.5rem -0.5rem auto;
+    }
+  }
+
+  // Loading
+  .spinner-border {
+    width: 1.5rem;
+    height: 1.5rem;
+    border-width: 0.2em;
+  }
+
+  // Lista de recomendaciones
+  .list-group {
+    .list-group-item {
+      border: 1px solid rgba(0, 0, 0, 0.125);
+      padding: 0.75rem;
+      margin-bottom: 0.25rem;
+      border-radius: 0.375rem;
+      background-color: #f8f9fa;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      &.text-danger {
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+      }
+    }
+  }
+
+  // Resumen de exportación
+  .card.bg-light {
+    background-color: #f8f9fa !important;
+    border: 1px solid #dee2e6;
+
+    .card-body {
+      text-align: center;
+    }
+  }
+
+  // Iconos
+  .fas, .far {
+    width: 1em;
+    text-align: center;
+  }
+
+  // Estados de hover
+  .table tbody tr:hover {
+    background-color: rgba(13, 110, 253, 0.05);
+  }
+
+  .btn:hover {
+    transform: translateY(-1px);
+  }
+
+  // Responsive
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+
+    .card-body {
+      padding: 1rem;
+    }
+
+    .btn-lg {
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+    }
+
+    .h3, .h4, .h5 {
+      font-size: 1.25rem;
+    }
+
+    .table-responsive {
+      font-size: 0.875rem;
+    }
+
+    .d-flex.gap-2 {
+      flex-direction: column;
+    }
+
+    .btn {
+      width: 100%;
+      margin-bottom: 0.5rem;
+    }
+  }
+
+  @media (max-width: 576px) {
+    .card-header {
+      padding: 0.75rem 1rem;
+
+      h4 {
+        font-size: 1.25rem;
+      }
+
+      h5, h6 {
+        font-size: 1rem;
+      }
+    }
+
+    .card-body {
+      padding: 0.75rem;
+    }
+
+    .nav-tabs .nav-link {
+      padding: 0.5rem 0.75rem;
+      font-size: 0.875rem;
+    }
+
+    .h2, .h3, .h4, .h5 {
+      font-size: 1.125rem;
+    }
+  }
+
+  // Animaciones
+  .fade-in {
+    animation: fadeIn 0.3s ease-in;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  // Estilos específicos para el balance de fases
+  .phase-balance-stats {
+    .stat-item {
+      text-align: center;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      background-color: #f8f9fa;
+      border: 1px solid #dee2e6;
+      transition: all 0.15s ease-in-out;
+
+      &:hover {
+        background-color: #e9ecef;
+        transform: translateY(-2px);
+      }
+    }
+  }
+
+  // Estilos para las opciones de exportación
+  .export-options {
+    .form-check {
+      margin-bottom: 1rem;
+
+      .form-check-input {
+        margin-right: 0.5rem;
+      }
+    }
+  }
+
+  // Estilos para la validación
+  .validation-result {
+    .validation-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .validation-status {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+  }
+
+  // Estilos para el balance de fases
+  .phase-balance {
+    .balance-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .balance-status {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .recommendations {
+      margin-top: 1rem;
+
+      .list-group-item {
+        border-left: 4px solid #ffc107;
+        background-color: #fff3cd;
+        color: #856404;
+      }
+    }
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "ampacity_mm2_60C": [
+    {
+      "gauge": "1.5 mm2",
+      "ampacityA": 15
+    },
+    {
+      "gauge": "2.0 mm2",
+      "ampacityA": 20
+    },
+    {
+      "gauge": "3.5 mm2",
+      "ampacityA": 30
+    },
+    {
+      "gauge": "5.5 mm2",
+      "ampacityA": 50
+    },
+    {
+      "gauge": "8.0 mm2",
+      "ampacityA": 70
+    }
+  ],
+  "std_breakers_A": [
+    15,
+    20,
+    25,
+    30,
+    40,
+    50,
+    60
+  ],
+  "differential_rules": {
+    "GFCI_required_areas": [
+      "banio",
+      "cocina",
+      "lavanderia",
+      "exteriores"
+    ],
+    "AFCI_susceptible_areas": [
+      "dormitorio",
+      "estudio",
+      "sala"
+    ]
+  },
+  "assumptions": [
+    "Valores orientativos, ajustar a RIE RD y catálogos locales.",
+    "Voltajes de referencia: 120V/240V."
+  ]
+}

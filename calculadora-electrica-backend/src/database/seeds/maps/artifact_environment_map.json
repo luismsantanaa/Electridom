@@ -1,0 +1,41 @@
+[
+  {
+    "artifact": "TOMA_GENERAL",
+    "environments": [
+      "SALA",
+      "DORMITORIO",
+      "COCINA",
+      "LAVANDERIA"
+    ]
+  },
+  {
+    "artifact": "ILUMINACION_LED",
+    "environments": [
+      "SALA",
+      "DORMITORIO",
+      "COCINA",
+      "BANIO",
+      "LAVANDERIA",
+      "EXTERIOR"
+    ]
+  },
+  {
+    "artifact": "NEVERA",
+    "environments": [
+      "COCINA"
+    ]
+  },
+  {
+    "artifact": "MICROONDAS",
+    "environments": [
+      "COCINA"
+    ]
+  },
+  {
+    "artifact": "AA_MINISPLIT",
+    "environments": [
+      "SALA",
+      "DORMITORIO"
+    ]
+  }
+]

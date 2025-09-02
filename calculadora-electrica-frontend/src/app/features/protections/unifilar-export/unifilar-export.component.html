@@ -1,0 +1,249 @@
+<div class="unifilar-export-container">
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h5 class="mb-0">
+      <i class="fas fa-project-diagram text-primary me-2"></i>
+      Diagrama Unifilar
+    </h5>
+    <div class="d-flex gap-2">
+      <select 
+        class="form-select form-select-sm"
+        [(ngModel)]="exportFormat"
+        (change)="onFormatChange()"
+        [disabled]="loading">
+        <option value="full">Completo</option>
+        <option value="simplified">Simplificado</option>
+      </select>
+      <button 
+        class="btn btn-sm btn-outline-primary"
+        (click)="loadUnifilarData()"
+        [disabled]="loading || !projectId">
+        <i class="fas fa-sync-alt me-1"></i>
+        Refrescar
+      </button>
+    </div>
+  </div>
+
+  <!-- Mensajes de Error -->
+  <div class="mb-3" *ngIf="error">
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      <i class="fas fa-exclamation-triangle me-2"></i>
+      {{ error }}
+      <button type="button" class="btn-close" (click)="clearError()"></button>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div class="mb-3" *ngIf="loading">
+    <div class="d-flex justify-content-center">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Cargando...</span>
+      </div>
+      <span class="ms-2">Cargando diagrama unifilar...</span>
+    </div>
+  </div>
+
+  <!-- Sin Proyecto Seleccionado -->
+  <div *ngIf="!projectId && !loading">
+    <div class="card">
+      <div class="card-body text-center py-5">
+        <i class="fas fa-info-circle fa-3x text-muted mb-3"></i>
+        <h5 class="text-muted">Seleccione un Proyecto</h5>
+        <p class="text-muted mb-0">
+          Para generar el diagrama unifilar, primero debe seleccionar un proyecto.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Diagrama Unifilar -->
+  <div *ngIf="unifilarData && !loading">
+    <!-- Información del Servicio -->
+    <div class="card mb-4">
+      <div class="card-header">
+        <h6 class="card-title mb-0">
+          <i class="fas fa-bolt me-2"></i>
+          Configuración del Servicio
+        </h6>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-3">
+            <div class="text-center">
+              <div class="h4 mb-1">{{ unifilarData.service.voltage }}V</div>
+              <small class="text-muted">Tensión</small>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="text-center">
+              <div class="h4 mb-1">{{ unifilarData.service.phases }}</div>
+              <small class="text-muted">Fases</small>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="text-center">
+              <div class="h4 mb-1">{{ unifilarData.service.amperage }}A</div>
+              <small class="text-muted">Amperaje</small>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="text-center">
+              <div class="h4 mb-1">{{ unifilarData.service.type }}</div>
+              <small class="text-muted">Tipo</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel Principal -->
+    <div class="card mb-4">
+      <div class="card-header">
+        <h6 class="card-title mb-0">
+          <i class="fas fa-server me-2"></i>
+          Panel Principal
+        </h6>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-6">
+            <h6>Información del Panel</h6>
+            <p><strong>ID:</strong> {{ unifilarData.mainPanel.id }}</p>
+            <p><strong>Etiqueta:</strong> {{ unifilarData.mainPanel.label }}</p>
+            <p><strong>Tipo:</strong> {{ unifilarData.mainPanel.type }}</p>
+            <p><strong>Amperaje:</strong> {{ unifilarData.mainPanel.amperage }}A</p>
+          </div>
+          <div class="col-md-6">
+            <h6>Circuitos Conectados</h6>
+            <p><strong>Total:</strong> {{ unifilarData.mainPanel.circuits.length }}</p>
+            <div class="mt-2">
+              <span 
+                *ngFor="let circuitId of unifilarData.mainPanel.circuits.slice(0, 5)"
+                class="badge bg-primary me-1 mb-1">
+                {{ circuitId }}
+              </span>
+              <span 
+                *ngIf="unifilarData.mainPanel.circuits.length > 5"
+                class="badge bg-secondary">
+                +{{ unifilarData.mainPanel.circuits.length - 5 }} más
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Circuitos -->
+    <div class="card mb-4">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h6 class="card-title mb-0">
+          <i class="fas fa-plug me-2"></i>
+          Circuitos ({{ unifilarData.circuits.length }})
+        </h6>
+        <div class="d-flex gap-2">
+          <button 
+            class="btn btn-sm btn-outline-info"
+            (click)="validateUnifilar()"
+            [disabled]="loading">
+            <i class="fas fa-check-circle me-1"></i>
+            Validar
+          </button>
+          <button 
+            class="btn btn-sm btn-success"
+            (click)="downloadUnifilar()"
+            [disabled]="loading">
+            <i class="fas fa-download me-1"></i>
+            Descargar JSON
+          </button>
+        </div>
+      </div>
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-hover mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>ID</th>
+                <th>Etiqueta</th>
+                <th>Carga (VA)</th>
+                <th>Voltaje (V)</th>
+                <th>Corriente (A)</th>
+                <th>Conductor</th>
+                <th>Breaker (A)</th>
+                <th>Diferencial</th>
+                <th>Área</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let circuit of unifilarData.circuits">
+                <td>
+                  <code>{{ circuit.id }}</code>
+                </td>
+                <td>
+                  <i [class]="getCircuitIcon(circuit)"></i>
+                  {{ circuit.label }}
+                </td>
+                <td>{{ circuit.loadVA }}</td>
+                <td>{{ circuit.voltage }}</td>
+                <td>{{ circuit.currentA }}</td>
+                <td>{{ circuit.conductorGauge }}</td>
+                <td>
+                  <span class="badge bg-primary">{{ circuit.breakerAmp }}A</span>
+                </td>
+                <td>
+                  <span 
+                    [class]="'badge ' + getDifferentialBadgeClass(circuit.differentialType)">
+                    {{ getDifferentialText(circuit.differentialType) }}
+                  </span>
+                </td>
+                <td>
+                  <span 
+                    [class]="'badge ' + getAreaBadgeClass(circuit.areaType)">
+                    {{ circuit.areaType }}
+                  </span>
+                </td>
+                <td>
+                  <button 
+                    class="btn btn-sm btn-outline-secondary"
+                    title="Ver detalles">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Metadatos -->
+    <div class="card">
+      <div class="card-header">
+        <h6 class="card-title mb-0">
+          <i class="fas fa-info-circle me-2"></i>
+          Metadatos
+        </h6>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-4">
+            <p><strong>Versión:</strong> {{ unifilarData.metadata.version }}</p>
+          </div>
+          <div class="col-md-4">
+            <p><strong>Generado:</strong> {{ unifilarData.metadata.generatedAt | date:'medium' }}</p>
+          </div>
+          <div class="col-md-4">
+            <p><strong>Estándares:</strong></p>
+            <div class="mt-1">
+              <span 
+                *ngFor="let standard of unifilarData.metadata.standards"
+                class="badge bg-info me-1">
+                {{ standard }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

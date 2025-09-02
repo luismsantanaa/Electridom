@@ -1,9 +1,9 @@
 import { DataSource } from 'typeorm';
 import { config } from 'dotenv';
-import { normConstSeed } from '../src/database/seeds/norm-const.seed';
-import { demandFactorSeed } from '../src/database/seeds/demand-factor.seed';
-import { seedResistivity } from '../src/database/seeds/resistivity.seed';
-import { seedGroundingRules } from '../src/database/seeds/grounding-rules.seed';
+import { normConstSeed } from '../src/database/seeds/_archive/norm-const.seed';
+import { demandFactorSeed } from '../src/database/seeds/_archive/demand-factor.seed';
+import { seedResistivity } from '../src/database/seeds/_archive/resistivity.seed';
+import { seedGroundingRules } from '../src/database/seeds/_archive/grounding-rules.seed';
 
 config();
 

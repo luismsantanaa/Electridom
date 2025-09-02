@@ -1,0 +1,15 @@
+{
+  "export_format": [
+    "pdf",
+    "json"
+  ],
+  "layout": {
+    "orientation": "vertical",
+    "symbols": "IEC"
+  },
+  "pdf": {
+    "page_size": "A3",
+    "margins_mm": 10
+  },
+  "json_version": "1.0.0"
+}

@@ -342,8 +342,8 @@ describe('ModeladoElectricoService', () => {
       
       expect(serviceAny.calcularCalibreDefault(10)).toBe('14');
       expect(serviceAny.calcularCalibreDefault(20)).toBe('12');
-      expect(serviceAny.calcularCalibreDefault(35)).toBe('10');
-      expect(serviceAny.calcularCalibreDefault(50)).toBe('8');
+      expect(serviceAny.calcularCalibreDefault(35)).toBe('8');  // 35A > 30A, so returns '8'
+      expect(serviceAny.calcularCalibreDefault(50)).toBe('6');  // 50A > 40A, so returns '6'
       expect(serviceAny.calcularCalibreDefault(200)).toBe('1/0');
     });
 

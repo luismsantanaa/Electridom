@@ -1,0 +1,1 @@
+Helpers para exportación PDF/JSON y renderizado previo.

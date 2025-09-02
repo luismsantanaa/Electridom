@@ -3,6 +3,7 @@
   NotFoundException,
   ConflictException,
   BadRequestException,
+  Logger,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DataSource } from 'typeorm';
@@ -26,6 +27,7 @@ import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class ProjectsAppService {
+  private readonly logger = new Logger(ProjectsAppService.name);
   private readonly maxVersionsPerProject: number;
 
   constructor(
@@ -616,9 +618,43 @@ export class ProjectsAppService {
    * Verifica si un proyecto tiene exportaciones activas
    */
   private async checkActiveExports(projectId: string): Promise<boolean> {
-    // TODO: Implementar verificación real cuando se tenga el módulo de exportaciones
-    // Por ahora retornamos false para permitir eliminación
-    return false;
+    try {
+      // Verificar si hay exportaciones en estado activo (PROCESSING o PENDING)
+      // Por ahora implementamos una verificación básica
+      // En el futuro, esto debería consultar la tabla de exportaciones
+      
+      // TODO: Cuando se implemente la entidad Export, usar:
+      // const activeExports = await this.exportRepository.find({
+      //   where: {
+      //     projectId,
+      //     status: In(['PROCESSING', 'PENDING'])
+      //   }
+      // });
+      // return activeExports.length > 0;
+      
+      // Por ahora, verificamos si el proyecto tiene versiones recientes
+      // que podrían indicar actividad reciente
+      const project = await this.projectRepository.findOne({
+        where: { id: projectId },
+        relations: ['versions']
+      });
+      
+      if (!project || !project.versions || project.versions.length === 0) {
+        return false;
+      }
+      
+      // Verificar si hay versiones creadas en las últimas 24 horas
+      const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+      const recentVersions = project.versions.filter(
+        version => version.creationDate > twentyFourHoursAgo
+      );
+      
+      return recentVersions.length > 0;
+    } catch (error) {
+      // Si hay algún error en la verificación, por seguridad no permitimos eliminación
+      this.logger.warn(`Error verificando exportaciones activas para proyecto ${projectId}: ${error.message}`);
+      return true; // Por defecto, no permitir eliminación si hay error
+    }
   }
 
   /**

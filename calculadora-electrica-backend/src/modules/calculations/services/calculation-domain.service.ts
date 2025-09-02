@@ -25,6 +25,11 @@ interface CircuitoPropuesto {
   calibreSugerido: string;
 }
 
+interface RuleSetOptions {
+  ruleSetId?: string;
+  effectiveDate?: string;
+}
+
 @Injectable()
 export class CalculationDomainService {
   constructor(private readonly ruleProvider: RuleProviderService) {}
@@ -79,7 +84,7 @@ export class CalculationDomainService {
   }
 
   // Métodos de validación y normalización
-  private normalizarAmbientes(surfaces: any[]): Map<string, number> {
+  private normalizarAmbientes(surfaces: Array<{ environment: string; areaM2: number }>): Map<string, number> {
     const environments = new Map<string, number>();
 
     for (const surface of surfaces) {
@@ -141,7 +146,7 @@ export class CalculationDomainService {
   private async calcularCargasPorAmbiente(
     datosPorAmbiente: AmbienteData[],
     warnings: string[],
-    ruleSetOptions: any,
+    ruleSetOptions: RuleSetOptions,
   ): Promise<CargaCalculada[]> {
     const cargasPorAmbiente: CargaCalculada[] = [];
 
@@ -171,7 +176,7 @@ export class CalculationDomainService {
   private async calcularIluminacion(
     areaM2: number,
     warnings: string[],
-    ruleSetOptions: any,
+    ruleSetOptions: RuleSetOptions,
   ): Promise<number> {
     const luzVAPorM2 = await this.ruleProvider.getNumber('LUZ_VA_POR_M2', {
       fallback: 100,
@@ -193,7 +198,7 @@ export class CalculationDomainService {
   private async calcularTotales(
     cargasPorAmbiente: CargaCalculada[],
     warnings: string[],
-    ruleSetOptions: any,
+    ruleSetOptions: RuleSetOptions,
   ): Promise<{ totalConectadaVA: number; demandaEstimadaVA: number }> {
     const totalConectadaVA = cargasPorAmbiente.reduce(
       (total, load) => total + load.totalVA,
@@ -215,7 +220,7 @@ export class CalculationDomainService {
   private async calcularDemandaEstimada(
     cargasPorAmbiente: CargaCalculada[],
     warnings: string[],
-    ruleSetOptions: any,
+    ruleSetOptions: RuleSetOptions,
   ): Promise<number> {
     const factorDemandaLuz = await this.ruleProvider.getNumber(
       'FACTOR_DEMANDA_LUZ',
@@ -242,7 +247,7 @@ export class CalculationDomainService {
   private async generarPropuestaCircuitos(
     cargasPorAmbiente: CargaCalculada[],
     warnings: string[],
-    ruleSetOptions: any,
+    ruleSetOptions: RuleSetOptions,
   ): Promise<CircuitoPropuesto[]> {
     const iluVAMaxPorCircuito = await this.ruleProvider.getNumber(
       'ILU_VA_MAX_POR_CIRCUITO',

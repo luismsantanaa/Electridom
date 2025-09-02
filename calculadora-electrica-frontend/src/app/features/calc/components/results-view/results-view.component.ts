@@ -591,12 +591,93 @@ export class ResultsViewComponent {
 
   // Métodos de acción
   exportResults(): void {
-    // TODO: Implementar exportación de resultados
-    console.log('Exportar resultados:', this.fullData() || this.data());
+    try {
+      const dataToExport = this.fullData() || this.data();
+      if (!dataToExport) {
+        console.warn('No hay datos para exportar');
+        return;
+      }
+
+      // Crear objeto de exportación
+      const exportData = {
+        timestamp: new Date().toISOString(),
+        project: this.calculationInput()?.projectName || 'Cálculo Eléctrico',
+        results: dataToExport,
+        metadata: {
+          version: '1.0',
+          generatedBy: 'Calculadora Eléctrica Electridom',
+          calculationType: this.fullData() ? 'Completo (CE-01 → CE-05)' : 'Parcial'
+        }
+      };
+
+      // Generar archivo JSON
+      const jsonString = JSON.stringify(exportData, null, 2);
+      const blob = new Blob([jsonString], { type: 'application/json' });
+      const url = window.URL.createObjectURL(blob);
+      
+      // Crear enlace de descarga
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `calculo-electrico-${new Date().toISOString().split('T')[0]}.json`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      // Limpiar URL
+      window.URL.revokeObjectURL(url);
+      
+      console.log('Resultados exportados exitosamente');
+    } catch (error) {
+      console.error('Error exportando resultados:', error);
+    }
   }
 
   continueToNextStep(): void {
-    // TODO: Implementar navegación al siguiente paso
-    console.log('Continuar al siguiente paso');
+    try {
+      // Determinar el siguiente paso basado en los datos disponibles
+      if (this.fullData()) {
+        // Si tenemos datos completos, sugerir exportación o análisis adicional
+        console.log('Cálculo completo realizado. Considera exportar los resultados o realizar análisis adicional.');
+        
+        // Opcional: Mostrar modal con opciones
+        this.showNextStepsModal();
+      } else if (this.data()) {
+        // Si solo tenemos datos parciales, sugerir continuar con el siguiente cálculo
+        const currentStep = this.determineCurrentStep();
+        console.log(`Continuar con el siguiente paso: ${currentStep}`);
+        
+        // Emitir evento para navegación (si el componente padre lo maneja)
+        // this.nextStepRequested.emit(currentStep);
+      } else {
+        console.log('No hay datos disponibles para continuar');
+      }
+    } catch (error) {
+      console.error('Error determinando siguiente paso:', error);
+    }
+  }
+
+  private determineCurrentStep(): string {
+    const data = this.data();
+    if (!data) return 'Inicio';
+    
+    // Determinar el paso actual basado en los datos disponibles
+    if (data.ambientes && data.ambientes.length > 0) {
+      if (data.totales && data.totales.carga_diversificada_va > 0) {
+        return 'Circuits';
+      }
+      return 'Demand';
+    }
+    
+    return 'Rooms';
+  }
+
+  private showNextStepsModal(): void {
+    // Implementar modal con opciones de siguiente paso
+    // Por ahora solo log
+    console.log('Modal de siguientes pasos:');
+    console.log('- Exportar resultados completos');
+    console.log('- Generar reporte PDF');
+    console.log('- Analizar protecciones');
+    console.log('- Crear diagrama unifilar');
   }
 }

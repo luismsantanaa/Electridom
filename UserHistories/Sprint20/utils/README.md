@@ -1,0 +1,1 @@
+Funciones de integración IA (cliente HTTP, normalización de respuestas).

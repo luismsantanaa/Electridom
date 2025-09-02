@@ -28,6 +28,7 @@ import {
   ListExportsQueryDto,
   ExportListResponseDto,
   CreateExportDto,
+  ExportResponseDto,
 } from './dtos/export.dto';
 import { Roles, UserRole } from '../../common/decorators/roles.decorator';
 import { RolesGuard } from '../../common/guards/roles.guard';
@@ -94,7 +95,7 @@ export class ExportsController {
     status: 404,
     description: 'Proyecto no encontrado',
   })
-  async createExport(@Body() dto: CreateExportDto): Promise<void> {
+  async createExport(@Body() dto: CreateExportDto): Promise<ExportResponseDto> {
     return this.exportsService.createExport(dto);
   }
 

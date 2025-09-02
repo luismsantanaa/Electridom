@@ -100,6 +100,11 @@ export class CreateExportDto {
   @IsNotEmpty()
   projectId: string;
 
+  @ApiProperty({ example: 'Residencia García', required: false })
+  @IsOptional()
+  @IsString()
+  projectName?: string;
+
   @ApiProperty({ enum: ExportType, example: 'PDF' })
   @IsEnum(ExportType)
   @IsNotEmpty()

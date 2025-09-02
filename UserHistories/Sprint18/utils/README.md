@@ -1,0 +1,1 @@
+Helpers de cálculo de corriente, ampacidad y selección de breaker.

@@ -4,13 +4,12 @@ import { Observable } from 'rxjs';
 import { ExportsService } from '../../../../core/services/exports/exports.service';
 import { AppDataGridComponent, ColumnDef, ActionDef, GridParams, GridResponse } from '../../../../shared/ui/app-data-grid/app-data-grid.component';
 import { Export, ExportStatus, ExportType } from '../../../../shared/types/export.types';
-import { HasRoleDirective } from '../../../../shared/directives/has-role.directive';
 import { UserRole } from '../../../../shared/types/user.types';
 
 @Component({
   selector: 'app-export-list',
   standalone: true,
-  imports: [CommonModule, AppDataGridComponent, HasRoleDirective],
+  imports: [CommonModule, AppDataGridComponent],
   templateUrl: './export-list.page.html',
   styleUrls: ['./export-list.page.scss']
 })

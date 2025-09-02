@@ -1,0 +1,27 @@
+{
+  "symbols": [
+    {
+      "id": "main-breaker",
+      "name": "Interruptor General",
+      "unicode": "⏻"
+    },
+    {
+      "id": "mcb",
+      "name": "Breaker",
+      "unicode": "⎍"
+    },
+    {
+      "id": "gfci",
+      "name": "GFCI",
+      "unicode": "⚡"
+    },
+    {
+      "id": "afci",
+      "name": "AFCI",
+      "unicode": "🛡"
+    }
+  ],
+  "notes": [
+    "Unicode ilustrativo; en Sprint 21 se definirá librería SVG."
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "model": "electridom-v1",
+  "parameters": {
+    "temperature": 0.2,
+    "top_p": 0.9,
+    "max_tokens": 1200
+  },
+  "timeouts_ms": {
+    "request": 20000
+  },
+  "retry": {
+    "maxAttempts": 2,
+    "backoffMs": 1500
+  }
+}

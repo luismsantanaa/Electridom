@@ -1,0 +1,481 @@
+<div class="unifilar-advanced-container">
+  <!-- Header -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="mb-0">
+            <i class="fas fa-project-diagram text-primary me-2"></i>
+            Exportación Avanzada de Diagrama Unifilar
+          </h4>
+          <p class="text-muted mb-0">
+            Visualice y exporte diagramas unifilares con balance de fases, validación y múltiples formatos
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Formulario de Proyecto -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">
+            <i class="fas fa-folder-open me-2"></i>
+            Información del Proyecto
+          </h5>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="projectForm" class="row">
+            <div class="col-md-6">
+              <label for="projectId" class="form-label">ID del Proyecto</label>
+              <input
+                type="number"
+                id="projectId"
+                formControlName="projectId"
+                class="form-control"
+                placeholder="Ingrese el ID del proyecto"
+                [class.is-invalid]="projectForm.get('projectId')?.invalid && projectForm.get('projectId')?.touched"
+              />
+              <div class="invalid-feedback" *ngIf="projectForm.get('projectId')?.invalid && projectForm.get('projectId')?.touched">
+                ID de proyecto es requerido y debe ser mayor a 0
+              </div>
+            </div>
+            <div class="col-md-6 d-flex align-items-end">
+              <div class="d-flex gap-2">
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  (click)="generatePreview()"
+                  [disabled]="loading || projectForm.invalid">
+                  <i class="fas fa-eye me-1"></i>
+                  Generar Vista Previa
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-outline-secondary"
+                  (click)="clearForms()">
+                  <i class="fas fa-eraser me-1"></i>
+                  Limpiar
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mensajes de Error -->
+  <div class="row mb-3" *ngIf="error">
+    <div class="col-12">
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-triangle me-2"></i>
+        {{ error }}
+        <button type="button" class="btn-close" (click)="clearError()"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div class="row mb-3" *ngIf="loading">
+    <div class="col-12">
+      <div class="d-flex justify-content-center">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Procesando...</span>
+        </div>
+        <span class="ms-2">Procesando diagrama unifilar...</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Resultados -->
+  <div class="row" *ngIf="showResults && unifilarData">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">
+            <i class="fas fa-chart-line me-2"></i>
+            Resultados del Diagrama Unifilar Avanzado
+          </h5>
+        </div>
+        <div class="card-body">
+          <!-- Pestañas -->
+          <ul class="nav nav-tabs mb-3" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button
+                class="nav-link"
+                [class.active]="activeTab === 'preview'"
+                (click)="setActiveTab('preview')"
+                type="button"
+                role="tab">
+                <i class="fas fa-eye me-1"></i>
+                Vista Previa
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button
+                class="nav-link"
+                [class.active]="activeTab === 'export'"
+                (click)="setActiveTab('export')"
+                type="button"
+                role="tab">
+                <i class="fas fa-download me-1"></i>
+                Exportar
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button
+                class="nav-link"
+                [class.active]="activeTab === 'validation'"
+                (click)="setActiveTab('validation')"
+                type="button"
+                role="tab">
+                <i class="fas fa-check-circle me-1"></i>
+                Validación
+              </button>
+            </li>
+          </ul>
+
+          <!-- Contenido de las pestañas -->
+          <div class="tab-content">
+            <!-- Pestaña Vista Previa -->
+            <div class="tab-pane fade" [class.show active]="activeTab === 'preview'">
+              <!-- Información del Servicio -->
+              <div class="row mb-4">
+                <div class="col-12">
+                  <h6>Información del Servicio:</h6>
+                  <div class="row">
+                    <div class="col-md-3">
+                      <div class="text-center">
+                        <div class="h4 text-primary mb-1">{{ unifilarData.service.voltage }}</div>
+                        <small class="text-muted">Voltaje</small>
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="text-center">
+                        <div class="h4 text-info mb-1">{{ unifilarData.service.phases }}</div>
+                        <small class="text-muted">Fases</small>
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="text-center">
+                        <div class="h4 text-success mb-1">{{ unifilarData.service.amperage }}A</div>
+                        <small class="text-muted">Amperaje</small>
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="text-center">
+                        <div class="h4 text-warning mb-1">{{ unifilarData.service.type }}</div>
+                        <small class="text-muted">Tipo</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Balance de Fases -->
+              <div class="row mb-4" *ngIf="phaseBalanceStats">
+                <div class="col-12">
+                  <h6>Balance de Fases:</h6>
+                  <div class="row">
+                    <div class="col-md-2">
+                      <div class="text-center">
+                        <div class="h5 text-primary mb-1">{{ phaseBalanceStats.totalLoad }} VA</div>
+                        <small class="text-muted">Carga Total</small>
+                      </div>
+                    </div>
+                    <div class="col-md-2">
+                      <div class="text-center">
+                        <div class="h5 text-info mb-1">{{ phaseBalanceStats.averageLoad.toFixed(0) }} VA</div>
+                        <small class="text-muted">Promedio</small>
+                      </div>
+                    </div>
+                    <div class="col-md-2">
+                      <div class="text-center">
+                        <div class="h5 text-success mb-1">{{ phaseBalanceStats.maxLoad }} VA</div>
+                        <small class="text-muted">Máxima</small>
+                      </div>
+                    </div>
+                    <div class="col-md-2">
+                      <div class="text-center">
+                        <div class="h5 text-warning mb-1">{{ phaseBalanceStats.minLoad }} VA</div>
+                        <small class="text-muted">Mínima</small>
+                      </div>
+                    </div>
+                    <div class="col-md-2">
+                      <div class="text-center">
+                        <div class="h5" [class]="'text-' + getPhaseBalanceColor(phaseBalanceStats.status)">
+                          {{ phaseBalanceStats.imbalancePercentage.toFixed(1) }}%
+                        </div>
+                        <small class="text-muted">Desbalance</small>
+                      </div>
+                    </div>
+                    <div class="col-md-2">
+                      <div class="text-center">
+                        <div class="h5" [class]="'text-' + getPhaseBalanceColor(phaseBalanceStats.status)">
+                          <i [class]="getPhaseBalanceIcon(phaseBalanceStats.status)"></i>
+                        </div>
+                        <small class="text-muted">Estado</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Distribución por Fases -->
+              <div class="row mb-4">
+                <div class="col-12">
+                  <h6>Distribución por Fases:</h6>
+                  <div class="row">
+                    <div class="col-md-4" *ngFor="let phase of ['A', 'B', 'C']">
+                      <div class="card border-primary">
+                        <div class="card-header bg-primary text-white text-center">
+                          <h6 class="mb-0">Fase {{ phase }}</h6>
+                        </div>
+                        <div class="card-body text-center">
+                          <div class="h4 text-primary mb-2">{{ getTotalCircuitsByPhase(phase) }}</div>
+                          <small class="text-muted">Circuitos</small>
+                          <hr>
+                          <div class="h5 text-success mb-2">{{ getTotalLoadByPhase(phase) }} VA</div>
+                          <small class="text-muted">Carga Total</small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Paneles -->
+              <div class="row mb-4" *ngIf="unifilarData.panels">
+                <div class="col-12">
+                  <h6>Paneles del Sistema:</h6>
+                  <div class="table-responsive">
+                    <table class="table table-hover">
+                      <thead class="table-light">
+                        <tr>
+                          <th>Panel</th>
+                          <th>Tipo</th>
+                          <th>Amperaje</th>
+                          <th>Voltaje</th>
+                          <th>Fases</th>
+                          <th>Circuitos</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let panel of unifilarData.panels; trackBy: trackByPanel">
+                          <td>
+                            <span class="badge bg-primary">{{ panel.name }}</span>
+                          </td>
+                          <td>{{ panel.type }}</td>
+                          <td>{{ panel.amperage }}A</td>
+                          <td>{{ panel.voltage }}</td>
+                          <td>{{ panel.phases }}</td>
+                          <td>{{ panel.circuits.length }}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Pestaña Exportar -->
+            <div class="tab-pane fade" [class.show active]="activeTab === 'export'">
+              <div class="row">
+                <div class="col-md-8">
+                  <form [formGroup]="exportForm">
+                    <!-- Formato de Exportación -->
+                    <div class="mb-3">
+                      <label class="form-label">Formato de Exportación:</label>
+                      <div class="d-flex gap-3">
+                        <div class="form-check" *ngFor="let format of exportFormats">
+                          <input
+                            class="form-check-input"
+                            type="radio"
+                            [id]="'format-' + format.value"
+                            formControlName="format"
+                            [value]="format.value">
+                          <label class="form-check-label" [for]="'format-' + format.value">
+                            <i [class]="format.icon + ' me-1'"></i>
+                            {{ format.label }}
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Tamaño de Página -->
+                    <div class="mb-3">
+                      <label for="pageSize" class="form-label">Tamaño de Página:</label>
+                      <select id="pageSize" formControlName="pageSize" class="form-select">
+                        <option *ngFor="let size of pageSizes" [value]="size.value">
+                          {{ size.label }}
+                        </option>
+                      </select>
+                    </div>
+
+                    <!-- Orientación -->
+                    <div class="mb-3">
+                      <label class="form-label">Orientación:</label>
+                      <div class="d-flex gap-3">
+                        <div class="form-check" *ngFor="let orientation of orientations">
+                          <input
+                            class="form-check-input"
+                            type="radio"
+                            [id]="'orientation-' + orientation.value"
+                            formControlName="orientation"
+                            [value]="orientation.value">
+                          <label class="form-check-label" [for]="'orientation-' + orientation.value">
+                            <i [class]="orientation.icon + ' me-1'"></i>
+                            {{ orientation.label }}
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Estándar de Símbolos -->
+                    <div class="mb-3">
+                      <label class="form-label">Estándar de Símbolos:</label>
+                      <div class="d-flex gap-3">
+                        <div class="form-check" *ngFor="let standard of symbolStandards">
+                          <input
+                            class="form-check-input"
+                            type="radio"
+                            [id]="'standard-' + standard.value"
+                            formControlName="symbolStandard"
+                            [value]="standard.value">
+                          <label class="form-check-label" [for]="'standard-' + standard.value">
+                            <i [class]="standard.icon + ' me-1'"></i>
+                            {{ standard.label }}
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Opciones Adicionales -->
+                    <div class="mb-3">
+                      <div class="form-check">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          id="includeMetadata"
+                          formControlName="includeMetadata">
+                        <label class="form-check-label" for="includeMetadata">
+                          Incluir metadatos completos
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          id="includeSymbols"
+                          formControlName="includeSymbols">
+                        <label class="form-check-label" for="includeSymbols">
+                          Incluir definiciones de símbolos
+                        </label>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+
+                <div class="col-md-4">
+                  <div class="card bg-light">
+                    <div class="card-body text-center">
+                      <h6>Resumen de Exportación</h6>
+                      <p class="text-muted small">
+                        Formato: <strong>{{ exportForm.get('format')?.value?.toUpperCase() }}</strong><br>
+                        Tamaño: <strong>{{ exportForm.get('pageSize')?.value }}</strong><br>
+                        Orientación: <strong>{{ exportForm.get('orientation')?.value }}</strong>
+                      </p>
+                      <button
+                        type="button"
+                        class="btn btn-success btn-lg w-100"
+                        (click)="exportUnifilar()"
+                        [disabled]="loading || exportForm.invalid">
+                        <i class="fas fa-download me-2"></i>
+                        Exportar Diagrama
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Pestaña Validación -->
+            <div class="tab-pane fade" [class.show active]="activeTab === 'validation'">
+              <div class="row">
+                <div class="col-md-6">
+                  <!-- Resultado de Validación -->
+                  <div class="card" *ngIf="validationResult">
+                    <div class="card-header">
+                      <h6 class="mb-0">
+                        <i class="fas fa-check-circle me-2"></i>
+                        Resultado de Validación
+                      </h6>
+                    </div>
+                    <div class="card-body">
+                      <div class="text-center mb-3">
+                        <div class="h2" [class]="validationResult.isValid ? 'text-success' : 'text-danger'">
+                          <i [class]="validationResult.isValid ? 'fas fa-check-circle' : 'fas fa-times-circle'"></i>
+                        </div>
+                        <h5 [class]="validationResult.isValid ? 'text-success' : 'text-danger'">
+                          {{ validationResult.isValid ? 'Válido' : 'Con Errores' }}
+                        </h5>
+                      </div>
+
+                      <div *ngIf="!validationResult.isValid && validationResult.errors.length > 0">
+                        <h6>Errores Encontrados:</h6>
+                        <ul class="list-group list-group-flush">
+                          <li class="list-group-item text-danger" *ngFor="let error of validationResult.errors">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            {{ error }}
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <!-- Balance de Fases -->
+                  <div class="card" *ngIf="phaseBalance">
+                    <div class="card-header">
+                      <h6 class="mb-0">
+                        <i class="fas fa-balance-scale me-2"></i>
+                        Balance de Fases
+                      </h6>
+                    </div>
+                    <div class="card-body">
+                      <div class="text-center mb-3">
+                        <div class="h2" [class]="phaseBalance.isBalanced ? 'text-success' : 'text-warning'">
+                          <i [class]="phaseBalance.isBalanced ? 'fas fa-check-circle' : 'fas fa-exclamation-triangle'"></i>
+                        </div>
+                        <h5 [class]="phaseBalance.isBalanced ? 'text-success' : 'text-warning'">
+                          {{ phaseBalance.isBalanced ? 'Balanceado' : 'Desbalanceado' }}
+                        </h5>
+                        <p class="text-muted">
+                          Desbalance: {{ phaseBalance.maxImbalance.toFixed(1) }}%
+                        </p>
+                      </div>
+
+                      <div *ngIf="phaseBalance.recommendations.length > 0">
+                        <h6>Recomendaciones:</h6>
+                        <ul class="list-group list-group-flush">
+                          <li class="list-group-item" *ngFor="let rec of phaseBalance.recommendations">
+                            <i class="fas fa-lightbulb text-warning me-2"></i>
+                            {{ rec }}
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

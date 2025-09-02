@@ -2,11 +2,11 @@
 
 ## 🎯 RESUMEN GENERAL
 
-**Estado:** PRODUCCIÓN DESPLEGADA - Sprint 1 completado al 100% + Sprint 2 completado al 100% + Sprint 3 Frontend completado al 100% + Sprint 4 AI Integration completado al 100% + Sprint 16 completado al 100% + Sprint 17 completado al 100% + Testing y Compilación completados al 100% + Docker Despliegue completado al 100% + Error 500 Solucionado al 100%
+**Estado:** PRODUCCIÓN DESPLEGADA - Sprint 1 completado al 100% + Sprint 2 completado al 100% + Sprint 3 Frontend completado al 100% + Sprint 4 AI Integration completado al 100% + Sprint 16 completado al 100% + Sprint 17 completado al 100% + Sprint 18 completado al 100% + Sprint 19 completado al 100% + Sprint 20 completado al 100% + Sprint 21 completado al 100% + Testing y Compilación completados al 100% + Docker Despliegue completado al 100% + Error 500 Solucionado al 100%
 
-**Última Actualización:** 9 de Enero 2025
+**Última Actualización:** 2 de Septiembre 2025 - Deudas Técnicas Resueltas
 
-**Contexto del Proyecto:** Sistema completo para cálculos eléctricos residenciales, comerciales e industriales según normativas NEC 2023 y RIE RD. Backend con API RESTful completa, documentación Swagger, seguridad avanzada, observabilidad funcional e integración de IA. Frontend Angular 20 con template moderno, arquitectura monorepo e interfaz de asistente IA. **DESPLEGADO EN DOCKER** con todos los servicios funcionando correctamente. **ERROR 500 SOLUCIONADO** - Endpoint de creación de proyectos operativo.
+**Contexto del Proyecto:** Sistema completo para cálculos eléctricos residenciales, comerciales e industriales según normativas NEC 2023 y RIE RD. Backend con API RESTful completa, documentación Swagger, seguridad avanzada, observabilidad funcional e integración de IA. Frontend Angular 20 con template moderno, arquitectura monorepo e interfaz de asistente IA. **DESPLEGADO EN DOCKER** con todos los servicios funcionando correctamente. **ERROR 500 SOLUCIONADO** - Endpoint de creación de proyectos operativo. **SPRINT 21 COMPLETADO** - Exportación avanzada unifilar con balance de fases implementada. **DEUDAS TÉCNICAS RESUELTAS** - Backend y frontend optimizados, type safety mejorada, código más limpio.
 
 ## 🚀 FUNCIONALIDADES IMPLEMENTADAS
 
@@ -716,6 +716,9 @@ Authorization: Bearer <jwt_token>
 - [x] **Sprint 4 Completo** - Integración de IA funcional (4/4 historias)
 - [x] **Sprint 16 Completo** - Servicios de cálculo avanzados y validación normativa
 - [x] **Sprint 17 Completo** - IA Explicativa y Validación Normativa (3/3 servicios)
+- [x] **Sprint 18 Completo** - Selección de Protecciones Eléctricas (entidades, servicios, controladores, frontend)
+- [x] **Sprint 19 Completo** - Validación de Protecciones y Exportación Unifilar (servicios, controladores, componentes frontend)
+- [x] **Sprint 20 Completo** - Cálculos con Inteligencia Artificial (IA para asignación automática de circuitos y protecciones)
 - [x] **Base de Datos Sincronizada** - Migraciones y seeds completados
 - [x] **Tests Funcionales** - 162 tests de cálculo pasando
 - [x] **Documentación API** - Swagger completo y actualizado
@@ -733,11 +736,51 @@ Authorization: Bearer <jwt_token>
 ### ✅ Completado Recientemente
 
 - [x] **Sprint 17: IA Explicativa y Validación Normativa** - COMPLETADO AL 100%
+
   - AIExplanationService con integración OpenAI implementado
   - RuleEngineService para validación normativa implementado
   - IntelligentValidationService para orquestación implementado
   - Todos los servicios integrados en CalculationsModule
   - Proyecto compila sin errores y todas las pruebas pasan
+
+- [x] **Sprint 18: Selección de Protecciones Eléctricas** - COMPLETADO AL 100%
+
+  - Entidades Protection y Circuit implementadas
+  - ProtectionService con lógica de selección automática
+  - ProtectionController con endpoints REST
+  - Módulo Angular completo con componentes y servicios
+  - Migraciones y seeds de datos normativos
+
+- [x] **Sprint 19: Validación y Exportación Unifilar** - COMPLETADO AL 100%
+
+  - ProtectionValidationService para validación normativa
+  - UnifilarExportService para diagramas unifilares
+  - ProtectionValidationController con endpoints de validación
+  - Componentes frontend para validación y exportación
+  - Sistema de símbolos eléctricos IEC/UNE
+
+- [x] **Sprint 20: Cálculos con Inteligencia Artificial** - COMPLETADO AL 100%
+
+  - IACalculationService para cálculos automáticos
+  - IACalculationController con API REST
+  - Integración con Ollama y OpenAI
+  - Frontend completo con formularios dinámicos
+  - Vista de comparación Manual vs IA
+  - Persistencia y recuperación de resultados
+
+- [x] **Sprint 21: Exportación Avanzada Unifilar con Balance de Fases** - COMPLETADO AL 100%
+  - UnifilarAdvancedExportService para exportación en PDF y JSON
+  - UnifilarAdvancedExportController con endpoints avanzados
+  - Cálculo automático de balance de fases
+  - Validación de coherencia del diagrama
+  - Frontend completo con vista previa y opciones configurables
+  - Sistema de símbolos IEC/UNE/NEMA
+
+- [x] **Resolución de Deudas Técnicas** - COMPLETADO AL 100% (2 Septiembre 2025)
+  - **Fase 1 - Deudas Críticas:** Tests corregidos, type safety mejorada, métodos implementados
+  - **Fase 2 - Deudas Importantes:** Tipos específicos, lógica real, funcionalidad completa
+  - **Fase 3 - Mejoras:** Imports limpios, funcionalidades TODO implementadas, documentación
+  - **Impacto:** Backend 0 errores, frontend optimizado, código más mantenible
 
 ### 📅 Pendiente
 
@@ -789,4 +832,4 @@ Authorization: Bearer <jwt_token>
 
 ---
 
-**🎉 SPRINT 1 COMPLETADO AL 100% + SPRINT 2 COMPLETADO AL 100% + SPRINT 3 FRONTEND FASE INICIAL COMPLETADA + SPRINT 4 AI INTEGRATION COMPLETADO AL 100% + SPRINT 16 COMPLETADO AL 100% + SPRINT 17 COMPLETADO AL 100% + ERROR 500 SOLUCIONADO AL 100% - PROYECTO FUNCIONAL CON MONOREPO, BACKEND COMPLETO, FRONTEND ANGULAR 20, INTEGRACIÓN DE IA OPERATIVA, SISTEMA DE LOGGING MEJORADO Y SERVICIOS DE IA AVANZADOS IMPLEMENTADOS**
+**🎉 SPRINT 1 COMPLETADO AL 100% + SPRINT 2 COMPLETADO AL 100% + SPRINT 3 FRONTEND FASE INICIAL COMPLETADA + SPRINT 4 AI INTEGRATION COMPLETADO AL 100% + SPRINT 16 COMPLETADO AL 100% + SPRINT 17 COMPLETADO AL 100% + SPRINT 18 COMPLETADO AL 100% + SPRINT 19 COMPLETADO AL 100% + SPRINT 20 COMPLETADO AL 100% + SPRINT 21 COMPLETADO AL 100% + ERROR 500 SOLUCIONADO AL 100% + DEUDAS TÉCNICAS RESUELTAS AL 100% - PROYECTO FUNCIONAL CON MONOREPO, BACKEND COMPLETO, FRONTEND ANGULAR 20, INTEGRACIÓN DE IA OPERATIVA, SISTEMA DE LOGGING MEJORADO, SERVICIOS DE IA AVANZADOS, PROTECCIONES ELÉCTRICAS, VALIDACIÓN NORMATIVA, EXPORTACIÓN UNIFILAR, CÁLCULOS AUTOMÁTICOS CON IA, EXPORTACIÓN AVANZADA UNIFILAR CON BALANCE DE FASES Y CÓDIGO OPTIMIZADO IMPLEMENTADOS**
