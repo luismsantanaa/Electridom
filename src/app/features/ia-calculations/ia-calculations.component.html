@@ -1,0 +1,463 @@
+<div class="ia-calculations-container">
+  <!-- Header -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="mb-0">
+            <i class="fas fa-robot text-primary me-2"></i>
+            Cálculos Eléctricos con Inteligencia Artificial
+          </h4>
+          <p class="text-muted mb-0">
+            Ingrese las superficies y consumos del proyecto para calcular automáticamente circuitos y protecciones
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Formulario de Proyecto -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">
+            <i class="fas fa-project-diagram me-2"></i>
+            Información del Proyecto
+          </h5>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="projectForm" class="row">
+            <div class="col-md-6">
+              <label for="projectId" class="form-label">ID del Proyecto</label>
+              <input
+                type="number"
+                id="projectId"
+                formControlName="projectId"
+                class="form-control"
+                placeholder="Ingrese el ID del proyecto"
+                [class.is-invalid]="projectForm.get('projectId')?.invalid && projectForm.get('projectId')?.touched"
+              />
+              <div class="invalid-feedback" *ngIf="projectForm.get('projectId')?.invalid && projectForm.get('projectId')?.touched">
+                ID de proyecto es requerido y debe ser mayor a 0
+              </div>
+            </div>
+            <div class="col-md-6 d-flex align-items-end">
+              <div class="d-flex gap-2">
+                <button
+                  type="button"
+                  class="btn btn-outline-primary"
+                  (click)="loadLastResult()"
+                  [disabled]="loading || !projectForm.get('projectId')?.value">
+                  <i class="fas fa-history me-1"></i>
+                  Cargar Último Resultado
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-outline-secondary"
+                  (click)="clearForms()">
+                  <i class="fas fa-eraser me-1"></i>
+                  Limpiar
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mensajes de Error -->
+  <div class="row mb-3" *ngIf="error">
+    <div class="col-12">
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-triangle me-2"></i>
+        {{ error }}
+        <button type="button" class="btn-close" (click)="clearError()"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div class="row mb-3" *ngIf="loading">
+    <div class="col-12">
+      <div class="d-flex justify-content-center">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Calculando...</span>
+        </div>
+        <span class="ms-2">Calculando con IA...</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Formularios de Entrada -->
+  <div class="row" *ngIf="!showResults">
+    <!-- Superficies -->
+    <div class="col-xl-6">
+      <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">
+            <i class="fas fa-ruler-combined me-2"></i>
+            Superficies del Proyecto
+          </h5>
+          <button
+            type="button"
+            class="btn btn-sm btn-primary"
+            (click)="addSuperficie()">
+            <i class="fas fa-plus me-1"></i>
+            Agregar Superficie
+          </button>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="superficiesForm">
+            <div formArrayName="superficies">
+              <div
+                *ngFor="let superficie of superficiesArray.controls; let i = index"
+                class="row mb-3"
+                [formGroupName]="i">
+                <div class="col-md-6">
+                  <label [for]="'nombre' + i" class="form-label">Nombre del Área</label>
+                  <input
+                    type="text"
+                    [id]="'nombre' + i"
+                    formControlName="nombre"
+                    class="form-control"
+                    placeholder="Ej: Cocina, Dormitorio, etc."
+                    (input)="updateCalculations()"
+                  />
+                </div>
+                <div class="col-md-4">
+                  <label [for]="'area' + i" class="form-label">Área (m²)</label>
+                  <input
+                    type="number"
+                    [id]="'area' + i"
+                    formControlName="area_m2"
+                    class="form-control"
+                    placeholder="0.0"
+                    step="0.1"
+                    min="0.1"
+                    (input)="updateCalculations()"
+                  />
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                  <button
+                    type="button"
+                    class="btn btn-outline-danger btn-sm"
+                    (click)="removeSuperficie(i)"
+                    [disabled]="superficiesArray.length <= 1">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Consumos -->
+    <div class="col-xl-6">
+      <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">
+            <i class="fas fa-plug me-2"></i>
+            Consumos Eléctricos
+          </h5>
+          <button
+            type="button"
+            class="btn btn-sm btn-primary"
+            (click)="addConsumo()">
+            <i class="fas fa-plus me-1"></i>
+            Agregar Consumo
+          </button>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="consumosForm">
+            <div formArrayName="consumos">
+              <div
+                *ngFor="let consumo of consumosArray.controls; let i = index"
+                class="row mb-3"
+                [formGroupName]="i">
+                <div class="col-md-4">
+                  <label [for]="'equipo' + i" class="form-label">Equipo</label>
+                  <input
+                    type="text"
+                    [id]="'equipo' + i"
+                    formControlName="equipo"
+                    class="form-control"
+                    placeholder="Ej: Refrigerador, TV, etc."
+                    (input)="updateCalculations()"
+                  />
+                </div>
+                <div class="col-md-3">
+                  <label [for]="'ambiente' + i" class="form-label">Ambiente</label>
+                  <select
+                    [id]="'ambiente' + i"
+                    formControlName="ambiente"
+                    class="form-select"
+                    (change)="updateCalculations()">
+                    <option value="">Seleccionar...</option>
+                    <option *ngFor="let ambiente of getUniqueAmbientes()" [value]="ambiente">
+                      {{ ambiente }}
+                    </option>
+                  </select>
+                </div>
+                <div class="col-md-3">
+                  <label [for]="'w' + i" class="form-label">Potencia (W)</label>
+                  <input
+                    type="number"
+                    [id]="'w' + i"
+                    formControlName="w"
+                    class="form-control"
+                    placeholder="0"
+                    min="1"
+                    (input)="updateCalculations()"
+                  />
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                  <button
+                    type="button"
+                    class="btn btn-outline-danger btn-sm"
+                    (click)="removeConsumo(i)"
+                    [disabled]="consumosArray.length <= 1">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Resumen de Cálculos -->
+  <div class="row mb-4" *ngIf="!showResults">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">
+            <i class="fas fa-calculator me-2"></i>
+            Resumen de Cálculos
+          </h5>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-4">
+              <div class="text-center">
+                <div class="h3 text-primary mb-1">{{ totalLoad }} W</div>
+                <small class="text-muted">Carga Total</small>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="text-center">
+                <div class="h3 text-info mb-1">{{ (totalLoad / 1000).toFixed(2) }} kW</div>
+                <small class="text-muted">En Kilowatts</small>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="text-center">
+                <div class="h3 text-success mb-1">{{ (totalLoad / 120).toFixed(1) }} A</div>
+                <small class="text-muted">Corriente Total (120V)</small>
+              </div>
+            </div>
+          </div>
+
+          <!-- Carga por Ambiente -->
+          <div class="mt-4" *ngIf="Object.keys(loadByAmbiente).length > 0">
+            <h6>Carga por Ambiente:</h6>
+            <div class="row">
+              <div class="col-md-6" *ngFor="let [ambiente, carga] of Object.entries(loadByAmbiente)">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                  <span class="fw-bold">{{ ambiente }}:</span>
+                  <span class="badge bg-primary">{{ carga }} W</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Botón de Cálculo -->
+          <div class="text-center mt-4">
+            <button
+              type="button"
+              class="btn btn-success btn-lg"
+              (click)="calculateWithIA()"
+              [disabled]="loading || superficiesForm.invalid || consumosForm.invalid || projectForm.invalid">
+              <i class="fas fa-robot me-2"></i>
+              Calcular con Inteligencia Artificial
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Resultados -->
+  <div class="row" *ngIf="showResults && iaResult">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">
+            <i class="fas fa-chart-line me-2"></i>
+            Resultados del Cálculo con IA
+          </h5>
+        </div>
+        <div class="card-body">
+          <!-- Pestañas -->
+          <ul class="nav nav-tabs mb-3" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button
+                class="nav-link"
+                [class.active]="activeTab === 'manual'"
+                (click)="setActiveTab('manual')"
+                type="button"
+                role="tab">
+                <i class="fas fa-calculator me-1"></i>
+                Cálculo Manual
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button
+                class="nav-link"
+                [class.active]="activeTab === 'ia'"
+                (click)="setActiveTab('ia')"
+                type="button"
+                role="tab">
+                <i class="fas fa-robot me-1"></i>
+                Cálculo con IA
+                <span class="badge bg-success ms-1">Nuevo</span>
+              </button>
+            </li>
+          </ul>
+
+          <!-- Contenido de las pestañas -->
+          <div class="tab-content">
+            <!-- Pestaña Manual -->
+            <div class="tab-pane fade" [class.show active]="activeTab === 'manual'">
+              <div class="text-center py-5">
+                <i class="fas fa-calculator fa-3x text-muted mb-3"></i>
+                <h5 class="text-muted">Cálculo Manual</h5>
+                <p class="text-muted">
+                  Aquí se mostrarían los resultados del cálculo manual tradicional.
+                </p>
+              </div>
+            </div>
+
+            <!-- Pestaña IA -->
+            <div class="tab-pane fade" [class.show active]="activeTab === 'ia'">
+              <!-- Metadatos -->
+              <div class="row mb-4">
+                <div class="col-md-4">
+                  <div class="text-center">
+                    <div class="h4 text-primary mb-1">{{ iaResult.circuits.length }}</div>
+                    <small class="text-muted">Circuitos Generados</small>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="text-center">
+                    <div class="h4 text-info mb-1">{{ iaResult.protections.length }}</div>
+                    <small class="text-muted">Protecciones</small>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="text-center">
+                    <div class="h4 text-success mb-1">{{ iaResult.metadata.processingTime }}ms</div>
+                    <small class="text-muted">Tiempo de Procesamiento</small>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Circuitos -->
+              <div class="mb-4">
+                <h6>Circuitos Generados:</h6>
+                <div class="table-responsive">
+                  <table class="table table-hover">
+                    <thead class="table-light">
+                      <tr>
+                        <th>Área</th>
+                        <th>Carga (VA)</th>
+                        <th>Conductor</th>
+                        <th>Voltaje (V)</th>
+                        <th>Corriente (A)</th>
+                        <th>Fase</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let circuit of iaResult.circuits">
+                        <td>
+                          <span class="badge bg-primary">{{ circuit.area }}</span>
+                        </td>
+                        <td>{{ circuit.loadVA }}</td>
+                        <td>{{ circuit.conductorGauge }}</td>
+                        <td>{{ circuit.voltage }}</td>
+                        <td>{{ circuit.currentA.toFixed(2) }}</td>
+                        <td>{{ circuit.phase }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- Protecciones -->
+              <div class="mb-4">
+                <h6>Protecciones Seleccionadas:</h6>
+                <div class="table-responsive">
+                  <table class="table table-hover">
+                    <thead class="table-light">
+                      <tr>
+                        <th>Circuito</th>
+                        <th>Breaker (A)</th>
+                        <th>Tipo</th>
+                        <th>Diferencial</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let protection of iaResult.protections">
+                        <td>
+                          <span class="badge bg-info">{{ protection.circuitId }}</span>
+                        </td>
+                        <td>
+                          <span class="badge bg-warning">{{ protection.breakerAmp }}A</span>
+                        </td>
+                        <td>{{ protection.breakerType }}</td>
+                        <td>
+                          <span 
+                            class="badge"
+                            [class]="protection.differential === 'NONE' ? 'bg-secondary' : 
+                                     protection.differential === 'GFCI' ? 'bg-danger' : 'bg-warning'">
+                            {{ protection.differential }}
+                          </span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- Explicaciones -->
+              <div class="mb-4" *ngIf="iaResult.explanations.length > 0">
+                <h6>Explicaciones de la IA:</h6>
+                <div class="list-group">
+                  <div 
+                    *ngFor="let explanation of iaResult.explanations"
+                    class="list-group-item">
+                    <i class="fas fa-lightbulb text-warning me-2"></i>
+                    {{ explanation }}
+                  </div>
+                </div>
+              </div>
+
+              <!-- Información del Modelo -->
+              <div class="text-center">
+                <small class="text-muted">
+                  <i class="fas fa-robot me-1"></i>
+                  Generado por {{ iaResult.metadata.model }} el {{ iaResult.metadata.timestamp | date:'medium' }}
+                </small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

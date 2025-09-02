@@ -1,0 +1,360 @@
+.ia-calculations-container {
+  padding: 1rem;
+
+  // Header
+  .card-header {
+    h4 {
+      color: #2c3e50;
+      font-weight: 600;
+    }
+    
+    p {
+      font-size: 0.95rem;
+    }
+  }
+
+  // Cards
+  .card {
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    border: 1px solid rgba(0, 0, 0, 0.125);
+    margin-bottom: 1.5rem;
+
+    .card-header {
+      background-color: #f8f9fa;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+      padding: 1rem 1.25rem;
+
+      h5 {
+        color: #495057;
+        font-weight: 600;
+        margin: 0;
+      }
+    }
+
+    .card-body {
+      padding: 1.25rem;
+    }
+  }
+
+  // Formularios
+  .form-label {
+    font-weight: 500;
+    color: #495057;
+    margin-bottom: 0.5rem;
+  }
+
+  .form-control, .form-select {
+    border: 1px solid #ced4da;
+    border-radius: 0.375rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.9rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+
+    &:focus {
+      border-color: #86b7fe;
+      box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    }
+
+    &.is-invalid {
+      border-color: #dc3545;
+      box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+    }
+  }
+
+  .invalid-feedback {
+    display: block;
+    font-size: 0.875rem;
+    color: #dc3545;
+    margin-top: 0.25rem;
+  }
+
+  // Botones
+  .btn {
+    border-radius: 0.375rem;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    transition: all 0.15s ease-in-out;
+
+    &.btn-sm {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.875rem;
+    }
+
+    &.btn-lg {
+      padding: 0.75rem 1.5rem;
+      font-size: 1.125rem;
+    }
+
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.15);
+    }
+
+    &:disabled {
+      transform: none;
+      box-shadow: none;
+    }
+  }
+
+  // Resumen de cálculos
+  .h3 {
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+
+  .text-primary {
+    color: #0d6efd !important;
+  }
+
+  .text-info {
+    color: #0dcaf0 !important;
+  }
+
+  .text-success {
+    color: #198754 !important;
+  }
+
+  .text-muted {
+    color: #6c757d !important;
+    font-size: 0.875rem;
+  }
+
+  // Badges
+  .badge {
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 0.35em 0.65em;
+    border-radius: 0.375rem;
+  }
+
+  .bg-primary {
+    background-color: #0d6efd !important;
+  }
+
+  .bg-info {
+    background-color: #0dcaf0 !important;
+  }
+
+  .bg-warning {
+    background-color: #ffc107 !important;
+    color: #000 !important;
+  }
+
+  .bg-success {
+    background-color: #198754 !important;
+  }
+
+  .bg-secondary {
+    background-color: #6c757d !important;
+  }
+
+  .bg-danger {
+    background-color: #dc3545 !important;
+  }
+
+  // Tablas
+  .table {
+    margin-bottom: 0;
+
+    th {
+      background-color: #f8f9fa;
+      border-bottom: 2px solid #dee2e6;
+      font-weight: 600;
+      color: #495057;
+      padding: 0.75rem;
+    }
+
+    td {
+      padding: 0.75rem;
+      vertical-align: middle;
+      border-bottom: 1px solid #dee2e6;
+    }
+
+    tbody tr:hover {
+      background-color: rgba(0, 0, 0, 0.02);
+    }
+  }
+
+  // Pestañas
+  .nav-tabs {
+    border-bottom: 1px solid #dee2e6;
+
+    .nav-link {
+      border: 1px solid transparent;
+      border-radius: 0.375rem 0.375rem 0 0;
+      color: #6c757d;
+      font-weight: 500;
+      padding: 0.75rem 1rem;
+      transition: all 0.15s ease-in-out;
+
+      &:hover {
+        border-color: #e9ecef #e9ecef #dee2e6;
+        color: #495057;
+      }
+
+      &.active {
+        color: #495057;
+        background-color: #fff;
+        border-color: #dee2e6 #dee2e6 #fff;
+      }
+    }
+  }
+
+  .tab-content {
+    padding-top: 1rem;
+  }
+
+  .tab-pane {
+    &.show.active {
+      display: block;
+    }
+  }
+
+  // Lista de explicaciones
+  .list-group {
+    .list-group-item {
+      border: 1px solid rgba(0, 0, 0, 0.125);
+      padding: 1rem;
+      margin-bottom: 0.5rem;
+      border-radius: 0.375rem;
+      background-color: #f8f9fa;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  // Alertas
+  .alert {
+    border-radius: 0.375rem;
+    border: 1px solid transparent;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1rem;
+
+    &.alert-danger {
+      color: #721c24;
+      background-color: #f8d7da;
+      border-color: #f5c6cb;
+    }
+
+    .btn-close {
+      padding: 0.5rem;
+      margin: -0.5rem -0.5rem -0.5rem auto;
+    }
+  }
+
+  // Loading
+  .spinner-border {
+    width: 1.5rem;
+    height: 1.5rem;
+    border-width: 0.2em;
+  }
+
+  // Responsive
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+
+    .card-body {
+      padding: 1rem;
+    }
+
+    .btn-lg {
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+    }
+
+    .h3 {
+      font-size: 1.5rem;
+    }
+
+    .table-responsive {
+      font-size: 0.875rem;
+    }
+  }
+
+  @media (max-width: 576px) {
+    .card-header {
+      padding: 0.75rem 1rem;
+
+      h4 {
+        font-size: 1.25rem;
+      }
+
+      h5 {
+        font-size: 1rem;
+      }
+    }
+
+    .card-body {
+      padding: 0.75rem;
+    }
+
+    .btn {
+      width: 100%;
+      margin-bottom: 0.5rem;
+    }
+
+    .d-flex.gap-2 {
+      flex-direction: column;
+    }
+  }
+
+  // Animaciones
+  .fade-in {
+    animation: fadeIn 0.3s ease-in;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  // Estados de hover
+  .table tbody tr:hover {
+    background-color: rgba(13, 110, 253, 0.05);
+  }
+
+  .btn:hover {
+    transform: translateY(-1px);
+  }
+
+  // Iconos
+  .fas, .far {
+    width: 1em;
+    text-align: center;
+  }
+
+  // Mensajes informativos
+  .text-muted {
+    font-style: italic;
+  }
+
+  // Códigos de error
+  small.text-muted {
+    font-size: 0.75rem;
+  }
+
+  // Estilos específicos para el diagrama
+  .diagram-section {
+    background-color: #f8f9fa;
+    border-radius: 0.375rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  // Estilos para la información del servicio
+  .service-info {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 0.375rem;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+}
