@@ -4,16 +4,18 @@ Sistema completo para cálculos eléctricos residenciales, comerciales e industr
 
 ## 📊 Estado del Proyecto
 
-**✅ Sprint 1-5 Completados (100%) + Error 500 Solucionado (100%)**
+**✅ Sprint 1-17 Completados (100%) + Error 500 Solucionado (100%)**
 
 - Backend NestJS completo con motor de cálculos eléctricos
 - Frontend Angular 20 con template moderno
 - Integración de IA con OpenAI
+- Servicios de cálculo avanzados (Sprint 16)
+- IA Explicativa y Validación Normativa (Sprint 17)
 - Monorepo configurado y funcional
 - CI/CD pipeline operativo
 - Base de datos sincronizada
 - Sistema de logging mejorado con Pino
-- 186 tests pasando
+- 162 tests de cálculo pasando
 - Endpoint de creación de proyectos funcionando correctamente
 
 ## 🏗️ Arquitectura

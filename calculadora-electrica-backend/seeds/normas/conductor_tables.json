@@ -1,0 +1,319 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "norma": "NEC 2023",
+    "fecha": "2025-09-01",
+    "descripcion": "Tablas de conductores eléctricos para proyectos residenciales"
+  },
+  "COBRE": {
+    "THHN_THWN": [
+      {
+        "calibre": "AWG 14",
+        "seccionMM2": 2.08,
+        "ampacidadBase": 20,
+        "tensionMaxima": 600,
+        "material": "COBRE",
+        "tipoAislamiento": "THHN/THWN",
+        "aplicaciones": ["ILUMINACION", "CIRCUITOS_15A"]
+      },
+      {
+        "calibre": "AWG 12",
+        "seccionMM2": 3.31,
+        "ampacidadBase": 25,
+        "tensionMaxima": 600,
+        "material": "COBRE",
+        "tipoAislamiento": "THHN/THWN",
+        "aplicaciones": ["ILUMINACION", "TOMACORRIENTES", "CIRCUITOS_20A"]
+      },
+      {
+        "calibre": "AWG 10",
+        "seccionMM2": 5.26,
+        "ampacidadBase": 35,
+        "tensionMaxima": 600,
+        "material": "COBRE",
+        "tipoAislamiento": "THHN/THWN",
+        "aplicaciones": ["TOMACORRIENTES", "CIRCUITOS_30A", "ALIMENTADORES_PEQUEÑOS"]
+      },
+      {
+        "calibre": "AWG 8",
+        "seccionMM2": 8.37,
+        "ampacidadBase": 50,
+        "tensionMaxima": 600,
+        "material": "COBRE",
+        "tipoAislamiento": "THHN/THWN",
+        "aplicaciones": ["ALIMENTADORES", "CIRCUITOS_40A", "EQUIPOS_MAYORES"]
+      },
+      {
+        "calibre": "AWG 6",
+        "seccionMM2": 13.3,
+        "ampacidadBase": 65,
+        "tensionMaxima": 600,
+        "material": "COBRE",
+        "tipoAislamiento": "THHN/THWN",
+        "aplicaciones": ["ALIMENTADORES", "CIRCUITOS_60A", "SUB_PANELES"]
+      },
+      {
+        "calibre": "AWG 4",
+        "seccionMM2": 21.2,
+        "ampacidadBase": 85,
+        "tensionMaxima": 600,
+        "material": "COBRE",
+        "tipoAislamiento": "THHN/THWN",
+        "aplicaciones": ["ALIMENTADORES", "CIRCUITOS_80A", "PANELES_PRINCIPALES"]
+      },
+      {
+        "calibre": "AWG 2",
+        "seccionMM2": 33.6,
+        "ampacidadBase": 115,
+        "tensionMaxima": 600,
+        "material": "COBRE",
+        "tipoAislamiento": "THHN/THWN",
+        "aplicaciones": ["ALIMENTADORES", "CIRCUITOS_100A", "SERVICIOS_MAYORES"]
+      },
+      {
+        "calibre": "AWG 1",
+        "seccionMM2": 42.4,
+        "ampacidadBase": 130,
+        "tensionMaxima": 600,
+        "material": "COBRE",
+        "tipoAislamiento": "THHN/THWN",
+        "aplicaciones": ["ALIMENTADORES", "CIRCUITOS_125A", "SERVICIOS_MAYORES"]
+      },
+      {
+        "calibre": "AWG 1/0",
+        "seccionMM2": 53.5,
+        "ampacidadBase": 150,
+        "tensionMaxima": 600,
+        "material": "COBRE",
+        "tipoAislamiento": "THHN/THWN",
+        "aplicaciones": ["ALIMENTADORES", "CIRCUITOS_150A", "SERVICIOS_MAYORES"]
+      },
+      {
+        "calibre": "AWG 2/0",
+        "seccionMM2": 67.4,
+        "ampacidadBase": 175,
+        "tensionMaxima": 600,
+        "material": "COBRE",
+        "tipoAislamiento": "THHN/THWN",
+        "aplicaciones": ["ALIMENTADORES", "CIRCUITOS_175A", "SERVICIOS_MAYORES"]
+      },
+      {
+        "calibre": "AWG 3/0",
+        "seccionMM2": 85.0,
+        "ampacidadBase": 200,
+        "tensionMaxima": 600,
+        "material": "COBRE",
+        "tipoAislamiento": "THHN/THWN",
+        "aplicaciones": ["ALIMENTADORES", "CIRCUITOS_200A", "SERVICIOS_MAYORES"]
+      },
+      {
+        "calibre": "AWG 4/0",
+        "seccionMM2": 107.2,
+        "ampacidadBase": 230,
+        "tensionMaxima": 600,
+        "material": "COBRE",
+        "tipoAislamiento": "THHN/THWN",
+        "aplicaciones": ["ALIMENTADORES", "CIRCUITOS_225A", "SERVICIOS_MAYORES"]
+      }
+    ],
+    "XHHW": [
+      {
+        "calibre": "AWG 12",
+        "seccionMM2": 3.31,
+        "ampacidadBase": 20,
+        "tensionMaxima": 600,
+        "material": "COBRE",
+        "tipoAislamiento": "XHHW",
+        "aplicaciones": ["INSTALACIONES_HUMEDAS", "EXTERIORES"]
+      },
+      {
+        "calibre": "AWG 10",
+        "seccionMM2": 5.26,
+        "ampacidadBase": 30,
+        "tensionMaxima": 600,
+        "material": "COBRE",
+        "tipoAislamiento": "XHHW",
+        "aplicaciones": ["INSTALACIONES_HUMEDAS", "EXTERIORES"]
+      },
+      {
+        "calibre": "AWG 8",
+        "seccionMM2": 8.37,
+        "ampacidadBase": 40,
+        "tensionMaxima": 600,
+        "material": "COBRE",
+        "tipoAislamiento": "XHHW",
+        "aplicaciones": ["INSTALACIONES_HUMEDAS", "EXTERIORES"]
+      }
+    ]
+  },
+  "ALUMINIO": {
+    "THHN_THWN": [
+      {
+        "calibre": "AWG 12",
+        "seccionMM2": 3.31,
+        "ampacidadBase": 20,
+        "tensionMaxima": 600,
+        "material": "ALUMINIO",
+        "tipoAislamiento": "THHN/THWN",
+        "aplicaciones": ["ALIMENTADORES", "CIRCUITOS_20A"],
+        "factor_correccion": 0.78
+      },
+      {
+        "calibre": "AWG 10",
+        "seccionMM2": 5.26,
+        "ampacidadBase": 30,
+        "tensionMaxima": 600,
+        "material": "ALUMINIO",
+        "tipoAislamiento": "THHN/THWN",
+        "aplicaciones": ["ALIMENTADORES", "CIRCUITOS_30A"],
+        "factor_correccion": 0.78
+      },
+      {
+        "calibre": "AWG 8",
+        "seccionMM2": 8.37,
+        "ampacidadBase": 40,
+        "tensionMaxima": 600,
+        "material": "ALUMINIO",
+        "tipoAislamiento": "THHN/THWN",
+        "aplicaciones": ["ALIMENTADORES", "CIRCUITOS_40A"],
+        "factor_correccion": 0.78
+      },
+      {
+        "calibre": "AWG 6",
+        "seccionMM2": 13.3,
+        "ampacidadBase": 55,
+        "tensionMaxima": 600,
+        "material": "ALUMINIO",
+        "tipoAislamiento": "THHN/THWN",
+        "aplicaciones": ["ALIMENTADORES", "CIRCUITOS_60A"],
+        "factor_correccion": 0.78
+      },
+      {
+        "calibre": "AWG 4",
+        "seccionMM2": 21.2,
+        "ampacidadBase": 70,
+        "tensionMaxima": 600,
+        "material": "ALUMINIO",
+        "tipoAislamiento": "THHN/THWN",
+        "aplicaciones": ["ALIMENTADORES", "CIRCUITOS_80A"],
+        "factor_correccion": 0.78
+      },
+      {
+        "calibre": "AWG 2",
+        "seccionMM2": 33.6,
+        "ampacidadBase": 95,
+        "tensionMaxima": 600,
+        "material": "ALUMINIO",
+        "tipoAislamiento": "THHN/THWN",
+        "aplicaciones": ["ALIMENTADORES", "CIRCUITOS_100A"],
+        "factor_correccion": 0.78
+      },
+      {
+        "calibre": "AWG 1",
+        "seccionMM2": 42.4,
+        "ampacidadBase": 115,
+        "tensionMaxima": 600,
+        "material": "ALUMINIO",
+        "tipoAislamiento": "THHN/THWN",
+        "aplicaciones": ["ALIMENTADORES", "CIRCUITOS_125A"],
+        "factor_correccion": 0.78
+      },
+      {
+        "calibre": "AWG 1/0",
+        "seccionMM2": 53.5,
+        "ampacidadBase": 135,
+        "tensionMaxima": 600,
+        "material": "ALUMINIO",
+        "tipoAislamiento": "THHN/THWN",
+        "aplicaciones": ["ALIMENTADORES", "CIRCUITOS_150A"],
+        "factor_correccion": 0.78
+      },
+      {
+        "calibre": "AWG 2/0",
+        "seccionMM2": 67.4,
+        "ampacidadBase": 155,
+        "tensionMaxima": 600,
+        "material": "ALUMINIO",
+        "tipoAislamiento": "THHN/THWN",
+        "aplicaciones": ["ALIMENTADORES", "CIRCUITOS_175A"],
+        "factor_correccion": 0.78
+      },
+      {
+        "calibre": "AWG 3/0",
+        "seccionMM2": 85.0,
+        "ampacidadBase": 180,
+        "tensionMaxima": 600,
+        "material": "ALUMINIO",
+        "tipoAislamiento": "THHN/THWN",
+        "aplicaciones": ["ALIMENTADORES", "CIRCUITOS_200A"],
+        "factor_correccion": 0.78
+      },
+      {
+        "calibre": "AWG 4/0",
+        "seccionMM2": 107.2,
+        "ampacidadBase": 205,
+        "tensionMaxima": 600,
+        "material": "ALUMINIO",
+        "tipoAislamiento": "THHN/THWN",
+        "aplicaciones": ["ALIMENTADORES", "CIRCUITOS_225A"],
+        "factor_correccion": 0.78
+      }
+    ]
+  },
+  "factores_correccion": {
+    "temperatura": {
+      "20": 1.08,
+      "25": 1.04,
+      "30": 1.00,
+      "35": 0.96,
+      "40": 0.91,
+      "45": 0.87,
+      "50": 0.82,
+      "55": 0.76,
+      "60": 0.71,
+      "65": 0.65,
+      "70": 0.58,
+      "75": 0.50,
+      "80": 0.41,
+      "85": 0.33,
+      "90": 0.25
+    },
+    "agrupamiento": {
+      "1": 1.00,
+      "2": 0.80,
+      "3": 0.70,
+      "4": 0.65,
+      "5": 0.60,
+      "6": 0.56,
+      "7": 0.52,
+      "8": 0.49,
+      "9": 0.47,
+      "10": 0.45,
+      "11": 0.44,
+      "12": 0.42,
+      "13": 0.41,
+      "14": 0.40,
+      "15": 0.39,
+      "16": 0.38,
+      "17": 0.37,
+      "18": 0.36,
+      "19": 0.35,
+      "20": 0.34
+    },
+    "tipo_instalacion": {
+      "TUBO_EMBUTIDO": 0.80,
+      "TUBO_VISTO": 0.85,
+      "CANALIZACION": 0.90,
+      "AIRE_LIBRE": 1.00,
+      "TIERRA_DIRECTA": 0.70
+    },
+    "tipo_aislamiento": {
+      "THHN": 1.00,
+      "THW": 0.88,
+      "THWN": 0.88,
+      "XHHW": 0.88,
+      "USE": 0.88,
+      "RHW": 0.88
+    }
+  }
+}

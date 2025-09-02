@@ -1,0 +1,140 @@
+{
+  "info": {
+    "name": "Calculadora Electrica RD \u2014 API Sprint 16-17",
+    "_postman_id": "b2c2c6e2-8d1e-4a4a-8c9a-111122223333",
+    "description": "Colecci\u00f3n de endpoints para c\u00e1lculos, validaciones e IA.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Run c\u00e1lculo (pipeline)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/calculos/proyecto/{{proyectoId}}/run",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "calculos",
+            "proyecto",
+            "{{proyectoId}}",
+            "run"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{}"
+        }
+      }
+    },
+    {
+      "name": "Obtener resultado c\u00e1lculo",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/calculos/proyecto/{{proyectoId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "calculos",
+            "proyecto",
+            "{{proyectoId}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Validaciones normativas",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/calculos/{{calcId}}/validaciones",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "calculos",
+            "{{calcId}}",
+            "validaciones"
+          ]
+        }
+      }
+    },
+    {
+      "name": "IA \u2014 Recomendaciones",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/ia/recomendar/{{calcId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "ia",
+            "recomendar",
+            "{{calcId}}"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\"nivelDetalle\":\"alto\"}"
+        }
+      }
+    },
+    {
+      "name": "IA \u2014 Explicaci\u00f3n por circuito",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/calculos/{{calcId}}/circuitos/{{circuitoId}}/explicacion",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "calculos",
+            "{{calcId}}",
+            "circuitos",
+            "{{circuitoId}}",
+            "explicacion"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Normas \u2014 Obtener clave",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/normas/{{key}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "normas",
+            "{{key}}"
+          ]
+        }
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    }
+  ]
+}

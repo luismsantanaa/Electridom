@@ -1,1 +1,0 @@
-- Tablas normativas, fórmulas caída de tensión, coeficientes simultaneidad

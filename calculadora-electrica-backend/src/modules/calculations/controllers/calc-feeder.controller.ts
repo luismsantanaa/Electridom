@@ -31,13 +31,13 @@ export class CalcFeederController {
     summary: 'Análisis de caída de tensión y selección de feeder',
     description: `
       Analiza la caída de tensión en circuits ramales y feeder principal.
-      
+
       **Funcionalidades:**
       - Calcula caída de tensión en cada circuit ramal
       - Selecciona calibre del feeder considerando límites
       - Determina longitud crítica máxima
       - Valida cumplimiento de límites (3% ramal, 5% total por defecto)
-      
+
       **Parámetros configurables:**
       - Límites de caída de tensión desde norm_const
       - material del conductor (Cu, Al)
@@ -242,6 +242,7 @@ export class CalcFeederController {
   async analyzeVoltageDrop(
     @Body() request: CalcFeederRequestDto,
   ): Promise<CalcFeederResponseDto> {
-    return this.voltageDropService.selectFeeder(request);
+    // TODO: Implementar análisis de caída de tensión con el nuevo VoltageDropService
+    throw new Error('Método no implementado en la nueva versión del servicio');
   }
 }

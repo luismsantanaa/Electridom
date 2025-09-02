@@ -1,3 +1,0 @@
-- Conectar servicios Angular a endpoints backend
-- Integrar exportaciones con datos reales
-- Ajustar env

@@ -16,6 +16,17 @@ import { CircuitService } from './services/circuit.service';
 import { VoltageDropService } from './services/voltage-drop.service';
 import { GroundingService } from './services/grounding.service';
 import { ReportService } from './services/report.service';
+// Nuevos servicios del Sprint 16
+import { CircuitAllocatorService } from './services/circuit-allocator.service';
+import { ConductorSizerService } from './services/conductor-sizer.service';
+import { ProtectionSelectorService } from './services/protection-selector.service';
+import { ShortCircuitService } from './services/short-circuit.service';
+import { SelectivityService } from './services/selectivity.service';
+import { ValidationService } from './services/validation.service';
+// Servicios de Sprint 17
+import { AIExplanationService } from './services/ai-explanation.service';
+import { RuleEngineService } from './services/rule-engine.service';
+import { IntelligentValidationService } from './services/intelligent-validation.service';
 import { NormConst } from './entities/norm-const.entity';
 import { DemandFactor } from './entities/demand-factor.entity';
 import { Ampacity } from './entities/ampacity.entity';
@@ -57,6 +68,18 @@ import { MetricsModule } from '../metrics/metrics.module';
     VoltageDropService,
     GroundingService,
     ReportService,
+    // Nuevos servicios del Sprint 16
+    CircuitAllocatorService,
+    ConductorSizerService,
+    ProtectionSelectorService,
+    // Servicios de Fase 2
+    ShortCircuitService,
+    SelectivityService,
+    ValidationService,
+    // Servicios de Sprint 17
+    AIExplanationService,
+    RuleEngineService,
+    IntelligentValidationService,
   ],
   exports: [
     CalculationAppService,
@@ -67,6 +90,18 @@ import { MetricsModule } from '../metrics/metrics.module';
     VoltageDropService,
     GroundingService,
     ReportService,
+    // Nuevos servicios del Sprint 16
+    CircuitAllocatorService,
+    ConductorSizerService,
+    ProtectionSelectorService,
+    // Servicios de Fase 2
+    ShortCircuitService,
+    SelectivityService,
+    ValidationService,
+    // Servicios de Sprint 17
+    AIExplanationService,
+    RuleEngineService,
+    IntelligentValidationService,
   ],
 })
 export class CalculationsModule {}

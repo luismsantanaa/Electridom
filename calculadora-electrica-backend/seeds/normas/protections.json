@@ -1,0 +1,325 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "norma": "NEC 2023 + RIE RD",
+    "fecha": "2025-09-01",
+    "descripcion": "Catálogo de protecciones eléctricas para proyectos residenciales"
+  },
+  "mcb_1p": {
+    "curva_b": [
+      {
+        "amperaje": 15,
+        "curva": "B",
+        "polo": "1P",
+        "corrienteInterruptora": 150,
+        "precioEstimado": 25,
+        "caracteristicas": ["B", "1P"],
+        "aplicaciones": ["ILUMINACION", "CARGAS_SENSIBLES"]
+      },
+      {
+        "amperaje": 20,
+        "curva": "B",
+        "polo": "1P",
+        "corrienteInterruptora": 200,
+        "precioEstimado": 25,
+        "caracteristicas": ["B", "1P"],
+        "aplicaciones": ["ILUMINACION", "CARGAS_SENSIBLES"]
+      },
+      {
+        "amperaje": 25,
+        "curva": "B",
+        "polo": "1P",
+        "corrienteInterruptora": 250,
+        "precioEstimado": 25,
+        "caracteristicas": ["B", "1P"],
+        "aplicaciones": ["ILUMINACION", "CARGAS_SENSIBLES"]
+      },
+      {
+        "amperaje": 32,
+        "curva": "B",
+        "polo": "1P",
+        "corrienteInterruptora": 320,
+        "precioEstimado": 30,
+        "caracteristicas": ["B", "1P"],
+        "aplicaciones": ["ILUMINACION", "CARGAS_SENSIBLES"]
+      }
+    ],
+    "curva_c": [
+      {
+        "amperaje": 15,
+        "curva": "C",
+        "polo": "1P",
+        "corrienteInterruptora": 150,
+        "precioEstimado": 28,
+        "caracteristicas": ["C", "1P"],
+        "aplicaciones": ["TOMACORRIENTES", "CARGAS_GENERALES"]
+      },
+      {
+        "amperaje": 20,
+        "curva": "C",
+        "polo": "1P",
+        "corrienteInterruptora": 200,
+        "precioEstimado": 28,
+        "caracteristicas": ["C", "1P"],
+        "aplicaciones": ["TOMACORRIENTES", "CARGAS_GENERALES"]
+      },
+      {
+        "amperaje": 25,
+        "curva": "C",
+        "polo": "1P",
+        "corrienteInterruptora": 250,
+        "precioEstimado": 28,
+        "caracteristicas": ["C", "1P"],
+        "aplicaciones": ["TOMACORRIENTES", "CARGAS_GENERALES"]
+      },
+      {
+        "amperaje": 32,
+        "curva": "C",
+        "polo": "1P",
+        "corrienteInterruptora": 320,
+        "precioEstimado": 32,
+        "caracteristicas": ["C", "1P"],
+        "aplicaciones": ["TOMACORRIENTES", "CARGAS_GENERALES"]
+      },
+      {
+        "amperaje": 40,
+        "curva": "C",
+        "polo": "1P",
+        "corrienteInterruptora": 400,
+        "precioEstimado": 32,
+        "caracteristicas": ["C", "1P"],
+        "aplicaciones": ["TOMACORRIENTES", "CARGAS_GENERALES"]
+      },
+      {
+        "amperaje": 50,
+        "curva": "C",
+        "polo": "1P",
+        "corrienteInterruptora": 500,
+        "precioEstimado": 38,
+        "caracteristicas": ["C", "1P"],
+        "aplicaciones": ["TOMACORRIENTES", "CARGAS_GENERALES"]
+      },
+      {
+        "amperaje": 63,
+        "curva": "C",
+        "polo": "1P",
+        "corrienteInterruptora": 630,
+        "precioEstimado": 42,
+        "caracteristicas": ["C", "1P"],
+        "aplicaciones": ["TOMACORRIENTES", "CARGAS_GENERALES"]
+      }
+    ],
+    "curva_d": [
+      {
+        "amperaje": 20,
+        "curva": "D",
+        "polo": "1P",
+        "corrienteInterruptora": 200,
+        "precioEstimado": 32,
+        "caracteristicas": ["D", "1P"],
+        "aplicaciones": ["MOTORES", "COMPRESORES", "CARGAS_ALTA_CORRIENTE_ARRANQUE"]
+      },
+      {
+        "amperaje": 25,
+        "curva": "D",
+        "polo": "1P",
+        "corrienteInterruptora": 250,
+        "precioEstimado": 32,
+        "caracteristicas": ["D", "1P"],
+        "aplicaciones": ["MOTORES", "COMPRESORES", "CARGAS_ALTA_CORRIENTE_ARRANQUE"]
+      },
+      {
+        "amperaje": 32,
+        "curva": "D",
+        "polo": "1P",
+        "corrienteInterruptora": 320,
+        "precioEstimado": 35,
+        "caracteristicas": ["D", "1P"],
+        "aplicaciones": ["MOTORES", "COMPRESORES", "CARGAS_ALTA_CORRIENTE_ARRANQUE"]
+      },
+      {
+        "amperaje": 40,
+        "curva": "D",
+        "polo": "1P",
+        "corrienteInterruptora": 400,
+        "precioEstimado": 35,
+        "caracteristicas": ["D", "1P"],
+        "aplicaciones": ["MOTORES", "COMPRESORES", "CARGAS_ALTA_CORRIENTE_ARRANQUE"]
+      },
+      {
+        "amperaje": 50,
+        "curva": "D",
+        "polo": "1P",
+        "corrienteInterruptora": 500,
+        "precioEstimado": 40,
+        "caracteristicas": ["D", "1P"],
+        "aplicaciones": ["MOTORES", "COMPRESORES", "CARGAS_ALTA_CORRIENTE_ARRANQUE"]
+      },
+      {
+        "amperaje": 63,
+        "curva": "D",
+        "polo": "1P",
+        "corrienteInterruptora": 630,
+        "precioEstimado": 45,
+        "caracteristicas": ["D", "1P"],
+        "aplicaciones": ["MOTORES", "COMPRESORES", "CARGAS_ALTA_CORRIENTE_ARRANQUE"]
+      }
+    ]
+  },
+  "mcb_2p": {
+    "curva_b": [
+      {
+        "amperaje": 15,
+        "curva": "B",
+        "polo": "2P",
+        "corrienteInterruptora": 150,
+        "precioEstimado": 45,
+        "caracteristicas": ["B", "2P"],
+        "aplicaciones": ["CIRCUITOS_240V", "EQUIPOS_CRITICOS"]
+      },
+      {
+        "amperaje": 20,
+        "curva": "B",
+        "polo": "2P",
+        "corrienteInterruptora": 200,
+        "precioEstimado": 45,
+        "caracteristicas": ["B", "2P"],
+        "aplicaciones": ["CIRCUITOS_240V", "EQUIPOS_CRITICOS"]
+      },
+      {
+        "amperaje": 25,
+        "curva": "B",
+        "polo": "2P",
+        "corrienteInterruptora": 250,
+        "precioEstimado": 45,
+        "caracteristicas": ["B", "2P"],
+        "aplicaciones": ["CIRCUITOS_240V", "EQUIPOS_CRITICOS"]
+      },
+      {
+        "amperaje": 32,
+        "curva": "B",
+        "polo": "2P",
+        "corrienteInterruptora": 320,
+        "precioEstimado": 50,
+        "caracteristicas": ["B", "2P"],
+        "aplicaciones": ["CIRCUITOS_240V", "EQUIPOS_CRITICOS"]
+      },
+      {
+        "amperaje": 40,
+        "curva": "B",
+        "polo": "2P",
+        "corrienteInterruptora": 400,
+        "precioEstimado": 50,
+        "caracteristicas": ["B", "2P"],
+        "aplicaciones": ["CIRCUITOS_240V", "EQUIPOS_CRITICOS"]
+      },
+      {
+        "amperaje": 50,
+        "curva": "B",
+        "polo": "2P",
+        "corrienteInterruptora": 500,
+        "precioEstimado": 55,
+        "caracteristicas": ["B", "2P"],
+        "aplicaciones": ["CIRCUITOS_240V", "EQUIPOS_CRITICOS"]
+      },
+      {
+        "amperaje": 63,
+        "curva": "B",
+        "polo": "2P",
+        "corrienteInterruptora": 630,
+        "precioEstimado": 60,
+        "caracteristicas": ["B", "2P"],
+        "aplicaciones": ["CIRCUITOS_240V", "EQUIPOS_CRITICOS"]
+      }
+    ]
+  },
+  "mccb": {
+    "curva_d": [
+      {
+        "amperaje": 100,
+        "curva": "D",
+        "polo": "3P",
+        "corrienteInterruptora": 1000,
+        "precioEstimado": 150,
+        "caracteristicas": ["D", "3P"],
+        "aplicaciones": ["ALIMENTADORES", "SUB_PANELES", "EQUIPOS_INDUSTRIALES"]
+      },
+      {
+        "amperaje": 125,
+        "curva": "D",
+        "polo": "3P",
+        "corrienteInterruptora": 1250,
+        "precioEstimado": 180,
+        "caracteristicas": ["D", "3P"],
+        "aplicaciones": ["ALIMENTADORES", "SUB_PANELES", "EQUIPOS_INDUSTRIALES"]
+      },
+      {
+        "amperaje": 160,
+        "curva": "D",
+        "polo": "3P",
+        "corrienteInterruptora": 1600,
+        "precioEstimado": 220,
+        "caracteristicas": ["D", "3P"],
+        "aplicaciones": ["ALIMENTADORES", "SUB_PANELES", "EQUIPOS_INDUSTRIALES"]
+      },
+      {
+        "amperaje": 200,
+        "curva": "D",
+        "polo": "3P",
+        "corrienteInterruptora": 2000,
+        "precioEstimado": 280,
+        "caracteristicas": ["D", "3P"],
+        "aplicaciones": ["ALIMENTADORES", "SUB_PANELES", "EQUIPOS_INDUSTRIALES"]
+      },
+      {
+        "amperaje": 250,
+        "curva": "D",
+        "polo": "3P",
+        "corrienteInterruptora": 2500,
+        "precioEstimado": 350,
+        "caracteristicas": ["D", "3P"],
+        "aplicaciones": ["ALIMENTADORES", "SUB_PANELES", "EQUIPOS_INDUSTRIALES"]
+      },
+      {
+        "amperaje": 315,
+        "curva": "D",
+        "polo": "3P",
+        "corrienteInterruptora": 3150,
+        "precioEstimado": 420,
+        "caracteristicas": ["D", "3P"],
+        "aplicaciones": ["ALIMENTADORES", "SUB_PANELES", "EQUIPOS_INDUSTRIALES"]
+      },
+      {
+        "amperaje": 400,
+        "curva": "D",
+        "polo": "3P",
+        "corrienteInterruptora": 4000,
+        "precioEstimado": 550,
+        "caracteristicas": ["D", "3P"],
+        "aplicaciones": ["ALIMENTADORES", "SUB_PANELES", "EQUIPOS_INDUSTRIALES"]
+      }
+    ]
+  },
+  "especiales": {
+    "gfci": {
+      "descripcion": "Interruptor de falla a tierra",
+      "aplicaciones": ["BANOS", "COCINAS", "LAVADEROS", "EXTERIORES", "GARAGES", "SOTANOS"],
+      "factor_precio": 1.5
+    },
+    "afci": {
+      "descripcion": "Interruptor de falla de arco",
+      "aplicaciones": ["DORMITORIOS", "SALAS", "COMEDORES", "ESTUDIOS", "OFICINAS"],
+      "factor_precio": 2.0
+    },
+    "rcd": {
+      "descripcion": "Interruptor diferencial residual",
+      "aplicaciones": ["BANOS", "COCINAS", "LAVADEROS", "EXTERIORES", "GARAGES"],
+      "factor_precio": 1.8
+    },
+    "spd": {
+      "descripcion": "Protector contra sobretensiones",
+      "aplicaciones": ["PANEL_PRINCIPAL", "SUB_PANELES", "ALIMENTADORES", "EQUIPOS_SENSIBLES"],
+      "factor_precio": 1.3
+    }
+  }
+}

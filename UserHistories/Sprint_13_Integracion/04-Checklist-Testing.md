@@ -1,4 +1,0 @@
-- [ ] Crear proyecto desde frontend → BD
-- [ ] Agregar consumos
-- [ ] Generar resultados → ver frontend
-- [ ] Exportar PDF/Excel

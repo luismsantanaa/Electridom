@@ -1,4 +1,0 @@
-- Dashboard con métricas
-- Unifilar SVG
-- Carga planos
-- Mejoras UI
