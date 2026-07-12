@@ -9,7 +9,7 @@ on:
 env:
   NODE_ENV: test
   TEST_DB_HOST: localhost
-  TEST_DB_PORT: 3306
+  TEST_DB_PORT: 5432
   TEST_DB_USERNAME: electridom_test
   TEST_DB_PASSWORD: electridom_test
   TEST_DB_NAME: electridom_test
@@ -29,17 +29,16 @@ jobs:
         node-version: [18.x, 20.x]
     
     services:
-      mariadb:
-        image: mariadb:10.6
+      postgres:
+        image: postgis/postgis:16-3.4
         env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: electridom_test
-          MYSQL_USER: electridom_test
-          MYSQL_PASSWORD: electridom_test
+          POSTGRES_USER: electridom_test
+          POSTGRES_PASSWORD: electridom_test
+          POSTGRES_DB: electridom_test
         ports:
-          - 3306:3306
+          - 5432:5432
         options: >-
-          --health-cmd "mysqladmin ping"
+          --health-cmd pg_isready
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
@@ -75,7 +74,7 @@ jobs:
           cp env.example .env.test
           echo "NODE_ENV=test" >> .env.test
           echo "TEST_DB_HOST=localhost" >> .env.test
-          echo "TEST_DB_PORT=3306" >> .env.test
+          echo "TEST_DB_PORT=5432" >> .env.test
           echo "TEST_DB_USERNAME=electridom_test" >> .env.test
           echo "TEST_DB_PASSWORD=electridom_test" >> .env.test
           echo "TEST_DB_NAME=electridom_test" >> .env.test
