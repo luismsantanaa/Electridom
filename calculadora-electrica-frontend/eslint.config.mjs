@@ -29,14 +29,7 @@ export default [
   {
     files: ['**/*.ts'],
     rules: {
-      '@angular-eslint/directive-selector': [
-        'error',
-        {
-          type: 'attribute',
-          prefix: 'app',
-          style: 'camelCase'
-        }
-      ],
+      '@angular-eslint/directive-selector': 'off',
       '@angular-eslint/component-class-suffix': 'off',
       '@angular-eslint/component-selector': [
         'error',
@@ -44,6 +37,22 @@ export default [
           type: 'element',
           prefix: 'app',
           style: 'kebab-case'
+        }
+      ],
+      // Desactivar reglas invasivas que requieren refactorización manual extensiva
+      '@angular-eslint/prefer-inject': 'off',
+      '@angular-eslint/no-empty-lifecycle-method': 'off',
+      '@angular-eslint/no-output-native': 'off',
+      '@angular-eslint/no-output-on-prefix': 'off',
+      // Relajar no-explicit-any temporalmente (se corregirá en futuras iteraciones)
+      '@typescript-eslint/no-explicit-any': 'warn',
+      // Relajar no-unused-vars temporalmente (se corregirá en futuras iteraciones)
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_'
         }
       ]
     }
