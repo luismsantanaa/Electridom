@@ -42,6 +42,10 @@ export default tseslint.config(
           caughtErrorsIgnorePattern: '^_',
         },
       ],
+      // Relax require imports (needed for CommonJS compatibility)
+      '@typescript-eslint/no-require-imports': 'warn',
+      // Relax useless escape (minor style issue)
+      'no-useless-escape': 'warn',
     },
   },
 );

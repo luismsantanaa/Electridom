@@ -1,8 +1,24 @@
 # Plan de Ejecución — Migración V2 Calculadora Eléctrica RD
 
 **Fecha:** Julio 2026
-**Versión:** 1.0
+**Versión:** 1.1 (Actualizado)
 **Base:** [plan_de_migracion.md](./plan_de_migracion.md)
+**Última actualización:** 12 de Julio 2026
+
+---
+
+## Estado de Progreso
+
+| Fase | Estado | Fecha Completada | Notas |
+|------|--------|------------------|-------|
+| **Fase 0: Preparación e Infraestructura** | ✅ Completada | 12 Julio 2026 | plan-service creado, Docker Compose unificado, CI/CD actualizado |
+| **Fase 1: Migración de Base de Datos** | ✅ Completada | 12 Julio 2026 | MariaDB → PostgreSQL 16 + PostGIS, entities actualizadas |
+| **Fase 2: Python Plan Service — Setup** | 🔄 En progreso | - | Skeleton creado, pendiente implementar endpoints funcionales |
+| **Fase 3: Pipeline DXF** | ⏳ Pendiente | - | - |
+| **Fase 4: Pipeline PDF** | ⏳ Pendiente | - | - |
+| **Fase 5: Migración Frontend a React** | ⏳ Pendiente | - | - |
+| **Fase 6: Visualización Interactiva** | ⏳ Pendiente | - | - |
+| **Fase 7: AI/ML + Pulido Final** | ⏳ Pendiente | - | - |
 
 ---
 
