@@ -86,6 +86,21 @@
   - Parser PDF raster con OpenCV + OCR
   - Detección de tipo de PDF (vectorial/raster/mixto)
 
+### ⚠️ Estado del CI/CD
+
+**Nota:** El CI/CD tiene errores de linting preexistentes en el frontend Angular (198 errores) que no están relacionados con la migración V2. Estos errores son del código Angular existente (Sprints 1-21) e incluyen:
+- Variables no usadas (`@typescript-eslint/no-unused-vars`)
+- Uso de `any` (`@typescript-eslint/no-explicit-any`)
+- Preferir `inject()` sobre constructor injection (`@angular-eslint/prefer-inject`)
+- Selectores de directivas sin prefijo "app" (`@angular-eslint/directive-selector`)
+
+**Acción requerida:** Corregir estos errores de linting en el frontend Angular en una tarea separada para desbloquear el pipeline de CI/CD.
+
+**Estado actual del CI:**
+- ✅ Backend tests: Pasando
+- ✅ Plan Service tests: Pasando (después de fixes de linting y Dockerfile)
+- ❌ Frontend tests: Fallando por errores de linting preexistentes (no bloquea la migración V2)
+
 ---
 
 ## 📊 ESTADO ANTERIOR (Sprints 1-21 Completados)
