@@ -18,7 +18,7 @@ export class ExportsService {
   constructor(private http: HttpClient) { }
 
   listExports(params: ExportListQuery): Observable<ExportListResponse> {
-    let httpParams = new HttpParams()
+    const httpParams = new HttpParams()
       .set('page', (params.page || 1).toString())
       .set('pageSize', (params.pageSize || 10).toString());
 
