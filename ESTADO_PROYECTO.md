@@ -2,11 +2,93 @@
 
 ## 🎯 RESUMEN GENERAL
 
-**Estado:** PRODUCCIÓN DESPLEGADA - Sprint 1 completado al 100% + Sprint 2 completado al 100% + Sprint 3 Frontend completado al 100% + Sprint 4 AI Integration completado al 100% + Sprint 16 completado al 100% + Sprint 17 completado al 100% + Sprint 18 completado al 100% + Sprint 19 completado al 100% + Sprint 20 completado al 100% + Sprint 21 completado al 100% + Testing y Compilación completados al 100% + Docker Despliegue completado al 100% + Error 500 Solucionado al 100%
+**Estado:** MIGRACIÓN V2 EN PROGRESO - Fase 0 completada al 100% + Fase 1 completada al 100%
 
-**Última Actualización:** 2 de Septiembre 2025 - Deudas Técnicas Resueltas
+**Última Actualización:** 12 de Julio 2026 - Migración V2 (PostgreSQL + Plan Service)
 
-**Contexto del Proyecto:** Sistema completo para cálculos eléctricos residenciales, comerciales e industriales según normativas NEC 2023 y RIE RD. Backend con API RESTful completa, documentación Swagger, seguridad avanzada, observabilidad funcional e integración de IA. Frontend Angular 20 con template moderno, arquitectura monorepo e interfaz de asistente IA. **DESPLEGADO EN DOCKER** con todos los servicios funcionando correctamente. **ERROR 500 SOLUCIONADO** - Endpoint de creación de proyectos operativo. **SPRINT 21 COMPLETADO** - Exportación avanzada unifilar con balance de fases implementada. **DEUDAS TÉCNICAS RESUELTAS** - Backend y frontend optimizados, type safety mejorada, código más limpio.
+**Contexto del Proyecto:** Sistema completo para cálculos eléctricos residenciales, comerciales e industriales según normativas NEC 2023 y RIE RD. Backend con API RESTful completa, documentación Swagger, seguridad avanzada, observabilidad funcional e integración de IA. Frontend Angular 20 con template moderno, arquitectura monorepo e interfaz de asistente IA. **MIGRACIÓN V2 EN PROGRESO** - Migrando de MariaDB a PostgreSQL + PostGIS, agregando Plan Service (Python FastAPI) para reconocimiento de planos PDF/DXF.
+
+## 🔄 MIGRACIÓN V2 - EN PROGRESO
+
+### ✅ Fase 0: Preparación e Infraestructura (100% Completada - Julio 2026)
+
+- **Plan Service:** Microservicio Python FastAPI creado con estructura completa
+  - FastAPI skeleton con endpoints base (health, plans CRUD)
+  - SQLAlchemy async + PostGIS para geometría
+  - Celery + Redis para procesamiento asíncrono
+  - MinIO para almacenamiento de archivos PDF/DXF
+  - Dockerfile multi-stage con Python 3.12
+  - Tests unitarios con pytest
+
+- **Docker Compose Unificado:** Todos los servicios en un solo compose
+  - PostgreSQL 16 + PostGIS (reemplaza MariaDB)
+  - Redis (message broker para Celery)
+  - MinIO (S3-compatible storage)
+  - Plan Service (FastAPI)
+  - Celery Worker
+  - Adminer (DB management UI)
+  - Servicios existentes: frontend, api, mariadb, ollama, openwebui, prometheus
+
+- **NestJS Plans Gateway:** Proxy transparente `/api/plans/*` → Python service
+  - PlansGatewayModule con HttpModule
+  - Error handling: 503 (unavailable), 504 (timeout)
+  - PLAN_SERVICE_URL environment variable
+
+- **CI/CD Actualizado:** Pipeline para 3 proyectos
+  - plan-service-test: pytest + ruff + mypy + Docker build
+  - plan-service-quick-check: lint para PRs
+  - pip-audit en security-check
+
+### ✅ Fase 1: Migración de Base de Datos (100% Completada - Julio 2026)
+
+- **Auditoría de Compatibilidad:** Documentada en `docs/db_migration_audit.md`
+  - Entities y migraciones son agnósticas al driver (TypeORM API)
+  - No se requieren cambios en entities
+  - Solo 1 test E2E requería cambio (SHOW TABLES → information_schema)
+
+- **TypeORM Driver:** Cambiado de `mariadb` a `postgres`
+  - src/config/typeorm.config.ts
+  - src/database/data-source.ts
+  - src/app.module.ts
+
+- **Dependencias:** package.json actualizado
+  - Agregado: `pg` (PostgreSQL driver)
+  - Removido: `mariadb`, `mysql2`
+
+- **Configuración:** env.example actualizado
+  - DATABASE_PORT: 3306 → 5432
+  - DATABASE_URL: mariadb:// → postgresql://
+
+- **Tests E2E:** database-connection.e2e-spec.ts corregido
+  - SHOW TABLES → information_schema.tables
+  - Parámetros posicionales: ? → $1
+
+- **PostgreSQL + PostGIS:** Corriendo en Docker
+  - Puerto 5432
+  - Extensiones: postgis, uuid-ossp
+  - Conexión verificada exitosamente
+
+### 🔄 Próximas Fases
+
+- **Fase 2:** Implementar endpoints funcionales del plan-service (2-3 semanas)
+  - Upload de archivos PDF/DXF a MinIO
+  - Integración con Celery para procesamiento asíncrono
+  - Status polling para seguimiento de procesamiento
+
+- **Fase 3:** Pipeline DXF (3 semanas)
+  - Parser DXF con ezdxf
+  - Reconstrucción de polígonos con Shapely
+  - Clasificación de espacios
+  - Cálculo de áreas y perímetros
+
+- **Fase 4:** Pipeline PDF (3 semanas)
+  - Parser PDF vectorial con PyMuPDF
+  - Parser PDF raster con OpenCV + OCR
+  - Detección de tipo de PDF (vectorial/raster/mixto)
+
+---
+
+## 📊 ESTADO ANTERIOR (Sprints 1-21 Completados)
 
 ## 🚀 FUNCIONALIDADES IMPLEMENTADAS
 
