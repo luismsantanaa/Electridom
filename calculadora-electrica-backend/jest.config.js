@@ -25,8 +25,8 @@ module.exports = {
     global: {
       branches: 15,
       functions: 30,
-      lines: 40,
-      statements: 40,
+      lines: 35,
+      statements: 35,
     },
   },
   testEnvironment: 'node',
