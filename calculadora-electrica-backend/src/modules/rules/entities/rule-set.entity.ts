@@ -17,10 +17,10 @@ export class RuleSet extends BaseAuditEntity {
   @Column({ type: 'varchar', length: 16, default: 'DRAFT' })
   status: RuleSetStatus;
 
-  @Column({ type: 'datetime', nullable: true })
+  @Column({ type: 'timestamp', nullable: true })
   effectiveFrom?: Date;
 
-  @Column({ type: 'datetime', nullable: true })
+  @Column({ type: 'timestamp', nullable: true })
   effectiveTo?: Date;
 
   @OneToMany(() => NormRule, (rule) => rule.ruleSet)

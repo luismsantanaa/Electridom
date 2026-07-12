@@ -29,10 +29,10 @@ export class Session extends BaseAuditEntity {
   @Column({ type: 'varchar', length: 64 })
   ip: string;
 
-  @Column({ type: 'datetime' })
+  @Column({ type: 'timestamp' })
   expiresAt: Date;
 
-  @Column({ type: 'datetime', nullable: true })
+  @Column({ type: 'timestamp', nullable: true })
   revokedAt: Date | null;
 
   @Column({ type: 'varchar', length: 255, nullable: true })

@@ -46,10 +46,10 @@ export class Protection {
   @Column({ name: 'notes', type: 'varchar', length: 255, nullable: true })
   notes: string;
 
-  @CreateDateColumn({ name: 'createdAt', type: 'datetime' })
+  @CreateDateColumn({ name: 'createdAt', type: 'timestamp' })
   createdAt: Date;
 
-  @UpdateDateColumn({ name: 'updatedAt', type: 'datetime' })
+  @UpdateDateColumn({ name: 'updatedAt', type: 'timestamp' })
   updatedAt: Date;
 
   // Relaciones

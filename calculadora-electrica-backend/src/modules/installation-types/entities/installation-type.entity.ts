@@ -1,4 +1,4 @@
-ï»¿import { Entity, Column, OneToMany } from 'typeorm';
+import { Entity, Column, OneToMany } from 'typeorm';
 import { BaseAuditEntity } from '../../../common/entities/base-audit.entity';
 import { EnvironmentType } from '../../environment-types/entities/environment-type.entity';
 
@@ -12,14 +12,14 @@ export class InstallationType extends BaseAuditEntity {
   @Column({ length: 255, nullable: true })
   description: string;
 
-  // RelaciÃ³n con EnvironmentType
+  // Relación con EnvironmentType
   @OneToMany(
     () => EnvironmentType,
     (environmentType) => environmentType.installationType,
   )
   environmentTypes: EnvironmentType[];
 
-  // Los campos de auditorÃ­a ya vienen de BaseAuditEntity:
+  // Los campos de auditoría ya vienen de BaseAuditEntity:
   // - active (antes activo)
   // - creationDate (antes fechaCreacion)
   // - updateDate (antes fechaActualizacion)

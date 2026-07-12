@@ -1,4 +1,4 @@
-Ôªøimport { Entity, Column, PrimaryGeneratedColumn, Index } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, Index } from 'typeorm';
 import { BaseAuditEntity } from '../../../common/entities/base-audit.entity';
 
 @Entity('demand_factor')
@@ -11,7 +11,7 @@ export class DemandFactor extends BaseAuditEntity {
   @Column({
     type: 'varchar',
     length: 100,
-    comment: 'Categor√≠a de load (lighting_general, tomas_generales, etc.)',
+    comment: 'CategorÌa de load (lighting_general, tomas_generales, etc.)',
   })
   category: string;
 
@@ -20,7 +20,7 @@ export class DemandFactor extends BaseAuditEntity {
     type: 'decimal',
     precision: 10,
     scale: 2,
-    comment: 'Rango m√≠nimo de load en VA',
+    comment: 'Rango mÌnimo de load en VA',
   })
   rangeMin: number;
 
@@ -29,7 +29,7 @@ export class DemandFactor extends BaseAuditEntity {
     type: 'decimal',
     precision: 10,
     scale: 2,
-    comment: 'Rango m√°ximo de load en VA',
+    comment: 'Rango m·ximo de load en VA',
   })
   rangeMax: number;
 

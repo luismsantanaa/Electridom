@@ -1,4 +1,4 @@
-ï»¿import { Entity, Column, ManyToOne, JoinColumn, Index } from 'typeorm';
+import { Entity, Column, ManyToOne, JoinColumn, Index } from 'typeorm';
 import { BaseAuditEntity } from '../../../common/entities/base-audit.entity';
 import { Project } from './project.entity';
 
@@ -37,7 +37,7 @@ export class ProjectVersion extends BaseAuditEntity {
   @Column('json', { default: '[]' })
   outputWarnings: any;
 
-  // AuditorÃ­a de rules
+  // Auditoría de rules
   @Column({ length: 200 })
   rulesSignature: string;
 
@@ -45,7 +45,7 @@ export class ProjectVersion extends BaseAuditEntity {
   @Column({ type: 'varchar', length: 240, nullable: true })
   note?: string;
 
-  // Los campos de auditorÃ­a ya vienen de BaseAuditEntity:
+  // Los campos de auditoría ya vienen de BaseAuditEntity:
   // - active
   // - creationDate
   // - updateDate

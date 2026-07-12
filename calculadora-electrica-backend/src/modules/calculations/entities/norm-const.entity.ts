@@ -1,4 +1,4 @@
-Ôªøimport { Entity, Column, Index } from 'typeorm';
+import { Entity, Column, Index } from 'typeorm';
 import { BaseAuditEntity } from '../../../common/entities/base-audit.entity';
 
 @Entity('norm_const')
@@ -8,11 +8,11 @@ export class NormConst extends BaseAuditEntity {
     type: 'varchar',
     length: 100,
     unique: true,
-    comment: 'Clave del par√°metro normativo',
+    comment: 'Clave del par·metro normativo',
   })
   key: string;
 
-  @Column({ type: 'varchar', length: 255, comment: 'value del par√°metro' })
+  @Column({ type: 'varchar', length: 255, comment: 'value del par·metro' })
   value: string;
 
   @Column({ type: 'varchar', length: 50, comment: 'Unidad de medida' })
@@ -21,7 +21,7 @@ export class NormConst extends BaseAuditEntity {
   @Column({
     type: 'text',
     nullable: true,
-    comment: 'Notas y observaciones del par√°metro',
+    comment: 'Notas y observaciones del par·metro',
   })
   notes?: string;
 }

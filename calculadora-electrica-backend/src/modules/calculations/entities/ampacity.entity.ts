@@ -1,4 +1,4 @@
-ï»¿import { Entity, Column, PrimaryGeneratedColumn, Index } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, Index } from 'typeorm';
 import { BaseAuditEntity } from '../../../common/entities/base-audit.entity';
 
 @Entity('ampacity')
@@ -24,14 +24,14 @@ export class Ampacity extends BaseAuditEntity {
   @Column({
     type: 'varchar',
     length: 20,
-    comment: 'type de aislaciÃ³n (THHN, THWN, etc.)',
+    comment: 'type de aislación (THHN, THWN, etc.)',
   })
   insulation: string;
 
   @Column({
     name: 'temp_c',
     type: 'int',
-    comment: 'Temperatura de operaciÃ³n en Celsius',
+    comment: 'Temperatura de operación en Celsius',
   })
   tempC: number;
 
@@ -47,7 +47,7 @@ export class Ampacity extends BaseAuditEntity {
     type: 'decimal',
     precision: 8,
     scale: 3,
-    comment: 'SecciÃ³n transversal en mmÂ²',
+    comment: 'Sección transversal en mm²',
   })
   seccionMm2: number;
 

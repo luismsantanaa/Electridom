@@ -1,4 +1,4 @@
-ï»¿import { Entity, Column, PrimaryGeneratedColumn, Index } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, Index } from 'typeorm';
 import { BaseAuditEntity } from '../../../common/entities/base-audit.entity';
 
 @Entity('resistivity')
@@ -20,7 +20,7 @@ export class Resistivity extends BaseAuditEntity {
     type: 'decimal',
     precision: 8,
     scale: 3,
-    comment: 'SecciÃ³n transversal en mmÂ²',
+    comment: 'Sección transversal en mm²',
   })
   seccionMm2: number;
 
@@ -29,7 +29,7 @@ export class Resistivity extends BaseAuditEntity {
     type: 'decimal',
     precision: 10,
     scale: 6,
-    comment: 'Resistencia en Ohm por kilÃ³metro',
+    comment: 'Resistencia en Ohm por kilómetro',
   })
   ohmKm: number;
 

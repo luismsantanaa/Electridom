@@ -1,4 +1,4 @@
-Ôªøimport { Entity, Column, BeforeInsert } from 'typeorm';
+import { Entity, Column, BeforeInsert } from 'typeorm';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { BaseAuditEntity } from '../../../common/entities/base-audit.entity';
 import { HashService, HashResult } from '../../../common/services/hash.service';
@@ -31,17 +31,17 @@ export type UserWithoutPassword = Omit<
 export class User extends BaseAuditEntity {
   private hashService: HashService;
 
-  @ApiProperty({ description: 'ID √∫nico del user' })
+  @ApiProperty({ description: 'ID ˙nico del user' })
   // id ya viene de BaseAuditEntity
-  @ApiProperty({ description: 'name de user √∫nico' })
+  @ApiProperty({ description: 'name de user ˙nico' })
   @Column({ unique: true, length: 50 })
   username: string;
 
-  @ApiProperty({ description: 'Correo electr√≥nico del user' })
+  @ApiProperty({ description: 'Correo electrÛnico del user' })
   @Column({ unique: true, length: 100 })
   email: string;
 
-  @ApiProperty({ description: 'Contrase√±a del user' })
+  @ApiProperty({ description: 'ContraseÒa del user' })
   @Column({ length: 255 })
   password: string;
 
@@ -77,7 +77,7 @@ export class User extends BaseAuditEntity {
   })
   estado: UserStatus;
 
-  @ApiPropertyOptional({ description: 'N√∫mero de tel√©fono' })
+  @ApiPropertyOptional({ description: 'N˙mero de telÈfono' })
   @Column({ nullable: true, length: 15 })
   telefono?: string;
 
@@ -85,15 +85,15 @@ export class User extends BaseAuditEntity {
   @Column({ nullable: true, length: 200 })
   empresa?: string;
 
-  @ApiPropertyOptional({ description: 'N√∫mero de c√©dula' })
+  @ApiPropertyOptional({ description: 'N˙mero de cÈdula' })
   @Column({ nullable: true, length: 50 })
   cedula?: string;
 
-  @ApiPropertyOptional({ description: 'Fecha del √∫ltimo acceso' })
-  @Column({ type: 'datetime', nullable: true })
+  @ApiPropertyOptional({ description: 'Fecha del ˙ltimo acceso' })
+  @Column({ type: 'timestamp', nullable: true })
   ultimoAcceso?: Date;
 
-  // Los campos de auditor√≠a ya vienen de BaseAuditEntity:
+  // Los campos de auditorÌa ya vienen de BaseAuditEntity:
   // - creationDate (antes fechaCreacion)
   // - updateDate (antes fechaActualizacion)
   // - usrCreate (antes creadoPor)
@@ -102,7 +102,7 @@ export class User extends BaseAuditEntity {
 
   /**
    * Inyecta el servicio de hash
-   * Debe ser llamado despu√©s de crear la instancia
+   * Debe ser llamado despuÈs de crear la instancia
    */
   setHashService(hashService: HashService) {
     this.hashService = hashService;
@@ -116,35 +116,35 @@ export class User extends BaseAuditEntity {
   }
 
   /**
-   * Valida la contrase√±a y retorna informaci√≥n sobre migraci√≥n
+   * Valida la contraseÒa y retorna informaciÛn sobre migraciÛn
    * Soporta tanto bcrypt (legacy) como Argon2id
    */
   async validatePassword(password: string): Promise<HashResult> {
     if (!this.hashService) {
-      throw new Error('HashService no est√° disponible');
+      throw new Error('HashService no est· disponible');
     }
 
     return await this.hashService.verifyPassword(password, this.password);
   }
 
   /**
-   * Genera hash usando Argon2id (m√©todo recomendado)
+   * Genera hash usando Argon2id (mÈtodo recomendado)
    */
   async hashedPassword(password: string): Promise<string> {
     if (!this.hashService) {
-      throw new Error('HashService no est√° disponible');
+      throw new Error('HashService no est· disponible');
     }
 
     return await this.hashService.hashPassword(password);
   }
 
   /**
-   * Migra la contrase√±a de bcrypt a Argon2id
+   * Migra la contraseÒa de bcrypt a Argon2id
    * Actualiza el hash en la entidad
    */
   async migratePassword(password: string): Promise<void> {
     if (!this.hashService) {
-      throw new Error('HashService no est√° disponible');
+      throw new Error('HashService no est· disponible');
     }
 
     if (this.hashService.isBcrypt(this.password)) {
@@ -156,14 +156,14 @@ export class User extends BaseAuditEntity {
   }
 
   /**
-   * Verifica si la contrase√±a est√° usando Argon2id
+   * Verifica si la contraseÒa est· usando Argon2id
    */
   isUsingArgon2id(): boolean {
     return this.hashService?.isArgon2id(this.password) ?? false;
   }
 
   /**
-   * Verifica si la contrase√±a necesita migraci√≥n (est√° usando bcrypt)
+   * Verifica si la contraseÒa necesita migraciÛn (est· usando bcrypt)
    */
   needsPasswordMigration(): boolean {
     return this.hashService?.isBcrypt(this.password) ?? false;

@@ -1,4 +1,4 @@
-﻿import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
 import { BaseAuditEntity } from '../../../common/entities/base-audit.entity';
 import { EnvironmentType } from '../../environment-types/entities/environment-type.entity';
 
@@ -16,7 +16,7 @@ export class Environment extends BaseAuditEntity {
   @JoinColumn({ name: 'tipo_ambiente_id' })
   environmentType: EnvironmentType;
 
-  // Los campos de auditoría ya vienen de BaseAuditEntity:
+  // Los campos de auditor�a ya vienen de BaseAuditEntity:
   // - active
   // - creationDate
   // - updateDate

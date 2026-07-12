@@ -15,10 +15,10 @@ export abstract class BaseAuditEntity {
   @Column({ name: 'usr_update', length: 100, nullable: true })
   usrUpdate?: string;
 
-  @CreateDateColumn({ name: 'creation_date', type: 'datetime' })
+  @CreateDateColumn({ name: 'creation_date', type: 'timestamp' })
   creationDate: Date;
 
-  @UpdateDateColumn({ name: 'update_date', type: 'datetime' })
+  @UpdateDateColumn({ name: 'update_date', type: 'timestamp' })
   updateDate: Date;
 
   @Column({ name: 'active', type: 'boolean', default: true })
