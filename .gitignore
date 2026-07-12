@@ -42,6 +42,20 @@ calculadora-electrica-frontend/pnpm-debug.log*
 calculadora-electrica-frontend/yarn-debug.log*
 calculadora-electrica-frontend/yarn-error.log*
 
+# ===== PLAN SERVICE (Python) =====
+plan-service/venv/
+plan-service/.venv/
+plan-service/__pycache__/
+plan-service/**/__pycache__/
+plan-service/*.pyc
+plan-service/.env
+plan-service/.pytest_cache/
+plan-service/htmlcov/
+plan-service/.coverage
+plan-service/dist/
+plan-service/build/
+plan-service/*.egg-info/
+
 # ===== GENERAL =====
 # OS
 .DS_Store

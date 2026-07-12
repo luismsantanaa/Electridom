@@ -45,6 +45,7 @@ import { MetricsModule } from './modules/metrics/metrics.module';
 import { MetricsInterceptor } from './common/interceptors/metrics.interceptor';
 import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 import { RequestIdMiddleware } from './common/middleware/request-id.middleware';
+import { PlansGatewayModule } from './modules/plans-gateway/plans-gateway.module';
 import { LoggerModule } from 'nestjs-pino';
 import { AppLoggerService } from './common/services/logger.service';
 
@@ -112,6 +113,7 @@ import { AppLoggerService } from './common/services/logger.service';
     ExportsModule,
     ModeladoModule,
     MetricsModule,
+<<<<<<< HEAD
     LoggerModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -148,6 +150,12 @@ import { AppLoggerService } from './common/services/logger.service';
             })
           },
         };
+=======
+    PlansGatewayModule,
+    LoggerModule.forRoot({
+      pinoHttp: {
+        level: 'silent',
+>>>>>>> d26e028 (feat: Phase 0 - Migration infrastructure setup)
       },
     }),
   ],
