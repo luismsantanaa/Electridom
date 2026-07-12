@@ -2,8 +2,8 @@
 
 import uuid
 
-from app.schemas.plan import PlanDetail, PlanListItem, PlanUploadResponse
-from app.schemas.space import DetectedSpaceResponse, Point, SpaceStatistics
+from app.schemas.plan import PlanUploadResponse
+from app.schemas.space import Point, SpaceStatistics
 
 
 def test_plan_upload_response():

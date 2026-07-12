@@ -64,7 +64,7 @@ class DetectedSpace(Base):
     )
 
     # Relationships
-    plan: Mapped["Plan"] = relationship(
+    plan: Mapped["Plan"] = relationship(  # noqa: F821
         "Plan",
         back_populates="detected_spaces",
     )

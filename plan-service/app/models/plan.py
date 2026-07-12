@@ -61,11 +61,14 @@ class Plan(Base):
     )
 
     # Relationships
-    detected_spaces: Mapped[list["DetectedSpace"]] = relationship(
+    detected_spaces: Mapped[list["DetectedSpace"]] = relationship(  # noqa: F821
         "DetectedSpace",
         back_populates="plan",
         cascade="all, delete-orphan",
     )
 
     def __repr__(self) -> str:
-        return f"<Plan(id={self.id}, filename={self.original_filename}, status={self.processing_status})>"
+        return (
+            f"<Plan(id={self.id}, filename={self.original_filename}, "
+            f"status={self.processing_status})>"
+        )
