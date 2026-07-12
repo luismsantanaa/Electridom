@@ -33,18 +33,22 @@ describe('Database Connection E2E Test', () => {
   });
 
   it('should have users table accessible', async () => {
-    const result = await dataSource.query('SHOW TABLES LIKE "users"');
+    const result = await dataSource.query(
+      "SELECT table_name FROM information_schema.tables WHERE table_name = 'users'",
+    );
     expect(result.length).toBeGreaterThan(0);
   });
 
   it('should have sessions table accessible', async () => {
-    const result = await dataSource.query('SHOW TABLES LIKE "sessions"');
+    const result = await dataSource.query(
+      "SELECT table_name FROM information_schema.tables WHERE table_name = 'sessions'",
+    );
     expect(result.length).toBeGreaterThan(0);
   });
 
   it('should have test user in database', async () => {
     const result = await dataSource.query(
-      'SELECT COUNT(*) as count FROM users WHERE email = ?',
+      'SELECT COUNT(*) as count FROM users WHERE email = $1',
       ['test@example.com'],
     );
     expect(parseInt(result[0].count)).toBeGreaterThan(0);

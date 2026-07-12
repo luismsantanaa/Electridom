@@ -82,7 +82,7 @@ import { AppLoggerService } from './common/services/logger.service';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
-        type: 'mariadb',
+        type: 'postgres',
         host: configService.get('database.host'),
         port: configService.get('database.port'),
         username: configService.get('database.username'),
@@ -113,7 +113,7 @@ import { AppLoggerService } from './common/services/logger.service';
     ExportsModule,
     ModeladoModule,
     MetricsModule,
-<<<<<<< HEAD
+    PlansGatewayModule,
     LoggerModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -150,12 +150,6 @@ import { AppLoggerService } from './common/services/logger.service';
             })
           },
         };
-=======
-    PlansGatewayModule,
-    LoggerModule.forRoot({
-      pinoHttp: {
-        level: 'silent',
->>>>>>> d26e028 (feat: Phase 0 - Migration infrastructure setup)
       },
     }),
   ],
