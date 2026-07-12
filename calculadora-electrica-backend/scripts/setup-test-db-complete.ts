@@ -19,17 +19,18 @@ async function setupTestDb() {
     database: process.env.TEST_DB_NAME || 'electridom_test',
     entities: [join(__dirname, '..', 'src', '**', '*.entity{.ts,.js}')],
     migrations: [join(__dirname, '..', 'src', 'database', 'migrations', '*.{ts,.js}')],
-    synchronize: false,
+    synchronize: true, // Use synchronize for test DB (migrations need PostgreSQL syntax fixes)
     logging: false,
   });
 
   try {
     await dataSource.initialize();
     console.log('✓ Connected to test database');
+    console.log('✓ Tables synchronized with entities');
 
-    // Run migrations
-    const migrations = await dataSource.runMigrations();
-    console.log(`✓ Ran ${migrations.length} migrations`);
+    // TODO: Run migrations after fixing PostgreSQL syntax
+    // const migrations = await dataSource.runMigrations();
+    // console.log(`✓ Ran ${migrations.length} migrations`);
 
     console.log('✓ Test database setup complete');
   } catch (error) {
