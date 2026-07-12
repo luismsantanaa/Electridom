@@ -1,7 +1,39 @@
-<<<<<<< HEAD
+# =============================================================================
+# Calculadora Eléctrica RD — Unified Docker Compose
+# =============================================================================
+# Orchestrates all services: existing stack + V2 migration services.
+#
+# Existing services:
+#   - frontend: Angular app
+#   - api: NestJS backend
+#   - mariadb: Current database (until Fase 1 migration)
+#   - ollama: Local LLM
+#   - openwebui: LLM web interface
+#   - prometheus: Metrics
+#
+# V2 Migration services (new):
+#   - postgres: PostgreSQL 16 + PostGIS (will replace MariaDB in Fase 1)
+#   - redis: Message broker for Celery async tasks
+#   - minio: S3-compatible object storage for plan files
+#   - plan-service: Python FastAPI microservice for PDF/DXF processing
+#   - celery-worker: Async task processor
+#   - adminer: Database management UI (PostgreSQL)
+#
+# Usage:
+#   docker compose up -d              # Start ALL services
+#   docker compose up api mariadb     # Start only existing stack
+#   docker compose up plan-service    # Start V2 services only
+#   docker compose logs -f            # Follow logs
+#   docker compose down -v            # Stop and remove volumes
+# =============================================================================
+
 version: '3.8'
 
 services:
+  # ===========================================================================
+  # EXISTING STACK
+  # ===========================================================================
+
   # Frontend Angular
   frontend:
     build:
@@ -49,6 +81,7 @@ services:
       - REFRESH_ROTATE=true
       - REFRESH_SALT=your-refresh-salt-here-make-it-long-and-random
       - REFRESH_COOKIE_ENABLED=false
+      - PLAN_SERVICE_URL=http://plan-service:8000
     depends_on:
       mariadb:
         condition: service_healthy
@@ -70,7 +103,7 @@ services:
       retries: 3
       start_period: 40s
 
-  # Base de datos MariaDB
+  # MariaDB (current — will be replaced by PostgreSQL in Fase 1)
   mariadb:
     image: mariadb:11
     container_name: electridom-mariadb
@@ -95,143 +128,6 @@ services:
       timeout: 10s
       retries: 3
       start_period: 60s
-=======
-# =============================================================================
-# Calculadora Eléctrica RD v2 — Unified Docker Compose
-# =============================================================================
-# This compose file orchestrates all services for the V2 architecture.
-#
-# Services:
-#   - postgres: PostgreSQL 16 + PostGIS (replaces MariaDB in Fase 1)
-#   - redis: Message broker for Celery async tasks
-#   - minio: S3-compatible object storage for plan files
-#   - plan-service: Python FastAPI microservice for PDF/DXF processing
-#   - adminer: Database management UI
-#
-# Usage:
-#   docker compose up -d          # Start all services
-#   docker compose up plan-service # Start only plan-service + dependencies
-#   docker compose logs -f        # Follow logs
-#   docker compose down -v        # Stop and remove volumes
-#
-# Note: The NestJS backend (calculadora-electrica-backend/) still uses its own
-# docker-compose.yml with MariaDB until Fase 1 (DB migration to PostgreSQL).
-# =============================================================================
-
-services:
-  # ---------------------------------------------------------------------------
-  # PostgreSQL 16 + PostGIS (replaces MariaDB)
-  # ---------------------------------------------------------------------------
-  postgres:
-    image: postgis/postgis:16-3.4
-    container_name: electridom-postgres
-    environment:
-      POSTGRES_USER: electridom
-      POSTGRES_PASSWORD: electridom
-      POSTGRES_DB: electridom
-      POSTGRES_MULTIPLE_DATABASES: electridom_plans
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - ./scripts/init-multiple-databases.sh:/docker-entrypoint-initdb.d/init-multiple-databases.sh
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U electridom -d electridom"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    restart: unless-stopped
-    networks:
-      - electridom-network
-
-  # ---------------------------------------------------------------------------
-  # Redis — Message broker for Celery
-  # ---------------------------------------------------------------------------
-  redis:
-    image: redis:7-alpine
-    container_name: electridom-redis
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis_data:/data
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    restart: unless-stopped
-    networks:
-      - electridom-network
-
-  # ---------------------------------------------------------------------------
-  # MinIO — S3-compatible object storage for plan files
-  # ---------------------------------------------------------------------------
-  minio:
-    image: minio/minio:latest
-    container_name: electridom-minio
-    command: server /data --console-address ":9001"
-    environment:
-      MINIO_ROOT_USER: electridom
-      MINIO_ROOT_PASSWORD: electridom123
-    ports:
-      - "9000:9000"   # API
-      - "9001:9001"   # Console
-    volumes:
-      - minio_data:/data
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    restart: unless-stopped
-    networks:
-      - electridom-network
-
-  # ---------------------------------------------------------------------------
-  # Plan Service — Python FastAPI for PDF/DXF processing
-  # ---------------------------------------------------------------------------
-  plan-service:
-    build:
-      context: ./plan-service
-      dockerfile: Dockerfile
-    container_name: electridom-plan-service
-    environment:
-      APP_ENV: development
-      DEBUG: "true"
-      LOG_LEVEL: INFO
-      HOST: 0.0.0.0
-      PORT: 8000
-      DATABASE_URL: postgresql+asyncpg://electridom:electridom@postgres:5432/electridom_plans
-      REDIS_URL: redis://redis:6379/0
-      CELERY_BROKER_URL: redis://redis:6379/0
-      CELERY_RESULT_BACKEND: redis://redis:6379/1
-      MINIO_ENDPOINT: minio:9000
-      MINIO_ACCESS_KEY: electridom
-      MINIO_SECRET_KEY: electridom123
-      MINIO_BUCKET: plans
-      MINIO_SECURE: "false"
-    ports:
-      - "8000:8000"
-    depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-      minio:
-        condition: service_healthy
-    healthcheck:
-      test: ["CMD", "python", "-c", "import httpx; httpx.get('http://localhost:8000/health').raise_for_status()"]
-      interval: 30s
-      timeout: 5s
-      retries: 3
-      start_period: 10s
->>>>>>> d26e028 (feat: Phase 0 - Migration infrastructure setup)
-    restart: unless-stopped
-    networks:
-      - electridom-network
-
-<<<<<<< HEAD
-
 
   # Ollama - LLM Local
   ollama:
@@ -294,10 +190,114 @@ services:
       - '--web.enable-lifecycle'
     depends_on:
       - api
-=======
-  # ---------------------------------------------------------------------------
+
+  # ===========================================================================
+  # V2 MIGRATION SERVICES (new)
+  # ===========================================================================
+
+  # PostgreSQL 16 + PostGIS (will replace MariaDB in Fase 1)
+  postgres:
+    image: postgis/postgis:16-3.4
+    container_name: electridom-postgres
+    environment:
+      POSTGRES_USER: electridom
+      POSTGRES_PASSWORD: electridom
+      POSTGRES_DB: electridom
+      POSTGRES_MULTIPLE_DATABASES: electridom_plans
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init-multiple-databases.sh:/docker-entrypoint-initdb.d/init-multiple-databases.sh
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U electridom -d electridom"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - electridom-network
+
+  # Redis — Message broker for Celery
+  redis:
+    image: redis:7-alpine
+    container_name: electridom-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - electridom-network
+
+  # MinIO — S3-compatible object storage for plan files
+  minio:
+    image: minio/minio:latest
+    container_name: electridom-minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: electridom
+      MINIO_ROOT_PASSWORD: electridom123
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - electridom-network
+
+  # Plan Service — Python FastAPI for PDF/DXF processing
+  plan-service:
+    build:
+      context: ./plan-service
+      dockerfile: Dockerfile
+    container_name: electridom-plan-service
+    environment:
+      APP_ENV: development
+      DEBUG: "true"
+      LOG_LEVEL: INFO
+      HOST: 0.0.0.0
+      PORT: 8000
+      DATABASE_URL: postgresql+asyncpg://electridom:electridom@postgres:5432/electridom_plans
+      REDIS_URL: redis://redis:6379/0
+      CELERY_BROKER_URL: redis://redis:6379/0
+      CELERY_RESULT_BACKEND: redis://redis:6379/1
+      MINIO_ENDPOINT: minio:9000
+      MINIO_ACCESS_KEY: electridom
+      MINIO_SECRET_KEY: electridom123
+      MINIO_BUCKET: plans
+      MINIO_SECURE: "false"
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import httpx; httpx.get('http://localhost:8000/health').raise_for_status()"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+    networks:
+      - electridom-network
+
   # Celery Worker — Async task processor for plan-service
-  # ---------------------------------------------------------------------------
   celery-worker:
     build:
       context: ./plan-service
@@ -325,41 +325,32 @@ services:
     networks:
       - electridom-network
 
-  # ---------------------------------------------------------------------------
   # Adminer — Database management UI (PostgreSQL)
-  # ---------------------------------------------------------------------------
   adminer:
     image: adminer:latest
     container_name: electridom-adminer
     environment:
       ADMINER_DEFAULT_SERVER: postgres
     ports:
-      - "8080:8080"
+      - "8081:8080"
     depends_on:
       - postgres
->>>>>>> d26e028 (feat: Phase 0 - Migration infrastructure setup)
     restart: unless-stopped
     networks:
       - electridom-network
 
-<<<<<<< HEAD
+# =============================================================================
+# Volumes
+# =============================================================================
 volumes:
+  # Existing
   mariadb_data:
     driver: local
   ollama_data:
     driver: local
   prometheus_data:
     driver: local
-
-networks:
-  electridom-network:
-    driver: bridge
-    name: electridom-network
-=======
-# =============================================================================
-# Volumes
-# =============================================================================
-volumes:
+  # V2 Migration
   postgres_data:
     driver: local
   redis_data:
@@ -373,4 +364,4 @@ volumes:
 networks:
   electridom-network:
     driver: bridge
->>>>>>> d26e028 (feat: Phase 0 - Migration infrastructure setup)
+    name: electridom-network
