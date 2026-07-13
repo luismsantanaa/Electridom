@@ -7,6 +7,7 @@ import RegisterPage from '@features/auth/RegisterPage';
 import DashboardPage from '@features/calc/DashboardPage';
 import CalculatorPage from '@features/calc/CalculatorPage';
 import ProjectsPage from '@features/projects/ProjectsPage';
+import PlansPage from '@features/plans/PlansPage';
 
 export default function AppRoutes() {
   return (
@@ -28,6 +29,7 @@ export default function AppRoutes() {
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/calculator" element={<CalculatorPage />} />
             <Route path="/projects" element={<ProjectsPage />} />
+            <Route path="/plans" element={<PlansPage />} />
           </Route>
 
           {/* Redirects */}

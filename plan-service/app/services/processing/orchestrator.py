@@ -54,7 +54,59 @@ class ProcessingOrchestrator:
         else:
             polygons = mixed_parser.parse(file_path)
 
-        return self._measure_and_classify(polygons, file_path, scale)
+        result = self._measure_and_classify(polygons, file_path, scale)
+
+        # AI fallback: if average confidence is low, try OpenAI Vision
+        avg_conf = result["metadata"]["average_confidence"]
+        if avg_conf < 0.5 and pdf_type in (PdfType.RASTER, PdfType.MIXED):
+            try:
+                from app.services.ai.vision_classifier import analyze_with_vision
+
+                # Render first page as image for Vision API
+                image_path = self._render_pdf_page_as_image(file_path)
+                if image_path:
+                    logger.info(
+                        "Low confidence (%.2f), trying Vision API fallback", avg_conf
+                    )
+                    import asyncio
+
+                    vision_spaces = asyncio.run(
+                        analyze_with_vision(
+                            image_path,
+                            cache_key=str(Path(file_path).stat().st_mtime),
+                        )
+                    )
+                    if vision_spaces:
+                        result["spaces"] = vision_spaces
+                        result["metadata"]["ai_fallback_used"] = True
+                        result["metadata"]["ai_fallback_reason"] = (
+                            f"low_confidence:{avg_conf:.2f}"
+                        )
+                        # Recalculate metadata
+                        total_area = sum(s["area_m2"] for s in vision_spaces)
+                        classified = sum(
+                            1
+                            for s in vision_spaces
+                            if s["space_type"] and s["space_type"] != "unknown"
+                        )
+                        confs = [s["confidence"] for s in vision_spaces]
+                        result["metadata"].update(
+                            {
+                                "total_spaces": len(vision_spaces),
+                                "total_area_m2": round(total_area, 4),
+                                "classified_spaces": classified,
+                                "unclassified_spaces": len(vision_spaces) - classified,
+                                "average_confidence": round(
+                                    sum(confs) / len(confs) if confs else 0.0, 4
+                                ),
+                            },
+                        )
+            except Exception as e:
+                logger.warning("Vision API fallback failed: %s", e)
+                result["metadata"]["ai_fallback_used"] = False
+                result["metadata"]["ai_fallback_error"] = str(e)
+
+        return result
 
     def process_dxf(self, file_path: str, scale: float = 1.0) -> dict[str, Any]:
         """Process a DXF file and return detected spaces.
@@ -220,3 +272,28 @@ class ProcessingOrchestrator:
             doc.close()
 
         return texts
+
+    @staticmethod
+    def _render_pdf_page_as_image(file_path: str) -> str | None:
+        """Render the first page of a PDF as a PNG image for Vision API.
+
+        Returns the path to the temporary image file, or None on failure.
+        """
+        try:
+            import tempfile
+
+            import pymupdf
+        except ImportError:
+            return None
+
+        try:
+            doc = pymupdf.open(file_path)
+            page = doc[0]
+            pix = page.get_pixmap(dpi=150)
+
+            tmp = tempfile.NamedTemporaryFile(suffix=".png", delete=False)
+            pix.save(tmp.name)
+            doc.close()
+            return tmp.name
+        except Exception:
+            return None

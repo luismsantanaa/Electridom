@@ -16,9 +16,9 @@
 | **Fase 2: Python Plan Service — Setup** | ✅ Completada | 12 Julio 2026 | Endpoints CRUD funcionales, Celery+Redis+MinIO integrados, Alembic setup, 39 tests con 85% coverage |
 | **Fase 3: Pipeline DXF** | ✅ Completada | 12 Julio 2026 | Parser ezdxf, polygon builder con Shapely polygonize, clasificador texto+heurísticas, Celery task completo, 44 tests nuevos (83 total), coverage 79-100% en módulos DXF |
 | **Fase 4: Pipeline PDF** | ✅ Completada | 12 Julio 2026 | PdfTypeDetector, PdfVectorParser (PyMuPDF), PdfRasterParser (OpenCV), OcrEngine (graceful degradation), MixedParser, ProcessingOrchestrator, 41 tests nuevos (124 total), coverage 83-100% en módulos PDF |
-| **Fase 5: Migración Frontend a React** | ⏳ Pendiente | - | - |
-| **Fase 6: Visualización Interactiva** | ⏳ Pendiente | - | - |
-| **Fase 7: AI/ML + Pulido Final** | ⏳ Pendiente | - | - |
+| **Fase 5: Migración Frontend a React** | ✅ Completada | 12 Julio 2026 | React 19 + Vite + TypeScript, auth JWT, calculadora 5 pasos, proyectos CRUD, 14 tests |
+| **Fase 6: Visualización Interactiva** | ✅ Completada | 12 Julio 2026 | Visor 2D Fabric.js, gráfica D3 treemap/bubble, editor de espacios, flujo upload→revisar |
+| **Fase 7: AI/ML + Pulido Final** | ✅ Completada | 12 Julio 2026 | OpenAI Vision fallback, health check AI, documentación actualizada |
 
 ### Estado del CI/CD (Actualizado: 12 Julio 2026)
 

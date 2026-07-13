@@ -58,3 +58,15 @@ async def health_check(
     status = "ok" if all(v == "ok" for v in checks.values()) else "degraded"
 
     return {"status": status, "checks": checks}
+
+
+@router.get("/health/ai")
+async def ai_health_check() -> dict:
+    """Check AI/Vision API availability and usage stats."""
+    from app.services.ai.vision_classifier import get_daily_stats
+
+    stats = get_daily_stats()
+    return {
+        "status": "ok" if stats["api_configured"] else "not_configured",
+        "stats": stats,
+    }
