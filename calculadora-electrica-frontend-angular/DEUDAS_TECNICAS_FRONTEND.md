@@ -1,1 +1,0 @@
-# Deudas Técnicas Frontend - Electridom
