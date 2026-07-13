@@ -1,6 +1,6 @@
 ﻿import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { SeedsService } from './seeds.service';
+import { SeedsService } from './templates/seeds.service';
 import { InstallationType } from '../../modules/installation-types/entities/installation-type.entity';
 import { EnvironmentType } from '../../modules/environment-types/entities/environment-type.entity';
 import { ArtifactType } from '../../modules/artifact-types/entities/artifact-type.entity';

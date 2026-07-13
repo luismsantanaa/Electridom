@@ -6,8 +6,6 @@ import helmet from 'helmet';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { AppLoggerService } from './common/services/logger.service';
-import { DataSource } from 'typeorm';
-import { seedNormRules } from './database/seeds/_archive/norm-rules.seed';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -86,14 +84,7 @@ async function bootstrap() {
   app.useGlobalFilters(new HttpExceptionFilter(app.get(AppLoggerService)));
 
   // Ejecutar seeds solo en desarrollo
-  if (nodeEnv === 'development') {
-    try {
-      const dataSource = app.get(DataSource);
-      await seedNormRules(dataSource);
-    } catch (error) {
-      console.warn('No se pudieron ejecutar los seeds:', error.message);
-    }
-  }
+  // NOTE: seedNormRules block removed - _archive/norm-rules.seed no longer exists
 
   // Configuración de Swagger
   const config = new DocumentBuilder()

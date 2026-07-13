@@ -1,7 +1,4 @@
 import { DataSource } from 'typeorm';
-import { ProjectsSeed } from './seeds/_archive/projects.seed';
-import { Sprint9PerformanceSeed } from './seeds/_archive/sprint-9-performance.seed';
-import { ModeladoElectricoSeed } from './seeds/_archive/modelado-electrico.seed';
 
 async function runSeeds() {
   const dataSource = new DataSource({
@@ -20,21 +17,10 @@ async function runSeeds() {
     await dataSource.initialize();
     console.log('✅ Conexión a la base de datos establecida');
 
-    // Ejecutar semillas
-    const projectsSeed = new ProjectsSeed(dataSource);
-    await projectsSeed.run();
-
-    // Sprint 9: Seed de performance (opcional - comentar si no se necesita)
-    if (process.env.RUN_PERFORMANCE_SEED === 'true') {
-      const performanceSeed = new Sprint9PerformanceSeed(dataSource);
-      await performanceSeed.run();
-    }
-
-    // Sprint 10: Seed de modelado eléctrico
-    const modeladoElectricoSeed = new ModeladoElectricoSeed(dataSource);
-    await modeladoElectricoSeed.run();
-
-    console.log('✅ Todas las semillas ejecutadas exitosamente');
+    // NOTE: ProjectsSeed, Sprint9PerformanceSeed, ModeladoElectricoSeed were
+    // removed because the _archive/ folder no longer exists. Use the
+    // SeedsService (npm run seed) for active seeding.
+    console.warn('run-seeds: archived seed classes no longer exist. Use `npm run seed`.');
   } catch (error) {
     console.error('❌ Error ejecutando semillas:', error);
     process.exit(1);

@@ -262,7 +262,7 @@ export class ReportService {
       template = this.replaceTemplateVariables(template, reportData);
 
       // Configurar página
-      await page.setContent(template, { waitUntil: 'networkidle0' });
+      await page.setContent(template, { waitUntil: 'networkidle' as any });
       await page.setViewport({ width: 1200, height: 800 });
 
       // Generar PDF

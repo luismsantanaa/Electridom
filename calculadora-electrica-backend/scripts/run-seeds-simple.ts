@@ -1,9 +1,5 @@
 import { DataSource } from 'typeorm';
 import { config } from 'dotenv';
-import { normConstSeed } from '../src/database/seeds/_archive/norm-const.seed';
-import { demandFactorSeed } from '../src/database/seeds/_archive/demand-factor.seed';
-import { seedResistivity } from '../src/database/seeds/_archive/resistivity.seed';
-import { seedGroundingRules } from '../src/database/seeds/_archive/grounding-rules.seed';
 
 config();
 
@@ -23,11 +19,10 @@ async function runSeeds() {
   try {
     await dataSource.initialize();
 
-    // Ejecutar seeds en orden
-    await normConstSeed(dataSource);
-    await demandFactorSeed(dataSource);
-    await seedResistivity(dataSource);
-    await seedGroundingRules(dataSource);
+    // NOTE: individual seed functions (normConstSeed, demandFactorSeed,
+    // seedResistivity, seedGroundingRules) were removed because the
+    // _archive/ folder no longer exists. Use `npm run seed` instead.
+    console.warn('run-seeds-simple: seed functions moved to SeedsService. Use `npm run seed`.');
   } catch (error) {
     console.error('Error during seeds execution:', error);
     process.exit(1);

@@ -117,6 +117,7 @@ import { AppLoggerService } from './common/services/logger.service';
     LoggerModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
+      providers: [ConfigService],
       useFactory: (configService: ConfigService) => {
         const loggerConfig = configService.get('logger');
         if (!loggerConfig || !loggerConfig.pino) {

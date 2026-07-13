@@ -17,7 +17,7 @@ import { JwksAdminController } from './controllers/jwks-admin.controller';
       useFactory: async (configService: ConfigService) => ({
         secret: configService.get<string>('JWT_SECRET'),
         signOptions: {
-          expiresIn: configService.get<string>('JWT_EXPIRES_IN', '900s'),
+          expiresIn: configService.get<string>('JWT_EXPIRES_IN', '900s') as any,
         },
       }),
       inject: [ConfigService],

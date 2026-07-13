@@ -1,16 +1,15 @@
 ﻿import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DataSource } from 'typeorm';
-import { InstallationType } from '../../modules/installation-types/entities/installation-type.entity';
-import { EnvironmentType } from '../../modules/environment-types/entities/environment-type.entity';
-import { ArtifactType } from '../../modules/artifact-types/entities/artifact-type.entity';
-import { NormConst } from '../../modules/calculations/entities/norm-const.entity';
-import { DemandFactor } from '../../modules/calculations/entities/demand-factor.entity';
-import { Ampacity } from '../../modules/calculations/entities/ampacity.entity';
-import { BreakerCurve } from '../../modules/calculations/entities/breaker-curve.entity';
-import { Resistivity } from '../../modules/calculations/entities/resistivity.entity';
-import { GroundingRules } from '../../modules/calculations/entities/grounding-rules.entity';
-import { UnifilarConfigSeeder } from './unifilar-config.seed';
+import { InstallationType } from '../../../modules/installation-types/entities/installation-type.entity';
+import { EnvironmentType } from '../../../modules/environment-types/entities/environment-type.entity';
+import { ArtifactType } from '../../../modules/artifact-types/entities/artifact-type.entity';
+import { NormConst } from '../../../modules/calculations/entities/norm-const.entity';
+import { DemandFactor } from '../../../modules/calculations/entities/demand-factor.entity';
+import { Ampacity } from '../../../modules/calculations/entities/ampacity.entity';
+import { BreakerCurve } from '../../../modules/calculations/entities/breaker-curve.entity';
+import { Resistivity } from '../../../modules/calculations/entities/resistivity.entity';
+import { GroundingRules } from '../../../modules/calculations/entities/grounding-rules.entity';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -164,7 +163,7 @@ export class SeedsService {
       await this.seedIAConfig();
 
       // Sembrar configuración unifilar
-      await this.seedUnifilarConfig();
+      // NOTE: seedUnifilarConfig() removed - unifilar-config.seed.ts no longer exists
     } catch (error) {
       console.error('Error al realizar el seed:', error);
       throw error;
@@ -1061,20 +1060,6 @@ export class SeedsService {
       console.log('✅ Configuración de IA sembrada exitosamente');
     } catch (error) {
       console.error('❌ Error sembrando configuración de IA:', error);
-      throw error;
-    }
-  }
-
-  private async seedUnifilarConfig(): Promise<void> {
-    try {
-      console.log('🔌 Sembrando configuración unifilar...');
-
-      const unifilarSeeder = new UnifilarConfigSeeder(this.dataSource);
-      await unifilarSeeder.seed();
-
-      console.log('✅ Configuración unifilar sembrada exitosamente');
-    } catch (error) {
-      console.error('❌ Error sembrando configuración unifilar:', error);
       throw error;
     }
   }
