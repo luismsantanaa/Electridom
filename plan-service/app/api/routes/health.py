@@ -1,10 +1,12 @@
 """Health check endpoint — verifies connectivity to all dependencies."""
 
 from fastapi import APIRouter, Depends
+from redis.asyncio import Redis
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.deps import get_db, get_storage
+from app.core.config import settings
 from app.core.storage import StorageService
 
 router = APIRouter(tags=["health"])
@@ -20,6 +22,7 @@ async def health_check(
     Verifies connectivity to:
     - PostgreSQL database
     - MinIO object storage
+    - Redis cache/broker
     """
     checks: dict[str, str] = {}
 
@@ -36,6 +39,21 @@ async def health_check(
         checks["minio"] = "ok"
     except Exception as e:
         checks["minio"] = f"error: {e}"
+
+    # Check Redis
+    redis_client: Redis | None = None
+    try:
+        redis_client = Redis.from_url(settings.redis_url)
+        await redis_client.ping()
+        checks["redis"] = "ok"
+    except Exception as e:
+        checks["redis"] = f"error: {e}"
+    finally:
+        if redis_client is not None:
+            try:
+                await redis_client.close()
+            except Exception:
+                pass
 
     status = "ok" if all(v == "ok" for v in checks.values()) else "degraded"
 

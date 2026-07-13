@@ -1,12 +1,14 @@
-"""Plan endpoints — upload, list, detail, delete."""
+"""Plan endpoints — upload, list, detail, delete, spaces, download."""
 
 import uuid
+from io import BytesIO
 from pathlib import Path
 
 from fastapi import APIRouter, Depends, HTTPException, UploadFile
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
+from starlette.responses import StreamingResponse
 
 from app.api.deps import get_db, get_storage
 from app.core.config import settings
@@ -14,6 +16,9 @@ from app.core.storage import StorageService
 from app.models.plan import Plan
 from app.schemas.plan import PlanDetail, PlanListItem, PlanListResponse, PlanUploadResponse
 from app.schemas.processing import ProcessingStatusResponse
+from app.schemas.space import DetectedSpaceResponse, SpaceUpdateRequest
+from app.tasks.process_dxf import process_dxf_task
+from app.tasks.process_pdf import process_pdf_task
 
 router = APIRouter(prefix="/api/plans", tags=["plans"])
 
@@ -79,13 +84,14 @@ async def upload_plan(
     db.add(plan)
     await db.flush()
 
-    # TODO (Fase 3): Queue Celery task for processing
-    # from app.tasks.process_dxf import process_dxf_task
-    # from app.tasks.process_pdf import process_pdf_task
-    # if file_type == "dxf":
-    #     task = process_dxf_task.delay(str(plan_id))
-    # else:
-    #     task = process_pdf_task.delay(str(plan_id))
+    # Queue Celery task for processing
+    if file_type == "dxf":
+        task = process_dxf_task.delay(str(plan_id))
+    else:
+        task = process_pdf_task.delay(str(plan_id))
+
+    plan.processing_result = {"celery_task_id": task.id}
+    await db.flush()
 
     return PlanUploadResponse(
         plan_id=plan.id,
@@ -282,3 +288,67 @@ async def delete_plan(
 
     # Delete from database (cascades to detected_spaces)
     await db.delete(plan)
+
+
+@router.patch("/{plan_id}/spaces/{space_id}", response_model=DetectedSpaceResponse)
+async def update_detected_space(
+    plan_id: uuid.UUID,
+    space_id: uuid.UUID,
+    update: SpaceUpdateRequest,
+    db: AsyncSession = Depends(get_db),
+) -> DetectedSpaceResponse:
+    """Update/verify a detected space within a plan."""
+    result = await db.execute(
+        select(Plan)
+        .options(selectinload(Plan.detected_spaces))
+        .where(Plan.id == plan_id),
+    )
+    plan = result.scalar_one_or_none()
+
+    if not plan:
+        raise HTTPException(status_code=404, detail="Plan not found")
+
+    space = next(
+        (s for s in (plan.detected_spaces or []) if s.id == space_id),
+        None,
+    )
+    if not space:
+        raise HTTPException(status_code=404, detail="Space not found")
+
+    update_data = update.model_dump(exclude_unset=True)
+
+    # Vertices changes reset verification status
+    if "vertices" in update_data:
+        update_data["is_verified"] = False
+
+    for field, value in update_data.items():
+        setattr(space, field, value)
+
+    await db.flush()
+
+    return DetectedSpaceResponse.model_validate(space)
+
+
+@router.get("/{plan_id}/download")
+async def download_plan(
+    plan_id: uuid.UUID,
+    db: AsyncSession = Depends(get_db),
+    storage_service: StorageService = Depends(get_storage),
+) -> StreamingResponse:
+    """Download the original plan file from storage."""
+    result = await db.execute(select(Plan).where(Plan.id == plan_id))
+    plan = result.scalar_one_or_none()
+
+    if not plan:
+        raise HTTPException(status_code=404, detail="Plan not found")
+
+    data = storage_service.download_file(plan.storage_key)
+    media_type = "application/pdf" if plan.file_type == "pdf" else "application/octet-stream"
+
+    return StreamingResponse(
+        BytesIO(data),
+        media_type=media_type,
+        headers={
+            "Content-Disposition": f'attachment; filename="{plan.original_filename}"',
+        },
+    )
