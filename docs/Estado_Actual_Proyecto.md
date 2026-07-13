@@ -1,332 +1,237 @@
-# Estado Actual del Proyecto Electridom
+# Estado Actual del Proyecto - Calculadora Eléctrica RD
 
-## 📊 **Resumen General**
+## 📊 Resumen Ejecutivo
 
-**Fecha**: 28 de Agosto, 2025  
-**Último Commit**: `a38a280` - Sprint 6 y 7 completados  
-**Estado**: ✅ **Completado y Desplegado**
+**Fecha:** Julio 2026  
+**Estado:** ✅ **Migración V2 Completada (100%)**  
+**Último Commit:** `d6f8ca3` - Eliminación de Angular legacy
 
-## 🎯 **Sprints Completados**
+## 🎯 Migración V2 - Completada
 
-### ✅ **Sprint 6: IA Local con Ollama**
-
-- **Estado**: Completado
-- **Funcionalidades**:
-  - Integración con Ollama para IA local
-  - Módulo LLM Gateway con proveedores múltiples
-  - Fallback automático a OpenAI
-  - Prompts especializados para cálculos eléctricos
-  - Streaming de respuestas con SSE
-
-### ✅ **Sprint 7: Frontend Avanzado con Angular 20**
-
-- **Estado**: Completado
-- **Funcionalidades**:
-  - Módulo IA completo con 5 componentes
-  - Angular Signals para reactividad
-  - Chart.js para gráficos interactivos
-  - jsPDF y XLSX para exportación
-  - SVG dinámico para diagramas unifilares
-
-## 🏗️ **Arquitectura Actual**
-
-### **Backend (NestJS)**
+### Arquitectura Actual
 
 ```
-✅ Módulos principales:
-- Auth (JWT + Argon2)
-- Users
-- Projects
-- Environments
-- Loads
-- Calculations
-- LLM (IA Local + OpenAI)
-- Artifact Types
-- Environment Types
-- Installation Types
-
-✅ Base de datos:
-- MariaDB con TypeORM
-- Migraciones automáticas
-- Seeds de datos iniciales
-- Auditoría y versionado
+CalculadoraElectricaRD/
+├── calculadora-electrica-backend/    # NestJS 10 + PostgreSQL 16
+├── calculadora-electrica-frontend/   # React 19 + Vite + TypeScript
+├── plan-service/                     # Python 3.12 + FastAPI
+└── docker-compose.yml               # 7 servicios orquestados
 ```
 
-### **Frontend (Angular 20)**
+### Fases Completadas
 
-```
-✅ Módulos implementados:
-- Auth (login/registro)
-- Dashboard principal
-- Cálculos eléctricos
-- Gestión de proyectos
-- IA (Chat, Cálculos, Dashboard, Unifilar, Export)
+| Fase | Estado | Fecha | Descripción |
+|------|--------|-------|-------------|
+| **Fase 0** | ✅ | Julio 2026 | Infraestructura (Docker Compose, CI/CD) |
+| **Fase 1** | ✅ | Julio 2026 | Migración MariaDB → PostgreSQL 16 |
+| **Fase 2** | ✅ | Julio 2026 | Plan Service (FastAPI + Celery + MinIO) |
+| **Fase 3** | ✅ | Julio 2026 | Pipeline DXF (ezdxf + Shapely) |
+| **Fase 4** | ✅ | Julio 2026 | Pipeline PDF (PyMuPDF + OpenCV + OCR) |
+| **Fase 5** | ✅ | Julio 2026 | Frontend React 19 + Vite |
+| **Fase 6** | ✅ | Julio 2026 | Visualización Interactiva (Fabric.js + D3.js) |
+| **Fase 7** | ✅ | Julio 2026 | AI/ML (OpenAI Vision fallback) |
 
-✅ Tecnologías:
-- Angular 20 con Signals
-- Bootstrap 5
-- Chart.js
-- jsPDF + XLSX
-- Font Awesome
-```
+## 🏗️ Servicios Activos
 
-### **Infraestructura (Docker)**
+### Backend (NestJS)
 
-```
-✅ Servicios containerizados:
-- Frontend Angular (Nginx)
-- Backend NestJS
-- MariaDB
-- Adminer (DB Management)
-- Ollama (IA Local)
-- Open WebUI (Gestión Ollama)
-- Prometheus (Monitoreo)
-```
+- **Puerto:** 3000
+- **Base de datos:** PostgreSQL 16 + PostGIS
+- **Autenticación:** JWT RS256 + JWKS
+- **Tests:** 186 tests (37.44% coverage)
+- **Endpoints:** 37+ endpoints documentados
 
-## 🔧 **Estado de Servicios**
+### Frontend (React 19)
 
-### **✅ Servicios Activos**
+- **Puerto:** 4200
+- **Build tool:** Vite
+- **State:** Zustand + React Query
+- **Visualización:** Fabric.js + D3.js
+- **Tests:** 14 tests (Vitest)
 
-- **Frontend**: http://localhost:4200
-- **Backend**: http://localhost:3000
-- **Open WebUI**: http://localhost:3001
-- **Ollama**: http://localhost:11434
-- **MariaDB**: localhost:3306
-- **Adminer**: http://localhost:8080
+### Plan Service (Python)
 
-### **✅ Servicios Activos**
+- **Puerto:** 8000
+- **Framework:** FastAPI
+- **Async:** Celery + Redis
+- **Storage:** MinIO (S3-compatible)
+- **Tests:** 124 tests (85% coverage)
 
-- **Ollama**: ✅ Funcionando con modelos `deepseek-r1:1.5b` y `llama3.2:1b`
-- **Open WebUI**: ✅ Funcionando en puerto 3001
-- **MariaDB**: ✅ Funcionando en puerto 3306
-- **Adminer**: ✅ Funcionando en puerto 8080
-- **Frontend**: ✅ Build exitoso, listo para deployment
-- **Backend**: ✅ Configurado para deployment
-- **Prometheus**: Configurado, pendiente métricas
+### Infraestructura
 
-## 📋 **Funcionalidades Implementadas**
+- **PostgreSQL 16:** Puerto 5432
+- **Redis:** Puerto 6379
+- **MinIO:** Puerto 9000 (API), 9001 (Console)
+- **Adminer:** Puerto 8081
+- **Prometheus:** Puerto 9090
 
-### **✅ Cálculos Eléctricos**
+## 🚀 Funcionalidades Principales
 
-- Cálculo de demanda
-- Dimensionamiento de conductores
-- Protecciones eléctricas
-- Puesta a tierra
-- Caída de tensión
-- Reportes automáticos
+### Cálculos Eléctricos (Backend)
 
-### **✅ Gestión de Proyectos**
+1. **CE-01:** Cálculo de cargas por ambiente
+2. **CE-02:** Factores de demanda y carga diversificada
+3. **CE-03:** Agrupación de circuitos ramales
+4. **CE-04:** Alimentadores y caída de tensión
+5. **CE-05:** Puesta a tierra
+6. **CE-06:** Generación de reportes PDF/Excel
 
-- CRUD completo de proyectos
-- Versionado automático
-- Auditoría de cambios
-- Exportación de datos
+### Reconocimiento de Planos (Plan Service)
 
-### **✅ IA Integrada**
+1. **Pipeline DXF:** Parser + polígonos + clasificación
+2. **Pipeline PDF:** Vectorial + Raster + Mixed
+3. **AI Fallback:** OpenAI Vision para planos complejos
+4. **Procesamiento:** Asíncrono con Celery
 
-- Chat interactivo con IA
-- Cálculos asistidos por IA
-- Dashboard de cargas con gráficos
-- Diagramas unifilares SVG
-- Exportación de reportes
+### Frontend React
 
-### **✅ Autenticación y Seguridad**
+1. **Autenticación:** JWT con refresh automático
+2. **Calculadora:** 5 pasos (CE-01 a CE-05)
+3. **Proyectos:** CRUD completo
+4. **Planos:**
+   - Upload PDF/DXF
+   - Visor 2D (Fabric.js)
+   - Gráficas (D3.js)
+   - Editor de espacios
 
-- JWT con refresh tokens
-- Argon2 para hashing
-- Roles y permisos
-- Auditoría de sesiones
+## 📊 Métricas
 
-## 🚀 **Endpoints Disponibles**
+### Código
 
-### **Backend API**
+- **Total líneas:** ~35,000+
+- **Backend:** ~20,000 líneas
+- **Frontend:** ~8,000 líneas
+- **Plan Service:** ~7,000 líneas
+
+### Tests
+
+- **Total:** 324 tests
+- **Backend:** 186 tests (37.44% coverage)
+- **Plan Service:** 124 tests (85% coverage)
+- **Frontend:** 14 tests
+
+### Endpoints
+
+- **Backend:** 37+ endpoints
+- **Plan Service:** 15+ endpoints
+- **Total:** 52+ endpoints
+
+## 🔧 Comandos Principales
+
+### Desarrollo
 
 ```bash
-# Autenticación
-POST /api/auth/login
-POST /api/auth/register
-POST /api/auth/refresh
+# Levantar todos los servicios
+docker compose up -d
 
-# Proyectos
-GET    /api/projects
-POST   /api/projects
-GET    /api/projects/:id
-PUT    /api/projects/:id
-DELETE /api/projects/:id
+# Backend
+cd calculadora-electrica-backend
+npm run start:dev
 
-# Cálculos
-POST /api/calculations/demand
-POST /api/calculations/circuits
-POST /api/calculations/feeder
-POST /api/calculations/grounding
-POST /api/calculations/report
+# Frontend
+cd calculadora-electrica-frontend
+npm run dev
 
-# IA
-GET  /api/llm/health
-GET  /api/llm/provider
-POST /api/llm/calc
-POST /api/llm/explain
-
-# Entidades
-GET /api/environments
-GET /api/loads
-GET /api/artifact-types
-GET /api/environment-types
-GET /api/installation-types
+# Plan Service
+cd plan-service
+uvicorn app.main:app --reload --port 8000
 ```
 
-### **Frontend Rutas**
+### Testing
 
 ```bash
-# Páginas principales
-/                    # Dashboard
-/login              # Autenticación
-/register           # Registro
-/projects           # Gestión de proyectos
-/calc               # Cálculos eléctricos
+# Backend
+npm run test:unit
+npm run test:e2e
 
-# Módulo IA
-/ia/chat            # Chat con IA
-/ia/calculos        # Cálculos asistidos
-/ia/dashboard       # Dashboard de cargas
-/ia/unifilar        # Diagramas unifilares
-/ia/export          # Exportación de reportes
+# Plan Service
+pytest tests/ --cov=app
+
+# Frontend
+npm run test
 ```
 
-## 📊 **Métricas del Proyecto**
+### Build
 
-### **Código**
+```bash
+# Backend
+npm run build
 
-- **Backend**: ~15,000 líneas de código
-- **Frontend**: ~8,000 líneas de código
-- **Scripts**: ~2,000 líneas de código
-- **Documentación**: ~5,000 líneas
+# Frontend
+npm run build
 
-### **Archivos**
+# Plan Service
+# (No requiere build, se ejecuta directamente)
+```
 
-- **Total de archivos**: 429 archivos modificados
-- **Nuevos archivos**: 150+ archivos creados
-- **Archivos eliminados**: 200+ archivos de backup
+## 📚 Documentación
 
-### **Dependencias**
+- [README.md](../README.md) - Guía principal
+- [AGENTS.md](../AGENTS.md) - Instrucciones para agentes AI
+- [plan_ejecucion_migracion_v2.md](plan_ejecucion_migracion_v2.md) - Plan de migración completo
+- [CONFIGURATION.md](CONFIGURATION.md) - Configuración detallada
+- [TESTING.md](TESTING.md) - Estrategia de testing
+- [CI_CD_PIPELINE.md](CI_CD_PIPELINE.md) - CI/CD pipeline
+- [MANUAL_USUARIO.md](MANUAL_USUARIO.md) - Manual de usuario
 
-- **Backend**: 50+ dependencias
-- **Frontend**: 30+ dependencias
-- **Docker**: 6 servicios
+## 🎯 Próximos Pasos
 
-## 🎯 **Próximos Pasos**
+### Corto Plazo
 
-### **Inmediato (Pendiente)**
+- [ ] Pruebas de usabilidad con usuarios reales
+- [ ] Feedback y ajustes basados en testing
+- [ ] Optimización de performance
 
-1. **Testing Completo**:
+### Mediano Plazo
 
-   - Probar todas las rutas del frontend
-   - Verificar integración frontend-backend
-   - Validar funcionalidades de exportación
-   - Probar endpoints de IA con modelos disponibles
+- [ ] YOLOv8 para detección de habitaciones (opcional)
+- [ ] Dark mode en frontend
+- [ ] Code splitting para reducir bundle
+- [ ] Deploy a staging
 
-2. **Optimización de IA**:
-   - Ajustar prompts para cálculos eléctricos
-   - Optimizar respuestas de modelos locales
-   - Configurar fallback a OpenAI
+### Largo Plazo
 
-### **Corto Plazo**
+- [ ] Deploy a producción
+- [ ] Monitoreo con Grafana
+- [ ] Escalabilidad horizontal
+- [ ] Multi-tenancy
 
-1. **Optimización**:
+## 🏅 Logros Destacados
 
-   - Performance de gráficos
-   - Caché de respuestas de IA
-   - Optimización de memoria
+### Migración V2
 
-2. **Mejoras UX/UI**:
-   - Responsive design
-   - Animaciones
-   - Feedback de usuario
+- ✅ Migración completa MariaDB → PostgreSQL
+- ✅ Plan Service con pipelines DXF/PDF
+- ✅ Frontend migrado Angular → React 19
+- ✅ Visualización interactiva completa
+- ✅ AI fallback con OpenAI Vision
+- ✅ 324 tests en total
+- ✅ CI/CD para 3 proyectos
 
-### **Mediano Plazo**
+### Calidad
 
-1. **Sprint 8**: Testing y QA
-2. **Sprint 9**: Optimización y performance
-3. **Sprint 10**: Despliegue a producción
+- ✅ TypeScript strict mode (frontend)
+- ✅ Type hints (Python)
+- ✅ ESLint + Prettier + Ruff
+- ✅ Cobertura 85% (Plan Service)
+- ✅ Documentación completa
 
-## 📝 **Documentación Disponible**
+## 📞 Soporte
 
-### **Guías de Usuario**
+- **Issues:** GitHub Issues
+- **Documentación:** `/docs`
+- **API Docs:** http://localhost:3000/api/docs
+- **Plan Service Docs:** http://localhost:8000/docs
 
-- `UserHistories/Sprint_6_IA_Local.md`
-- `UserHistories/Sprint_7_Frontend_Avanzado.md`
-- `docs/Frontend_IA.md`
+---
 
-### **Documentación Técnica**
+**🎉 ¡Migración V2 Completada!**
 
-- `docs/CONFIGURATION.md`
-- `docs/CI_CD_PIPELINE.md`
-- `docs/TESTING.md`
-- `docs/SECURITY_PASSWORD_POLICY.md`
-- `docs/Deudas_Tecnicas_Pendientes.md`
+Sistema funcional con:
+- Reconocimiento automático de planos PDF/DXF
+- Cálculos eléctricos completos (NEC 2023)
+- Visualización interactiva 2D
+- Editor de espacios
+- AI fallback para casos complejos
 
-### **Scripts de Automatización**
-
-- `scripts/docker-setup.ps1`
-- `scripts/download-small-model.ps1`
-- `scripts/setup-openwebui.ps1`
-- `scripts/verify-setup.ps1`
-
-## 🏆 **Logros Principales**
-
-### **✅ Arquitectura Sólida**
-
-- Clean Architecture implementada
-- SOLID principles aplicados
-- Testing automatizado
-- CI/CD preparado
-
-### **✅ Funcionalidades Completas**
-
-- Sistema de cálculos eléctricos
-- Gestión de proyectos
-- IA integrada local y en la nube
-- Exportación profesional
-
-### **✅ Infraestructura Unificada**
-
-- **Red Docker unificada**: Todos los servicios en `electridom-network`
-- **Contenedores optimizados**: Frontend, Backend, MariaDB, Ollama, Open WebUI, Adminer
-- **Comunicación interna**: Optimizada entre servicios en la misma red
-
-### **✅ Tecnologías Modernas**
-
-- Angular 20 con Signals
-- NestJS con TypeORM
-- Docker multi-servicio
-- IA local con Ollama
-
-### **✅ Documentación Completa**
-
-- User stories detalladas
-- Documentación técnica
-- Scripts de automatización
-- Guías de configuración
-
-## 🎉 **Conclusión**
-
-**El proyecto Electridom está en un estado excelente con:**
-
-- ✅ **Sprint 6 y 7 completados al 100%**
-- ✅ **Arquitectura sólida y escalable**
-- ✅ **Funcionalidades principales implementadas**
-- ✅ **Código limpio y documentado**
-- ✅ **Despliegue automatizado con Docker**
-
-**Listo para:**
-
-- 🚀 Testing exhaustivo
-- 🚀 Optimización de performance
-- 🚀 Despliegue a producción
-- 🚀 Desarrollo de nuevas funcionalidades
-
-**Estado del repositorio:**
-
-- ✅ **Commit realizado**: `a38a280`
-- ✅ **Push exitoso**: Cambios subidos a GitHub
-- ✅ **Documentación actualizada**: Estado del proyecto reflejado
+**Última actualización:** Julio 2026

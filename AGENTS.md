@@ -7,15 +7,15 @@
 - **codegraph**: Para explorar y entender la estructura del código, dependencias, y relaciones entre archivos. Úsalo antes de hacer cambios significativos.
 - **context7**: Para obtener documentación actualizada sobre librerías y frameworks (React, NestJS, FastAPI, etc.). Úsalo cuando necesites verificar APIs o patrones.
 - **engram**: Para guardar y recuperar contexto del proyecto, decisiones arquitectónicas, y estado actual. Úsalo para mantener memoria entre sesiones.
-- **playwright**: Para testing E2E del frontend Angular. Úsalo cuando necesites verificar flujos de usuario completos.
+- **playwright**: Para testing E2E del frontend React. Úsalo cuando necesites verificar flujos de usuario completos.
 
 ## Estructura del Monorepo
 
 ```
 CalculadoraElectricaRD/
 ├── calculadora-electrica-backend/    # NestJS 10 + TypeScript + PostgreSQL
-├── calculadora-electrica-frontend/   # Angular 20
-├── plan-service/                     # Python 3.12 + FastAPI (nuevo en V2)
+├── calculadora-electrica-frontend/   # React 19 + Vite + TypeScript
+├── plan-service/                     # Python 3.12 + FastAPI
 ├── docker-compose.yml               # Orquestación unificada
 └── docs/                           # Documentación
 ```
@@ -34,14 +34,15 @@ npm run test:unit       # Tests unitarios
 npm run test:e2e        # Tests E2E (requiere DB)
 ```
 
-### Frontend (Angular)
+### Frontend (React 19 + Vite)
 
 ```bash
 cd calculadora-electrica-frontend
 npm install
-npm start              # Servidor desarrollo (puerto 4200, proxy a :3000)
-npm run build          # Build producción
-npm run lint           # Linting
+npm run dev              # Servidor desarrollo (puerto 4200, proxy a :3000)
+npm run build            # Build producción
+npm run lint             # Linting
+npm run test             # Tests Vitest
 ```
 
 ### Plan Service (Python FastAPI)
@@ -58,26 +59,23 @@ ruff check app/ tests/
 
 ### Servicios Principales
 
-- **PostgreSQL 16 + PostGIS**: Puerto 5432 (reemplaza MariaDB en V2)
+- **PostgreSQL 16 + PostGIS**: Puerto 5432
 - **Redis**: Puerto 6379 (Celery broker)
 - **MinIO**: Puerto 9000 (API), 9001 (Console)
 - **Plan Service**: Puerto 8000
 - **Celery Worker**: Procesamiento asíncrono
-- **MariaDB**: Puerto 3306 (legacy, será removido)
 
 ### Comandos Útiles
 
 ```bash
 docker compose up -d              # Iniciar todos los servicios
-docker compose up api mariadb     # Solo stack existente
-docker compose up plan-service    # Solo servicios V2
 docker compose logs -f            # Ver logs
 docker compose down -v            # Detener y remover volúmenes
 ```
 
 ## URLs de Desarrollo
 
-- **Frontend**: http://localhost:4200
+- **Frontend React**: http://localhost:4200
 - **Backend API**: http://localhost:3000
 - **API Docs**: http://localhost:3000/api/docs
 - **Plan Service**: http://localhost:8000
@@ -171,8 +169,11 @@ npm run lint
 # Build verification
 npm run build
 
-# Tests (actualmente desactivados en CI)
-npm run test -- --watch=false --browsers=ChromeHeadless
+# Tests (Vitest)
+npm run test
+
+# Tests con coverage
+npm run test:coverage
 ```
 
 ## Convenciones de Código
@@ -184,12 +185,14 @@ npm run test -- --watch=false --browsers=ChromeHeadless
 - TypeORM entities con decoradores
 - JWT RS256 para autenticación
 
-### Frontend (Angular)
+### Frontend (React)
 
-- Standalone components
-- Lazy loading de módulos
+- Functional components con hooks
+- TypeScript estricto
+- Tailwind CSS para estilos
+- Zustand para state management global
+- React Query para server state
 - Proxy config para API calls en desarrollo
-- Template Datta Able para UI
 
 ### Plan Service (Python)
 
@@ -209,9 +212,10 @@ El pipeline corre en GitHub Actions para branches `main` y `develop`:
 
 ## Notas Importantes
 
-- El proyecto está en migración de MariaDB a PostgreSQL (Fase 1 completada)
-- Plan Service es nuevo en V2 para procesamiento de planos PDF/DXF
-- Frontend Angular será migrado a React en Fase 5 (pendiente)
+- El proyecto completó la migración V2 en Julio 2026
+- Frontend migrado de Angular 20 a React 19
+- Base de datos migrada de MariaDB a PostgreSQL 16
+- Plan Service es el microservicio Python para procesamiento de planos PDF/DXF
 - Usar `engram` para guardar decisiones arquitectónicas importantes
 - Consultar `context7` antes de usar APIs de librerías para verificar sintaxis actual
 - Usar `codegraph` para entender dependencias antes de refactorizar
@@ -220,6 +224,6 @@ El pipeline corre en GitHub Actions para branches `main` y `develop`:
 ## Documentación Adicional
 
 - `ESTADO_PROYECTO.md`: Estado detallado del proyecto
-- `docs/plan_ejecucion_migracion_v2.md`: Plan de migración V2
+- `docs/plan_ejecucion_migracion_v2.md`: Plan de migración V2 (completado)
 - `docs/db_migration_audit.md`: Auditoría de migración DB
 - `UserHistories/`: Historias de usuario y especificaciones
