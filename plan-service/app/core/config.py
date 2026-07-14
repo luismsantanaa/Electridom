@@ -41,7 +41,7 @@ class Settings(BaseSettings):  # type: ignore[misc]
     minio_secure: bool = False
 
     # Processing
-    max_file_size_mb: int = 50
+    max_file_size_mb: int = 60
     allowed_file_types: list[str] = ["pdf", "dxf"]
     processing_timeout_seconds: int = 120
 

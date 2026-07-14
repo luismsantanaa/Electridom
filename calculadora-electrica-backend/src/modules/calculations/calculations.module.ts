@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { HttpModule } from '@nestjs/axios';
 import { CalculationsController } from './calculations.controller';
 import { CalcRoomsController } from './controllers/calc-rooms.controller';
 import { CalcDemandController } from './controllers/calc-demand.controller';
@@ -53,6 +54,7 @@ import { MetricsModule } from '../metrics/metrics.module';
   imports: [
     RulesModule,
     MetricsModule,
+    HttpModule,
     TypeOrmModule.forFeature([
       NormConst,
       DemandFactor,

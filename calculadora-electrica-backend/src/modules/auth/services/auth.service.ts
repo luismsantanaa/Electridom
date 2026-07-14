@@ -267,13 +267,9 @@ export class AuthService {
       );
     }
 
-    const hashedPassword = await this.hashService.hashPassword(
-      registerDto.password,
-    );
-
+    // La contraseña se hashea automáticamente en el hook @BeforeInsert() de la entidad User
     const user = await this.usersService.create({
       ...registerDto,
-      password: hashedPassword,
       role: UserRole.CLIENTE,
       estado: UserStatus.ACTIVO,
     });

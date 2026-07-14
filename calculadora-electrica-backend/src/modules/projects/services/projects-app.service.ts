@@ -247,17 +247,17 @@ export class ProjectsAppService {
 
     // Aplicar ordenamiento
     if (sort) {
-      const validSortFields = ['name', 'createdAt', 'updatedAt', 'status'];
+      const validSortFields = ['name', 'creationDate', 'updateDate', 'status'];
       if (validSortFields.includes(sort)) {
         queryBuilder.orderBy(
           `project.${sort}`,
           order.toUpperCase() as 'ASC' | 'DESC',
         );
       } else {
-        queryBuilder.orderBy('project.createdAt', 'DESC');
+        queryBuilder.orderBy('project.creationDate', 'DESC');
       }
     } else {
-      queryBuilder.orderBy('project.createdAt', 'DESC');
+      queryBuilder.orderBy('project.creationDate', 'DESC');
     }
 
     // Aplicar filtros

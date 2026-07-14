@@ -34,8 +34,15 @@ const processQueue = (error: unknown | null, token: string | null = null) => {
   failedQueue = [];
 };
 
+// Response interceptor: unwrap backend response envelope and handle 401
 apiClient.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    // Unwrap backend response envelope: { success, message, data } -> data
+    if (response.data && typeof response.data === 'object' && 'success' in response.data && 'data' in response.data) {
+      response.data = response.data.data;
+    }
+    return response;
+  },
   async (error) => {
     const originalRequest = error.config;
 
@@ -65,9 +72,11 @@ apiClient.interceptors.response.use(
       }
 
       try {
-        const { data } = await axios.post('/api/auth/refresh', {
+        const { data: responseData } = await axios.post('/api/auth/refresh', {
           refreshToken,
         });
+        // Unwrap response envelope if present
+        const data = responseData.data || responseData;
         const { access_token, refresh_token } = data;
         localStorage.setItem('access_token', access_token);
         localStorage.setItem('refresh_token', refresh_token);

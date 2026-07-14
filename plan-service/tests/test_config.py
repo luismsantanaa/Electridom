@@ -10,7 +10,7 @@ def test_settings_default_values():
     assert s.app_env == "development"
     assert s.debug is True
     assert s.port == 8000
-    assert s.max_file_size_mb == 50
+    assert s.max_file_size_mb == 60
     assert s.allowed_file_types == ["pdf", "dxf"]
 
 

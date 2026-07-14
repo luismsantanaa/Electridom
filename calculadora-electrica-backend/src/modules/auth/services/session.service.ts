@@ -55,9 +55,9 @@ export class SessionService {
         throw new Error('Refresh token malformado: faltan componentes');
       }
 
-      // Validar que sessionId sea un UUID válido
+      // Validar que sessionId sea un UUID válido (formato básico)
       const uuidRegex =
-        /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+        /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
       if (!uuidRegex.test(sessionId)) {
         throw new Error('SessionId no es un UUID válido');
       }

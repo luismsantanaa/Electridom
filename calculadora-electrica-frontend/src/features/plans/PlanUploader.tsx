@@ -16,8 +16,8 @@ export default function PlanUploader({ onUploadComplete }: PlanUploaderProps) {
       setError('Solo se permiten archivos PDF o DXF');
       return;
     }
-    if (file.size > 50 * 1024 * 1024) {
-      setError('El archivo es demasiado grande (máximo 50MB)');
+    if (file.size > 60 * 1024 * 1024) {
+      setError('El archivo es demasiado grande (máximo 60MB)');
       return;
     }
 
@@ -92,7 +92,7 @@ export default function PlanUploader({ onUploadComplete }: PlanUploaderProps) {
             Arrastra un archivo PDF o DXF aquí
           </p>
           <p className="text-sm text-gray-500 mt-1">o haz click para seleccionar</p>
-          <p className="text-xs text-gray-400 mt-2">Máximo 50MB</p>
+          <p className="text-xs text-gray-400 mt-2">Máximo 60MB</p>
         </div>
       )}
 
