@@ -227,6 +227,24 @@ CalculadoraElectricaRD/
 │   │   │   ├── components/    # Layout, Sidebar, Header
 │   │   │   └── types/         # TypeScript types
 │   │   └── app/               # Routing + providers
+│
+├── plan-service/              # Python FastAPI
+│
+├── shared/                    # Código compartido (preparado para futuro)
+│   ├── types/                 # Tipos TypeScript compartidos
+│   ├── utils/                 # Utilidades compartidas
+│   └── configs/               # Configuraciones compartidas
+│
+├── infrastructure/            # Infraestructura y scripts
+│   ├── docker/                # Docker Compose y configuración
+│   │   ├── docker-compose.yml
+│   │   └── prometheus.yml
+│   └── scripts/               # Scripts de desarrollo
+│       ├── start-dev.ps1
+│       └── stop-dev.ps1
+│
+└── docs/                      # Documentación
+```
 │   └── tests/                 # Vitest tests
 │
 ├── plan-service/

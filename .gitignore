@@ -2,45 +2,45 @@
 # Backend y Frontend
 
 # ===== BACKEND =====
-calculadora-electrica-backend/dist/
-calculadora-electrica-backend/node_modules/
-calculadora-electrica-backend/build/
-calculadora-electrica-backend/logs/
-calculadora-electrica-backend/coverage/
-calculadora-electrica-backend/.nyc_output/
-calculadora-electrica-backend/.env
-calculadora-electrica-backend/.env.development.local
-calculadora-electrica-backend/.env.test.local
-calculadora-electrica-backend/.env.production.local
-calculadora-electrica-backend/.env.local
-calculadora-electrica-backend/.temp/
-calculadora-electrica-backend/.tmp/
-calculadora-electrica-backend/*.log
-calculadora-electrica-backend/npm-debug.log*
-calculadora-electrica-backend/pnpm-debug.log*
-calculadora-electrica-backend/yarn-debug.log*
-calculadora-electrica-backend/yarn-error.log*
-calculadora-electrica-backend/lerna-debug.log*
+backend/dist/
+backend/node_modules/
+backend/build/
+backend/logs/
+backend/coverage/
+backend/.nyc_output/
+backend/.env
+backend/.env.development.local
+backend/.env.test.local
+backend/.env.production.local
+backend/.env.local
+backend/.temp/
+backend/.tmp/
+backend/*.log
+backend/npm-debug.log*
+backend/pnpm-debug.log*
+backend/yarn-debug.log*
+backend/yarn-error.log*
+backend/lerna-debug.log*
 
 # ===== FRONTEND =====
-calculadora-electrica-frontend/dist/
-calculadora-electrica-frontend/node_modules/
-calculadora-electrica-frontend/build/
-calculadora-electrica-frontend/.next/
-calculadora-electrica-frontend/.nuxt/
-calculadora-electrica-frontend/.output/
-calculadora-electrica-frontend/coverage/
-calculadora-electrica-frontend/.nyc_output/
-calculadora-electrica-frontend/.env
-calculadora-electrica-frontend/.env.local
-calculadora-electrica-frontend/.env.development.local
-calculadora-electrica-frontend/.env.test.local
-calculadora-electrica-frontend/.env.production.local
-calculadora-electrica-frontend/*.log
-calculadora-electrica-frontend/npm-debug.log*
-calculadora-electrica-frontend/pnpm-debug.log*
-calculadora-electrica-frontend/yarn-debug.log*
-calculadora-electrica-frontend/yarn-error.log*
+frontend/dist/
+frontend/node_modules/
+frontend/build/
+frontend/.next/
+frontend/.nuxt/
+frontend/.output/
+frontend/coverage/
+frontend/.nyc_output/
+frontend/.env
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.test.local
+frontend/.env.production.local
+frontend/*.log
+frontend/npm-debug.log*
+frontend/pnpm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
 
 # ===== PLAN SERVICE (Python) =====
 plan-service/venv/
