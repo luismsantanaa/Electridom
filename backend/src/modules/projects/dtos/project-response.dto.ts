@@ -193,6 +193,18 @@ export class ProjectVersionDetailDto {
   traceId: string;
 }
 
+/** Totales agregados para el dashboard (sin paginación). */
+export class ProjectStatsDto {
+  @ApiProperty({ example: 42, description: 'Proyectos activos' })
+  activeProjects: number;
+
+  @ApiProperty({
+    example: 17,
+    description: 'Proyectos activos con al menos una versión de cálculo',
+  })
+  calculationsDone: number;
+}
+
 // DTO para listado de projects
 export class ProjectListResponseDto {
   @ApiProperty({ type: [ProjectSummaryDto], description: 'Lista de projects' })

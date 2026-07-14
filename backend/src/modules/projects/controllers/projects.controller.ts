@@ -34,6 +34,7 @@ import {
   ProjectVersionDetailDto,
   ProjectListResponseDto,
   ProjectExportDto,
+  ProjectStatsDto,
 } from '../dtos/project-response.dto';
 import { ProjectInputDto, ProjectResponseDto } from '../dtos/project-crud.dto';
 import { Roles, UserRole } from '../../../common/decorators/roles.decorator';
@@ -164,6 +165,21 @@ export class ProjectsController {
     @Body() request: CreateVersionRequestDto,
   ): Promise<ProjectVersionDetailDto> {
     return this.projectsAppService.createVersion(projectId, request);
+  }
+
+  @Get('stats')
+  @ApiOperation({
+    summary: 'Estadísticas de projects para dashboard',
+    description:
+      'Devuelve conteos globales (activos y con cálculo), sin paginación',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Estadísticas obtenidas exitosamente',
+    type: ProjectStatsDto,
+  })
+  async getDashboardStats(): Promise<ProjectStatsDto> {
+    return this.projectsAppService.getDashboardStats();
   }
 
   @Get(':projectId')

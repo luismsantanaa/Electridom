@@ -2,7 +2,7 @@ import { useEffect, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { FolderKanban, Calculator, FileStack, ArrowRight, Info } from 'lucide-react';
 import { useAuth } from '@features/auth/useAuth';
-import { useProjects } from '@features/projects/useProjects';
+import { useProjectStats } from '@features/projects/useProjects';
 import { useQuery } from '@tanstack/react-query';
 import { plansApi } from '@shared/api/plans.api';
 import { Button } from '@/components/ui/button';
@@ -81,10 +81,7 @@ function MetricCard({ title, value, tooltip, icon, href, isLoading }: MetricCard
 
 export default function DashboardPage() {
   const { user, loadUser, isLoading: authLoading } = useAuth();
-  const { data: projectsData, isLoading: projectsLoading } = useProjects({
-    page: 1,
-    pageSize: 100,
-  });
+  const { data: projectStats, isLoading: projectsLoading } = useProjectStats();
   const { data: plansData, isLoading: plansLoading } = useQuery({
     queryKey: ['plans', { page: 1, pageSize: 1 }],
     queryFn: () => plansApi.list({ page: 1, pageSize: 1 }),
@@ -95,11 +92,9 @@ export default function DashboardPage() {
   }, [user, loadUser]);
 
   const metricsLoading = authLoading || projectsLoading || plansLoading;
-  const activeProjects = projectsData?.total ?? 0;
+  const activeProjects = projectStats?.activeProjects ?? 0;
+  const calculationsDone = projectStats?.calculationsDone ?? 0;
   const processedPlans = plansData?.total ?? 0;
-  // Proxy: proyectos con al menos una versión calculada (muestra cargada)
-  const calculationsDone =
-    projectsData?.data?.filter((p) => !!p.latestVersion).length ?? 0;
 
   return (
     <div className="space-y-8 motion-safe:animate-[fadeIn_200ms_ease-out]">

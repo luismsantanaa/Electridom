@@ -4,9 +4,15 @@ import type {
   ProjectListResponse,
   ProjectListParams,
   CreateProjectRequest,
+  ProjectStats,
 } from '../types/project.types';
 
 export const projectsApi = {
+  stats: async (): Promise<ProjectStats> => {
+    const response = await apiClient.get<ProjectStats>('/v1/projects/stats');
+    return response.data;
+  },
+
   list: async (params?: ProjectListParams): Promise<ProjectListResponse> => {
     const searchParams = new URLSearchParams();
     if (params?.page) searchParams.set('page', String(params.page));

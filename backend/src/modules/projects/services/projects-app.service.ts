@@ -19,6 +19,7 @@ import {
   ProjectVersionDetailDto,
   ProjectListResponseDto,
   ProjectExportDto,
+  ProjectStatsDto,
 } from '../dtos/project-response.dto';
 import { ProjectInputDto, ProjectResponseDto } from '../dtos/project-crud.dto';
 import { CalculationAppService } from '../../calculations/services/calculation-app.service';
@@ -225,6 +226,27 @@ export class ProjectsAppService {
     }
 
     return this.mapVersionToDetailDto(version, project);
+  }
+
+  /**
+   * Totales para dashboard (conteos globales, no limitados por página).
+   */
+  async getDashboardStats(): Promise<ProjectStatsDto> {
+    const activeProjects = await this.projectRepository.count({
+      where: { status: ProjectStatus.ACTIVE },
+    });
+
+    const raw = await this.projectRepository
+      .createQueryBuilder('project')
+      .innerJoin('project.versions', 'versions')
+      .where('project.status = :status', { status: ProjectStatus.ACTIVE })
+      .select('COUNT(DISTINCT project.id)', 'count')
+      .getRawOne<{ count: string }>();
+
+    return {
+      activeProjects,
+      calculationsDone: Number(raw?.count ?? 0),
+    };
   }
 
   /**

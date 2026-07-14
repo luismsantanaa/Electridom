@@ -9,6 +9,13 @@ export function useProjects(params?: ProjectListParams) {
   });
 }
 
+export function useProjectStats() {
+  return useQuery({
+    queryKey: ['projects', 'stats'],
+    queryFn: () => projectsApi.stats(),
+  });
+}
+
 export function useProject(projectId: string) {
   return useQuery({
     queryKey: ['project', projectId],

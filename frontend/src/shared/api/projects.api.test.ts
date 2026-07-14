@@ -21,6 +21,18 @@ describe('projectsApi', () => {
     vi.clearAllMocks();
   });
 
+  it('should fetch project dashboard stats', async () => {
+    const mockResponse = {
+      data: { activeProjects: 120, calculationsDone: 45 },
+    };
+    mockGet.mockResolvedValueOnce(mockResponse);
+
+    const result = await projectsApi.stats();
+
+    expect(mockGet).toHaveBeenCalledWith('/v1/projects/stats');
+    expect(result).toEqual(mockResponse.data);
+  });
+
   it('should list projects with params', async () => {
     const mockResponse = { data: { data: [], total: 0, page: 1, pageSize: 10, totalPages: 0 } };
     mockGet.mockResolvedValueOnce(mockResponse);

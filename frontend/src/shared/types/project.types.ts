@@ -49,6 +49,11 @@ export interface ProjectListResponse {
   totalPages: number;
 }
 
+export interface ProjectStats {
+  activeProjects: number;
+  calculationsDone: number;
+}
+
 export interface ProjectListParams {
   page?: number;
   pageSize?: number;
