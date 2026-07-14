@@ -49,5 +49,11 @@ class Settings(BaseSettings):  # type: ignore[misc]
     openai_api_key: str | None = None
     openai_vision_model: str = "gpt-4o"
 
+    # YOLOv8 detector (optional — requires trained model)
+    yolov8_enabled: bool = False
+    yolov8_model_path: str = "models/yolov8_spaces.pt"
+    yolov8_confidence_threshold: float = 0.5
+    yolov8_device: str = "cpu"
+
 
 settings = Settings()

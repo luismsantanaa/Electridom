@@ -6,6 +6,7 @@ import logging
 from pathlib import Path
 from typing import Any, cast
 
+from app.services.detection.yolov8_detector import YOLOv8Detector
 from app.services.dxf.classifier import SpaceClassifier
 from app.services.dxf.parser import DxfParser, detect_scale
 from app.services.dxf.polygon_builder import PolygonBuilder
@@ -25,6 +26,21 @@ class ProcessingOrchestrator:
     def __init__(self) -> None:
         self.type_detector = PdfTypeDetector()
         self.ocr_engine = OcrEngine()
+
+        # Optional YOLOv8 detector — gracefully disabled if model/deps missing
+        from app.core.config import settings
+
+        self.yolov8_detector = YOLOv8Detector(
+            model_path=settings.yolov8_model_path if settings.yolov8_enabled else None,
+            confidence_threshold=settings.yolov8_confidence_threshold,
+            device=settings.yolov8_device,
+        )
+        if self.yolov8_detector.is_available:
+            logger.info("YOLOv8 detector enabled — ML-based space detection active")
+        else:
+            logger.info(
+                "YOLOv8 detector disabled — using heuristic-based detection only"
+            )
 
     def process_pdf(self, file_path: str, scale: float = 1.0) -> dict[str, Any]:
         """Process a PDF file and return detected spaces.
@@ -105,6 +121,24 @@ class ProcessingOrchestrator:
                 logger.warning("Vision API fallback failed: %s", e)
                 result["metadata"]["ai_fallback_used"] = False
                 result["metadata"]["ai_fallback_error"] = str(e)
+
+        # YOLOv8 enrichment: if available, add ML detections to metadata
+        if self.yolov8_detector.is_available:
+            try:
+                image_path = self._render_pdf_page_as_image(file_path)
+                if image_path:
+                    yolov8_result = self.yolov8_detector.detect(image_path)
+                    if yolov8_result:
+                        result["metadata"]["yolov8_detections"] = (
+                            yolov8_result.to_dict()
+                        )
+                        logger.info(
+                            "YOLOv8 detected %d spaces in %s",
+                            len(yolov8_result.spaces),
+                            path.name,
+                        )
+            except Exception as e:
+                logger.warning("YOLOv8 enrichment failed: %s", e)
 
         return result
 
