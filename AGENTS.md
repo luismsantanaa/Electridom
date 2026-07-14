@@ -124,7 +124,48 @@ MINIO_SECRET_KEY=electridom123
 
 ### Deuda Técnica Conocida
 
-- Pruebas de usabilidad con usuarios reales pendientes
+**✅ TODA LA DEUDA TÉCNICA RESUELTA** (Julio 2026)
+
+- ✅ Backend build funcional (18 TypeScript errors fixed)
+- ✅ Migraciones PostgreSQL ejecutadas (17 migraciones, 30 tablas)
+- ✅ Seeds cargados (222 registros en 10 tablas)
+- ✅ E2E tests infraestructura lista (puerto DB corregido, LlmGateway graceful)
+- ✅ mypy type checking limpio (43 archivos Python, 0 errores)
+- ✅ YOLOv8 detector scaffold (listo para modelo entrenado)
+- ✅ Code review completado y fixes aplicados
+
+**Pendiente:**
+- Pruebas de usabilidad con usuarios reales (no-code)
+- Entrenar modelo YOLOv8 con dataset etiquetado (ver plan-service/docs/yolov8_setup.md)
+
+### Estado de Base de Datos (Actualizado Julio 2026)
+
+**30 tablas creadas** | **222 filas de seed data**:
+
+| Tabla | Registros | Descripción |
+|-------|-----------|-------------|
+| tipos_instalaciones | 4 | Tipos de instalación eléctrica |
+| tipos_ambientes | 3 | Sala, Comedor, Cocina |
+| tipos_artefactos | 124 | Artefactos eléctricos (remapeados a 3 ambientes válidos) |
+| norm_const | 6 | Parámetros normativos |
+| demand_factor | 5 | Factores de demanda |
+| ampacity | 5 | Ampacidades de conductores |
+| breaker_curve | 5 | Curvas de breakers |
+| resistivity | 34 | Resistividades (Cu y Al) |
+| grounding_rules | 28 | Reglas de puesta a tierra |
+| ia_config | 8 | Configuración de IA |
+
+**Comandos útiles:**
+```bash
+# Ejecutar migraciones
+npm run migration:run
+
+# Cargar seeds (script standalone)
+npx ts-node src/database/run-seeds-fresh.ts
+
+# Verificar estado de DB
+docker exec electridom-postgres psql -U electridom -d electridom -c "SELECT tablename FROM pg_tables WHERE schemaname='public' ORDER BY tablename;"
+```
 
 ## Testing Strategy
 

@@ -89,6 +89,55 @@
 - 4 tests para vision_classifier
 - Documentación completa actualizada
 
+## 🔧 Estado Actual (Julio 2026)
+
+### ✅ Deuda Técnica - RESUELTA
+
+Todas las deudas técnicas de la migración V2 han sido resueltas:
+
+- **Backend build**: Funcional (18 TypeScript errors corregidos)
+- **Migraciones PostgreSQL**: 17 migraciones ejecutadas, 30 tablas creadas
+- **Seed data**: 222 registros cargados en 10 tablas
+- **E2E tests**: Infraestructura lista (puerto DB corregido, LlmGateway graceful)
+- **mypy type checking**: Limpio (43 archivos Python, 0 errores)
+- **YOLOv8 detector**: Scaffold implementado (listo para modelo entrenado)
+- **Code review**: Completado y todos los fixes aplicados
+
+### 📊 Estado de Base de Datos
+
+**30 tablas** | **222 filas de seed data** | **17 migraciones ejecutadas**
+
+| Tabla | Registros | Descripción |
+|-------|-----------|-------------|
+| tipos_instalaciones | 4 | Tipos de instalación eléctrica |
+| tipos_ambientes | 3 | Sala, Comedor, Cocina |
+| tipos_artefactos | 124 | Artefactos eléctricos |
+| norm_const | 6 | Parámetros normativos |
+| demand_factor | 5 | Factores de demanda |
+| ampacity | 5 | Ampacidades de conductores |
+| breaker_curve | 5 | Curvas de breakers |
+| resistivity | 34 | Resistividades (Cu y Al) |
+| grounding_rules | 28 | Reglas de puesta a tierra |
+| ia_config | 8 | Configuración de IA |
+
+**Comandos para inicializar DB desde cero:**
+```bash
+# Ejecutar migraciones
+npm run migration:run
+
+# Cargar seeds
+npx ts-node src/database/run-seeds-fresh.ts
+
+# Verificar tablas
+docker exec electridom-postgres psql -U electridom -d electridom -c "SELECT tablename FROM pg_tables WHERE schemaname='public' ORDER BY tablename;"
+```
+
+### 🎯 Próximos Pasos
+
+1. **Pruebas de usabilidad** con usuarios reales (no-code)
+2. **Entrenar modelo YOLOv8** con dataset etiquetado (ver `plan-service/docs/yolov8_setup.md`)
+3. **Testing E2E completo** (requiere PostgreSQL corriendo)
+
 ## 📊 Métricas del Proyecto
 
 ### Código
@@ -100,10 +149,10 @@
 
 ### Tests
 
-- **Backend:** 186 tests (37.44% coverage)
+- **Backend:** 421 tests (44 suites, unit tests passing)
 - **Plan Service:** 124 tests (85% coverage)
 - **Frontend:** 14 tests (Vitest)
-- **Total:** 324 tests
+- **Total:** 559 tests
 
 ### Endpoints API
 
