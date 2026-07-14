@@ -1,6 +1,14 @@
 import { useState, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from './useAuth';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { PasswordInput } from '@/shared/components/PasswordInput';
+import { ThemeToggle } from '@/shared/components/ThemeToggle';
+import { UserPlus } from 'lucide-react';
 
 export default function RegisterPage() {
   const [form, setForm] = useState({
@@ -34,169 +42,163 @@ export default function RegisterPage() {
 
   if (success) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-        <div className="max-w-md w-full bg-white rounded-xl shadow-md p-8 text-center">
-          <div className="text-green-600 text-4xl mb-4">✓</div>
-          <h2 className="text-xl font-bold text-gray-900">Registro exitoso</h2>
-          <p className="text-gray-500 mt-2">Redirigiendo al login...</p>
-        </div>
+      <div className="min-h-screen flex items-center justify-center bg-background px-4">
+        <Card className="w-full max-w-md shadow-lg text-center">
+          <CardContent className="pt-6">
+            <div className="rounded-full bg-green-500/10 p-3 w-fit mx-auto mb-4">
+              <UserPlus className="h-8 w-8 text-green-500" />
+            </div>
+            <h2 className="text-xl font-bold">Registro exitoso</h2>
+            <p className="text-muted-foreground mt-2">Redirigiendo al login...</p>
+          </CardContent>
+        </Card>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-8">
-      <div className="max-w-md w-full bg-white rounded-xl shadow-md p-8">
-        <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-gray-900">Crear cuenta</h1>
-          <p className="text-gray-500 mt-2">Regístrate para comenzar</p>
-        </div>
+    <div className="min-h-screen flex items-center justify-center bg-background px-4 py-8">
+      {/* Theme Toggle */}
+      <div className="absolute top-4 right-4">
+        <ThemeToggle />
+      </div>
 
-        {error && (
-          <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
-            {error}
-            <button onClick={clearError} className="ml-2 font-bold">×</button>
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-                Nombre
-              </label>
-              <input
-                id="name"
-                name="name"
-                type="text"
-                value={form.name}
-                onChange={handleChange}
-                required
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
-              />
-            </div>
-            <div>
-              <label htmlFor="apellido" className="block text-sm font-medium text-gray-700 mb-1">
-                Apellido
-              </label>
-              <input
-                id="apellido"
-                name="apellido"
-                type="text"
-                value={form.apellido}
-                onChange={handleChange}
-                required
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
-              />
+      <Card className="w-full max-w-2xl shadow-lg">
+        <CardHeader className="text-center">
+          <div className="flex justify-center mb-4">
+            <div className="rounded-full bg-primary/10 p-3">
+              <UserPlus className="h-8 w-8 text-primary" />
             </div>
           </div>
+          <CardTitle className="text-2xl font-bold">Crear cuenta</CardTitle>
+          <CardDescription>Regístrate para comenzar</CardDescription>
+        </CardHeader>
+        
+        <CardContent>
+          {error && (
+            <Alert variant="destructive" className="mb-4">
+              <AlertDescription className="flex items-center justify-between">
+                <span>{error}</span>
+                <button onClick={clearError} className="ml-2 font-bold" aria-label="Dismiss" type="button">
+                  ×
+                </button>
+              </AlertDescription>
+            </Alert>
+          )}
 
-          <div>
-            <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">
-              Username
-            </label>
-            <input
-              id="username"
-              name="username"
-              type="text"
-              value={form.username}
-              onChange={handleChange}
-              required
-              minLength={3}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
-            />
-          </div>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="name">Nombre</Label>
+                <Input
+                  id="name"
+                  name="name"
+                  type="text"
+                  value={form.name}
+                  onChange={handleChange}
+                  required
+                  autoComplete="given-name"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="apellido">Apellido</Label>
+                <Input
+                  id="apellido"
+                  name="apellido"
+                  type="text"
+                  value={form.apellido}
+                  onChange={handleChange}
+                  required
+                  autoComplete="family-name"
+                />
+              </div>
+            </div>
 
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-              Correo electrónico
-            </label>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              value={form.email}
-              onChange={handleChange}
-              required
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
-            />
-          </div>
+            <div className="space-y-2">
+              <Label htmlFor="username">Username</Label>
+              <Input
+                id="username"
+                name="username"
+                type="text"
+                value={form.username}
+                onChange={handleChange}
+                required
+                minLength={3}
+                autoComplete="username"
+              />
+            </div>
 
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-              Contraseña
-            </label>
-            <input
+            <div className="space-y-2">
+              <Label htmlFor="email">Correo electrónico</Label>
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                value={form.email}
+                onChange={handleChange}
+                required
+                autoComplete="email"
+              />
+            </div>
+
+            <PasswordInput
               id="password"
-              name="password"
-              type="password"
+              label="Contraseña"
               value={form.password}
-              onChange={handleChange}
+              onChange={(value) => setForm({ ...form, password: value })}
               required
               minLength={6}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
             />
-          </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label htmlFor="telefono" className="block text-sm font-medium text-gray-700 mb-1">
-                Teléfono (opcional)
-              </label>
-              <input
-                id="telefono"
-                name="telefono"
-                type="tel"
-                value={form.telefono}
-                onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
-              />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="telefono">Teléfono (opcional)</Label>
+                <Input
+                  id="telefono"
+                  name="telefono"
+                  type="tel"
+                  value={form.telefono}
+                  onChange={handleChange}
+                  autoComplete="tel"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="cedula">Cédula (opcional)</Label>
+                <Input
+                  id="cedula"
+                  name="cedula"
+                  type="text"
+                  value={form.cedula}
+                  onChange={handleChange}
+                />
+              </div>
             </div>
-            <div>
-              <label htmlFor="cedula" className="block text-sm font-medium text-gray-700 mb-1">
-                Cédula (opcional)
-              </label>
-              <input
-                id="cedula"
-                name="cedula"
+
+            <div className="space-y-2">
+              <Label htmlFor="empresa">Empresa (opcional)</Label>
+              <Input
+                id="empresa"
+                name="empresa"
                 type="text"
-                value={form.cedula}
+                value={form.empresa}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                autoComplete="organization"
               />
             </div>
+
+            <Button type="submit" className="w-full" disabled={isLoading}>
+              {isLoading ? 'Registrando...' : 'Crear cuenta'}
+            </Button>
+          </form>
+
+          <div className="mt-6 text-center text-sm">
+            <span className="text-muted-foreground">¿Ya tienes cuenta? </span>
+            <Link to="/login" className="text-primary hover:text-primary/80 font-medium">
+              Inicia sesión
+            </Link>
           </div>
-
-          <div>
-            <label htmlFor="empresa" className="block text-sm font-medium text-gray-700 mb-1">
-              Empresa (opcional)
-            </label>
-            <input
-              id="empresa"
-              name="empresa"
-              type="text"
-              value={form.empresa}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
-            />
-          </div>
-
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-medium rounded-lg transition-colors"
-          >
-            {isLoading ? 'Registrando...' : 'Crear cuenta'}
-          </button>
-        </form>
-
-        <p className="mt-6 text-center text-sm text-gray-500">
-          ¿Ya tienes cuenta?{' '}
-          <Link to="/login" className="text-blue-600 hover:text-blue-700 font-medium">
-            Inicia sesión
-          </Link>
-        </p>
-      </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
