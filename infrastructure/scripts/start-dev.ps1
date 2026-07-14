@@ -6,7 +6,8 @@ Write-Host "  Calculadora Eléctrica RD - Dev Setup" -ForegroundColor Cyan
 Write-Host "========================================" -ForegroundColor Cyan
 Write-Host ""
 
-$rootPath = $PSScriptRoot
+$rootPath = Split-Path -Parent $PSScriptRoot
+$rootPath = Split-Path -Parent $rootPath
 $backendPath = Join-Path $rootPath "backend"
 $frontendPath = Join-Path $rootPath "frontend"
 $planServicePath = Join-Path $rootPath "plan-service"
@@ -49,5 +50,5 @@ Write-Host "Backend:       http://localhost:3000" -ForegroundColor White
 Write-Host "Frontend:      http://localhost:4200" -ForegroundColor White
 Write-Host "Plan Service:  http://localhost:8000" -ForegroundColor White
 Write-Host ""
-Write-Host "Para detener todos los servicios, ejecuta: .\stop-dev.ps1" -ForegroundColor Gray
+Write-Host "Para detener todos los servicios, ejecuta: .\infrastructure\scripts\stop-dev.ps1" -ForegroundColor Gray
 Write-Host ""

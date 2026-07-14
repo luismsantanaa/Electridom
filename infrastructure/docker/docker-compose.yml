@@ -37,7 +37,7 @@ services:
   # Frontend React
   frontend:
     build:
-      context: ./frontend
+      context: ../../frontend
       dockerfile: Dockerfile
     container_name: electridom-frontend
     ports:
@@ -53,7 +53,7 @@ services:
   # Backend NestJS API
   api:
     build:
-      context: ./backend
+      context: ../../backend
       dockerfile: Dockerfile
     container_name: electridom-api
     ports:
@@ -86,7 +86,7 @@ services:
       mariadb:
         condition: service_healthy
     volumes:
-      - ./backend/logs:/app/logs
+      - ../../backend/logs:/app/logs
     restart: unless-stopped
     networks:
       - electridom-network
@@ -207,7 +207,7 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./scripts/init-multiple-databases.sh:/docker-entrypoint-initdb.d/init-multiple-databases.sh
+      - ../../scripts/init-multiple-databases.sh:/docker-entrypoint-initdb.d/init-multiple-databases.sh
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U electridom -d electridom"]
       interval: 10s
@@ -259,7 +259,7 @@ services:
   # Plan Service — Python FastAPI for PDF/DXF processing
   plan-service:
     build:
-      context: ./plan-service
+      context: ../../plan-service
       dockerfile: Dockerfile
     container_name: electridom-plan-service
     environment:
@@ -299,7 +299,7 @@ services:
   # Celery Worker — Async task processor for plan-service
   celery-worker:
     build:
-      context: ./plan-service
+      context: ../../plan-service
       dockerfile: Dockerfile
     container_name: electridom-celery-worker
     command: celery -A app.core.celery_app worker --loglevel=info

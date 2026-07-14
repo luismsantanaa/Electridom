@@ -15,9 +15,12 @@
 CalculadoraElectricaRD/
 ├── backend/                    # NestJS 10 + TypeScript + PostgreSQL
 ├── frontend/                   # React 19 + Vite + TypeScript
-├── plan-service/                     # Python 3.12 + FastAPI
-├── docker-compose.yml               # Orquestación unificada
-└── docs/                           # Documentación
+├── plan-service/               # Python 3.12 + FastAPI
+├── shared/                     # Código compartido (types, utils, configs)
+├── infrastructure/             # Infraestructura y scripts
+│   ├── docker/                 # Docker Compose y configuración
+│   └── scripts/                # Scripts de desarrollo
+└── docs/                       # Documentación
 ```
 
 ## Comandos de Desarrollo
@@ -68,9 +71,16 @@ ruff check app/ tests/
 ### Comandos Útiles
 
 ```bash
-docker compose up -d              # Iniciar todos los servicios
-docker compose logs -f            # Ver logs
-docker compose down -v            # Detener y remover volúmenes
+docker compose -f infrastructure/docker/docker-compose.yml up -d    # Iniciar todos los servicios
+docker compose -f infrastructure/docker/docker-compose.yml logs -f  # Ver logs
+docker compose -f infrastructure/docker/docker-compose.yml down -v  # Detener y remover volúmenes
+```
+
+### Scripts de Desarrollo
+
+```powershell
+.\infrastructure\scripts\start-dev.ps1    # Iniciar backend, frontend y plan-service
+.\infrastructure\scripts\stop-dev.ps1     # Detener todos los servicios
 ```
 
 ## URLs de Desarrollo

@@ -12,9 +12,12 @@ Sistema completo para cálculos eléctricos residenciales, comerciales e industr
 CalculadoraElectricaRD/
 ├── backend/                    # NestJS 10 + TypeScript + PostgreSQL
 ├── frontend/                   # React 19 + Vite + TypeScript
-├── plan-service/                     # Python 3.12 + FastAPI (reconocimiento de planos)
-├── docker-compose.yml               # Orquestación unificada
-└── docs/                           # Documentación
+├── plan-service/               # Python 3.12 + FastAPI (reconocimiento de planos)
+├── shared/                     # Código compartido (types, utils, configs)
+├── infrastructure/             # Infraestructura y scripts
+│   ├── docker/                 # Docker Compose y configuración
+│   └── scripts/                # Scripts de desarrollo
+└── docs/                       # Documentación
 ```
 
 ### Componentes Principales
