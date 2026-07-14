@@ -9,6 +9,7 @@ import json
 import logging
 import os
 from pathlib import Path
+from typing import Any
 
 import httpx
 
@@ -21,7 +22,7 @@ MAX_DAILY_CALLS = int(os.getenv("OPENAI_VISION_MAX_DAILY", "5"))
 
 # Simple in-memory counter for daily calls (reset on restart)
 _daily_call_count = 0
-_daily_cache: dict[str, list[dict]] = {}
+_daily_cache: dict[str, list[dict[str, Any]]] = {}
 
 VISION_PROMPT = """Analyze this architectural floor plan image and detect rooms/spaces.
 
@@ -66,7 +67,7 @@ def _get_mime_type(image_path: str) -> str:
     return mime_map.get(ext, "image/png")
 
 
-async def analyze_with_vision(image_path: str, cache_key: str | None = None) -> list[dict]:
+async def analyze_with_vision(image_path: str, cache_key: str | None = None) -> list[dict[str, Any]]:
     """Send image to OpenAI Vision API for space detection.
 
     Args:
@@ -178,7 +179,7 @@ async def analyze_with_vision(image_path: str, cache_key: str | None = None) -> 
     return normalized
 
 
-def get_daily_stats() -> dict:
+def get_daily_stats() -> dict[str, Any]:
     """Get daily usage statistics."""
     return {
         "calls_today": _daily_call_count,

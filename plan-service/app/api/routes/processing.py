@@ -16,7 +16,7 @@ from app.tasks.process_pdf import process_pdf_task
 router = APIRouter(prefix="/api/plans", tags=["processing"])
 
 
-@router.post("/{plan_id}/process", response_model=ProcessingStatusResponse)
+@router.post("/{plan_id}/process", response_model=ProcessingStatusResponse)  # type: ignore[untyped-decorator]
 async def process_plan(
     plan_id: uuid.UUID,
     db: AsyncSession = Depends(get_db),

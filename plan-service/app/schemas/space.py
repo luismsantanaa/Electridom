@@ -2,6 +2,7 @@
 
 import uuid
 from datetime import datetime
+from typing import Any
 
 from pydantic import BaseModel, Field
 
@@ -56,6 +57,6 @@ class ProcessingResult(BaseModel):
     plan_id: uuid.UUID
     file_type: str
     processing_status: str
-    metadata: dict = Field(default_factory=dict)
+    metadata: dict[str, Any] = Field(default_factory=dict)
     spaces: list[DetectedSpaceResponse] = Field(default_factory=list)
     statistics: SpaceStatistics | None = None

@@ -369,7 +369,7 @@ class DxfParser:
         if not path.exists():
             raise FileNotFoundError(f"DXF file not found: {file_path}")
 
-        doc = ezdxf.readfile(str(path))  # type: ignore[attr-defined]
+        doc = ezdxf.readfile(str(path))
         msp = doc.modelspace()
 
         entities = DxfEntities(metadata=_build_metadata(doc))

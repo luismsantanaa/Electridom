@@ -1,6 +1,7 @@
 """MinIO client for S3-compatible file storage."""
 
 from io import BytesIO
+from typing import cast
 
 from minio import Minio
 from minio.error import S3Error
@@ -41,7 +42,7 @@ class StorageService:
         """Download a file from MinIO. Returns file content as bytes."""
         response = self.client.get_object(self.bucket, object_key)
         try:
-            return response.read()
+            return cast("bytes", response.read())
         finally:
             response.close()
             response.release_conn()

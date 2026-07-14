@@ -1,5 +1,7 @@
 """Health check endpoint — verifies connectivity to all dependencies."""
 
+from typing import Any
+
 from fastapi import APIRouter, Depends
 from redis.asyncio import Redis
 from sqlalchemy import text
@@ -12,11 +14,11 @@ from app.core.storage import StorageService
 router = APIRouter(tags=["health"])
 
 
-@router.get("/health")
+@router.get("/health")  # type: ignore[untyped-decorator]
 async def health_check(
     db: AsyncSession = Depends(get_db),
     storage_service: StorageService = Depends(get_storage),
-) -> dict:
+) -> dict[str, Any]:
     """Check health of all service dependencies.
 
     Verifies connectivity to:
@@ -41,7 +43,7 @@ async def health_check(
         checks["minio"] = f"error: {e}"
 
     # Check Redis
-    redis_client: Redis | None = None
+    redis_client: Redis[Any] | None = None
     try:
         redis_client = Redis.from_url(settings.redis_url)
         await redis_client.ping()
@@ -60,8 +62,8 @@ async def health_check(
     return {"status": status, "checks": checks}
 
 
-@router.get("/health/ai")
-async def ai_health_check() -> dict:
+@router.get("/health/ai")  # type: ignore[untyped-decorator]
+async def ai_health_check() -> dict[str, Any]:
     """Check AI/Vision API availability and usage stats."""
     from app.services.ai.vision_classifier import get_daily_stats
 

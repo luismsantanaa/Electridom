@@ -56,7 +56,7 @@ class PdfVectorParser:
         try:
             import pymupdf
         except ImportError:  # pragma: no cover - fallback import
-            import fitz as pymupdf  # type: ignore[no-redef]
+            import fitz as pymupdf
 
         doc = pymupdf.open(str(path))
         all_lines: list[LineEntity] = []
@@ -247,13 +247,13 @@ class PdfVectorParser:
         segment_length_sq = dx * dx + dy * dy
 
         if segment_length_sq == 0:
-            return ((px - x1) ** 2 + (py - y1) ** 2) ** 0.5
+            return float(((px - x1) ** 2 + (py - y1) ** 2) ** 0.5)
 
         t = max(0.0, min(1.0, ((px - x1) * dx + (py - y1) * dy) / segment_length_sq))
         projection_x = x1 + t * dx
         projection_y = y1 + t * dy
 
-        return ((px - projection_x) ** 2 + (py - projection_y) ** 2) ** 0.5
+        return float(((px - projection_x) ** 2 + (py - projection_y) ** 2) ** 0.5)
 
     @staticmethod
     def _extract_texts(page: Any) -> list[TextEntity]:

@@ -3,6 +3,7 @@
 import uuid
 from io import BytesIO
 from pathlib import Path
+from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException, UploadFile
 from sqlalchemy import func, select
@@ -43,7 +44,7 @@ def _validate_file(filename: str, content_length: int) -> tuple[str, str]:
     return file_type, ext
 
 
-@router.post("/upload", response_model=PlanUploadResponse, status_code=201)
+@router.post("/upload", response_model=PlanUploadResponse, status_code=201)  # type: ignore[untyped-decorator]
 async def upload_plan(
     file: UploadFile,
     project_id: uuid.UUID | None = None,
@@ -102,7 +103,7 @@ async def upload_plan(
     )
 
 
-@router.get("", response_model=PlanListResponse)
+@router.get("", response_model=PlanListResponse)  # type: ignore[untyped-decorator]
 async def list_plans(
     page: int = 1,
     page_size: int = 20,
@@ -151,7 +152,7 @@ async def list_plans(
     )
 
 
-@router.get("/{plan_id}", response_model=PlanDetail)
+@router.get("/{plan_id}", response_model=PlanDetail)  # type: ignore[untyped-decorator]
 async def get_plan(
     plan_id: uuid.UUID,
     db: AsyncSession = Depends(get_db),
@@ -182,7 +183,7 @@ async def get_plan(
     )
 
 
-@router.get("/{plan_id}/status", response_model=ProcessingStatusResponse)
+@router.get("/{plan_id}/status", response_model=ProcessingStatusResponse)  # type: ignore[untyped-decorator]
 async def get_plan_status(
     plan_id: uuid.UUID,
     db: AsyncSession = Depends(get_db),
@@ -207,11 +208,11 @@ async def get_plan_status(
     )
 
 
-@router.get("/{plan_id}/result")
+@router.get("/{plan_id}/result")  # type: ignore[untyped-decorator]
 async def get_plan_result(
     plan_id: uuid.UUID,
     db: AsyncSession = Depends(get_db),
-) -> dict:
+) -> dict[str, Any]:
     """Get the processing result (detected spaces) for a plan."""
     query = (
         select(Plan)
@@ -266,7 +267,7 @@ async def get_plan_result(
     }
 
 
-@router.delete("/{plan_id}", status_code=204)
+@router.delete("/{plan_id}", status_code=204)  # type: ignore[untyped-decorator]
 async def delete_plan(
     plan_id: uuid.UUID,
     db: AsyncSession = Depends(get_db),
@@ -290,7 +291,7 @@ async def delete_plan(
     await db.delete(plan)
 
 
-@router.patch("/{plan_id}/spaces/{space_id}", response_model=DetectedSpaceResponse)
+@router.patch("/{plan_id}/spaces/{space_id}", response_model=DetectedSpaceResponse)  # type: ignore[untyped-decorator]
 async def update_detected_space(
     plan_id: uuid.UUID,
     space_id: uuid.UUID,
@@ -329,7 +330,7 @@ async def update_detected_space(
     return DetectedSpaceResponse.model_validate(space)
 
 
-@router.get("/{plan_id}/download")
+@router.get("/{plan_id}/download")  # type: ignore[untyped-decorator]
 async def download_plan(
     plan_id: uuid.UUID,
     db: AsyncSession = Depends(get_db),

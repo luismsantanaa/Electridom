@@ -10,7 +10,7 @@ from app.core.storage import StorageService, storage
 
 async def get_db() -> AsyncGenerator[AsyncSession, None]:
     """Yield an async database session."""
-    async with get_session() as session:
+    async for session in get_session():
         yield session
 
 

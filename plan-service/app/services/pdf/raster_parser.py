@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import logging
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 import numpy as np
 from shapely import LineString, Polygon
@@ -50,7 +50,7 @@ class PdfRasterParser:
         try:
             import pymupdf
         except ImportError:  # pragma: no cover - fallback import
-            import fitz as pymupdf  # type: ignore[no-redef]
+            import fitz as pymupdf
 
         doc = pymupdf.open(str(path))
         all_segments: list[LineString] = []
@@ -85,7 +85,7 @@ class PdfRasterParser:
         pixmap = page.get_pixmap(dpi=self.dpi)
         # Render via PNG bytes to handle any colorspace robustly.
         img = Image.open(io.BytesIO(pixmap.tobytes("png")))
-        return cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
+        return cast("np.ndarray", cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR))
 
     def _preprocess(self, image: np.ndarray) -> np.ndarray:
         """Grayscale + denoise + adaptive threshold → binary image."""
@@ -105,7 +105,7 @@ class PdfRasterParser:
             11,
             2,
         )
-        return binary
+        return cast("np.ndarray", binary)
 
     def _detect_contours(self, binary: np.ndarray) -> list[LineString]:
         """Find contours and convert them to Shapely LineStrings."""

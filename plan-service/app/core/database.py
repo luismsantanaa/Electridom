@@ -22,7 +22,7 @@ async_session_factory = async_sessionmaker(
 )
 
 
-class Base(DeclarativeBase):
+class Base(DeclarativeBase):  # type: ignore[misc]
     """Base class for all SQLAlchemy models."""
 
     pass

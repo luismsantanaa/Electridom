@@ -49,7 +49,7 @@ class PdfTypeDetector:
         try:
             import pymupdf
         except ImportError:  # pragma: no cover - fallback import
-            import fitz as pymupdf  # type: ignore[no-redef]
+            import fitz as pymupdf
 
         doc = pymupdf.open(str(path))
         try:

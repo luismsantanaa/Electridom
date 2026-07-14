@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+from typing import cast
 
 import numpy as np
 from PIL import Image
@@ -13,7 +14,7 @@ logger = logging.getLogger(__name__)
 try:
     import pytesseract
 except ImportError:  # pragma: no cover - optional dependency
-    pytesseract = None  # type: ignore[assignment]
+    pytesseract = None
 
 
 class OcrEngine:
@@ -54,11 +55,11 @@ class OcrEngine:
 
         try:
             crop = self._crop_image(image, region)
-            text = pytesseract.image_to_string(  # type: ignore[attr-defined]
+            text = pytesseract.image_to_string(
                 Image.fromarray(crop),
                 lang=self.language,
             )
-            return text.strip()
+            return cast("str", text.strip())
         except Exception as exc:  # noqa: BLE001
             logger.warning("OCR extraction failed: %s", exc)
             return ""

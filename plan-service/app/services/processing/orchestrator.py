@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import logging
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 from app.services.dxf.classifier import SpaceClassifier
 from app.services.dxf.parser import DxfParser, detect_scale
@@ -163,7 +163,7 @@ class ProcessingOrchestrator:
                     "vertices": [
                         {"x": round(x, 6), "y": round(y, 6)} for x, y in dimensions.vertices
                     ],
-                    "confidence": round(float(classification["confidence"]), 4),
+                    "confidence": round(float(cast("Any", classification["confidence"])), 4),
                     "classification_method": str(classification["method"]),
                 },
             )
@@ -196,7 +196,7 @@ class ProcessingOrchestrator:
                     "vertices": [
                         {"x": round(x, 6), "y": round(y, 6)} for x, y in dimensions.vertices
                     ],
-                    "confidence": round(float(classification["confidence"]), 4),
+                    "confidence": round(float(cast("Any", classification["confidence"])), 4),
                     "classification_method": str(classification["method"]),
                 },
             )
@@ -244,7 +244,7 @@ class ProcessingOrchestrator:
         try:
             import pymupdf
         except ImportError:  # pragma: no cover - fallback import
-            import fitz as pymupdf  # type: ignore[no-redef]
+            import fitz as pymupdf
 
         from app.services.dxf.parser import TextEntity
 
