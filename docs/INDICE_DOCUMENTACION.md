@@ -141,8 +141,8 @@ Electridom/
 │   ├── development/               # Prompts de desarrollo
 │   ├── testing/                   # Prompts de testing
 │   └── deployment/                # Prompts de despliegue
-├── calculadora-electrica-backend/  # API NestJS
-├── calculadora-electrica-frontend/ # Angular 20
+├── backend/  # API NestJS
+├── frontend/ # React 19
 ├── scripts/                        # Scripts de automatización
 └── docker-compose.yml             # Orquestación Docker
 ```

@@ -2,7 +2,7 @@ version: 2
 updates:
   # Backend Dependencies
   - package-ecosystem: 'npm'
-    directory: '/calculadora-electrica-backend'
+    directory: '/backend'
     schedule:
       interval: 'weekly'
       day: 'monday'
@@ -25,7 +25,7 @@ updates:
 
   # Frontend Dependencies
   - package-ecosystem: 'npm'
-    directory: '/calculadora-electrica-frontend'
+    directory: '/frontend'
     schedule:
       interval: 'weekly'
       day: 'monday'
@@ -65,7 +65,7 @@ updates:
 
   # Docker Dependencies
   - package-ecosystem: 'docker'
-    directory: '/calculadora-electrica-backend'
+    directory: '/backend'
     schedule:
       interval: 'weekly'
       day: 'monday'

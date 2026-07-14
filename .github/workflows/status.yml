@@ -21,21 +21,21 @@ jobs:
           node-version: 20.x
 
       - name: Check Backend Dependencies
-        working-directory: calculadora-electrica-backend
+        working-directory: backend
         run: |
           echo "Checking Backend dependencies..."
           npm ci --only=production
           echo "Backend dependencies OK"
 
       - name: Check Frontend Dependencies
-        working-directory: calculadora-electrica-frontend
+        working-directory: frontend
         run: |
           echo "Checking Frontend dependencies..."
           npm ci --only=production
           echo "Frontend dependencies OK"
 
       - name: Quick Backend Lint Check
-        working-directory: calculadora-electrica-backend
+        working-directory: backend
         run: |
           echo "Running Backend lint check..."
           npm ci
@@ -43,7 +43,7 @@ jobs:
           echo "Backend lint OK"
 
       - name: Quick Frontend Lint Check
-        working-directory: calculadora-electrica-frontend
+        working-directory: frontend
         run: |
           echo "Running Frontend lint check..."
           npm ci
@@ -51,14 +51,14 @@ jobs:
           echo "Frontend lint OK"
 
       - name: Check Build Capability
-        working-directory: calculadora-electrica-backend
+        working-directory: backend
         run: |
           echo "Checking Backend build capability..."
           npm run build --silent
           echo "Backend build OK"
 
       - name: Check Frontend Build Capability
-        working-directory: calculadora-electrica-frontend
+        working-directory: frontend
         run: |
           echo "Checking Frontend build capability..."
           npm run build --silent

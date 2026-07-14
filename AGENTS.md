@@ -13,8 +13,8 @@
 
 ```
 CalculadoraElectricaRD/
-├── calculadora-electrica-backend/    # NestJS 10 + TypeScript + PostgreSQL
-├── calculadora-electrica-frontend/   # React 19 + Vite + TypeScript
+├── backend/                    # NestJS 10 + TypeScript + PostgreSQL
+├── frontend/                   # React 19 + Vite + TypeScript
 ├── plan-service/                     # Python 3.12 + FastAPI
 ├── docker-compose.yml               # Orquestación unificada
 └── docs/                           # Documentación
@@ -25,7 +25,7 @@ CalculadoraElectricaRD/
 ### Backend (NestJS)
 
 ```bash
-cd calculadora-electrica-backend
+cd backend
 npm install
 npm run migration:run    # Ejecutar migraciones PostgreSQL
 npm run seed            # Cargar datos iniciales
@@ -37,7 +37,7 @@ npm run test:e2e        # Tests E2E (requiere DB)
 ### Frontend (React 19 + Vite)
 
 ```bash
-cd calculadora-electrica-frontend
+cd frontend
 npm install
 npm run dev              # Servidor desarrollo (puerto 4200, proxy a :3000)
 npm run build            # Build producción

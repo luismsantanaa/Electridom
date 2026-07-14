@@ -203,7 +203,7 @@ Infraestructura:
 
 ```
 CalculadoraElectricaRD/
-├── calculadora-electrica-backend/
+├── backend/
 │   ├── src/
 │   │   ├── modules/
 │   │   │   ├── auth/          # Autenticación JWT
@@ -215,7 +215,7 @@ CalculadoraElectricaRD/
 │   │   └── database/          # Migraciones + seeds
 │   └── test/                  # Tests E2E
 │
-├── calculadora-electrica-frontend/
+├── frontend/
 │   ├── src/
 │   │   ├── features/
 │   │   │   ├── auth/          # Login/Register

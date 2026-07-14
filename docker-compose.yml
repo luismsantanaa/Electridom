@@ -34,10 +34,10 @@ services:
   # EXISTING STACK
   # ===========================================================================
 
-  # Frontend Angular
+  # Frontend React
   frontend:
     build:
-      context: ./calculadora-electrica-frontend
+      context: ./frontend
       dockerfile: Dockerfile
     container_name: electridom-frontend
     ports:
@@ -53,7 +53,7 @@ services:
   # Backend NestJS API
   api:
     build:
-      context: ./calculadora-electrica-backend
+      context: ./backend
       dockerfile: Dockerfile
     container_name: electridom-api
     ports:
@@ -86,7 +86,7 @@ services:
       mariadb:
         condition: service_healthy
     volumes:
-      - ./calculadora-electrica-backend/logs:/app/logs
+      - ./backend/logs:/app/logs
     restart: unless-stopped
     networks:
       - electridom-network
@@ -119,7 +119,6 @@ services:
       - '3306:3306'
     volumes:
       - mariadb_data:/var/lib/mysql
-      - ./mariadb-custom.cnf:/etc/mysql/conf.d/custom.cnf:ro
     command: --default-authentication-plugin=mysql_native_password --bind-address=0.0.0.0
     healthcheck:
       test:

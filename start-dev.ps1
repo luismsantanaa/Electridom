@@ -7,8 +7,8 @@ Write-Host "========================================" -ForegroundColor Cyan
 Write-Host ""
 
 $rootPath = $PSScriptRoot
-$backendPath = Join-Path $rootPath "calculadora-electrica-backend"
-$frontendPath = Join-Path $rootPath "calculadora-electrica-frontend"
+$backendPath = Join-Path $rootPath "backend"
+$frontendPath = Join-Path $rootPath "frontend"
 $planServicePath = Join-Path $rootPath "plan-service"
 
 # Verificar que existen las carpetas

@@ -12,8 +12,8 @@
 
 ```
 CalculadoraElectricaRD/
-├── calculadora-electrica-backend/    # NestJS 10 + PostgreSQL 16
-├── calculadora-electrica-frontend/   # React 19 + Vite + TypeScript
+├── backend/                    # NestJS 10 + PostgreSQL 16
+├── frontend/                   # React 19 + Vite + TypeScript
 ├── plan-service/                     # Python 3.12 + FastAPI
 └── docker-compose.yml               # 7 servicios orquestados
 ```
@@ -125,11 +125,11 @@ CalculadoraElectricaRD/
 docker compose up -d
 
 # Backend
-cd calculadora-electrica-backend
+cd backend
 npm run start:dev
 
 # Frontend
-cd calculadora-electrica-frontend
+cd frontend
 npm run dev
 
 # Plan Service

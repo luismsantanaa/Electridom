@@ -10,8 +10,8 @@ Sistema completo para cálculos eléctricos residenciales, comerciales e industr
 
 ```
 CalculadoraElectricaRD/
-├── calculadora-electrica-backend/    # NestJS 10 + TypeScript + PostgreSQL
-├── calculadora-electrica-frontend/   # React 19 + Vite + TypeScript
+├── backend/                    # NestJS 10 + TypeScript + PostgreSQL
+├── frontend/                   # React 19 + Vite + TypeScript
 ├── plan-service/                     # Python 3.12 + FastAPI (reconocimiento de planos)
 ├── docker-compose.yml               # Orquestación unificada
 └── docs/                           # Documentación
@@ -108,7 +108,7 @@ docker compose logs -f
 ### Backend (NestJS)
 
 ```bash
-cd calculadora-electrica-backend
+cd backend
 
 # Instalar dependencias
 npm install
@@ -133,7 +133,7 @@ npm run test:e2e
 ### Frontend (React 19 + Vite)
 
 ```bash
-cd calculadora-electrica-frontend
+cd frontend
 
 # Instalar dependencias
 npm install
@@ -246,7 +246,7 @@ OPENAI_VISION_MAX_DAILY=5
 ### Backend
 
 ```bash
-cd calculadora-electrica-backend
+cd backend
 
 # Tests unitarios
 npm run test:unit
@@ -277,7 +277,7 @@ mypy app/ --ignore-missing-imports
 ### Frontend
 
 ```bash
-cd calculadora-electrica-frontend
+cd frontend
 
 # Tests
 npm run test
