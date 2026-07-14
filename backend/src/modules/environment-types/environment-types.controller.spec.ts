@@ -81,7 +81,6 @@ describe('EnvironmentTypesController', () => {
         usrCreate: mockUser.username,
         usrUpdate: mockUser.username,
         installationType: mockInstallationType,
-        installationTypeId: '1',
         artifactTypes: [],
       };
 
@@ -230,7 +229,6 @@ describe('EnvironmentTypesController', () => {
         usrCreate: mockUser.username,
         usrUpdate: mockUser.username,
         installationType: mockInstallationType,
-        installationTypeId: '1',
         artifactTypes: [],
       };
 

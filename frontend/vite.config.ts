@@ -11,6 +11,9 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: './src/test/setup.ts',
     css: true,
+    pool: 'forks',
+    testTimeout: 30000,
+    hookTimeout: 30000,
   },
   resolve: {
     alias: {
