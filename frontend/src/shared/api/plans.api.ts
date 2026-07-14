@@ -9,13 +9,21 @@ import type {
 } from '../types/plan.types';
 
 export const plansApi = {
-  upload: async (file: File, projectId?: string): Promise<PlanUploadResponse> => {
+  upload: async (
+    file: File,
+    projectId?: string,
+    onProgress?: (percent: number) => void,
+  ): Promise<PlanUploadResponse> => {
     const formData = new FormData();
     formData.append('file', file);
     if (projectId) formData.append('project_id', projectId);
 
     const response = await apiClient.post<PlanUploadResponse>('/plans/upload', formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
+      onUploadProgress: (event) => {
+        if (!onProgress || !event.total) return;
+        onProgress(Math.min(100, Math.round((event.loaded * 100) / event.total)));
+      },
     });
     return response.data;
   },

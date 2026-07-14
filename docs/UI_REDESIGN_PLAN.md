@@ -477,58 +477,61 @@ export default function LoginPage() {
 ## 🚀 Plan de Implementación
 
 ### Fase 1: Configuración Base (2-3 horas)
-- [ ] Instalar shadcn/ui
-- [ ] Configurar Tailwind para dark mode
-- [ ] Crear ThemeProvider
-- [ ] Crear ThemeToggle component
-- [ ] Configurar variables CSS
+- [x] Instalar shadcn/ui
+- [x] Configurar Tailwind para dark mode
+- [x] Crear ThemeProvider
+- [x] Crear ThemeToggle component
+- [x] Configurar variables CSS
 
 ### Fase 2: Componentes Core (3-4 horas)
-- [ ] Instalar componentes shadcn/ui (prioridad alta)
-- [ ] Crear PasswordInput component
-- [ ] Crear componentes reutilizables adicionales
-- [ ] Configurar sistema de toasts
+- [x] Instalar componentes shadcn/ui (prioridad alta)
+- [x] Crear PasswordInput component
+- [x] Crear componentes reutilizables adicionales
+- [x] Configurar sistema de toasts
 
 ### Fase 3: Login/Register (2-3 horas)
-- [ ] Rediseñar LoginPage con shadcn/ui
-- [ ] Agregar toggle de password
-- [ ] Agregar theme toggle
-- [ ] Mejorar validación y feedback
-- [ ] Rediseñar RegisterPage
+- [x] Rediseñar LoginPage con shadcn/ui
+- [x] Agregar toggle de password
+- [x] Agregar theme toggle
+- [x] Mejorar validación y feedback
+- [x] Rediseñar RegisterPage
 
 ### Fase 4: Dashboard (2-3 horas)
-- [ ] Rediseñar con shadcn/ui Card components
-- [ ] Agregar skeleton loading
-- [ ] Implementar tooltips
-- [ ] Optimizar responsive layout
-- [ ] Agregar animaciones sutiles
+- [x] Rediseñar con shadcn/ui Card components
+- [x] Agregar skeleton loading
+- [x] Implementar tooltips
+- [x] Optimizar responsive layout
+- [x] Agregar animaciones sutiles
 
 ### Fase 5: Calculator Pages (4-5 horas)
-- [ ] Rediseñar cada paso con shadcn/ui
-- [ ] Implementar progress indicator
-- [ ] Mejorar validación inline
-- [ ] Agregar transiciones entre pasos
-- [ ] Optimizar UX de inputs
+- [x] Rediseñar cada paso con shadcn/ui
+- [x] Implementar progress indicator
+- [x] Mejorar validación inline
+- [x] Agregar transiciones entre pasos
+- [x] Optimizar UX de inputs
+- [x] Paginación en tablas de resultados (CE-03 cargas, CE-04 circuitos)
 
 ### Fase 6: Projects Page (2-3 horas)
-- [ ] Implementar data table
-- [ ] Agregar sorting/filtering
-- [ ] Mejorar empty state
-- [ ] Agregar confirmation dialogs
+- [x] Implementar data table
+- [x] Agregar sorting/filtering
+- [x] Mejorar empty state
+- [x] Agregar confirmation dialogs
+- [x] Paginación de tabla (servidor: page + pageSize)
 - [ ] Optimizar acciones bulk
 
 ### Fase 7: Plans Page (3-4 horas)
-- [ ] Mejorar upload drag & drop
-- [ ] Agregar progress bar
-- [ ] Mejorar viewer controls
-- [ ] Optimizar space editor
-- [ ] Agregar toast notifications
+- [x] Mejorar upload drag & drop
+- [x] Agregar progress bar
+- [x] Mejorar viewer controls
+- [x] Optimizar space editor
+- [x] Agregar toast notifications
+- [x] Paginación de lista de planos + lista de espacios
 
 ### Fase 8: Testing y Optimización (2-3 horas)
-- [ ] Testing de dark mode en todas las páginas
+- [x] Testing de dark mode en todas las páginas
 - [ ] Testing de accesibilidad (Lighthouse)
-- [ ] Testing responsive (mobile, tablet, desktop)
-- [ ] Optimización de rendimiento
+- [x] Testing responsive (mobile, tablet, desktop)
+- [x] Optimización de rendimiento
 - [ ] Cross-browser testing
 
 **Total estimado: 20-28 horas (3-4 días de trabajo)**
@@ -538,34 +541,34 @@ export default function LoginPage() {
 ## ✅ Checklist de Accesibilidad (WCAG AA/AAA)
 
 ### Contraste de Colores
-- [ ] Light mode: texto 4.5:1 mínimo
-- [ ] Dark mode: texto 4.5:1 mínimo
-- [ ] Botones: 3:1 mínimo
-- [ ] Focus indicators: 3:1 mínimo
+- [x] Light mode: texto 4.5:1 mínimo
+- [x] Dark mode: texto 4.5:1 mínimo
+- [x] Botones: 3:1 mínimo
+- [x] Focus indicators: 3:1 mínimo
 
 ### Navegación por Teclado
-- [ ] Todos los elementos interactivos son focusable
-- [ ] Focus order lógico
-- [ ] Focus indicators visibles
-- [ ] Escape cierra modales/dropdowns
+- [x] Todos los elementos interactivos son focusable
+- [x] Focus order lógico
+- [x] Focus indicators visibles
+- [x] Escape cierra modales/dropdowns
 
 ### Semántica HTML
-- [ ] Labels asociados a inputs
-- [ ] Aria-labels en botones de icono
-- [ ] Roles ARIA apropiados
-- [ ] Heading hierarchy correcta
+- [x] Labels asociados a inputs
+- [x] Aria-labels en botones de icono
+- [x] Roles ARIA apropiados
+- [x] Heading hierarchy correcta
 
 ### Responsive
-- [ ] Mobile-first design
-- [ ] Touch targets 44x44px mínimo
-- [ ] No horizontal scroll
-- [ ] Text readable sin zoom
+- [x] Mobile-first design
+- [x] Touch targets 44x44px mínimo
+- [x] No horizontal scroll
+- [x] Text readable sin zoom
 
 ### Motion
-- [ ] `prefers-reduced-motion` respetado
-- [ ] Animaciones 150-300ms
-- [ ] Motion con propósito (no decorativo)
-- [ ] Exit animations más rápidas que enter
+- [x] `prefers-reduced-motion` respetado
+- [x] Animaciones 150-300ms
+- [x] Motion con propósito (no decorativo)
+- [x] Exit animations más rápidas que enter
 
 ---
 

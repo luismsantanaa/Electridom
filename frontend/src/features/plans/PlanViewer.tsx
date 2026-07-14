@@ -1,7 +1,11 @@
 import { useEffect, useRef, useCallback, useState } from 'react';
 import * as fabric from 'fabric';
+import { Download, Focus, ZoomIn } from 'lucide-react';
 import type { DetectedSpace, Point } from '@shared/types/plan.types';
 import { SPACE_TYPE_COLORS, SPACE_TYPE_LABELS } from '@shared/types/plan.types';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent } from '@/components/ui/card';
 
 interface PlanViewerProps {
   spaces: DetectedSpace[];
@@ -21,13 +25,17 @@ export default function PlanViewer({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fabricRef = useRef<fabric.Canvas | null>(null);
   const [selectedSpace, setSelectedSpace] = useState<DetectedSpace | null>(null);
-  const [tooltip, setTooltip] = useState<{ x: number; y: number; space: DetectedSpace } | null>(null);
+  const [tooltip, setTooltip] = useState<{
+    x: number;
+    y: number;
+    space: DetectedSpace;
+  } | null>(null);
+  const [zoomPct, setZoomPct] = useState(100);
 
   const getColor = useCallback((spaceType: string | null) => {
     return SPACE_TYPE_COLORS[spaceType || 'unknown'] || SPACE_TYPE_COLORS.unknown;
   }, []);
 
-  // Initialize canvas
   useEffect(() => {
     if (!canvasRef.current) return;
 
@@ -38,7 +46,6 @@ export default function PlanViewer({
 
     fabricRef.current = canvas;
 
-    // Zoom with mouse wheel
     canvas.on('mouse:wheel', (opt) => {
       const delta = (opt.e as WheelEvent).deltaY;
       let zoom = canvas.getZoom();
@@ -46,11 +53,11 @@ export default function PlanViewer({
       if (zoom > 20) zoom = 20;
       if (zoom < 0.1) zoom = 0.1;
       canvas.zoomToPoint(new fabric.Point(opt.e.offsetX, opt.e.offsetY), zoom);
+      setZoomPct(Math.round(zoom * 100));
       opt.e.preventDefault();
       opt.e.stopPropagation();
     });
 
-    // Pan with drag
     let isPanning = false;
     let lastPosX = 0;
     let lastPosY = 0;
@@ -87,7 +94,6 @@ export default function PlanViewer({
     };
   }, [mode]);
 
-  // Load background image
   useEffect(() => {
     if (!fabricRef.current || !backgroundImageUrl) return;
 
@@ -101,19 +107,16 @@ export default function PlanViewer({
     });
   }, [backgroundImageUrl]);
 
-  // Render spaces as polygons
   useEffect(() => {
     if (!fabricRef.current) return;
 
     const canvas = fabricRef.current;
 
-    // Remove existing polygons
     const objects = canvas.getObjects();
     objects
       .filter((obj) => (obj as fabric.Polygon & { data?: { isSpace: boolean } }).data?.isSpace)
       .forEach((obj) => canvas.remove(obj));
 
-    // Add new polygons
     spaces.forEach((space) => {
       if (!space.vertices || space.vertices.length < 3) return;
 
@@ -190,76 +193,89 @@ export default function PlanViewer({
   const handleResetZoom = useCallback(() => {
     if (!fabricRef.current) return;
     fabricRef.current.setViewportTransform([1, 0, 0, 1, 0, 0]);
+    setZoomPct(100);
+  }, []);
+
+  const handleZoomIn = useCallback(() => {
+    if (!fabricRef.current) return;
+    const canvas = fabricRef.current;
+    const zoom = Math.min(20, canvas.getZoom() * 1.2);
+    canvas.setZoom(zoom);
+    setZoomPct(Math.round(zoom * 100));
+    canvas.renderAll();
   }, []);
 
   return (
-    <div className="relative">
-      <div className="flex gap-2 mb-3">
-        <button
-          onClick={handleResetZoom}
-          className="px-3 py-1 text-sm bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
-        >
-          Reset Zoom
-        </button>
-        <button
-          onClick={handleExportPNG}
-          className="px-3 py-1 text-sm bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
-        >
-          Exportar PNG
-        </button>
-        <span className="px-3 py-1 text-sm text-gray-500">
-          Modo: {mode === 'view' ? 'Vista' : 'Edición'}
-        </span>
-      </div>
-
-      <div className="relative border border-gray-200 rounded-lg overflow-hidden bg-gray-100">
-        <canvas ref={canvasRef} width={800} height={600} className="w-full" />
-      </div>
-
-      {/* Tooltip */}
-      {tooltip && (
-        <div
-          className="fixed bg-white border border-gray-200 rounded-lg shadow-lg px-3 py-2 text-sm z-50 pointer-events-none"
-          style={{ left: tooltip.x, top: tooltip.y, transform: 'translateX(-50%)' }}
-        >
-          <div className="font-medium">
-            {SPACE_TYPE_LABELS[tooltip.space.space_type || 'unknown'] || tooltip.space.name}
-          </div>
-          <div className="text-gray-500">{tooltip.space.area_m2.toFixed(1)} m²</div>
-          <div className="text-xs text-gray-400">
-            Confianza: {(tooltip.space.confidence * 100).toFixed(0)}%
-          </div>
+    <Card>
+      <CardContent className="space-y-3 pt-4">
+        <div className="flex flex-wrap items-center gap-2">
+          <Button type="button" variant="outline" size="sm" onClick={handleResetZoom}>
+            <Focus className="size-4" />
+            Reset zoom
+          </Button>
+          <Button type="button" variant="outline" size="sm" onClick={handleZoomIn}>
+            <ZoomIn className="size-4" />
+            Acercar
+          </Button>
+          <Button type="button" variant="outline" size="sm" onClick={handleExportPNG}>
+            <Download className="size-4" />
+            Exportar PNG
+          </Button>
+          <Badge variant="secondary" className="ml-auto tabular-nums">
+            {zoomPct}% · {mode === 'view' ? 'Vista' : 'Edición'}
+          </Badge>
         </div>
-      )}
 
-      {/* Legend */}
-      <div className="mt-3 flex flex-wrap gap-3">
-        {Object.entries(SPACE_TYPE_COLORS)
-          .filter(([key]) => spaces.some((s) => (s.space_type || 'unknown') === key))
-          .map(([type, color]) => (
-            <div key={type} className="flex items-center gap-1 text-xs">
-              <div className="w-3 h-3 rounded" style={{ backgroundColor: color }} />
-              <span className="text-gray-600">{SPACE_TYPE_LABELS[type] || type}</span>
+        <div className="relative overflow-hidden rounded-lg border border-border bg-muted">
+          <canvas ref={canvasRef} width={800} height={600} className="w-full" />
+        </div>
+
+        {tooltip && (
+          <div
+            className="pointer-events-none fixed z-50 rounded-lg border border-border bg-popover px-3 py-2 text-sm text-popover-foreground shadow-md"
+            style={{ left: tooltip.x, top: tooltip.y, transform: 'translateX(-50%)' }}
+          >
+            <div className="font-medium">
+              {SPACE_TYPE_LABELS[tooltip.space.space_type || 'unknown'] ||
+                tooltip.space.name}
             </div>
-          ))}
-      </div>
+            <div className="text-muted-foreground">
+              {tooltip.space.area_m2.toFixed(1)} m²
+            </div>
+            <div className="text-xs text-muted-foreground">
+              Confianza: {(tooltip.space.confidence * 100).toFixed(0)}%
+            </div>
+          </div>
+        )}
 
-      {/* Selected space info */}
-      {selectedSpace && (
-        <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg text-sm">
-          <div className="font-medium text-blue-900">
-            {SPACE_TYPE_LABELS[selectedSpace.space_type || 'unknown'] || selectedSpace.name}
-          </div>
-          <div className="text-blue-700">
-            Área: {selectedSpace.area_m2.toFixed(1)} m² | Perímetro:{' '}
-            {selectedSpace.perimeter_m.toFixed(1)} m
-          </div>
-          <div className="text-blue-500 text-xs">
-            Confianza: {(selectedSpace.confidence * 100).toFixed(0)}% | Método:{' '}
-            {selectedSpace.classification_method}
-          </div>
+        <div className="flex flex-wrap gap-3">
+          {Object.entries(SPACE_TYPE_COLORS)
+            .filter(([key]) => spaces.some((s) => (s.space_type || 'unknown') === key))
+            .map(([type, color]) => (
+              <div key={type} className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                <div className="size-3 rounded-sm" style={{ backgroundColor: color }} />
+                <span>{SPACE_TYPE_LABELS[type] || type}</span>
+              </div>
+            ))}
         </div>
-      )}
-    </div>
+
+        {selectedSpace && (
+          <div className="rounded-lg border border-primary/20 bg-primary/5 p-3 text-sm">
+            <div className="font-medium text-foreground">
+              {SPACE_TYPE_LABELS[selectedSpace.space_type || 'unknown'] ||
+                selectedSpace.name}
+            </div>
+            <div className="mt-1 text-muted-foreground">
+              Área: {selectedSpace.area_m2.toFixed(1)} m² · Perímetro:{' '}
+              {selectedSpace.perimeter_m.toFixed(1)} m
+            </div>
+            <div className="mt-0.5 text-xs text-muted-foreground">
+              Confianza: {(selectedSpace.confidence * 100).toFixed(0)}% · Método:{' '}
+              {selectedSpace.classification_method}
+            </div>
+          </div>
+        )}
+      </CardContent>
+    </Card>
   );
 }

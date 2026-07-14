@@ -1,15 +1,26 @@
-import { useState } from 'react';
+import { useState, type FormEvent } from 'react';
+import { Loader2, Plus, Trash2 } from 'lucide-react';
 import { useRoomsCalc } from './useCalculations';
 import type { Surface, Consumption, RoomsResponse } from '@shared/types/calc.types';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 interface RoomsFormProps {
   onComplete: (data: RoomsResponse) => void;
 }
 
 export default function RoomsForm({ onComplete }: RoomsFormProps) {
-  const [surfaces, setSurfaces] = useState<Surface[]>([
-    { name: '', area_m2: 0 },
-  ]);
+  const [surfaces, setSurfaces] = useState<Surface[]>([{ name: '', area_m2: 0 }]);
   const [consumptions, setConsumptions] = useState<Consumption[]>([
     { name: '', environment: '', power_w: 0 },
   ]);
@@ -30,7 +41,7 @@ export default function RoomsForm({ onComplete }: RoomsFormProps) {
   const updateConsumption = (i: number, field: keyof Consumption, value: string | number) =>
     setConsumptions(consumptions.map((c, idx) => (idx === i ? { ...c, [field]: value } : c)));
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     mutation.mutate(
       {
@@ -43,117 +54,153 @@ export default function RoomsForm({ onComplete }: RoomsFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="bg-white rounded-xl border border-gray-200 p-6">
-        <h3 className="text-lg font-semibold mb-4">Configuración del Sistema</h3>
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Voltaje (V)</label>
-            <input
-              type="number"
-              value={voltage}
-              onChange={(e) => setVoltage(+e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-            />
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">Configuración del Sistema</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className="space-y-2">
+              <Label htmlFor="rooms-voltage">Voltaje (V)</Label>
+              <Input
+                id="rooms-voltage"
+                type="number"
+                value={voltage}
+                onChange={(e) => setVoltage(+e.target.value)}
+                min={1}
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="rooms-phases">Fases</Label>
+              <Select
+                value={String(phases)}
+                onValueChange={(v) => setPhases(Number(v))}
+              >
+                <SelectTrigger id="rooms-phases" className="w-full">
+                  <SelectValue placeholder="Seleccionar" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="1">Monofásico (1)</SelectItem>
+                  <SelectItem value="3">Trifásico (3)</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Fases</label>
-            <select
-              value={phases}
-              onChange={(e) => setPhases(+e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-            >
-              <option value={1}>Monofásico (1)</option>
-              <option value={3}>Trifásico (3)</option>
-            </select>
-          </div>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
 
-      <div className="bg-white rounded-xl border border-gray-200 p-6">
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-semibold">Ambientes / Superficies</h3>
-          <button type="button" onClick={addSurface} className="text-sm text-blue-600 hover:text-blue-700">
-            + Agregar
-          </button>
-        </div>
-        {surfaces.map((s, i) => (
-          <div key={i} className="flex gap-3 mb-2">
-            <input
-              type="text"
-              placeholder="Nombre"
-              value={s.name}
-              onChange={(e) => updateSurface(i, 'name', e.target.value)}
-              className="flex-1 px-3 py-2 border border-gray-300 rounded-lg"
-            />
-            <input
-              type="number"
-              placeholder="Área (m²)"
-              value={s.area_m2 || ''}
-              onChange={(e) => updateSurface(i, 'area_m2', +e.target.value)}
-              className="w-32 px-3 py-2 border border-gray-300 rounded-lg"
-            />
-            {surfaces.length > 1 && (
-              <button type="button" onClick={() => removeSurface(i)} className="text-red-500 px-2">
-                ×
-              </button>
-            )}
-          </div>
-        ))}
-      </div>
+      <Card>
+        <CardHeader className="flex-row items-center justify-between space-y-0">
+          <CardTitle className="text-base">Ambientes / Superficies</CardTitle>
+          <Button type="button" variant="ghost" size="sm" onClick={addSurface}>
+            <Plus className="size-4" />
+            Agregar
+          </Button>
+        </CardHeader>
+        <CardContent className="space-y-2">
+          {surfaces.map((s, i) => (
+            <div key={i} className="flex flex-col gap-2 sm:flex-row sm:items-center">
+              <Input
+                type="text"
+                placeholder="Nombre"
+                value={s.name}
+                onChange={(e) => updateSurface(i, 'name', e.target.value)}
+                className="flex-1"
+                aria-label={`Nombre ambiente ${i + 1}`}
+              />
+              <Input
+                type="number"
+                placeholder="Área (m²)"
+                value={s.area_m2 || ''}
+                onChange={(e) => updateSurface(i, 'area_m2', +e.target.value)}
+                className="sm:w-32"
+                min={0}
+                aria-label={`Área ambiente ${i + 1}`}
+              />
+              {surfaces.length > 1 && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => removeSurface(i)}
+                  aria-label={`Eliminar ambiente ${i + 1}`}
+                  className="text-destructive hover:text-destructive"
+                >
+                  <Trash2 className="size-4" />
+                </Button>
+              )}
+            </div>
+          ))}
+        </CardContent>
+      </Card>
 
-      <div className="bg-white rounded-xl border border-gray-200 p-6">
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-semibold">Consumos</h3>
-          <button type="button" onClick={addConsumption} className="text-sm text-blue-600 hover:text-blue-700">
-            + Agregar
-          </button>
-        </div>
-        {consumptions.map((c, i) => (
-          <div key={i} className="flex gap-3 mb-2">
-            <input
-              type="text"
-              placeholder="Nombre"
-              value={c.name}
-              onChange={(e) => updateConsumption(i, 'name', e.target.value)}
-              className="flex-1 px-3 py-2 border border-gray-300 rounded-lg"
-            />
-            <input
-              type="text"
-              placeholder="Ambiente"
-              value={c.environment}
-              onChange={(e) => updateConsumption(i, 'environment', e.target.value)}
-              className="flex-1 px-3 py-2 border border-gray-300 rounded-lg"
-            />
-            <input
-              type="number"
-              placeholder="Watts"
-              value={c.power_w || ''}
-              onChange={(e) => updateConsumption(i, 'power_w', +e.target.value)}
-              className="w-28 px-3 py-2 border border-gray-300 rounded-lg"
-            />
-            {consumptions.length > 1 && (
-              <button type="button" onClick={() => removeConsumption(i)} className="text-red-500 px-2">
-                ×
-              </button>
-            )}
-          </div>
-        ))}
-      </div>
+      <Card>
+        <CardHeader className="flex-row items-center justify-between space-y-0">
+          <CardTitle className="text-base">Consumos</CardTitle>
+          <Button type="button" variant="ghost" size="sm" onClick={addConsumption}>
+            <Plus className="size-4" />
+            Agregar
+          </Button>
+        </CardHeader>
+        <CardContent className="space-y-2">
+          {consumptions.map((c, i) => (
+            <div key={i} className="flex flex-col gap-2 sm:flex-row sm:items-center">
+              <Input
+                type="text"
+                placeholder="Nombre"
+                value={c.name}
+                onChange={(e) => updateConsumption(i, 'name', e.target.value)}
+                className="flex-1"
+                aria-label={`Nombre consumo ${i + 1}`}
+              />
+              <Input
+                type="text"
+                placeholder="Ambiente"
+                value={c.environment}
+                onChange={(e) => updateConsumption(i, 'environment', e.target.value)}
+                className="flex-1"
+                aria-label={`Ambiente consumo ${i + 1}`}
+              />
+              <Input
+                type="number"
+                placeholder="Watts"
+                value={c.power_w || ''}
+                onChange={(e) => updateConsumption(i, 'power_w', +e.target.value)}
+                className="sm:w-28"
+                min={0}
+                aria-label={`Watts consumo ${i + 1}`}
+              />
+              {consumptions.length > 1 && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => removeConsumption(i)}
+                  aria-label={`Eliminar consumo ${i + 1}`}
+                  className="text-destructive hover:text-destructive"
+                >
+                  <Trash2 className="size-4" />
+                </Button>
+              )}
+            </div>
+          ))}
+        </CardContent>
+      </Card>
 
       {mutation.isError && (
-        <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
-          Error al calcular. Verifica los datos e intenta de nuevo.
-        </div>
+        <Alert variant="destructive">
+          <AlertDescription>
+            Error al calcular. Verifica los datos e intenta de nuevo.
+          </AlertDescription>
+        </Alert>
       )}
 
-      <button
-        type="submit"
-        disabled={mutation.isPending}
-        className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-medium rounded-lg"
-      >
+      <Button type="submit" className="w-full" disabled={mutation.isPending}>
+        {mutation.isPending && <Loader2 className="size-4 animate-spin" />}
         {mutation.isPending ? 'Calculando...' : 'Calcular Habitaciones (CE-01)'}
-      </button>
+      </Button>
     </form>
   );
 }

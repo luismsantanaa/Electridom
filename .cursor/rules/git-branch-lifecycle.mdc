@@ -1,0 +1,16 @@
+---
+description: Al terminar trabajo con commit, mergear feature a main y eliminar ramas locales ya usadas
+alwaysApply: true
+---
+
+# Ciclo de vida de ramas Git
+
+Cuando el usuario pida **commit** o indique que **terminamos** una feature/tarea:
+
+1. Revisar ramas locales (`git branch`). Si el trabajo está en una feature branch:
+   - Completar el commit en esa rama (solo si el usuario lo pidió).
+   - Cambiar a `main`, mergear la feature (`git merge --no-ff <branch>` salvo que el usuario pida fast-forward).
+   - Eliminar la rama local mergeada (`git branch -d <branch>`).
+2. Si el trabajo ya está en `main`, solo commit; no crear/merge/borrar ramas innecesarias.
+3. No hacer `push`, borrar ramas remotas, ni force-push sin petición explícita del usuario.
+4. Documentación del proyecto: `AGENTS.md` sección "Flujo Git: ramas, merge y limpieza".

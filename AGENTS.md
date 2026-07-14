@@ -256,6 +256,23 @@ El pipeline corre en GitHub Actions para branches `main` y `develop`:
 3. **Plan Service Test**: Lint + Tests + Docker build (Python 3.12)
 4. **Build & Deploy**: Solo en `main` (actualmente parcial)
 
+## Flujo Git: ramas, merge y limpieza
+
+**Al terminar un feature o tarea**, el agente debe cerrar el ciclo de ramas (no dejar ramas locales huérfanas):
+
+1. **Commit** solo cuando el usuario lo pida (ver reglas de commit del usuario).
+2. Si el trabajo está en una **rama feature** (no en `main`):
+   - Asegurar que `main` está actualizado: `git checkout main` → `git pull` (si hay remote).
+   - **Merge** de la feature a `main`: `git merge --no-ff <feature-branch>` (o fast-forward si el usuario prefiere).
+   - Resolver conflictos si aparecen; no abortar el merge sin avisar.
+3. **Eliminar** la rama local ya mergeada: `git branch -d <feature-branch>`.
+4. Si la rama existía en remote y el usuario pidió limpiar remote: `git push origin --delete <feature-branch>` (solo con permiso explícito).
+5. Si el trabajo ya se hizo **directamente en `main`**, no hay merge ni borrado de ramas; solo el commit.
+
+**No hacer** sin petición explícita del usuario: `push`, `push --force`, borrar ramas remotas, ni rebase interactivo.
+
+Ver también: `.cursor/rules/git-branch-lifecycle.mdc`.
+
 ## Notas Importantes
 
 - El proyecto completó la migración V2 en Julio 2026
@@ -266,6 +283,7 @@ El pipeline corre en GitHub Actions para branches `main` y `develop`:
 - Consultar `context7` antes de usar APIs de librerías para verificar sintaxis actual
 - Usar `codegraph` para entender dependencias antes de refactorizar
 - Usar `playwright` para testing E2E del frontend cuando sea necesario
+- Preferir IronBee DevTools (browser) para verificación UI en lugar de Playwright MCP genérico cuando esté habilitado
 
 ## Documentación Adicional
 

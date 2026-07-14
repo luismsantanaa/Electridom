@@ -194,7 +194,10 @@ export default function SpaceGraphics({
 
   return (
     <div ref={containerRef} className="w-full">
-      <svg ref={svgRef} className="w-full border border-gray-200 rounded-lg bg-white" />
+      <svg
+        ref={svgRef}
+        className="w-full rounded-lg border border-border bg-card"
+      />
     </div>
   );
 }

@@ -1,6 +1,19 @@
-import { useState } from 'react';
+import { useState, type FormEvent } from 'react';
+import { Loader2, Plus, Trash2 } from 'lucide-react';
 import { useDemandCalc } from './useCalculations';
 import type { CategoryLoad, RoomsResponse, DemandResponse } from '@shared/types/calc.types';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 interface DemandFormProps {
   roomsResult: RoomsResponse | null;
@@ -27,7 +40,7 @@ export default function DemandForm({ roomsResult, onComplete }: DemandFormProps)
 
   const totalVA = categories.reduce((sum, c) => sum + c.carga_va, 0);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     mutation.mutate(
       {
@@ -39,81 +52,101 @@ export default function DemandForm({ roomsResult, onComplete }: DemandFormProps)
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="bg-white rounded-xl border border-gray-200 p-6">
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-semibold">Cargas por Categoría</h3>
-          <button type="button" onClick={addCategory} className="text-sm text-blue-600 hover:text-blue-700">
-            + Agregar
-          </button>
-        </div>
-        {categories.map((c, i) => (
-          <div key={i} className="flex gap-3 mb-2">
-            <input
-              type="text"
-              placeholder="Categoría"
-              value={c.category}
-              onChange={(e) => updateCategory(i, 'category', e.target.value)}
-              className="flex-1 px-3 py-2 border border-gray-300 rounded-lg"
-            />
-            <input
-              type="number"
-              placeholder="Carga (VA)"
-              value={c.carga_va || ''}
-              onChange={(e) => updateCategory(i, 'carga_va', +e.target.value)}
-              className="w-36 px-3 py-2 border border-gray-300 rounded-lg"
-            />
-            {categories.length > 1 && (
-              <button type="button" onClick={() => removeCategory(i)} className="text-red-500 px-2">
-                ×
-              </button>
-            )}
-          </div>
-        ))}
-        <div className="mt-3 text-sm text-gray-600">
-          Total: <strong>{totalVA.toLocaleString()} VA</strong>
-        </div>
-      </div>
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <Card>
+        <CardHeader className="flex-row items-center justify-between space-y-0">
+          <CardTitle className="text-base">Cargas por Categoría</CardTitle>
+          <Button type="button" variant="ghost" size="sm" onClick={addCategory}>
+            <Plus className="size-4" />
+            Agregar
+          </Button>
+        </CardHeader>
+        <CardContent className="space-y-2">
+          {categories.map((c, i) => (
+            <div key={i} className="flex flex-col gap-2 sm:flex-row sm:items-center">
+              <Input
+                type="text"
+                placeholder="Categoría"
+                value={c.category}
+                onChange={(e) => updateCategory(i, 'category', e.target.value)}
+                className="flex-1"
+                aria-label={`Categoría ${i + 1}`}
+              />
+              <Input
+                type="number"
+                placeholder="Carga (VA)"
+                value={c.carga_va || ''}
+                onChange={(e) => updateCategory(i, 'carga_va', +e.target.value)}
+                className="sm:w-36"
+                min={0}
+                aria-label={`Carga VA ${i + 1}`}
+              />
+              {categories.length > 1 && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => removeCategory(i)}
+                  aria-label={`Eliminar categoría ${i + 1}`}
+                  className="text-destructive hover:text-destructive"
+                >
+                  <Trash2 className="size-4" />
+                </Button>
+              )}
+            </div>
+          ))}
+          <p className="pt-2 text-sm text-muted-foreground">
+            Total:{' '}
+            <strong className="tabular-nums text-foreground">
+              {totalVA.toLocaleString()} VA
+            </strong>
+          </p>
+        </CardContent>
+      </Card>
 
-      <div className="bg-white rounded-xl border border-gray-200 p-6">
-        <h3 className="text-lg font-semibold mb-4">Sistema</h3>
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Voltaje (V)</label>
-            <input
-              type="number"
-              value={voltage}
-              onChange={(e) => setVoltage(+e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-            />
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">Sistema</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className="space-y-2">
+              <Label htmlFor="demand-voltage">Voltaje (V)</Label>
+              <Input
+                id="demand-voltage"
+                type="number"
+                value={voltage}
+                onChange={(e) => setVoltage(+e.target.value)}
+                min={1}
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="demand-phases">Fases</Label>
+              <Select value={String(phases)} onValueChange={(v) => setPhases(Number(v))}>
+                <SelectTrigger id="demand-phases" className="w-full">
+                  <SelectValue placeholder="Seleccionar" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="1">Monofásico</SelectItem>
+                  <SelectItem value="3">Trifásico</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Fases</label>
-            <select
-              value={phases}
-              onChange={(e) => setPhases(+e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-            >
-              <option value={1}>Monofásico</option>
-              <option value={3}>Trifásico</option>
-            </select>
-          </div>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
 
       {mutation.isError && (
-        <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
-          Error al calcular demanda.
-        </div>
+        <Alert variant="destructive">
+          <AlertDescription>Error al calcular demanda.</AlertDescription>
+        </Alert>
       )}
 
-      <button
-        type="submit"
-        disabled={mutation.isPending}
-        className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-medium rounded-lg"
-      >
+      <Button type="submit" className="w-full" disabled={mutation.isPending}>
+        {mutation.isPending && <Loader2 className="size-4 animate-spin" />}
         {mutation.isPending ? 'Calculando...' : 'Calcular Demanda (CE-02)'}
-      </button>
+      </Button>
     </form>
   );
 }

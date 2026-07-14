@@ -1,3 +1,4 @@
+import { FileWarning } from 'lucide-react';
 import type {
   RoomsResponse,
   DemandResponse,
@@ -5,6 +6,9 @@ import type {
   FeederResponse,
   GroundingResponse,
 } from '@shared/types/calc.types';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
 
 interface ResultsViewProps {
   rooms: RoomsResponse | null;
@@ -14,130 +18,192 @@ interface ResultsViewProps {
   grounding: GroundingResponse | null;
 }
 
-export default function ResultsView({ rooms, demand, circuits, feeder, grounding }: ResultsViewProps) {
+function Stat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="space-y-6">
-      {rooms && (
-        <div className="bg-white rounded-xl border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold mb-3">CE-01: Habitaciones</h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-            <div className="p-3 bg-gray-50 rounded-lg">
-              <div className="text-gray-500">Carga total</div>
-              <div className="text-lg font-bold">{rooms.totales.carga_total_va.toLocaleString()} VA</div>
-            </div>
-            <div className="p-3 bg-gray-50 rounded-lg">
-              <div className="text-gray-500">Diversificada</div>
-              <div className="text-lg font-bold">{rooms.totales.carga_diversificada_va.toLocaleString()} VA</div>
-            </div>
-            <div className="p-3 bg-gray-50 rounded-lg">
-              <div className="text-gray-500">Corriente</div>
-              <div className="text-lg font-bold">{rooms.totales.corriente_total_a.toFixed(2)} A</div>
-            </div>
-            <div className="p-3 bg-gray-50 rounded-lg">
-              <div className="text-gray-500">Ambientes</div>
-              <div className="text-lg font-bold">{rooms.environments.length}</div>
-            </div>
+    <div className="rounded-lg bg-muted/60 p-3">
+      <div className="text-xs text-muted-foreground">{label}</div>
+      <div className="mt-1 text-lg font-bold tabular-nums tracking-tight text-foreground">
+        {value}
+      </div>
+    </div>
+  );
+}
+
+export default function ResultsView({
+  rooms,
+  demand,
+  circuits,
+  feeder,
+  grounding,
+}: ResultsViewProps) {
+  const hasAny = !!(rooms || demand || circuits || feeder || grounding);
+
+  if (!hasAny) {
+    return (
+      <Card>
+        <CardContent className="flex flex-col items-center justify-center gap-3 py-12 text-center">
+          <div className="rounded-full bg-muted p-3">
+            <FileWarning className="size-6 text-muted-foreground" />
           </div>
-        </div>
+          <p className="text-sm text-muted-foreground">
+            Completa los cálculos para ver los resultados aquí.
+          </p>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  return (
+    <div className="space-y-4">
+      {rooms && (
+        <Card>
+          <CardHeader className="flex-row items-center justify-between space-y-0">
+            <CardTitle className="text-base">Habitaciones</CardTitle>
+            <Badge variant="secondary">CE-01</Badge>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+              <Stat label="Carga total" value={`${rooms.totales.carga_total_va.toLocaleString()} VA`} />
+              <Stat
+                label="Diversificada"
+                value={`${rooms.totales.carga_diversificada_va.toLocaleString()} VA`}
+              />
+              <Stat label="Corriente" value={`${rooms.totales.corriente_total_a.toFixed(2)} A`} />
+              <Stat label="Ambientes" value={String(rooms.environments.length)} />
+            </div>
+          </CardContent>
+        </Card>
       )}
 
       {demand && (
-        <div className="bg-white rounded-xl border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold mb-3">CE-02: Demanda</h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-            <div className="p-3 bg-gray-50 rounded-lg">
-              <div className="text-gray-500">Original</div>
-              <div className="text-lg font-bold">{demand.totales_diversificados.carga_total_original_va.toLocaleString()} VA</div>
+        <Card>
+          <CardHeader className="flex-row items-center justify-between space-y-0">
+            <CardTitle className="text-base">Demanda</CardTitle>
+            <Badge variant="secondary">CE-02</Badge>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+              <Stat
+                label="Original"
+                value={`${demand.totales_diversificados.carga_total_original_va.toLocaleString()} VA`}
+              />
+              <Stat
+                label="Diversificada"
+                value={`${demand.totales_diversificados.carga_total_diversificada_va.toLocaleString()} VA`}
+              />
+              <Stat
+                label="Factor"
+                value={`${(demand.totales_diversificados.factor_diversificacion_efectivo * 100).toFixed(1)}%`}
+              />
+              <Stat
+                label="Ahorro"
+                value={`${demand.totales_diversificados.porcentaje_ahorro.toFixed(1)}%`}
+              />
             </div>
-            <div className="p-3 bg-gray-50 rounded-lg">
-              <div className="text-gray-500">Diversificada</div>
-              <div className="text-lg font-bold">{demand.totales_diversificados.carga_total_diversificada_va.toLocaleString()} VA</div>
-            </div>
-            <div className="p-3 bg-gray-50 rounded-lg">
-              <div className="text-gray-500">Factor</div>
-              <div className="text-lg font-bold">{(demand.totales_diversificados.factor_diversificacion_efectivo * 100).toFixed(1)}%</div>
-            </div>
-            <div className="p-3 bg-gray-50 rounded-lg">
-              <div className="text-gray-500">Ahorro</div>
-              <div className="text-lg font-bold">{demand.totales_diversificados.porcentaje_ahorro.toFixed(1)}%</div>
-            </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       )}
 
       {circuits && (
-        <div className="bg-white rounded-xl border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold mb-3">CE-03: Circuitos</h3>
-          <div className="grid grid-cols-3 gap-4 text-sm">
-            <div className="p-3 bg-gray-50 rounded-lg">
-              <div className="text-gray-500">Total circuitos</div>
-              <div className="text-lg font-bold">{circuits.totales.total_circuitos}</div>
+        <Card>
+          <CardHeader className="flex-row items-center justify-between space-y-0">
+            <CardTitle className="text-base">Circuitos</CardTitle>
+            <Badge variant="secondary">CE-03</Badge>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+              <Stat label="Total circuitos" value={String(circuits.totales.total_circuitos)} />
+              <Stat
+                label="Carga total"
+                value={`${circuits.totales.carga_total_va.toLocaleString()} VA`}
+              />
+              <Stat
+                label="Corriente total"
+                value={`${circuits.totales.corriente_total_a.toFixed(2)} A`}
+              />
             </div>
-            <div className="p-3 bg-gray-50 rounded-lg">
-              <div className="text-gray-500">Carga total</div>
-              <div className="text-lg font-bold">{circuits.totales.carga_total_va.toLocaleString()} VA</div>
-            </div>
-            <div className="p-3 bg-gray-50 rounded-lg">
-              <div className="text-gray-500">Corriente total</div>
-              <div className="text-lg font-bold">{circuits.totales.corriente_total_a.toFixed(2)} A</div>
-            </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       )}
 
       {feeder && (
-        <div className="bg-white rounded-xl border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold mb-3">CE-04: Alimentador</h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-            <div className="p-3 bg-gray-50 rounded-lg">
-              <div className="text-gray-500">Calibre</div>
-              <div className="text-lg font-bold">{feeder.alimentador.calibre_awg} AWG</div>
+        <Card>
+          <CardHeader className="flex-row items-center justify-between space-y-0">
+            <CardTitle className="text-base">Alimentador</CardTitle>
+            <Badge variant="secondary">CE-04</Badge>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+              <Stat label="Calibre" value={`${feeder.alimentador.calibre_awg} AWG`} />
+              <Stat label="Sección" value={`${feeder.alimentador.section_mm2} mm²`} />
+              <Stat label="Ampacidad" value={`${feeder.alimentador.ampacidad_a} A`} />
+              <Stat
+                label="Caída tensión"
+                value={`${feeder.alimentador.caida_tension_pct.toFixed(2)}%`}
+              />
             </div>
-            <div className="p-3 bg-gray-50 rounded-lg">
-              <div className="text-gray-500">Sección</div>
-              <div className="text-lg font-bold">{feeder.alimentador.section_mm2} mm²</div>
-            </div>
-            <div className="p-3 bg-gray-50 rounded-lg">
-              <div className="text-gray-500">Ampacidad</div>
-              <div className="text-lg font-bold">{feeder.alimentador.ampacidad_a} A</div>
-            </div>
-            <div className="p-3 bg-gray-50 rounded-lg">
-              <div className="text-gray-500">Caída tensión</div>
-              <div className="text-lg font-bold">{feeder.alimentador.caida_tension_pct.toFixed(2)}%</div>
-            </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       )}
 
       {grounding && (
-        <div className="bg-white rounded-xl border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold mb-3">CE-05: Puesta a Tierra</h3>
-          <div className="grid grid-cols-2 gap-6 text-sm">
-            <div>
-              <h4 className="font-medium text-gray-700 mb-2">Electrodo</h4>
-              <div className="space-y-1">
-                <div>Tipo: <strong>{grounding.electrodo.tipo}</strong></div>
-                <div>Cantidad: <strong>{grounding.electrodo.cantidad}</strong></div>
-                <div>Profundidad: <strong>{grounding.electrodo.profundidad_m} m</strong></div>
-                <div>Resistencia: <strong>{grounding.electrodo.resistencia_ohm} Ω</strong></div>
+        <Card>
+          <CardHeader className="flex-row items-center justify-between space-y-0">
+            <CardTitle className="text-base">Puesta a Tierra</CardTitle>
+            <Badge variant="secondary">CE-05</Badge>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+              <div className="space-y-2 text-sm">
+                <h4 className="font-medium text-foreground">Electrodo</h4>
+                <Separator />
+                <div className="space-y-1 text-muted-foreground">
+                  <div>
+                    Tipo: <strong className="text-foreground">{grounding.electrodo.tipo}</strong>
+                  </div>
+                  <div>
+                    Cantidad:{' '}
+                    <strong className="text-foreground">{grounding.electrodo.cantidad}</strong>
+                  </div>
+                  <div>
+                    Profundidad:{' '}
+                    <strong className="text-foreground">
+                      {grounding.electrodo.profundidad_m} m
+                    </strong>
+                  </div>
+                  <div>
+                    Resistencia:{' '}
+                    <strong className="text-foreground">
+                      {grounding.electrodo.resistencia_ohm} Ω
+                    </strong>
+                  </div>
+                </div>
+              </div>
+              <div className="space-y-2 text-sm">
+                <h4 className="font-medium text-foreground">Conductor</h4>
+                <Separator />
+                <div className="space-y-1 text-muted-foreground">
+                  <div>
+                    Sección:{' '}
+                    <strong className="text-foreground">
+                      {grounding.conductor.section_mm2} mm²
+                    </strong>
+                  </div>
+                  <div>
+                    Calibre:{' '}
+                    <strong className="text-foreground">
+                      {grounding.conductor.calibre_awg} AWG
+                    </strong>
+                  </div>
+                  <div>
+                    Material:{' '}
+                    <strong className="text-foreground">{grounding.conductor.material}</strong>
+                  </div>
+                </div>
               </div>
             </div>
-            <div>
-              <h4 className="font-medium text-gray-700 mb-2">Conductor</h4>
-              <div className="space-y-1">
-                <div>Sección: <strong>{grounding.conductor.section_mm2} mm²</strong></div>
-                <div>Calibre: <strong>{grounding.conductor.calibre_awg} AWG</strong></div>
-                <div>Material: <strong>{grounding.conductor.material}</strong></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {!rooms && !demand && !circuits && !feeder && !grounding && (
-        <div className="bg-white rounded-xl border border-gray-200 p-6 text-center text-gray-500">
-          Completa los cálculos para ver los resultados aquí.
-        </div>
+          </CardContent>
+        </Card>
       )}
     </div>
   );
