@@ -163,7 +163,10 @@ export class SeedsService {
       await this.seedIAConfig();
 
       // Sembrar configuración unifilar
-      // NOTE: seedUnifilarConfig() removed - unifilar-config.seed.ts no longer exists
+      // NOTE: unifilar-config.seed.ts was removed during migration V2.
+      // Unifilar configuration seeds are no longer available.
+      // If unifilar configuration is needed, recreate the seeder with updated imports.
+      console.warn('⚠️ Unifilar config seeding skipped — seeder file not found (removed in V2 migration)');
     } catch (error) {
       console.error('Error al realizar el seed:', error);
       throw error;
@@ -997,6 +1000,25 @@ export class SeedsService {
           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
           updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
+      `);
+
+      // PostgreSQL replacement for MySQL ON UPDATE CURRENT_TIMESTAMP
+      // Ensures updated_at is refreshed on any UPDATE path, not only the
+      // ON CONFLICT ... DO UPDATE SET path used by the seed upserts below.
+      await this.dataSource.query(`
+        CREATE OR REPLACE FUNCTION update_ia_config_updated_at()
+        RETURNS TRIGGER AS $$
+        BEGIN
+          NEW.updated_at = CURRENT_TIMESTAMP;
+          RETURN NEW;
+        END;
+        $$ LANGUAGE plpgsql;
+
+        DROP TRIGGER IF EXISTS trg_ia_config_updated_at ON ia_config;
+        CREATE TRIGGER trg_ia_config_updated_at
+          BEFORE UPDATE ON ia_config
+          FOR EACH ROW
+          EXECUTE FUNCTION update_ia_config_updated_at();
       `);
 
       // Insertar configuración por defecto

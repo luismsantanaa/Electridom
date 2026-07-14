@@ -1,37 +1,15 @@
-import { DataSource } from 'typeorm';
-import { config } from 'dotenv';
+import { NestFactory } from '@nestjs/core';
+import { SeedsModule } from '../src/database/seeds/seeds.module';
+import { SeedsService } from '../src/database/seeds/templates/seeds.service';
 
-config();
-
-async function runSeeds() {
-  const dataSource = new DataSource({
-    type: 'mariadb',
-    host: process.env.DATABASE_HOST || 'localhost',
-    port: parseInt(process.env.DATABASE_PORT || '3306'),
-    username: process.env.DATABASE_USERNAME || 'electridom',
-    password: process.env.DATABASE_PASSWORD || 'electridom',
-    database: process.env.DATABASE_NAME || 'electridom',
-    synchronize: false,
-    logging: true,
-    entities: ['src/**/*.entity.ts'],
-  });
-
-  try {
-    await dataSource.initialize();
-
-    // NOTE: individual seed functions (normConstSeed, demandFactorSeed,
-    // seedResistivity, seedGroundingRules) were removed because the
-    // _archive/ folder no longer exists. Use `npm run seed` instead.
-    console.warn('run-seeds-simple: seed functions moved to SeedsService. Use `npm run seed`.');
-  } catch (error) {
-    console.error('Error during seeds execution:', error);
-    process.exit(1);
-  } finally {
-    await dataSource.destroy();
-  }
+async function bootstrap() {
+  const app = await NestFactory.createApplicationContext(SeedsModule);
+  const seedsService = app.get(SeedsService);
+  await seedsService.seed();
+  await app.close();
 }
 
-runSeeds().catch((error) => {
-  console.error('Failed to run seeds:', error);
+bootstrap().catch((err) => {
+  console.error('Seed failed:', err);
   process.exit(1);
 });

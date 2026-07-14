@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import type { StringValue } from 'ms';
 import { JwksKey } from './entities/jwks-key.entity';
 import { JwksKeyRepository } from './repositories/jwks-key.repository';
 import { KeyStoreService } from './services/key-store.service';
@@ -17,7 +18,7 @@ import { JwksAdminController } from './controllers/jwks-admin.controller';
       useFactory: async (configService: ConfigService) => ({
         secret: configService.get<string>('JWT_SECRET'),
         signOptions: {
-          expiresIn: configService.get<string>('JWT_EXPIRES_IN', '900s') as any,
+          expiresIn: configService.get<string>('JWT_EXPIRES_IN', '900s') as StringValue | number,
         },
       }),
       inject: [ConfigService],

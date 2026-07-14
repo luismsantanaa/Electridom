@@ -262,7 +262,12 @@ export class ReportService {
       template = this.replaceTemplateVariables(template, reportData);
 
       // Configurar página
-      await page.setContent(template, { waitUntil: 'networkidle' as any });
+      // NOTE: Puppeteer's Page.setContent only accepts waitUntil values
+      // 'load' | 'domcontentloaded' (networkidle0/2 are excluded for setContent).
+      // The previous `'networkidle' as any` was a latent bug: 'networkidle' is
+      // not a valid setContent lifecycle event. Use 'load' (window.onload) as
+      // the closest behavior-preserving choice that waits for resources.
+      await page.setContent(template, { waitUntil: 'load' });
       await page.setViewport({ width: 1200, height: 800 });
 
       // Generar PDF

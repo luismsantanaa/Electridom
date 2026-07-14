@@ -62,18 +62,7 @@ export class LlmGateway {
   }
 
   async generate<T = any>(prompt: PromptInput): Promise<PromptResponse> {
-    if (!this.currentProvider) {
-      try {
-        await this.initializeProvider();
-      } catch {
-        // ignore
-      }
-      if (!this.currentProvider) {
-        throw new Error(
-          'No LLM providers available. Ensure Ollama or OpenAI is configured and reachable.',
-        );
-      }
-    }
+    await this.ensureProvider();
 
     const startTime = Date.now();
     const correlationId = this.generateCorrelationId();
@@ -111,18 +100,7 @@ export class LlmGateway {
   }
 
   async *generateStream(prompt: PromptInput): AsyncGenerator<StreamResponse> {
-    if (!this.currentProvider) {
-      try {
-        await this.initializeProvider();
-      } catch {
-        // ignore
-      }
-      if (!this.currentProvider) {
-        throw new Error(
-          'No LLM providers available. Ensure Ollama or OpenAI is configured and reachable.',
-        );
-      }
-    }
+    await this.ensureProvider();
 
     const correlationId = this.generateCorrelationId();
     this.logger.log(
@@ -164,21 +142,41 @@ export class LlmGateway {
   }
 
   async getCurrentProvider(): Promise<{ name: string; models: string[] }> {
-    if (!this.currentProvider) {
-      try {
-        await this.initializeProvider();
-      } catch {
-        // ignore
-      }
-      if (!this.currentProvider) {
-        return { name: 'none', models: [] };
-      }
+    const hasProvider = await this.tryEnsureProvider();
+    if (!hasProvider) {
+      return { name: 'none', models: [] };
     }
 
     return {
       name: this.currentProvider.getProviderName(),
       models: await this.currentProvider.getModels(),
     };
+  }
+
+  private async ensureProvider(): Promise<void> {
+    if (!this.currentProvider) {
+      try {
+        await this.initializeProvider();
+      } catch {
+        // ignore — will throw below if still no provider
+      }
+      if (!this.currentProvider) {
+        throw new Error(
+          'No LLM providers available. Ensure Ollama or OpenAI is configured and reachable.',
+        );
+      }
+    }
+  }
+
+  private async tryEnsureProvider(): Promise<boolean> {
+    if (!this.currentProvider) {
+      try {
+        await this.initializeProvider();
+      } catch {
+        // ignore
+      }
+    }
+    return !!this.currentProvider;
   }
 
   private generateCorrelationId(): string {

@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
+import asyncio
+import concurrent.futures
 import logging
+import os
 from pathlib import Path
 from typing import Any, cast
 
@@ -18,6 +21,32 @@ from app.services.pdf.type_detector import PdfType, PdfTypeDetector
 from app.services.pdf.vector_parser import PdfVectorParser
 
 logger = logging.getLogger(__name__)
+
+
+def _run_async(coro: Any) -> Any:
+    """Run an async coroutine safely from a synchronous call site.
+
+    The Celery worker path runs without a running event loop, so ``asyncio.run``
+    is safe there. When the orchestrator is invoked from a FastAPI request
+    handler, however, an event loop is already running on the current thread and
+    ``asyncio.run`` would raise ``RuntimeError: asyncio.run() cannot be called
+    from a running event loop``. In that case we offload ``asyncio.run`` to a
+    short-lived thread pool so the running loop on the main thread is not
+    disturbed.
+    """
+    try:
+        loop = asyncio.get_running_loop()
+    except RuntimeError:
+        loop = None
+
+    if loop and loop.is_running():
+        # We're inside a running event loop (FastAPI path) — run on a worker
+        # thread so we don't collide with the active loop.
+        with concurrent.futures.ThreadPoolExecutor() as pool:
+            return pool.submit(asyncio.run, coro).result()
+    else:
+        # No running loop (Celery worker path) — safe to use asyncio.run.
+        return asyncio.run(coro)
 
 
 class ProcessingOrchestrator:
@@ -75,6 +104,7 @@ class ProcessingOrchestrator:
         # AI fallback: if average confidence is low, try OpenAI Vision
         avg_conf = result["metadata"]["average_confidence"]
         if avg_conf < 0.5 and pdf_type in (PdfType.RASTER, PdfType.MIXED):
+            image_path: str | None = None
             try:
                 from app.services.ai.vision_classifier import analyze_with_vision
 
@@ -84,9 +114,7 @@ class ProcessingOrchestrator:
                     logger.info(
                         "Low confidence (%.2f), trying Vision API fallback", avg_conf
                     )
-                    import asyncio
-
-                    vision_spaces = asyncio.run(
+                    vision_spaces = _run_async(
                         analyze_with_vision(
                             image_path,
                             cache_key=str(Path(file_path).stat().st_mtime),
@@ -121,13 +149,24 @@ class ProcessingOrchestrator:
                 logger.warning("Vision API fallback failed: %s", e)
                 result["metadata"]["ai_fallback_used"] = False
                 result["metadata"]["ai_fallback_error"] = str(e)
+            finally:
+                # Clean up the temporary PNG rendered for the Vision API to
+                # avoid leaking files on disk on every low-confidence PDF.
+                if image_path and os.path.exists(image_path):
+                    try:
+                        os.unlink(image_path)
+                    except OSError:
+                        logger.debug(
+                            "Failed to clean up Vision temp image: %s", image_path
+                        )
 
         # YOLOv8 enrichment: if available, add ML detections to metadata
         if self.yolov8_detector.is_available:
+            yolo_image_path: str | None = None
             try:
-                image_path = self._render_pdf_page_as_image(file_path)
-                if image_path:
-                    yolov8_result = self.yolov8_detector.detect(image_path)
+                yolo_image_path = self._render_pdf_page_as_image(file_path)
+                if yolo_image_path:
+                    yolov8_result = self.yolov8_detector.detect(yolo_image_path)
                     if yolov8_result:
                         result["metadata"]["yolov8_detections"] = (
                             yolov8_result.to_dict()
@@ -139,6 +178,16 @@ class ProcessingOrchestrator:
                         )
             except Exception as e:
                 logger.warning("YOLOv8 enrichment failed: %s", e)
+            finally:
+                # Clean up the temporary PNG rendered for YOLOv8 enrichment.
+                if yolo_image_path and os.path.exists(yolo_image_path):
+                    try:
+                        os.unlink(yolo_image_path)
+                    except OSError:
+                        logger.debug(
+                            "Failed to clean up YOLOv8 temp image: %s",
+                            yolo_image_path,
+                        )
 
         return result
 
@@ -163,6 +212,10 @@ class ProcessingOrchestrator:
 
         builder = PolygonBuilder()
         polygons = builder.build_polygons(entities, scale=effective_scale)
+
+        # YOLOv8 enrichment is PDF-only: it requires raster images as input.
+        # DXF files contain vector data that is already processed by the vector
+        # parser and classifier, so YOLOv8 detection is not applicable here.
 
         return self._measure_and_classify_dxf(
             polygons,
