@@ -25,7 +25,10 @@ export class LlmGateway {
       ['openai', this.openaiProvider],
     ]);
 
-    this.initializeProvider();
+    // Constructor calls async init but cannot await — defer to first use
+    this.initializeProvider().catch(() => {
+      // Graceful: no providers available at startup, will retry on first generate()
+    });
   }
 
   private async initializeProvider(): Promise<void> {
@@ -52,14 +55,24 @@ export class LlmGateway {
       this.currentProvider = this.openaiProvider;
       this.logger.log('Using fallback provider: openai');
     } else {
-      this.logger.error('No LLM providers available');
-      throw new Error('No LLM providers available');
+      this.logger.warn(
+        'No LLM providers available. LLM features will be disabled until a provider is reachable.',
+      );
     }
   }
 
   async generate<T = any>(prompt: PromptInput): Promise<PromptResponse> {
     if (!this.currentProvider) {
-      await this.initializeProvider();
+      try {
+        await this.initializeProvider();
+      } catch {
+        // ignore
+      }
+      if (!this.currentProvider) {
+        throw new Error(
+          'No LLM providers available. Ensure Ollama or OpenAI is configured and reachable.',
+        );
+      }
     }
 
     const startTime = Date.now();
@@ -99,7 +112,16 @@ export class LlmGateway {
 
   async *generateStream(prompt: PromptInput): AsyncGenerator<StreamResponse> {
     if (!this.currentProvider) {
-      await this.initializeProvider();
+      try {
+        await this.initializeProvider();
+      } catch {
+        // ignore
+      }
+      if (!this.currentProvider) {
+        throw new Error(
+          'No LLM providers available. Ensure Ollama or OpenAI is configured and reachable.',
+        );
+      }
     }
 
     const correlationId = this.generateCorrelationId();
@@ -143,7 +165,14 @@ export class LlmGateway {
 
   async getCurrentProvider(): Promise<{ name: string; models: string[] }> {
     if (!this.currentProvider) {
-      await this.initializeProvider();
+      try {
+        await this.initializeProvider();
+      } catch {
+        // ignore
+      }
+      if (!this.currentProvider) {
+        return { name: 'none', models: [] };
+      }
     }
 
     return {

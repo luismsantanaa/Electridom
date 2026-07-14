@@ -96,10 +96,9 @@ jobs:
         working-directory: calculadora-electrica-backend
         run: npm run test:unit:coverage
 
-      # TODO: Fix E2E tests - failing due to crypto not defined in Node.js 18.x
-      # - name: Run E2E tests
-      #   working-directory: calculadora-electrica-backend
-      #   run: npm run test:e2e
+      - name: Run E2E tests
+        working-directory: calculadora-electrica-backend
+        run: npm run test:e2e
 
       - name: Build application
         working-directory: calculadora-electrica-backend

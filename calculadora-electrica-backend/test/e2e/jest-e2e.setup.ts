@@ -6,7 +6,7 @@ process.env.NODE_ENV = 'test';
 
 // Configurar variables de entorno por defecto para tests
 process.env.DATABASE_HOST = 'localhost';
-process.env.DATABASE_PORT = '3306';
+process.env.DATABASE_PORT = '5432';
 process.env.DATABASE_USERNAME = 'electridom';
 process.env.DATABASE_PASSWORD = 'electridom';
 process.env.DATABASE_NAME = 'electridom'; // Usar la base de datos principal

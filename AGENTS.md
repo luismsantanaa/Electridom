@@ -124,7 +124,6 @@ MINIO_SECRET_KEY=electridom123
 
 ### Deuda Técnica Conocida
 
-- E2E tests desactivados (crypto error en Node.js 18.x)
 - YOLOv8 opcional no implementado (requiere dataset etiquetado)
 - Pruebas de usabilidad con usuarios reales pendientes
 
