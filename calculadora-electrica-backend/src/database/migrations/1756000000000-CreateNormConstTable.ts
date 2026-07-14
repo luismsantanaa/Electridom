@@ -45,12 +45,12 @@ export class CreateNormConstTable1756000000000 implements MigrationInterface {
           },
           {
             name: 'creation_date',
-            type: 'datetime',
+            type: 'timestamp',
             default: 'CURRENT_TIMESTAMP',
           },
           {
             name: 'update_date',
-            type: 'datetime',
+            type: 'timestamp',
             default: 'CURRENT_TIMESTAMP',
             onUpdate: 'CURRENT_TIMESTAMP',
           },

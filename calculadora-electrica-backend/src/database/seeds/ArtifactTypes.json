@@ -12,7 +12,7 @@
     },
     {
         "id": "5a30ed0b-ba61-49ba-a82e-d58e8510df3d",
-        "environmentTypeId": "47ededa5-d3c3-4307-88df-b17a48080995",
+        "environmentTypeId": "a1b2c3d4-e5f6-41d4-a716-446655440001",
         "name": "Bocinas",
         "power": 60,
         "voltage": 120,
@@ -23,7 +23,7 @@
     },
     {
         "id": "28d08d6f-bf45-4e60-9768-507dc7fefa5a",
-        "environmentTypeId": "2fec1d81-41d4-42a4-9a4f-388a71aaebf4",
+        "environmentTypeId": "47ededa5-d3c3-4307-88df-b17a48080995",
         "name": "Luz LED (Combinada)",
         "power": 75,
         "voltage": 120,
@@ -34,7 +34,7 @@
     },
     {
         "id": "4e74ff08-86e5-4242-b11d-d491b0ec1abf",
-        "environmentTypeId": "160c92e3-af8e-434c-9a91-4397da9c9deb",
+        "environmentTypeId": "a1b2c3d4-e5f6-41d4-a716-446655440001",
         "name": "TV LED 55'",
         "power": 275,
         "voltage": 120,
@@ -45,7 +45,7 @@
     },
     {
         "id": "33ebda1d-e329-40f6-9fc3-5406970dc46c",
-        "environmentTypeId": "6e81ed96-b4b8-4d5b-9c48-364aa4029510",
+        "environmentTypeId": "47ededa5-d3c3-4307-88df-b17a48080995",
         "name": "Abanico",
         "power": 80,
         "voltage": 120,
@@ -56,7 +56,7 @@
     },
     {
         "id": "63155fd0-4a19-444b-97f1-a4c52822837e",
-        "environmentTypeId": "19271bb0-d850-48f3-8c62-e233ba47000c",
+        "environmentTypeId": "2fec1d81-41d4-42a4-9a4f-388a71aaebf4",
         "name": "Estufa de Cuarzo",
         "power": 1200,
         "voltage": 120,
@@ -67,7 +67,7 @@
     },
     {
         "id": "2546e0d5-ec2c-406f-be62-f00be483cab7",
-        "environmentTypeId": "27e5f230-872e-41ef-a3b2-4ea9c619caeb",
+        "environmentTypeId": "47ededa5-d3c3-4307-88df-b17a48080995",
         "name": "Luz Fluorescente (Tubo)",
         "power": 75,
         "voltage": 120,
@@ -78,7 +78,7 @@
     },
     {
         "id": "a339291f-4157-46b5-bccc-c76596ace901",
-        "environmentTypeId": "ff7826ef-4abf-4a47-8d20-5bcf05f37d2d",
+        "environmentTypeId": "a1b2c3d4-e5f6-41d4-a716-446655440001",
         "name": "Ventilador de Techo",
         "power": 80,
         "voltage": 120,
@@ -89,7 +89,7 @@
     },
     {
         "id": "b2aa3693-8dd0-4370-a6dd-8f31462c479b",
-        "environmentTypeId": "f69c819a-0fe1-4871-afd3-62dbe8248e10",
+        "environmentTypeId": "2fec1d81-41d4-42a4-9a4f-388a71aaebf4",
         "name": "Batidora",
         "power": 600,
         "voltage": 120,
@@ -100,7 +100,7 @@
     },
     {
         "id": "6425a39b-f945-4682-9953-36e582bd5025",
-        "environmentTypeId": "b6580c50-0215-42ca-b0d9-f796de00b3e4",
+        "environmentTypeId": "2fec1d81-41d4-42a4-9a4f-388a71aaebf4",
         "name": "Bebedero",
         "power": 550,
         "voltage": 120,
@@ -111,7 +111,7 @@
     },
     {
         "id": "2aaee948-555b-4525-b37e-71265f0b3d49",
-        "environmentTypeId": "693f9382-de2c-4a02-9dea-31929f6c5a90",
+        "environmentTypeId": "2fec1d81-41d4-42a4-9a4f-388a71aaebf4",
         "name": "Extractor de Grasa",
         "power": 100,
         "voltage": 120,
@@ -122,7 +122,7 @@
     },
     {
         "id": "f8e7865d-aaee-489c-8097-f40074dea697",
-        "environmentTypeId": "1538351a-e63f-449e-b069-892ab1fff69a",
+        "environmentTypeId": "2fec1d81-41d4-42a4-9a4f-388a71aaebf4",
         "name": "Freidora de Aire",
         "power": 1700,
         "voltage": 120,
@@ -133,7 +133,7 @@
     },
     {
         "id": "0ac56c9d-17b0-435c-b7e1-307755464af7",
-        "environmentTypeId": "2eadb648-9c59-4dc7-8aa0-4e58ba6e5604",
+        "environmentTypeId": "2fec1d81-41d4-42a4-9a4f-388a71aaebf4",
         "name": "Microondas",
         "power": 900,
         "voltage": 120,
@@ -144,7 +144,7 @@
     },
     {
         "id": "76016d77-eebb-4bd5-9ba1-62a79a9b8923",
-        "environmentTypeId": "6d25b91c-da59-417d-bced-0aa17a493e65",
+        "environmentTypeId": "2fec1d81-41d4-42a4-9a4f-388a71aaebf4",
         "name": "Nevera",
         "power": 400,
         "voltage": 120,
@@ -155,7 +155,7 @@
     },
     {
         "id": "1db68e5a-bacb-45de-bf59-2edd5edaeb8c",
-        "environmentTypeId": "e312f4da-e558-4305-a202-27fdbbdb92d9",
+        "environmentTypeId": "2fec1d81-41d4-42a4-9a4f-388a71aaebf4",
         "name": "Tostadora",
         "power": 750,
         "voltage": 120,
@@ -166,7 +166,7 @@
     },
     {
         "id": "0b2bcc43-adcb-4da6-b53e-709ff1b46279",
-        "environmentTypeId": "52ae2fff-b613-414a-92e5-85e7c7b555ad",
+        "environmentTypeId": "2fec1d81-41d4-42a4-9a4f-388a71aaebf4",
         "name": "Cafetera",
         "power": 800,
         "voltage": 120,
@@ -177,7 +177,7 @@
     },
     {
         "id": "9bc1ad38-bbdd-40fc-bfec-71613730e489",
-        "environmentTypeId": "80d3533c-c0ac-4296-bdff-04e21b952e55",
+        "environmentTypeId": "2fec1d81-41d4-42a4-9a4f-388a71aaebf4",
         "name": "Luz LED (Bajo Gabinete)",
         "power": 15,
         "voltage": 120,
@@ -188,7 +188,7 @@
     },
     {
         "id": "032c13af-7fc7-449b-897a-798b3659ab19",
-        "environmentTypeId": "5653ed17-fadb-41ae-a0ec-2e4d0b76ab73",
+        "environmentTypeId": "47ededa5-d3c3-4307-88df-b17a48080995",
         "name": "Abanico",
         "power": 80,
         "voltage": 120,
@@ -199,7 +199,7 @@
     },
     {
         "id": "f44875d0-5d53-4faf-ad8b-2d626610c25a",
-        "environmentTypeId": "244792af-8ffe-4f87-8bd2-92f888cebf5b",
+        "environmentTypeId": "2fec1d81-41d4-42a4-9a4f-388a71aaebf4",
         "name": "Aire 12,000 Btu",
         "power": 1200,
         "voltage": 120,
@@ -210,7 +210,7 @@
     },
     {
         "id": "b707ceb7-adf6-470c-ae06-0bba4a09d393",
-        "environmentTypeId": "d3f9f252-925c-4fa7-8603-4ee93f0beaa6",
+        "environmentTypeId": "a1b2c3d4-e5f6-41d4-a716-446655440001",
         "name": "Bocinas",
         "power": 60,
         "voltage": 120,
@@ -221,7 +221,7 @@
     },
     {
         "id": "2cac1a5b-bea7-4ae3-b796-657c8638292a",
-        "environmentTypeId": "ffd14749-8305-454b-98de-8867a4bba5dd",
+        "environmentTypeId": "47ededa5-d3c3-4307-88df-b17a48080995",
         "name": "Luz LED (Techo)",
         "power": 50,
         "voltage": 120,
@@ -232,7 +232,7 @@
     },
     {
         "id": "fe6fbabd-cbeb-4549-a302-f09e4fb923bb",
-        "environmentTypeId": "774ff6db-8a34-4f62-a7d0-367021867f4d",
+        "environmentTypeId": "a1b2c3d4-e5f6-41d4-a716-446655440001",
         "name": "TV LED 50'",
         "power": 265,
         "voltage": 120,
@@ -243,7 +243,7 @@
     },
     {
         "id": "eea23b4b-cb02-4047-8dc1-a9ec0b023a69",
-        "environmentTypeId": "f5d0ebac-5be1-4913-a5e1-be1c62ea21c4",
+        "environmentTypeId": "a1b2c3d4-e5f6-41d4-a716-446655440001",
         "name": "Caloventor",
         "power": 2000,
         "voltage": 120,
@@ -254,7 +254,7 @@
     },
     {
         "id": "68ff640b-0023-485a-aaad-fc00b5743427",
-        "environmentTypeId": "51e7aacf-ebde-4033-850a-ad5b5e6f2244",
+        "environmentTypeId": "a1b2c3d4-e5f6-41d4-a716-446655440001",
         "name": "Cargadores",
         "power": 5,
         "voltage": 120,
@@ -265,7 +265,7 @@
     },
     {
         "id": "88aa2d66-25b6-451d-a798-bd0bb2c0cdc3",
-        "environmentTypeId": "9d5c2e22-a7bf-4850-9230-b8281fa9b0ec",
+        "environmentTypeId": "47ededa5-d3c3-4307-88df-b17a48080995",
         "name": "Abanico",
         "power": 80,
         "voltage": 120,
@@ -276,7 +276,7 @@
     },
     {
         "id": "ee8337e9-3528-4be0-9dda-228b6a9e6fa1",
-        "environmentTypeId": "21745c13-042e-4477-81e1-ee0eaea91f5c",
+        "environmentTypeId": "2fec1d81-41d4-42a4-9a4f-388a71aaebf4",
         "name": "Aire 12,000 Btu",
         "power": 1200,
         "voltage": 120,
@@ -287,7 +287,7 @@
     },
     {
         "id": "9b61f4d1-b52d-4946-907e-722278f63375",
-        "environmentTypeId": "a7b8c9d0-e1f2-41d4-a716-446655440027",
+        "environmentTypeId": "47ededa5-d3c3-4307-88df-b17a48080995",
         "name": "Luz Fluorescente Compacta",
         "power": 25,
         "voltage": 120,
@@ -298,7 +298,7 @@
     },
     {
         "id": "ad40421a-92e5-4fdc-912d-1a6a9f6785fd",
-        "environmentTypeId": "0567a7b3-3ae7-4567-aeb2-2f07a3384d74",
+        "environmentTypeId": "47ededa5-d3c3-4307-88df-b17a48080995",
         "name": "Laptop",
         "power": 300,
         "voltage": 120,
@@ -309,7 +309,7 @@
     },
     {
         "id": "9444d6e6-647f-4981-a02d-94cce687a0c6",
-        "environmentTypeId": "a2a877e9-e2f7-4d18-b35d-25e24bf130a2",
+        "environmentTypeId": "a1b2c3d4-e5f6-41d4-a716-446655440001",
         "name": "TV LED 32'",
         "power": 75,
         "voltage": 120,
@@ -320,7 +320,7 @@
     },
     {
         "id": "7ae78a66-cd3e-45ae-ad5c-a965a70f4c5f",
-        "environmentTypeId": "a9c53d07-b3e1-425c-a519-baec911046d7",
+        "environmentTypeId": "a1b2c3d4-e5f6-41d4-a716-446655440001",
         "name": "Estufa Halógena",
         "power": 1200,
         "voltage": 120,
@@ -331,7 +331,7 @@
     },
     {
         "id": "81ea6a9b-d8de-45ee-b749-ea4ab119d638",
-        "environmentTypeId": "0e594e86-ec66-4159-9b21-9ee4f6f5392b",
+        "environmentTypeId": "47ededa5-d3c3-4307-88df-b17a48080995",
         "name": "Luz Fluorescente Compacta",
         "power": 25,
         "voltage": 120,
@@ -342,7 +342,7 @@
     },
     {
         "id": "45949472-f1d3-48c8-9991-5c706c64decb",
-        "environmentTypeId": "b0b02369-ab70-496b-b9ef-f9d7ecd7fe93",
+        "environmentTypeId": "2fec1d81-41d4-42a4-9a4f-388a71aaebf4",
         "name": "Afeitadora",
         "power": 100,
         "voltage": 120,
@@ -353,7 +353,7 @@
     },
     {
         "id": "c0951e65-55a2-494f-91cc-48343add2806",
-        "environmentTypeId": "34adbe60-cabb-4ee5-8f03-d59bfa532182",
+        "environmentTypeId": "a1b2c3d4-e5f6-41d4-a716-446655440001",
         "name": "Secador de Pelo",
         "power": 1200,
         "voltage": 120,
@@ -364,7 +364,7 @@
     },
     {
         "id": "7694c76d-73be-4fad-a8cf-e135cfb9120a",
-        "environmentTypeId": "029b11c8-afbb-4ce1-8919-05837d557856",
+        "environmentTypeId": "47ededa5-d3c3-4307-88df-b17a48080995",
         "name": "Luz Fluorescente Compacta",
         "power": 25,
         "voltage": 120,
@@ -375,7 +375,7 @@
     },
     {
         "id": "dd7356d4-a17d-4182-8671-f3b5b0f643d0",
-        "environmentTypeId": "bf845d0d-b38d-4213-9254-0b22267980ee",
+        "environmentTypeId": "47ededa5-d3c3-4307-88df-b17a48080995",
         "name": "Afeitadora",
         "power": 100,
         "voltage": 120,
@@ -386,7 +386,7 @@
     },
     {
         "id": "276a8ea5-cdfe-4f62-96c3-77bddcd403ad",
-        "environmentTypeId": "f6dc5638-be5c-4463-822d-2e34e451e5ff",
+        "environmentTypeId": "47ededa5-d3c3-4307-88df-b17a48080995",
         "name": "Luz LED (Escritorio)",
         "power": 25,
         "voltage": 120,
@@ -397,7 +397,7 @@
     },
     {
         "id": "f6cbf00f-ca06-40e6-9742-bea6b189a845",
-        "environmentTypeId": "7a868b75-9959-4d89-a42e-0a6756f66366",
+        "environmentTypeId": "2fec1d81-41d4-42a4-9a4f-388a71aaebf4",
         "name": "Laptop",
         "power": 300,
         "voltage": 120,
@@ -408,7 +408,7 @@
     },
     {
         "id": "75fd9d5b-86a7-426a-b68c-aa9854d1f5af",
-        "environmentTypeId": "740a068e-9fa3-47b8-bd88-ab6fb2ea9ac5",
+        "environmentTypeId": "a1b2c3d4-e5f6-41d4-a716-446655440001",
         "name": "Impresora",
         "power": 100,
         "voltage": 120,
@@ -419,7 +419,7 @@
     },
     {
         "id": "387042ec-e11c-411f-aecb-30145caa7b65",
-        "environmentTypeId": "e2ba66ed-5e84-4eff-b012-a89af99d63bb",
+        "environmentTypeId": "47ededa5-d3c3-4307-88df-b17a48080995",
         "name": "Monitor",
         "power": 50,
         "voltage": 120,
@@ -430,7 +430,7 @@
     },
     {
         "id": "ed138ee6-7e2f-470a-82c4-0f43542946a3",
-        "environmentTypeId": "1c8ae859-888f-47a7-a98b-dd574d3aa43a",
+        "environmentTypeId": "a1b2c3d4-e5f6-41d4-a716-446655440001",
         "name": "Proyector",
         "power": 500,
         "voltage": 120,
@@ -441,7 +441,7 @@
     },
     {
         "id": "e6379d2e-2450-42cb-8c63-2be95fb15e0c",
-        "environmentTypeId": "78f28fbf-5cdb-4f0f-86a5-e40c7d82cc1c",
+        "environmentTypeId": "a1b2c3d4-e5f6-41d4-a716-446655440001",
         "name": "Bocinas",
         "power": 60,
         "voltage": 120,
@@ -452,7 +452,7 @@
     },
     {
         "id": "de32c50a-2c95-4edc-a99e-fa74fd92452d",
-        "environmentTypeId": "f936d477-5785-4b05-982b-531b00a401fc",
+        "environmentTypeId": "a1b2c3d4-e5f6-41d4-a716-446655440001",
         "name": "Equipo de Sonido",
         "power": 80,
         "voltage": 120,
@@ -463,7 +463,7 @@
     },
     {
         "id": "475a19fa-a552-4ef7-943b-d064d3662b84",
-        "environmentTypeId": "30237829-5948-46a0-9078-2b2ea60004fb",
+        "environmentTypeId": "47ededa5-d3c3-4307-88df-b17a48080995",
         "name": "Luz LED (Decorativa)",
         "power": 50,
         "voltage": 120,
@@ -474,7 +474,7 @@
     },
     {
         "id": "5fb70b50-eb03-40ce-b4ce-d02ab15f1645",
-        "environmentTypeId": "a1b2c3d4-e5f6-41d4-a716-446655440001",
+        "environmentTypeId": "47ededa5-d3c3-4307-88df-b17a48080995",
         "name": "Luz LED (Techo)",
         "power": 25,
         "voltage": 120,
@@ -485,7 +485,7 @@
     },
     {
         "id": "4e99531b-df93-4810-a4b5-78fe8c80b79b",
-        "environmentTypeId": "47ededa5-d3c3-4307-88df-b17a48080995",
+        "environmentTypeId": "2fec1d81-41d4-42a4-9a4f-388a71aaebf4",
         "name": "Lavadora/Secadora",
         "power": 610,
         "voltage": 120,
@@ -507,7 +507,7 @@
     },
     {
         "id": "6cf3183a-19fb-4cb0-9c6c-d4e0814f138c",
-        "environmentTypeId": "160c92e3-af8e-434c-9a91-4397da9c9deb",
+        "environmentTypeId": "2fec1d81-41d4-42a4-9a4f-388a71aaebf4",
         "name": "Aspiradora",
         "power": 800,
         "voltage": 120,
@@ -518,7 +518,7 @@
     },
     {
         "id": "392dd2a2-a81e-402a-81a1-a32aacd69a1a",
-        "environmentTypeId": "6e81ed96-b4b8-4d5b-9c48-364aa4029510",
+        "environmentTypeId": "47ededa5-d3c3-4307-88df-b17a48080995",
         "name": "Luz Halógena (Exterior)",
         "power": 50,
         "voltage": 120,
@@ -529,7 +529,7 @@
     },
     {
         "id": "14f4d904-f705-465a-afd7-ea48c9e33323",
-        "environmentTypeId": "19271bb0-d850-48f3-8c62-e233ba47000c",
+        "environmentTypeId": "a1b2c3d4-e5f6-41d4-a716-446655440001",
         "name": "Abridor de Puerta",
         "power": 400,
         "voltage": 120,
@@ -540,7 +540,7 @@
     },
     {
         "id": "e4357b57-2101-4922-b228-1e99916dc6ac",
-        "environmentTypeId": "27e5f230-872e-41ef-a3b2-4ea9c619caeb",
+        "environmentTypeId": "47ededa5-d3c3-4307-88df-b17a48080995",
         "name": "Luz LED (Exterior)",
         "power": 50,
         "voltage": 120,
@@ -551,7 +551,7 @@
     },
     {
         "id": "3b97287b-59cb-44b2-b993-38d29fd702cf",
-        "environmentTypeId": "ff7826ef-4abf-4a47-8d20-5bcf05f37d2d",
+        "environmentTypeId": "47ededa5-d3c3-4307-88df-b17a48080995",
         "name": "Cortadora de Césped Eléctrica",
         "power": 1200,
         "voltage": 120,
@@ -562,7 +562,7 @@
     },
     {
         "id": "d24d9b58-ee41-4ff0-ba16-b96b81964663",
-        "environmentTypeId": "f69c819a-0fe1-4871-afd3-62dbe8248e10",
+        "environmentTypeId": "47ededa5-d3c3-4307-88df-b17a48080995",
         "name": "Luz LED (Exterior)",
         "power": 50,
         "voltage": 120,
@@ -573,7 +573,7 @@
     },
     {
         "id": "552f92a8-8e9f-4e54-b7d9-96438cf933fb",
-        "environmentTypeId": "b6580c50-0215-42ca-b0d9-f796de00b3e4",
+        "environmentTypeId": "2fec1d81-41d4-42a4-9a4f-388a71aaebf4",
         "name": "Parrilla Eléctrica",
         "power": 1500,
         "voltage": 120,
@@ -584,7 +584,7 @@
     },
     {
         "id": "29f178bc-491a-4478-ae37-701082ce7cec",
-        "environmentTypeId": "693f9382-de2c-4a02-9dea-31929f6c5a90",
+        "environmentTypeId": "47ededa5-d3c3-4307-88df-b17a48080995",
         "name": "Abanicos",
         "power": 80,
         "voltage": 120,
@@ -595,7 +595,7 @@
     },
     {
         "id": "3c8a1ca6-297b-4f6e-af62-f8cdf9aeedb0",
-        "environmentTypeId": "1538351a-e63f-449e-b069-892ab1fff69a",
+        "environmentTypeId": "47ededa5-d3c3-4307-88df-b17a48080995",
         "name": "Luz LED (Exterior)",
         "power": 50,
         "voltage": 120,
@@ -606,7 +606,7 @@
     },
     {
         "id": "1b4309fe-fd5a-4b89-b4e7-936744042c4b",
-        "environmentTypeId": "2eadb648-9c59-4dc7-8aa0-4e58ba6e5604",
+        "environmentTypeId": "a1b2c3d4-e5f6-41d4-a716-446655440001",
         "name": "Bocinas",
         "power": 60,
         "voltage": 120,
@@ -617,7 +617,7 @@
     },
     {
         "id": "52258b36-f742-4a3d-a2cd-3077af16315c",
-        "environmentTypeId": "6d25b91c-da59-417d-bced-0aa17a493e65",
+        "environmentTypeId": "47ededa5-d3c3-4307-88df-b17a48080995",
         "name": "Luz LED (Exterior)",
         "power": 50,
         "voltage": 120,
@@ -628,7 +628,7 @@
     },
     {
         "id": "6404ae37-fa21-43df-87c5-61cedd5577c5",
-        "environmentTypeId": "e312f4da-e558-4305-a202-27fdbbdb92d9",
+        "environmentTypeId": "2fec1d81-41d4-42a4-9a4f-388a71aaebf4",
         "name": "Cargadores",
         "power": 5,
         "voltage": 120,
@@ -639,7 +639,7 @@
     },
     {
         "id": "f5bb9d62-0ce8-43fd-abe3-38b54a48459c",
-        "environmentTypeId": "52ae2fff-b613-414a-92e5-85e7c7b555ad",
+        "environmentTypeId": "47ededa5-d3c3-4307-88df-b17a48080995",
         "name": "Luz LED (Techo)",
         "power": 25,
         "voltage": 120,
@@ -650,7 +650,7 @@
     },
     {
         "id": "9166814b-d1e4-46b8-bb61-cd90439b9d47",
-        "environmentTypeId": "80d3533c-c0ac-4296-bdff-04e21b952e55",
+        "environmentTypeId": "2fec1d81-41d4-42a4-9a4f-388a71aaebf4",
         "name": "Deshumidificador",
         "power": 500,
         "voltage": 120,
@@ -661,7 +661,7 @@
     },
     {
         "id": "400d243d-0a54-47ca-8cf5-073dd00e4287",
-        "environmentTypeId": "5653ed17-fadb-41ae-a0ec-2e4d0b76ab73",
+        "environmentTypeId": "47ededa5-d3c3-4307-88df-b17a48080995",
         "name": "Luz LED (Techo)",
         "power": 25,
         "voltage": 120,
@@ -672,7 +672,7 @@
     },
     {
         "id": "8b3ecb58-8e38-419a-8a8c-95ba2269a34f",
-        "environmentTypeId": "244792af-8ffe-4f87-8bd2-92f888cebf5b",
+        "environmentTypeId": "a1b2c3d4-e5f6-41d4-a716-446655440001",
         "name": "Ventilador de Techo",
         "power": 80,
         "voltage": 120,
@@ -683,7 +683,7 @@
     },
     {
         "id": "d29616ee-be31-4cc4-a45b-8206836bcfac",
-        "environmentTypeId": "d3f9f252-925c-4fa7-8603-4ee93f0beaa6",
+        "environmentTypeId": "47ededa5-d3c3-4307-88df-b17a48080995",
         "name": "Luz LED (Escritorio)",
         "power": 25,
         "voltage": 120,
@@ -694,7 +694,7 @@
     },
     {
         "id": "2f354d74-8cc1-44ba-a34d-8a30691a0a4a",
-        "environmentTypeId": "ffd14749-8305-454b-98de-8867a4bba5dd",
+        "environmentTypeId": "a1b2c3d4-e5f6-41d4-a716-446655440001",
         "name": "Laptop",
         "power": 300,
         "voltage": 120,
@@ -705,7 +705,7 @@
     },
     {
         "id": "6524c138-fe79-43c8-8a6e-f33c9257adb6",
-        "environmentTypeId": "774ff6db-8a34-4f62-a7d0-367021867f4d",
+        "environmentTypeId": "47ededa5-d3c3-4307-88df-b17a48080995",
         "name": "Impresora",
         "power": 100,
         "voltage": 120,
@@ -716,7 +716,7 @@
     },
     {
         "id": "e8edf6ee-71ed-4598-a13a-7c4ddd1db4ae",
-        "environmentTypeId": "f5d0ebac-5be1-4913-a5e1-be1c62ea21c4",
+        "environmentTypeId": "2fec1d81-41d4-42a4-9a4f-388a71aaebf4",
         "name": "Monitor",
         "power": 50,
         "voltage": 120,
@@ -727,7 +727,7 @@
     },
     {
         "id": "4407937c-e7a0-4cb1-9609-b46823a98462",
-        "environmentTypeId": "51e7aacf-ebde-4033-850a-ad5b5e6f2244",
+        "environmentTypeId": "a1b2c3d4-e5f6-41d4-a716-446655440001",
         "name": "Cargadores",
         "power": 5,
         "voltage": 120,
@@ -738,7 +738,7 @@
     },
     {
         "id": "c0aafbb5-80e2-4043-aa73-6e6723a7c048",
-        "environmentTypeId": "9d5c2e22-a7bf-4850-9230-b8281fa9b0ec",
+        "environmentTypeId": "47ededa5-d3c3-4307-88df-b17a48080995",
         "name": "Docking Station",
         "power": 85,
         "voltage": 120,
@@ -749,7 +749,7 @@
     },
     {
         "id": "a0ad6f50-2fb8-40df-90a9-5fa5d0cecae4",
-        "environmentTypeId": "21745c13-042e-4477-81e1-ee0eaea91f5c",
+        "environmentTypeId": "47ededa5-d3c3-4307-88df-b17a48080995",
         "name": "Luz Halógena (Techo)",
         "power": 50,
         "voltage": 120,
@@ -760,7 +760,7 @@
     },
     {
         "id": "dd0eb4c6-d3aa-4c62-a22e-448724d676db",
-        "environmentTypeId": "a7b8c9d0-e1f2-41d4-a716-446655440027",
+        "environmentTypeId": "2fec1d81-41d4-42a4-9a4f-388a71aaebf4",
         "name": "Bomba de Agua",
         "power": 800,
         "voltage": 120,
@@ -771,7 +771,7 @@
     },
     {
         "id": "b69e34b5-e2c8-4fd6-a5dc-e24e26910b9e",
-        "environmentTypeId": "0567a7b3-3ae7-4567-aeb2-2f07a3384d74",
+        "environmentTypeId": "47ededa5-d3c3-4307-88df-b17a48080995",
         "name": "Luz LED (Exterior)",
         "power": 50,
         "voltage": 120,
@@ -782,7 +782,7 @@
     },
     {
         "id": "3fcd8a79-4fea-4b75-8acf-57ac1388e03a",
-        "environmentTypeId": "a2a877e9-e2f7-4d18-b35d-25e24bf130a2",
+        "environmentTypeId": "47ededa5-d3c3-4307-88df-b17a48080995",
         "name": "Luz LED (Techo)",
         "power": 25,
         "voltage": 120,
@@ -793,7 +793,7 @@
     },
     {
         "id": "60f0f9cc-c673-4d71-bd16-a13bb91c7a57",
-        "environmentTypeId": "a9c53d07-b3e1-425c-a519-baec911046d7",
+        "environmentTypeId": "47ededa5-d3c3-4307-88df-b17a48080995",
         "name": "Ventilador de Pie",
         "power": 100,
         "voltage": 120,
@@ -804,7 +804,7 @@
     },
     {
         "id": "0ffe8614-3849-437b-81b9-674606a8b953",
-        "environmentTypeId": "0e594e86-ec66-4159-9b21-9ee4f6f5392b",
+        "environmentTypeId": "47ededa5-d3c3-4307-88df-b17a48080995",
         "name": "Luz LED (Combinada)",
         "power": 75,
         "voltage": 120,
@@ -815,7 +815,7 @@
     },
     {
         "id": "398e7a6e-4a5b-4d64-bf47-de5635a56faa",
-        "environmentTypeId": "b0b02369-ab70-496b-b9ef-f9d7ecd7fe93",
+        "environmentTypeId": "a1b2c3d4-e5f6-41d4-a716-446655440001",
         "name": "TV LED 50'",
         "power": 265,
         "voltage": 120,
@@ -826,7 +826,7 @@
     },
     {
         "id": "64daadb0-1668-467a-88c9-17ba1372b364",
-        "environmentTypeId": "34adbe60-cabb-4ee5-8f03-d59bfa532182",
+        "environmentTypeId": "2fec1d81-41d4-42a4-9a4f-388a71aaebf4",
         "name": "Abanico",
         "power": 80,
         "voltage": 120,
@@ -837,7 +837,7 @@
     },
     {
         "id": "79468f80-8bcb-4318-a043-1061cdeaa90e",
-        "environmentTypeId": "029b11c8-afbb-4ce1-8919-05837d557856",
+        "environmentTypeId": "47ededa5-d3c3-4307-88df-b17a48080995",
         "name": "Luz LED (Techo)",
         "power": 40,
         "voltage": 120,
@@ -848,7 +848,7 @@
     },
     {
         "id": "b50084f4-0d79-46a8-a4df-88b2208f9643",
-        "environmentTypeId": "bf845d0d-b38d-4213-9254-0b22267980ee",
+        "environmentTypeId": "a1b2c3d4-e5f6-41d4-a716-446655440001",
         "name": "Computadora de Escritorio",
         "power": 200,
         "voltage": 120,
@@ -859,7 +859,7 @@
     },
     {
         "id": "a5f0bf4d-6fac-4674-ae87-3929cdbe368c",
-        "environmentTypeId": "f6dc5638-be5c-4463-822d-2e34e451e5ff",
+        "environmentTypeId": "47ededa5-d3c3-4307-88df-b17a48080995",
         "name": "Monitor",
         "power": 50,
         "voltage": 120,
@@ -870,7 +870,7 @@
     },
     {
         "id": "5131194d-5903-4f09-9883-906d671184ef",
-        "environmentTypeId": "7a868b75-9959-4d89-a42e-0a6756f66366",
+        "environmentTypeId": "2fec1d81-41d4-42a4-9a4f-388a71aaebf4",
         "name": "Teléfono IP",
         "power": 15,
         "voltage": 120,
@@ -881,7 +881,7 @@
     },
     {
         "id": "cb9de5dd-da73-4fe2-ac4c-fda91c9adedb",
-        "environmentTypeId": "740a068e-9fa3-47b8-bd88-ab6fb2ea9ac5",
+        "environmentTypeId": "47ededa5-d3c3-4307-88df-b17a48080995",
         "name": "Luz LED (Techo)",
         "power": 40,
         "voltage": 120,
@@ -892,7 +892,7 @@
     },
     {
         "id": "a19b0531-5919-4f92-8d5d-1cd1a2210ba7",
-        "environmentTypeId": "e2ba66ed-5e84-4eff-b012-a89af99d63bb",
+        "environmentTypeId": "a1b2c3d4-e5f6-41d4-a716-446655440001",
         "name": "Proyector",
         "power": 500,
         "voltage": 120,
@@ -903,7 +903,7 @@
     },
     {
         "id": "9ef728d0-c4cd-4939-935a-ba2a3d83f0bc",
-        "environmentTypeId": "1c8ae859-888f-47a7-a98b-dd574d3aa43a",
+        "environmentTypeId": "a1b2c3d4-e5f6-41d4-a716-446655440001",
         "name": "Pantalla LED",
         "power": 200,
         "voltage": 120,
@@ -914,7 +914,7 @@
     },
     {
         "id": "8d23c8c6-0cf2-4ec2-8a35-d46a23508afd",
-        "environmentTypeId": "78f28fbf-5cdb-4f0f-86a5-e40c7d82cc1c",
+        "environmentTypeId": "47ededa5-d3c3-4307-88df-b17a48080995",
         "name": "Luz LED (Escritorio)",
         "power": 25,
         "voltage": 120,
@@ -925,7 +925,7 @@
     },
     {
         "id": "89f81a8b-b04b-4e73-a7de-52d404098beb",
-        "environmentTypeId": "f936d477-5785-4b05-982b-531b00a401fc",
+        "environmentTypeId": "a1b2c3d4-e5f6-41d4-a716-446655440001",
         "name": "Laptop",
         "power": 300,
         "voltage": 120,
@@ -936,7 +936,7 @@
     },
     {
         "id": "02a7401a-d98e-453e-bacc-ad5591fc477a",
-        "environmentTypeId": "30237829-5948-46a0-9078-2b2ea60004fb",
+        "environmentTypeId": "47ededa5-d3c3-4307-88df-b17a48080995",
         "name": "Impresora",
         "power": 100,
         "voltage": 120,
@@ -947,7 +947,7 @@
     },
     {
         "id": "3bcbde02-2db5-4ad2-8b92-793e413b7e22",
-        "environmentTypeId": "a1b2c3d4-e5f6-41d4-a716-446655440001",
+        "environmentTypeId": "2fec1d81-41d4-42a4-9a4f-388a71aaebf4",
         "name": "Monitor",
         "power": 50,
         "voltage": 120,
@@ -969,7 +969,7 @@
     },
     {
         "id": "159f1094-79de-4e7c-a290-dbca387294b7",
-        "environmentTypeId": "2fec1d81-41d4-42a4-9a4f-388a71aaebf4",
+        "environmentTypeId": "a1b2c3d4-e5f6-41d4-a716-446655440001",
         "name": "Laptops x2",
         "power": 165,
         "voltage": 120,
@@ -980,7 +980,7 @@
     },
     {
         "id": "2604fcd2-f280-47ac-9cf2-43533b6db8d6",
-        "environmentTypeId": "160c92e3-af8e-434c-9a91-4397da9c9deb",
+        "environmentTypeId": "47ededa5-d3c3-4307-88df-b17a48080995",
         "name": "Cargadores",
         "power": 5,
         "voltage": 120,
@@ -991,7 +991,7 @@
     },
     {
         "id": "2b4ccb2d-bcf0-45b1-8bb9-f42ff2cac547",
-        "environmentTypeId": "6e81ed96-b4b8-4d5b-9c48-364aa4029510",
+        "environmentTypeId": "2fec1d81-41d4-42a4-9a4f-388a71aaebf4",
         "name": "Docking Station",
         "power": 85,
         "voltage": 120,
@@ -1002,7 +1002,7 @@
     },
     {
         "id": "7162b461-2bba-45e8-b0db-082165d4c680",
-        "environmentTypeId": "19271bb0-d850-48f3-8c62-e233ba47000c",
+        "environmentTypeId": "47ededa5-d3c3-4307-88df-b17a48080995",
         "name": "Luz LED (environment)",
         "power": 30,
         "voltage": 120,
@@ -1013,7 +1013,7 @@
     },
     {
         "id": "f3bb2580-900c-4524-9185-89963718e34a",
-        "environmentTypeId": "27e5f230-872e-41ef-a3b2-4ea9c619caeb",
+        "environmentTypeId": "2fec1d81-41d4-42a4-9a4f-388a71aaebf4",
         "name": "Máquina de Café",
         "power": 800,
         "voltage": 120,
@@ -1024,7 +1024,7 @@
     },
     {
         "id": "695d480b-ed6e-42a3-9155-4a7e02f0e1d1",
-        "environmentTypeId": "ff7826ef-4abf-4a47-8d20-5bcf05f37d2d",
+        "environmentTypeId": "2fec1d81-41d4-42a4-9a4f-388a71aaebf4",
         "name": "Refrigerador Pequeño",
         "power": 100,
         "voltage": 120,
@@ -1035,7 +1035,7 @@
     },
     {
         "id": "7cc5ed18-8b6e-4e1a-9c25-5c4937238fbe",
-        "environmentTypeId": "f69c819a-0fe1-4871-afd3-62dbe8248e10",
+        "environmentTypeId": "47ededa5-d3c3-4307-88df-b17a48080995",
         "name": "Luz LED (Techo)",
         "power": 25,
         "voltage": 120,
@@ -1046,7 +1046,7 @@
     },
     {
         "id": "6d75396b-3729-42b9-9076-da5e11009aff",
-        "environmentTypeId": "b6580c50-0215-42ca-b0d9-f796de00b3e4",
+        "environmentTypeId": "2fec1d81-41d4-42a4-9a4f-388a71aaebf4",
         "name": "Microondas",
         "power": 900,
         "voltage": 120,
@@ -1057,7 +1057,7 @@
     },
     {
         "id": "0e4c5242-6f97-4b7e-ba78-7a0e5a3af175",
-        "environmentTypeId": "693f9382-de2c-4a02-9dea-31929f6c5a90",
+        "environmentTypeId": "2fec1d81-41d4-42a4-9a4f-388a71aaebf4",
         "name": "Cafetera",
         "power": 800,
         "voltage": 120,
@@ -1068,7 +1068,7 @@
     },
     {
         "id": "111973da-2b40-4b96-9567-a6bcdd643a5d",
-        "environmentTypeId": "1538351a-e63f-449e-b069-892ab1fff69a",
+        "environmentTypeId": "47ededa5-d3c3-4307-88df-b17a48080995",
         "name": "Luz Fluorescente Compacta",
         "power": 25,
         "voltage": 120,
@@ -1079,7 +1079,7 @@
     },
     {
         "id": "e0bddb6e-d05b-4484-a0d5-dc85c5e0bd86",
-        "environmentTypeId": "2eadb648-9c59-4dc7-8aa0-4e58ba6e5604",
+        "environmentTypeId": "2fec1d81-41d4-42a4-9a4f-388a71aaebf4",
         "name": "Extractor de Aire",
         "power": 100,
         "voltage": 120,
@@ -1090,7 +1090,7 @@
     },
     {
         "id": "a6aad703-a931-489a-aa08-5e612c098bb8",
-        "environmentTypeId": "6d25b91c-da59-417d-bced-0aa17a493e65",
+        "environmentTypeId": "47ededa5-d3c3-4307-88df-b17a48080995",
         "name": "Luz LED (Techo)",
         "power": 25,
         "voltage": 120,
@@ -1101,7 +1101,7 @@
     },
     {
         "id": "9eb2a7a3-b8cf-4b51-8b41-d64ce1be3158",
-        "environmentTypeId": "e312f4da-e558-4305-a202-27fdbbdb92d9",
+        "environmentTypeId": "a1b2c3d4-e5f6-41d4-a716-446655440001",
         "name": "Deshumidificador",
         "power": 500,
         "voltage": 120,
@@ -1112,7 +1112,7 @@
     },
     {
         "id": "9f0a0c9a-12ca-4cb0-b96a-828b86f3c36d",
-        "environmentTypeId": "52ae2fff-b613-414a-92e5-85e7c7b555ad",
+        "environmentTypeId": "47ededa5-d3c3-4307-88df-b17a48080995",
         "name": "Luz LED (Industrial)",
         "power": 60,
         "voltage": 120,
@@ -1123,7 +1123,7 @@
     },
     {
         "id": "9510dcb0-df30-44ae-a370-8ad26d26ea98",
-        "environmentTypeId": "80d3533c-c0ac-4296-bdff-04e21b952e55",
+        "environmentTypeId": "a1b2c3d4-e5f6-41d4-a716-446655440001",
         "name": "Servidor",
         "power": 500,
         "voltage": 120,
@@ -1134,7 +1134,7 @@
     },
     {
         "id": "379e38d3-ec23-49f3-8fa9-dae1a3cd922e",
-        "environmentTypeId": "5653ed17-fadb-41ae-a0ec-2e4d0b76ab73",
+        "environmentTypeId": "47ededa5-d3c3-4307-88df-b17a48080995",
         "name": "Aire Acondicionado",
         "power": 1200,
         "voltage": 120,
@@ -1145,7 +1145,7 @@
     },
     {
         "id": "377fd3c3-8b15-47b6-8317-5e11b6c3652c",
-        "environmentTypeId": "244792af-8ffe-4f87-8bd2-92f888cebf5b",
+        "environmentTypeId": "47ededa5-d3c3-4307-88df-b17a48080995",
         "name": "Luz LED (Industrial)",
         "power": 60,
         "voltage": 120,
@@ -1156,7 +1156,7 @@
     },
     {
         "id": "0ce4c500-fcbe-4d52-82ff-9cff58e76bee",
-        "environmentTypeId": "d3f9f252-925c-4fa7-8603-4ee93f0beaa6",
+        "environmentTypeId": "2fec1d81-41d4-42a4-9a4f-388a71aaebf4",
         "name": "Ventilador Industrial",
         "power": 150,
         "voltage": 120,
@@ -1167,7 +1167,7 @@
     },
     {
         "id": "42171014-847d-44e9-921f-076af0c5db4b",
-        "environmentTypeId": "ffd14749-8305-454b-98de-8867a4bba5dd",
+        "environmentTypeId": "47ededa5-d3c3-4307-88df-b17a48080995",
         "name": "Luz LED (Techo)",
         "power": 40,
         "voltage": 120,
@@ -1178,7 +1178,7 @@
     },
     {
         "id": "7c99d186-dd80-4f5a-a196-4b97d718aac3",
-        "environmentTypeId": "774ff6db-8a34-4f62-a7d0-367021867f4d",
+        "environmentTypeId": "2fec1d81-41d4-42a4-9a4f-388a71aaebf4",
         "name": "Refrigerador",
         "power": 150,
         "voltage": 120,
@@ -1189,7 +1189,7 @@
     },
     {
         "id": "a0b56dde-b51c-4f23-815a-d83b82be0601",
-        "environmentTypeId": "f5d0ebac-5be1-4913-a5e1-be1c62ea21c4",
+        "environmentTypeId": "2fec1d81-41d4-42a4-9a4f-388a71aaebf4",
         "name": "Microondas",
         "power": 900,
         "voltage": 120,
@@ -1200,7 +1200,7 @@
     },
     {
         "id": "9a416f99-92ad-42da-b85a-89893187a266",
-        "environmentTypeId": "51e7aacf-ebde-4033-850a-ad5b5e6f2244",
+        "environmentTypeId": "47ededa5-d3c3-4307-88df-b17a48080995",
         "name": "Luz LED (Techo)",
         "power": 40,
         "voltage": 120,
@@ -1211,7 +1211,7 @@
     },
     {
         "id": "a0a62946-2ba3-4d16-877e-e6bb986e31d7",
-        "environmentTypeId": "9d5c2e22-a7bf-4850-9230-b8281fa9b0ec",
+        "environmentTypeId": "a1b2c3d4-e5f6-41d4-a716-446655440001",
         "name": "Proyector",
         "power": 500,
         "voltage": 120,
@@ -1222,7 +1222,7 @@
     },
     {
         "id": "2fe61f67-d813-4b3a-8334-3bc4360b9bff",
-        "environmentTypeId": "21745c13-042e-4477-81e1-ee0eaea91f5c",
+        "environmentTypeId": "a1b2c3d4-e5f6-41d4-a716-446655440001",
         "name": "Pantalla LED",
         "power": 200,
         "voltage": 120,
@@ -1233,7 +1233,7 @@
     },
     {
         "id": "98bb1dbd-46f8-4bb1-9850-c4cc907a7452",
-        "environmentTypeId": "a7b8c9d0-e1f2-41d4-a716-446655440027",
+        "environmentTypeId": "47ededa5-d3c3-4307-88df-b17a48080995",
         "name": "Luz LED (Techo)",
         "power": 25,
         "voltage": 120,
@@ -1244,7 +1244,7 @@
     },
     {
         "id": "17449420-74da-475e-8371-129cdcb6aa01",
-        "environmentTypeId": "0567a7b3-3ae7-4567-aeb2-2f07a3384d74",
+        "environmentTypeId": "47ededa5-d3c3-4307-88df-b17a48080995",
         "name": "Impresora Láser",
         "power": 400,
         "voltage": 120,
@@ -1255,7 +1255,7 @@
     },
     {
         "id": "22fed07e-d9b0-40aa-ae42-c7c3db9a0552",
-        "environmentTypeId": "a2a877e9-e2f7-4d18-b35d-25e24bf130a2",
+        "environmentTypeId": "2fec1d81-41d4-42a4-9a4f-388a71aaebf4",
         "name": "Escáner",
         "power": 50,
         "voltage": 120,
@@ -1266,7 +1266,7 @@
     },
     {
         "id": "5505a48e-64c4-4e29-8a62-e7fa50d5997f",
-        "environmentTypeId": "a9c53d07-b3e1-425c-a519-baec911046d7",
+        "environmentTypeId": "47ededa5-d3c3-4307-88df-b17a48080995",
         "name": "Luz LED (environment)",
         "power": 30,
         "voltage": 120,
@@ -1277,7 +1277,7 @@
     },
     {
         "id": "6418a732-8466-497a-bb59-0bc9d3f80e73",
-        "environmentTypeId": "0e594e86-ec66-4159-9b21-9ee4f6f5392b",
+        "environmentTypeId": "a1b2c3d4-e5f6-41d4-a716-446655440001",
         "name": "Pantalla Informativa",
         "power": 150,
         "voltage": 120,
@@ -1288,7 +1288,7 @@
     },
     {
         "id": "eebac2d5-f221-4bf4-a416-909f50e61eaf",
-        "environmentTypeId": "b0b02369-ab70-496b-b9ef-f9d7ecd7fe93",
+        "environmentTypeId": "47ededa5-d3c3-4307-88df-b17a48080995",
         "name": "Luz LED (Exterior)",
         "power": 50,
         "voltage": 120,
@@ -1299,7 +1299,7 @@
     },
     {
         "id": "134bc695-92ad-46f9-b60a-3be7ff70f9a8",
-        "environmentTypeId": "34adbe60-cabb-4ee5-8f03-d59bfa532182",
+        "environmentTypeId": "a1b2c3d4-e5f6-41d4-a716-446655440001",
         "name": "Ventilador de Exterior",
         "power": 100,
         "voltage": 120,
@@ -1310,7 +1310,7 @@
     },
     {
         "id": "cf654952-0401-4652-901c-b501ece2071e",
-        "environmentTypeId": "029b11c8-afbb-4ce1-8919-05837d557856",
+        "environmentTypeId": "47ededa5-d3c3-4307-88df-b17a48080995",
         "name": "Luz LED (environment)",
         "power": 40,
         "voltage": 120,
@@ -1321,7 +1321,7 @@
     },
     {
         "id": "03f732aa-34ef-43ca-8771-2b3a801e2722",
-        "environmentTypeId": "bf845d0d-b38d-4213-9254-0b22267980ee",
+        "environmentTypeId": "2fec1d81-41d4-42a4-9a4f-388a71aaebf4",
         "name": "Refrigerador Comercial",
         "power": 600,
         "voltage": 120,
@@ -1332,7 +1332,7 @@
     },
     {
         "id": "e5b9c5a1-08ad-4e22-9bc2-268c3b41b31d",
-        "environmentTypeId": "f6dc5638-be5c-4463-822d-2e34e451e5ff",
+        "environmentTypeId": "2fec1d81-41d4-42a4-9a4f-388a71aaebf4",
         "name": "Horno Eléctrico",
         "power": 2000,
         "voltage": 120,
@@ -1343,7 +1343,7 @@
     },
     {
         "id": "e0b4ed59-85d1-4506-9dfb-326032b5cd41",
-        "environmentTypeId": "7a868b75-9959-4d89-a42e-0a6756f66366",
+        "environmentTypeId": "a1b2c3d4-e5f6-41d4-a716-446655440001",
         "name": "Caja Registradora",
         "power": 50,
         "voltage": 120,
@@ -1354,7 +1354,7 @@
     },
     {
         "id": "cf30fd9c-6f39-49b9-873b-2e847796b257",
-        "environmentTypeId": "740a068e-9fa3-47b8-bd88-ab6fb2ea9ac5",
+        "environmentTypeId": "2fec1d81-41d4-42a4-9a4f-388a71aaebf4",
         "name": "Máquina de Hielo",
         "power": 400,
         "voltage": 120,

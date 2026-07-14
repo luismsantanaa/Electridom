@@ -31,12 +31,12 @@ export class CreateDemandFactorTable1756000000001
           },
           {
             name: 'creation_date',
-            type: 'datetime',
+            type: 'timestamp',
             default: 'CURRENT_TIMESTAMP',
           },
           {
             name: 'update_date',
-            type: 'datetime',
+            type: 'timestamp',
             default: 'CURRENT_TIMESTAMP',
             onUpdate: 'CURRENT_TIMESTAMP',
           },

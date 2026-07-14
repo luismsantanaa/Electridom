@@ -29,12 +29,12 @@ export class CreateAmpacityTable1756000000002 implements MigrationInterface {
           },
           {
             name: 'creation_date',
-            type: 'datetime',
+            type: 'timestamp',
             default: 'CURRENT_TIMESTAMP',
           },
           {
             name: 'update_date',
-            type: 'datetime',
+            type: 'timestamp',
             default: 'CURRENT_TIMESTAMP',
             onUpdate: 'CURRENT_TIMESTAMP',
           },

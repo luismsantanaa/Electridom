@@ -26,9 +26,6 @@ export class ArtifactType extends BaseAuditEntity {
   @JoinColumn({ name: 'environment_type_id' })
   environmentType: EnvironmentType;
 
-  @Column({ type: 'uuid', nullable: true })
-  environmentTypeId: string;
-
   // Los campos de auditoría ya vienen de BaseAuditEntity:
   // - active
   // - creationDate

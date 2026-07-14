@@ -31,12 +31,12 @@ export class CreateBreakerCurveTable1756000000003
           },
           {
             name: 'creation_date',
-            type: 'datetime',
+            type: 'timestamp',
             default: 'CURRENT_TIMESTAMP',
           },
           {
             name: 'update_date',
-            type: 'datetime',
+            type: 'timestamp',
             default: 'CURRENT_TIMESTAMP',
             onUpdate: 'CURRENT_TIMESTAMP',
           },

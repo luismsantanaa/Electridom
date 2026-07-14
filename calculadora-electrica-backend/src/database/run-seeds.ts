@@ -1,10 +1,13 @@
 import { DataSource } from 'typeorm';
+import { config } from 'dotenv';
+
+config();
 
 async function runSeeds() {
   const dataSource = new DataSource({
-    type: 'mariadb',
+    type: 'postgres',
     host: process.env.DATABASE_HOST || 'localhost',
-    port: parseInt(process.env.DATABASE_PORT || '3306'),
+    port: parseInt(process.env.DATABASE_PORT || '5432'),
     username: process.env.DATABASE_USERNAME || 'electridom',
     password: process.env.DATABASE_PASSWORD || 'electridom',
     database: process.env.DATABASE_NAME || 'electridom',

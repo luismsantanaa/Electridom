@@ -42,11 +42,11 @@ export class CreateSessionsTable1755797078021 implements MigrationInterface {
           },
           {
             name: 'expiresAt',
-            type: 'datetime',
+            type: 'timestamp',
           },
           {
             name: 'revokedAt',
-            type: 'datetime',
+            type: 'timestamp',
             isNullable: true,
           },
           {

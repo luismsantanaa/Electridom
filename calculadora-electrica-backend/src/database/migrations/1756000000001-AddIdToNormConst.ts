@@ -8,7 +8,7 @@ export class AddIdToNormConst1756000000001 implements MigrationInterface {
       const hasIdColumn = await queryRunner.hasColumn('norm_const', 'id');
       if (!hasIdColumn) {
         await queryRunner.query(
-          'ALTER TABLE `norm_const` ADD `id` uuid NOT NULL PRIMARY KEY DEFAULT (UUID())',
+          'ALTER TABLE "norm_const" ADD COLUMN "id" uuid NOT NULL PRIMARY KEY DEFAULT gen_random_uuid()',
         );
       }
     }
@@ -17,7 +17,7 @@ export class AddIdToNormConst1756000000001 implements MigrationInterface {
   public async down(queryRunner: QueryRunner): Promise<void> {
     const hasIdColumn = await queryRunner.hasColumn('norm_const', 'id');
     if (hasIdColumn) {
-      await queryRunner.query('ALTER TABLE `norm_const` DROP COLUMN `id`');
+      await queryRunner.query('ALTER TABLE "norm_const" DROP COLUMN "id"');
     }
   }
 }

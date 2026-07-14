@@ -63,12 +63,12 @@ export class CreateProtectionAndCircuitTables1756000000006 implements MigrationI
           },
           {
             name: 'createdAt',
-            type: 'datetime',
+            type: 'timestamp',
             default: 'CURRENT_TIMESTAMP',
           },
           {
             name: 'updatedAt',
-            type: 'datetime',
+            type: 'timestamp',
             default: 'CURRENT_TIMESTAMP',
             onUpdate: 'CURRENT_TIMESTAMP',
           },
@@ -121,12 +121,12 @@ export class CreateProtectionAndCircuitTables1756000000006 implements MigrationI
           },
           {
             name: 'createdAt',
-            type: 'datetime',
+            type: 'timestamp',
             default: 'CURRENT_TIMESTAMP',
           },
           {
             name: 'updatedAt',
-            type: 'datetime',
+            type: 'timestamp',
             default: 'CURRENT_TIMESTAMP',
             onUpdate: 'CURRENT_TIMESTAMP',
           },
@@ -136,9 +136,9 @@ export class CreateProtectionAndCircuitTables1756000000006 implements MigrationI
     );
 
     // Crear índices para mejor performance
-    await queryRunner.query('CREATE INDEX IDX_CIRCUIT_PROJECT_ID ON circuit (projectId)');
-    await queryRunner.query('CREATE INDEX IDX_CIRCUIT_AREA_TYPE ON circuit (areaType)');
-    await queryRunner.query('CREATE INDEX IDX_PROTECTION_CIRCUIT_ID ON protection (circuitId)');
+    await queryRunner.query('CREATE INDEX "IDX_CIRCUIT_PROJECT_ID" ON "circuit" ("projectId")');
+    await queryRunner.query('CREATE INDEX "IDX_CIRCUIT_AREA_TYPE" ON "circuit" ("areaType")');
+    await queryRunner.query('CREATE INDEX "IDX_PROTECTION_CIRCUIT_ID" ON "protection" ("circuitId")');
 
     // Crear foreign key para protection -> circuit
     await queryRunner.createForeignKey(

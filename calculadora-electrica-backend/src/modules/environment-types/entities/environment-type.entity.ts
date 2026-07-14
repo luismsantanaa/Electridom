@@ -13,7 +13,7 @@ export class EnvironmentType extends BaseAuditEntity {
   @Column({ length: 255, nullable: true })
   description: string;
 
-  // Relación con InstallationType
+  // Relaciï¿½n con InstallationType
   @ManyToOne(
     () => InstallationType,
     (installationType) => installationType.environmentTypes,
@@ -21,14 +21,11 @@ export class EnvironmentType extends BaseAuditEntity {
   @JoinColumn({ name: 'installation_type_id' })
   installationType: InstallationType;
 
-  @Column({ type: 'uuid', nullable: true })
-  installationTypeId: string;
-
-  // Relación con ArtifactType
+  // Relaciï¿½n con ArtifactType
   @OneToMany(() => ArtifactType, (artifactType) => artifactType.environmentType)
   artifactTypes: ArtifactType[];
 
-  // Los campos de auditoría ya vienen de BaseAuditEntity:
+  // Los campos de auditorï¿½a ya vienen de BaseAuditEntity:
   // - active
   // - creationDate
   // - updateDate
