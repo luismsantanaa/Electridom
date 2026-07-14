@@ -282,8 +282,9 @@ describe('AuthService - Argon2id Migration Tests', () => {
 
       mockUsersService.findByEmail.mockResolvedValue(null); // user no existe
       mockUsersService.create.mockImplementation(async (userData) => {
-        // Verificar que el password es un hash de Argon2id
-        expect(userData.password).toMatch(/^\$argon2id\$/);
+        // After fix: password is passed as plain text to service
+        // Hashing is done by @BeforeInsert() hook in User entity
+        expect(userData.password).toBe(registerDto.password);
         return mockCreatedUser;
       });
 
@@ -294,7 +295,7 @@ describe('AuthService - Argon2id Migration Tests', () => {
       expect(mockUsersService.create).toHaveBeenCalledWith(
         expect.objectContaining({
           ...registerDto,
-          password: expect.stringMatching(/^\$argon2id\$/),
+          password: registerDto.password, // Plain text - hashed by @BeforeInsert hook
           role: UserRole.CLIENTE,
         }),
       );
