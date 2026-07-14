@@ -1,6 +1,14 @@
 import { useState, type FormEvent } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from './useAuth';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { PasswordInput } from '@/shared/components/PasswordInput';
+import { ThemeToggle } from '@/shared/components/ThemeToggle';
+import { Zap } from 'lucide-react';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -22,68 +30,72 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-      <div className="max-w-md w-full bg-white rounded-xl shadow-md p-8">
-        <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-gray-900">Calculadora Eléctrica RD</h1>
-          <p className="text-gray-500 mt-2">Inicia sesión en tu cuenta</p>
-        </div>
+    <div className="min-h-screen flex items-center justify-center bg-background px-4 py-8">
+      {/* Theme Toggle */}
+      <div className="absolute top-4 right-4">
+        <ThemeToggle />
+      </div>
 
-        {error && (
-          <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
-            {error}
-            <button onClick={clearError} className="ml-2 font-bold">×</button>
+      <Card className="w-full max-w-md shadow-lg">
+        <CardHeader className="text-center">
+          <div className="flex justify-center mb-4">
+            <div className="rounded-full bg-primary/10 p-3">
+              <Zap className="h-8 w-8 text-primary" />
+            </div>
           </div>
-        )}
+          <CardTitle className="text-2xl font-bold">Calculadora Eléctrica RD</CardTitle>
+          <CardDescription>Inicia sesión en tu cuenta</CardDescription>
+        </CardHeader>
+        
+        <CardContent>
+          {error && (
+            <Alert variant="destructive" className="mb-4">
+              <AlertDescription className="flex items-center justify-between">
+                <span>{error}</span>
+                <button onClick={clearError} className="ml-2 font-bold" aria-label="Dismiss" type="button">
+                  ×
+                </button>
+              </AlertDescription>
+            </Alert>
+          )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-              Correo electrónico
-            </label>
-            <input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
-              placeholder="tu@email.com"
-            />
-          </div>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="email">Correo electrónico</Label>
+              <Input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                placeholder="tu@email.com"
+                autoComplete="email"
+              />
+            </div>
 
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-              Contraseña
-            </label>
-            <input
+            <PasswordInput
               id="password"
-              type="password"
+              label="Contraseña"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={setPassword}
               required
               minLength={6}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
               placeholder="••••••••"
             />
+
+            <Button type="submit" className="w-full" disabled={isLoading}>
+              {isLoading ? 'Iniciando sesión...' : 'Iniciar sesión'}
+            </Button>
+          </form>
+
+          <div className="mt-6 text-center text-sm">
+            <span className="text-muted-foreground">¿No tienes cuenta? </span>
+            <Link to="/register" className="text-primary hover:text-primary/80 font-medium">
+              Regístrate
+            </Link>
           </div>
-
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-medium rounded-lg transition-colors"
-          >
-            {isLoading ? 'Iniciando sesión...' : 'Iniciar sesión'}
-          </button>
-        </form>
-
-        <p className="mt-6 text-center text-sm text-gray-500">
-          ¿No tienes cuenta?{' '}
-          <Link to="/register" className="text-blue-600 hover:text-blue-700 font-medium">
-            Regístrate
-          </Link>
-        </p>
-      </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
