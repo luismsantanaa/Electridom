@@ -1,21 +1,21 @@
 ﻿import { Test, TestingModule } from '@nestjs/testing';
-import { CalculosController } from '../src/modules/calculos/controllers/calculos.controller';
-import { CalculosService } from '../src/modules/calculos/services/calculos.service';
+import { CalculationsController } from '../src/modules/calculations/calculations.controller';
+import { CalculationsService } from '../src/modules/calculations/calculations.service';
 import { RulesModule } from '../src/modules/rules/rules.module';
 
 describe('Calculations Unit Tests', () => {
-  let controller: CalculosController;
-  let service: CalculosService;
+  let controller: CalculationsController;
+  let service: CalculationsService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [RulesModule],
-      controllers: [CalculosController],
-      providers: [CalculosService],
+      controllers: [CalculationsController],
+      providers: [CalculationsService],
     }).compile();
 
-    controller = module.get<CalculosController>(CalculosController);
-    service = module.get<CalculosService>(CalculosService);
+    controller = module.get<CalculationsController>(CalculationsController);
+    service = module.get<CalculationsService>(CalculationsService);
   });
 
   describe('Calculations Service', () => {

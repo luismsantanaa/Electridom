@@ -1,7 +1,7 @@
 ﻿import { Test, TestingModule } from '@nestjs/testing';
-import { CalculationDomainService } from '../../src/modules/calculos/services/calculation-domain.service';
+import { CalculationDomainService } from '../../src/modules/calculations/services/calculation-domain.service';
 import { RuleProviderService } from '../../src/modules/rules/rule-provider.service';
-import { PreviewRequestDto } from '../../src/modules/calculos/dtos/preview.request.dto';
+import { PreviewRequestDto } from '../../src/modules/calculations/dtos/preview.request.dto';
 
 describe('CalculationDomainService', () => {
   let service: CalculationDomainService;

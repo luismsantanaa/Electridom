@@ -4,7 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { DataSource } from 'typeorm';
 import * as request from 'supertest';
-import { CalculosModule } from '../../src/modules/calculos/calculos.module';
+import { CalculationsModule } from '../../src/modules/calculations/calculations.module';
 import { RulesModule } from '../../src/modules/rules/rules.module';
 import { NormRule } from '../../src/modules/rules/entities/norm-rule.entity';
 import { RuleSet } from '../../src/modules/rules/entities/rule-set.entity';
@@ -35,7 +35,7 @@ describe('Calculations E2E Tests', () => {
           synchronize: testConfig.database.synchronize,
           logging: testConfig.database.logging,
         }),
-        CalculosModule,
+        CalculationsModule,
         RulesModule,
       ],
     }).compile();

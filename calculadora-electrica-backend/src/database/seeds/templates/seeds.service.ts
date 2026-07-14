@@ -990,12 +990,12 @@ export class SeedsService {
       // Crear tabla de configuración de IA si no existe
       await this.dataSource.query(`
         CREATE TABLE IF NOT EXISTS ia_config (
-          id INT PRIMARY KEY AUTO_INCREMENT,
+          id SERIAL PRIMARY KEY,
           config_key VARCHAR(100) UNIQUE NOT NULL,
           config_value TEXT NOT NULL,
           description VARCHAR(255),
           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-          updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+          updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
       `);
 
@@ -1047,10 +1047,10 @@ export class SeedsService {
         await this.dataSource.query(
           `
           INSERT INTO ia_config (config_key, config_value, description)
-          VALUES (?, ?, ?)
-          ON DUPLICATE KEY UPDATE
-            config_value = VALUES(config_value),
-            description = VALUES(description),
+          VALUES ($1, $2, $3)
+          ON CONFLICT (config_key) DO UPDATE SET
+            config_value = EXCLUDED.config_value,
+            description = EXCLUDED.description,
             updated_at = CURRENT_TIMESTAMP
         `,
           [config.key, config.value, config.description],

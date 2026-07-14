@@ -3,7 +3,7 @@ import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../../src/app.module';
 import { DataSource } from 'typeorm';
-import { DemandFactor } from '../../src/modules/calculos/entities/demand-factor.entity';
+import { DemandFactor } from '../../src/modules/calculations/entities/demand-factor.entity';
 
 describe('CalcDemandController (e2e)', () => {
   let app: INestApplication;

@@ -7,7 +7,7 @@ import * as request from 'supertest';
 import { ProjectsModule } from '../../src/modules/projects/projects.module';
 import { AuthModule } from '../../src/modules/auth/auth.module';
 import { UsersModule } from '../../src/modules/users/users.module';
-import { CalculosModule } from '../../src/modules/calculos/calculos.module';
+import { CalculationsModule } from '../../src/modules/calculations/calculations.module';
 import { RulesModule } from '../../src/modules/rules/rules.module';
 import { Project } from '../../src/modules/projects/entities/project.entity';
 import { ProjectVersion } from '../../src/modules/projects/entities/project-version.entity';
@@ -55,7 +55,7 @@ describe('Projects E2E Tests', () => {
         ProjectsModule,
         AuthModule,
         UsersModule,
-        CalculosModule,
+        CalculationsModule,
         RulesModule,
       ],
     }).compile();

@@ -3,7 +3,7 @@ import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../../src/app.module';
 import { DataSource } from 'typeorm';
-import { Resistivity } from '../../src/modules/calculos/entities/resistivity.entity';
+import { Resistivity } from '../../src/modules/calculations/entities/resistivity.entity';
 
 describe('CalcFeederController (e2e)', () => {
   let app: INestApplication;
