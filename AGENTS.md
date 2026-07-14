@@ -124,10 +124,7 @@ MINIO_SECRET_KEY=electridom123
 
 ### Deuda Técnica Conocida
 
-- Backend build desactivado en CI (imports rotos en seeds.service.ts)
 - E2E tests desactivados (crypto error en Node.js 18.x)
-- Frontend linting con errores preexistentes (no bloquea V2)
-- mypy type checking en plan-service (continue-on-error)
 - YOLOv8 opcional no implementado (requiere dataset etiquetado)
 - Pruebas de usabilidad con usuarios reales pendientes
 
