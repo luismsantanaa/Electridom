@@ -1,6 +1,10 @@
 """Application configuration using pydantic-settings."""
 
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from typing import Annotated
+import json
+
+from pydantic import field_validator
+from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict
 
 
 class Settings(BaseSettings):  # type: ignore[misc]
@@ -42,7 +46,8 @@ class Settings(BaseSettings):  # type: ignore[misc]
 
     # Processing
     max_file_size_mb: int = 60
-    allowed_file_types: list[str] = ["pdf", "dxf"]
+    # NoDecode: allow comma-separated .env values (pdf,dxf) instead of JSON only
+    allowed_file_types: Annotated[list[str], NoDecode] = ["pdf", "dxf", "dwg", "png", "jpg", "jpeg", "webp", "tiff"]
     processing_timeout_seconds: int = 120
 
     # AI/ML (optional)
@@ -54,6 +59,19 @@ class Settings(BaseSettings):  # type: ignore[misc]
     yolov8_model_path: str = "models/yolov8_spaces.pt"
     yolov8_confidence_threshold: float = 0.5
     yolov8_device: str = "cpu"
+
+    @field_validator("allowed_file_types", mode="before")
+    @classmethod
+    def parse_allowed_file_types(cls, value: object) -> object:
+        """Accept JSON lists or comma-separated values from .env (e.g. pdf,dxf)."""
+        if isinstance(value, str):
+            text = value.strip()
+            if not text:
+                return ["pdf", "dxf", "dwg", "png", "jpg", "jpeg", "webp", "tiff"]
+            if text.startswith("["):
+                return json.loads(text)
+            return [part.strip() for part in text.split(",") if part.strip()]
+        return value
 
 
 settings = Settings()

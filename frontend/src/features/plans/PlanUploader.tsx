@@ -19,9 +19,10 @@ export default function PlanUploader({ onUploadComplete }: PlanUploaderProps) {
 
   const handleFile = async (file: File) => {
     const ext = file.name.split('.').pop()?.toLowerCase();
-    if (ext !== 'pdf' && ext !== 'dxf') {
-      setError('Solo se permiten archivos PDF o DXF');
-      toast.error('Formato no válido. Usa PDF o DXF.');
+    const allowedExts = ['pdf', 'dxf', 'dwg', 'png', 'jpg', 'jpeg', 'webp', 'tiff'];
+    if (!ext || !allowedExts.includes(ext)) {
+      setError('Solo se permiten archivos PDF, DXF, DWG, PNG, JPG, WEBP o TIFF');
+      toast.error('Formato no válido. Usa PDF, DXF, DWG, PNG, JPG, WEBP o TIFF.');
       return;
     }
     if (file.size > 60 * 1024 * 1024) {
@@ -75,7 +76,7 @@ export default function PlanUploader({ onUploadComplete }: PlanUploaderProps) {
       <div
         role="button"
         tabIndex={0}
-        aria-label="Zona de carga de planos PDF o DXF"
+        aria-label="Zona de carga de planos PDF, DXF, DWG, PNG, JPG, WEBP o TIFF"
         onKeyDown={(e) => {
           if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
@@ -101,7 +102,7 @@ export default function PlanUploader({ onUploadComplete }: PlanUploaderProps) {
         <input
           ref={fileInputRef}
           type="file"
-          accept=".pdf,.dxf"
+          accept=".pdf,.dxf,.dwg,.png,.jpg,.jpeg,.webp,.tiff,image/png,image/jpeg,image/webp,image/tiff"
           onChange={handleFileInput}
           className="hidden"
           disabled={uploading}
@@ -139,10 +140,10 @@ export default function PlanUploader({ onUploadComplete }: PlanUploaderProps) {
               )}
             </div>
             <p className="text-lg font-medium text-foreground">
-              {dragging ? 'Suelta el archivo aquí' : 'Arrastra un archivo PDF o DXF'}
+              {dragging ? 'Suelta el archivo aquí' : 'Arrastra un archivo PDF, DXF, DWG o PNG'}
             </p>
             <p className="text-sm text-muted-foreground">o haz clic para seleccionar</p>
-            <p className="text-xs text-muted-foreground">Máximo 60MB · PDF / DXF</p>
+            <p className="text-xs text-muted-foreground">Máximo 60MB · PDF / DXF / DWG / PNG</p>
           </div>
         )}
       </div>

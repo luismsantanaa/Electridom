@@ -23,8 +23,19 @@ from app.tasks.process_pdf import process_pdf_task
 
 router = APIRouter(prefix="/api/plans", tags=["plans"])
 
-ALLOWED_EXTENSIONS = {".pdf", ".dxf"}
+ALLOWED_EXTENSIONS = {".pdf", ".dxf", ".dwg", ".png", ".jpg", ".jpeg", ".webp", ".tiff"}
 MAX_FILE_SIZE = settings.max_file_size_mb * 1024 * 1024  # Convert MB to bytes
+
+_CONTENT_TYPES: dict[str, str] = {
+    "pdf": "application/pdf",
+    "dxf": "application/dxf",
+    "dwg": "application/acad",
+    "png": "image/png",
+    "jpg": "image/jpeg",
+    "jpeg": "image/jpeg",
+    "webp": "image/webp",
+    "tiff": "image/tiff",
+}
 
 
 def _validate_file(filename: str, content_length: int) -> tuple[str, str]:
@@ -33,7 +44,7 @@ def _validate_file(filename: str, content_length: int) -> tuple[str, str]:
     if ext not in ALLOWED_EXTENSIONS:
         raise HTTPException(
             status_code=400,
-            detail=f"Invalid file type '{ext}'. Allowed: {', '.join(ALLOWED_EXTENSIONS)}",
+            detail=f"Invalid file type '{ext}'. Allowed: {', '.join(sorted(ALLOWED_EXTENSIONS))}",
         )
     if content_length > MAX_FILE_SIZE:
         raise HTTPException(
@@ -51,7 +62,7 @@ async def upload_plan(
     db: AsyncSession = Depends(get_db),
     storage_service: StorageService = Depends(get_storage),
 ) -> PlanUploadResponse:
-    """Upload a PDF or DXF plan file for processing.
+    """Upload a PDF, DXF, DWG, PNG, JPG, WEBP or TIFF plan file for processing.
 
     The file is stored in MinIO and a Celery task is queued for processing.
     """
@@ -70,7 +81,7 @@ async def upload_plan(
     storage_key = f"plans/{plan_id}/{file.filename}"
 
     # Upload to MinIO
-    content_type = "application/pdf" if file_type == "pdf" else "application/dxf"
+    content_type = _CONTENT_TYPES.get(file_type, "application/octet-stream")
     storage_service.upload_file(storage_key, content, content_type)
 
     # Create plan record in database
@@ -85,8 +96,10 @@ async def upload_plan(
     db.add(plan)
     await db.flush()
 
-    # Queue Celery task for processing
-    if file_type == "dxf":
+    # Queue Celery task for processing. DWG files go through the DXF
+    # pipeline: the parser converts them with ODA File Converter.
+    # PNG images use the same Celery task as PDF (raster/image branch).
+    if file_type in ("dxf", "dwg"):
         task = process_dxf_task.delay(str(plan_id))
     else:
         task = process_pdf_task.delay(str(plan_id))
@@ -125,6 +138,7 @@ async def list_plans(
     total = total_result.scalar() or 0
 
     # Paginate
+    query = query.options(selectinload(Plan.detected_spaces))
     query = query.order_by(Plan.created_at.desc())
     query = query.offset((page - 1) * page_size).limit(page_size)
 
@@ -200,9 +214,16 @@ async def get_plan_status(
     if not plan:
         raise HTTPException(status_code=404, detail="Plan not found")
 
+    celery_task_id = None
+    if isinstance(plan.processing_result, dict):
+        raw_id = plan.processing_result.get("celery_task_id")
+        if isinstance(raw_id, str) and raw_id:
+            celery_task_id = raw_id
+
     return ProcessingStatusResponse(
         plan_id=plan.id,
         processing_status=plan.processing_status,
+        celery_task_id=celery_task_id,
         error_message=plan.processing_error,
         spaces_detected=len(plan.detected_spaces) if plan.detected_spaces else None,
     )
@@ -248,6 +269,10 @@ async def get_plan_result(
         for space in (plan.detected_spaces or [])
     ]
 
+    processing_meta = {}
+    if isinstance(plan.processing_result, dict):
+        processing_meta = plan.processing_result.get("metadata") or {}
+
     return {
         "plan_id": str(plan.id),
         "file_type": plan.file_type,
@@ -263,6 +288,11 @@ async def get_plan_result(
                 if spaces
                 else 0
             ),
+        },
+        "metadata": {
+            "meters_per_pixel": processing_meta.get("meters_per_pixel"),
+            "image_width_px": processing_meta.get("image_width_px"),
+            "image_height_px": processing_meta.get("image_height_px"),
         },
     }
 
@@ -344,12 +374,13 @@ async def download_plan(
         raise HTTPException(status_code=404, detail="Plan not found")
 
     data = storage_service.download_file(plan.storage_key)
-    media_type = "application/pdf" if plan.file_type == "pdf" else "application/octet-stream"
+    media_type = _CONTENT_TYPES.get(plan.file_type, "application/octet-stream")
 
     return StreamingResponse(
         BytesIO(data),
         media_type=media_type,
         headers={
-            "Content-Disposition": f'attachment; filename="{plan.original_filename}"',
+            # inline so the 2D viewer can use the blob as a background image
+            "Content-Disposition": f'inline; filename="{plan.original_filename}"',
         },
     )
