@@ -1,4 +1,5 @@
-import { FileWarning } from 'lucide-react';
+import { FileWarning, Zap } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import type {
   RoomsResponse,
   DemandResponse,
@@ -8,6 +9,7 @@ import type {
 } from '@shared/types/calc.types';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 
 interface ResultsViewProps {
@@ -16,6 +18,7 @@ interface ResultsViewProps {
   circuits: CircuitsResponse | null;
   feeder: FeederResponse | null;
   grounding: GroundingResponse | null;
+  projectId?: number;
 }
 
 function Stat({ label, value }: { label: string; value: string }) {
@@ -35,7 +38,9 @@ export default function ResultsView({
   circuits,
   feeder,
   grounding,
+  projectId,
 }: ResultsViewProps) {
+  const navigate = useNavigate();
   const hasAny = !!(rooms || demand || circuits || feeder || grounding);
 
   if (!hasAny) {
@@ -202,6 +207,36 @@ export default function ResultsView({
                 </div>
               </div>
             </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Unifilar Advanced Export CTA */}
+      {circuits && circuits.circuitos.length > 0 && (
+        <Card className="border-primary/20 bg-primary/5">
+          <CardContent className="flex flex-col items-center gap-3 py-6 sm:flex-row sm:justify-between">
+            <div className="flex items-center gap-3 text-center sm:text-left">
+              <div className="rounded-full bg-primary/10 p-2.5">
+                <Zap className="size-5 text-primary" />
+              </div>
+              <div>
+                <p className="font-medium text-foreground">
+                  Diagrama Unifilar Avanzado
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  Visualiza y exporta el diagrama unifilar con balance de fases
+                  en PDF o JSON.
+                </p>
+              </div>
+            </div>
+            <Button
+              onClick={() =>
+                navigate(`/unifilar${projectId ? `?projectId=${projectId}` : ''}`)
+              }
+            >
+              <Zap className="mr-2 size-4" />
+              Ver Diagrama
+            </Button>
           </CardContent>
         </Card>
       )}

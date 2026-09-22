@@ -10,6 +10,7 @@ import DashboardPage from '@features/calc/DashboardPage';
 const CalculatorPage = lazy(() => import('@features/calc/CalculatorPage'));
 const ProjectsPage = lazy(() => import('@features/projects/ProjectsPage'));
 const PlansPage = lazy(() => import('@features/plans/PlansPage'));
+const UnifilarPage = lazy(() => import('@features/calc/UnifilarPage'));
 
 function PageFallback() {
   return (
@@ -66,6 +67,14 @@ export default function AppRoutes() {
               element={
                 <LazyPage>
                   <PlansPage />
+                </LazyPage>
+              }
+            />
+            <Route
+              path="/unifilar"
+              element={
+                <LazyPage>
+                  <UnifilarPage />
                 </LazyPage>
               }
             />
