@@ -1,10 +1,10 @@
 # 🚀 Calculadora Eléctrica RD - Electridom
 
-Sistema completo para cálculos eléctricos residenciales, comerciales e industriales según normativas NEC 2023 y RIE RD, con reconocimiento automático de espacios desde planos PDF/DXF.
+Sistema completo para cálculos eléctricos residenciales, comerciales e industriales según normativas NEC 2023 y RIE RD, con reconocimiento automático de espacios desde planos PDF/DXF/imagen.
 
 ## 📊 Estado del Proyecto
 
-**✅ Migración V2 Completada (100%) - Julio 2026**
+**✅ Migración V2 Completada + Sprint 21 Cerrado - Septiembre 2026**
 
 ### Arquitectura Actual
 
@@ -45,6 +45,7 @@ CalculadoraElectricaRD/
 
 - ✅ Pipeline DXF: Parser ezdxf + reconstrucción de polígonos + clasificación
 - ✅ Pipeline PDF: Vectorial (PyMuPDF), Raster (OpenCV + OCR), Mixed
+- ✅ Soporte de imágenes: PNG, JPG, JPEG, WEBP, TIFF
 - ✅ Detección automática de tipo de PDF
 - ✅ Clasificación de espacios con ML
 - ✅ Fallback a OpenAI Vision para planos de baja calidad
@@ -58,7 +59,9 @@ CalculadoraElectricaRD/
 - ✅ Visor 2D de planos con Fabric.js (zoom/pan, polígonos, tooltips)
 - ✅ Gráficas interactivas con D3.js (treemap, bubble chart)
 - ✅ Editor de espacios detectados (verificar, corregir, dividir, unir)
-- ✅ Flujo completo: upload → procesamiento → revisión → cálculo
+- ✅ Exportación avanzada de diagrama unifilar (PDF/JSON)
+- ✅ Indicadores de balance de fases
+- ✅ Flujo completo: upload → procesamiento → revisión → cálculo → exportación
 
 ## 🐳 Despliegue con Docker
 

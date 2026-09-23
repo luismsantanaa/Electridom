@@ -2,9 +2,9 @@
 
 ## 📊 Resumen Ejecutivo
 
-**Fecha:** Julio 2026  
-**Estado:** ✅ **Migración V2 Completada (100%)**  
-**Último Commit:** `d6f8ca3` - Eliminación de Angular legacy
+**Fecha:** Septiembre 2026  
+**Estado:** ✅ **Migración V2 Completada + Sprint 21 Cerrado**  
+**Último Commit:** `02d4526` - Actualización de documentación
 
 ## 🎯 Migración V2 - Completada
 
@@ -14,8 +14,8 @@
 CalculadoraElectricaRD/
 ├── backend/                    # NestJS 10 + PostgreSQL 16
 ├── frontend/                   # React 19 + Vite + TypeScript
-├── plan-service/                     # Python 3.12 + FastAPI
-└── docker-compose.yml               # 7 servicios orquestados
+├── plan-service/               # Python 3.12 + FastAPI
+└── docker-compose.yml          # 7 servicios orquestados
 ```
 
 ### Fases Completadas
@@ -30,6 +30,7 @@ CalculadoraElectricaRD/
 | **Fase 5** | ✅ | Julio 2026 | Frontend React 19 + Vite |
 | **Fase 6** | ✅ | Julio 2026 | Visualización Interactiva (Fabric.js + D3.js) |
 | **Fase 7** | ✅ | Julio 2026 | AI/ML (OpenAI Vision fallback) |
+| **Sprint 21** | ✅ | Sept 2026 | Exportación avanzada unifilar (PDF/JSON) |
 
 ## 🏗️ Servicios Activos
 
@@ -38,7 +39,7 @@ CalculadoraElectricaRD/
 - **Puerto:** 3000
 - **Base de datos:** PostgreSQL 16 + PostGIS
 - **Autenticación:** JWT RS256 + JWKS
-- **Tests:** 186 tests (37.44% coverage)
+- **Tests:** 522 tests (45.65% coverage)
 - **Endpoints:** 37+ endpoints documentados
 
 ### Frontend (React 19)
@@ -89,10 +90,11 @@ CalculadoraElectricaRD/
 2. **Calculadora:** 5 pasos (CE-01 a CE-05)
 3. **Proyectos:** CRUD completo
 4. **Planos:**
-   - Upload PDF/DXF
+   - Upload PDF/DXF/DWG/PNG/JPG/WEBP/TIFF
    - Visor 2D (Fabric.js)
    - Gráficas (D3.js)
    - Editor de espacios
+5. **Unifilar:** Exportación avanzada PDF/JSON con balance de fases
 
 ## 📊 Métricas
 
@@ -105,8 +107,8 @@ CalculadoraElectricaRD/
 
 ### Tests
 
-- **Total:** 324 tests
-- **Backend:** 186 tests (37.44% coverage)
+- **Total:** 660 tests
+- **Backend:** 522 tests (45.65% coverage)
 - **Plan Service:** 124 tests (85% coverage)
 - **Frontend:** 14 tests
 

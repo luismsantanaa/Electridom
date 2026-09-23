@@ -2,9 +2,9 @@
 
 ## 🎯 Resumen Ejecutivo
 
-**Estado:** ✅ **MIGRACIÓN V2 COMPLETADA (100%)**
+**Estado:** ✅ **MIGRACIÓN V2 COMPLETADA + SPRINT 21 CERRADO**
 
-**Fecha:** Julio 2026
+**Fecha:** Septiembre 2026
 
 **Arquitectura:** Monorepo con 3 servicios principales
 - Backend: NestJS 10 + TypeScript + PostgreSQL 16
@@ -89,7 +89,29 @@
 - 4 tests para vision_classifier
 - Documentación completa actualizada
 
-## 🔧 Estado Actual (Julio 2026)
+## 🔧 Estado Actual (Septiembre 2026)
+
+### ✅ Sprint 21 - Completado
+
+**Exportación Avanzada de Diagrama Unifilar**
+- Backend: `UnifilarAdvancedExportService` + Controller (ya existía)
+- Frontend: Componente `UnifilarAdvancedExport` con previsualización SVG
+- Descarga PDF y JSON del diagrama unifilar
+- Indicadores de balance de fases con recomendaciones
+- Ruta `/unifilar` accesible desde sidebar y ResultsView
+- 26 tests unitarios (14 controller + 12 service)
+
+### ✅ Soporte de Formatos de Imagen - Ampliado
+
+| Formato | Estado | Pipeline |
+|---------|--------|----------|
+| PDF (vectorial/raster/mixto) | ✅ | PyMuPDF / OpenCV |
+| DXF | ✅ | ezdxf + Shapely |
+| DWG | ✅ | Redirigido a PDF |
+| PNG | ✅ | OpenCV raster |
+| **JPG/JPEG** | ✅ Nuevo | OpenCV raster |
+| **WEBP** | ✅ Nuevo | OpenCV raster |
+| **TIFF** | ✅ Nuevo | OpenCV raster |
 
 ### ✅ Deuda Técnica - RESUELTA
 
@@ -149,10 +171,16 @@ docker exec electridom-postgres psql -U electridom -d electridom -c "SELECT tabl
 
 ### Tests
 
-- **Backend:** 421 tests (44 suites, unit tests passing)
+- **Backend:** 522 tests (55 suites, unit tests passing)
 - **Plan Service:** 124 tests (85% coverage)
 - **Frontend:** 14 tests (Vitest)
-- **Total:** 559 tests
+- **Total:** 660 tests
+
+### Cobertura
+
+- **Backend:** 45.65% statements (antes 37%)
+- **Plan Service:** 85%
+- **Frontend:** —
 
 ### Endpoints API
 
@@ -357,9 +385,9 @@ CalculadoraElectricaRD/
 ### Backend (NestJS)
 
 ```bash
-npm run test:unit          # Tests unitarios
-npm run test:e2e           # Tests E2E
-npm run test:unit:coverage # Coverage (37.44%)
+npm run test:unit          # Tests unitarios (522 tests)
+npm run test:e2e           # Tests E2E (requiere PostgreSQL)
+npm run test:unit:coverage # Coverage (45.65%)
 ```
 
 ### Plan Service (Python)
@@ -406,16 +434,16 @@ npm run lint               # ESLint
 
 ### Corto Plazo
 
+- [ ] Subir cobertura backend a 60% (módulos auth, calculations controllers)
+- [ ] Tests E2E con PostgreSQL corriendo
 - [ ] Pruebas de usabilidad con 3 técnicos eléctricos
-- [ ] Feedback de usuarios reales
-- [ ] Ajustes basados en feedback
 
 ### Mediano Plazo
 
 - [ ] YOLOv8 para detección de habitaciones (opcional, requiere dataset)
+- [ ] Soporte SVG (requiere conversión vectorial a raster)
 - [ ] Dark mode en frontend
 - [ ] Code splitting para reducir bundle size
-- [ ] Optimización de performance
 
 ### Largo Plazo
 
@@ -426,14 +454,16 @@ npm run lint               # ESLint
 
 ## 🏅 Logros
 
-### Migración V2
+### Migración V2 + Sprint 21
 
 - ✅ Migración completa de MariaDB a PostgreSQL
 - ✅ Plan Service funcional con pipelines DXF/PDF
 - ✅ Frontend migrado de Angular a React 19
 - ✅ Visualización interactiva con Fabric.js + D3.js
 - ✅ AI fallback con OpenAI Vision
-- ✅ 324 tests en total
+- ✅ Sprint 21: Exportación avanzada unifilar (PDF/JSON)
+- ✅ Soporte ampliado: JPG, JPEG, WEBP, TIFF
+- ✅ 660 tests en total
 - ✅ CI/CD para 3 proyectos
 - ✅ Documentación completa
 
@@ -443,7 +473,7 @@ npm run lint               # ESLint
 - ✅ Type hints en Python (mypy)
 - ✅ ESLint + Prettier configurados
 - ✅ Ruff para Python
-- ✅ Cobertura de tests: 85% (Plan Service), 37% (Backend)
+- ✅ Cobertura de tests: 85% (Plan Service), 45.65% (Backend)
 
 ## 📞 Soporte
 
@@ -455,6 +485,6 @@ Para soporte técnico o preguntas:
 
 ---
 
-**🎉 ¡Migración V2 Completada! Sistema funcional con reconocimiento automático de planos, cálculos eléctricos completos, y visualización interactiva.**
+**🎉 ¡Migración V2 Completada + Sprint 21 Cerrado! Sistema funcional con reconocimiento automático de planos, cálculos eléctricos completos, visualización interactiva, y exportación avanzada de diagramas unifilares.**
 
-**Última actualización:** Julio 2026
+**Última actualización:** Septiembre 2026

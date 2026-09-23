@@ -120,7 +120,7 @@ MINIO_ACCESS_KEY=electridom
 MINIO_SECRET_KEY=electridom123
 ```
 
-## Estado Actual del Proyecto (Julio 2026)
+## Estado Actual del Proyecto (Septiembre 2026)
 
 ### Migración V2 Completada ✅
 
@@ -132,10 +132,23 @@ MINIO_SECRET_KEY=electridom123
 - ✅ **Fase 5**: Frontend React 19 + Vite + TypeScript (auth, calculadora, proyectos)
 - ✅ **Fase 6**: Visualización Interactiva (Fabric.js visor 2D, D3.js gráficas, editor)
 - ✅ **Fase 7**: AI/ML fallback (OpenAI Vision), documentación
+- ✅ **Sprint 21**: Exportación avanzada unifilar (PDF/JSON + balance de fases)
+
+### Formatos de Imagen Soportados
+
+| Formato | Extensión | Estado |
+|---------|-----------|--------|
+| PDF | `.pdf` | ✅ Vectorial, raster, mixto |
+| DXF | `.dxf` | ✅ ezdxf + Shapely |
+| DWG | `.dwg` | ✅ Redirigido a PDF |
+| PNG | `.png` | ✅ OpenCV raster |
+| JPG/JPEG | `.jpg`, `.jpeg` | ✅ OpenCV raster |
+| WEBP | `.webp` | ✅ OpenCV raster |
+| TIFF | `.tiff` | ✅ OpenCV raster |
 
 ### Deuda Técnica Conocida
 
-**✅ TODA LA DEUDA TÉCNICA RESUELTA** (Julio 2026)
+**✅ TODA LA DEUDA TÉCNICA RESUELTA** (Septiembre 2026)
 
 - ✅ Backend build funcional (18 TypeScript errors fixed)
 - ✅ Migraciones PostgreSQL ejecutadas (17 migraciones, 30 tablas)
@@ -146,10 +159,11 @@ MINIO_SECRET_KEY=electridom123
 - ✅ Code review completado y fixes aplicados
 
 **Pendiente:**
+- Subir cobertura backend a 60% (módulos auth, calculations controllers)
 - Pruebas de usabilidad con usuarios reales (no-code)
 - Entrenar modelo YOLOv8 con dataset etiquetado (ver plan-service/docs/yolov8_setup.md)
 
-### Estado de Base de Datos (Actualizado Julio 2026)
+### Estado de Base de Datos (Actualizado Septiembre 2026)
 
 **30 tablas creadas** | **222 filas de seed data**:
 
@@ -190,7 +204,7 @@ npm run test:unit
 npm run setup:test-db-complete
 npm run test:e2e
 
-# Coverage (threshold: 35%)
+# Coverage (threshold: 45%)
 npm run test:unit:coverage
 ```
 

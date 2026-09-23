@@ -42,7 +42,7 @@ npm run setup:test-db
 
 ```bash
 # Verificar que la base de datos de prueba existe
-mysql -u electridom -p -e "SHOW DATABASES LIKE 'electridom_test';"
+docker exec electridom-postgres psql -U electridom -d electridom -c "SELECT datname FROM pg_database WHERE datname='electridom_test';"
 ```
 
 ## 🚀 **COMANDOS DE TESTING**
