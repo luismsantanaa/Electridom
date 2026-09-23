@@ -1,0 +1,33 @@
+path: D:/My Repos/Git Repos/CalculadoraElectricaRD/models/training/FloorPlanCAD/FloorPlanCAD_YOLOv8_Full
+train: images
+val: images
+
+names:
+  0: single_door
+  1: double_door
+  2: sliding_door
+  3: window
+  4: bay_window
+  5: blind_window
+  6: opening_symbol
+  7: stair
+  8: gas_stove
+  9: refrigerator
+  10: washing_machine
+  11: sofa
+  12: bed
+  13: chair
+  14: table
+  15: bedside_cupboard
+  16: tv_cabinet
+  17: half_height_cabinet
+  18: high_cabinet
+  19: wardrobe
+  20: sink
+  21: bath
+  22: bath_tub
+  23: squat_toilet
+  24: urinal
+  25: toilet
+  26: elevator
+  27: escalator
