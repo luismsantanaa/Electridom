@@ -27,9 +27,9 @@ def test_parse_vectorial_pdf(tmp_path: Path):
     filepath = tmp_path / "vectorial.pdf"
     _create_vectorial_pdf(filepath)
 
-    # Use a scale that makes the 200-point rectangles large enough to pass
-    # the 0.5 m2 area filter used by PolygonBuilder.
-    parser = PdfVectorParser(scale=100.0)
+    # Realistic calibration: 0.01 m/pt turns the 200-point rectangles into
+    # 2 m x 2 m rooms, passing the min-area filter and the residential cap.
+    parser = PdfVectorParser(scale=0.01)
     polygons = parser.parse(str(filepath))
 
     assert isinstance(polygons, list)

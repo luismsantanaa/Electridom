@@ -146,3 +146,25 @@ def test_snapping_tolerance(builder, tmp_path):
 
     assert len(polygons) == 1
     assert abs(polygons[0].area - 100.0) < 1.0
+
+
+def test_degenerate_segments_after_snap_are_skipped(builder, tmp_path):
+    """Zero-length / sub-tolerance LINEs must not crash polygonize (GEOSException)."""
+    filepath = tmp_path / "degenerate.dxf"
+    doc = ezdxf.new("R2010")
+    msp = doc.modelspace()
+    # Valid square.
+    msp.add_line((0, 0), (10, 0))
+    msp.add_line((10, 0), (10, 10))
+    msp.add_line((10, 10), (0, 10))
+    msp.add_line((0, 10), (0, 0))
+    # Collapses to a single snapped point (length < SNAP_TOLERANCE 2 mm).
+    msp.add_line((5.0, 5.0), (5.001, 5.0))
+    msp.add_line((1.0, 1.0), (1.0, 1.0))
+    doc.saveas(str(filepath))
+
+    entities = DxfParser().parse(str(filepath))
+    polygons = builder.build_polygons(entities, scale=1.0)
+
+    assert len(polygons) == 1
+    assert abs(polygons[0].area - 100.0) < 0.01

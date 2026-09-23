@@ -135,3 +135,48 @@ def test_parse_nonexistent_file():
 
     with pytest.raises(FileNotFoundError):
         parser.parse("/nonexistent/path/file.pdf")
+
+
+def test_parse_image_png(tmp_path: Path):
+    """parse_image should accept a PNG floor-plan image without raising."""
+    filepath = tmp_path / "plan.png"
+    img = Image.new("RGB", (400, 400), "white")
+    draw = ImageDraw.Draw(img)
+    draw.rectangle([40, 40, 180, 180], outline="black", width=3)
+    draw.rectangle([200, 40, 340, 180], outline="black", width=3)
+    img.save(filepath, format="PNG")
+
+    parser = PdfRasterParser(scale=1.0, dpi=150)
+    polygons = parser.parse_image(str(filepath))
+
+    assert isinstance(polygons, list)
+
+
+def test_parse_image_multi_room_segmentation(tmp_path: Path):
+    """Connected-component segmentation should find closed rooms in a PNG."""
+    filepath = tmp_path / "rooms.png"
+    # Thick walls forming a 2x2 apartment grid (rooms must be sealed).
+    img = Image.new("RGB", (400, 400), "white")
+    draw = ImageDraw.Draw(img)
+    wall = 8
+    # Outer walls
+    draw.rectangle([20, 20, 380, 380], outline="black", width=wall)
+    # Cross partition
+    draw.rectangle([196, 20, 204, 380], fill="black")
+    draw.rectangle([20, 196, 380, 204], fill="black")
+    img.save(filepath, format="PNG")
+
+    parser = PdfRasterParser(scale=1.0, dpi=150)
+    polygons = parser.parse_image(str(filepath))
+
+    assert len(polygons) >= 3
+    assert all(isinstance(p, Polygon) and p.area >= 1.5 for p in polygons)
+    assert parser.last_meters_per_pixel > 0
+
+
+def test_parse_image_nonexistent_file():
+    """A missing image should raise FileNotFoundError."""
+    parser = PdfRasterParser(scale=1.0, dpi=150)
+
+    with pytest.raises(FileNotFoundError):
+        parser.parse_image("/nonexistent/path/plan.png")

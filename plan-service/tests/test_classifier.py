@@ -96,3 +96,25 @@ def test_classify_abbreviation():
     result = classifier.classify(polygon, texts, scale=1.0)
 
     assert result["space_type"] == "dormitorio"
+
+
+def test_classify_closet_abbreviation():
+    """Label 'C.L' should map to deposito after punctuation normalization."""
+    classifier = SpaceClassifier()
+    polygon = Polygon([(0, 0), (3, 0), (3, 3), (0, 3)])
+    texts = [TextEntity(content="C.L", position=(1.5, 1.5), text_type="OCR")]
+
+    result = classifier.classify(polygon, texts, scale=1.0)
+
+    assert result["space_type"] == "deposito"
+
+
+def test_classify_ocr_typo_dormitorio():
+    """Common OCR typo 'dormitforio' should still map to dormitorio."""
+    classifier = SpaceClassifier()
+    polygon = Polygon([(0, 0), (4, 0), (4, 4), (0, 4)])
+    texts = [TextEntity(content="dormitforio", position=(2, 2), text_type="OCR")]
+
+    result = classifier.classify(polygon, texts, scale=1.0)
+
+    assert result["space_type"] == "dormitorio"

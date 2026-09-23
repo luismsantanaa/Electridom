@@ -41,6 +41,34 @@ def test_upload_plan_success(client, mock_storage, patch_process_tasks):
 
 
 @pytest.mark.usefixtures("override_deps")
+def test_upload_plan_png_success(client, mock_storage, patch_process_tasks):
+    """Uploading a valid PNG plan image should store it and queue PDF/image processing."""
+    mock_storage.upload_file.return_value = "plans/uuid/plano.png"
+    png_bytes = (
+        b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x01"
+        b"\x00\x00\x00\x01\x08\x02\x00\x00\x00\x90wS\xde\x00\x00"
+        b"\x00\x0cIDATx\x9cc\xf8\x0f\x00\x00\x01\x01\x00\x05\x18"
+        b"\xd8N\x00\x00\x00\x00IEND\xaeB`\x82"
+    )
+
+    response = client.post(
+        "/api/plans/upload",
+        files={"file": ("plano.png", BytesIO(png_bytes), "image/png")},
+    )
+
+    assert response.status_code == 201
+    data = response.json()
+    assert data["file_type"] == "png"
+    assert data["original_filename"] == "plano.png"
+    assert data["processing_status"] == "pending"
+
+    args = mock_storage.upload_file.call_args.args
+    assert args[0].endswith("/plano.png")
+    assert args[2] == "image/png"
+    patch_process_tasks["pdf"].delay.assert_called_once_with(data["plan_id"])
+
+
+@pytest.mark.usefixtures("override_deps")
 def test_upload_plan_invalid_extension(client):
     """Uploading a file with an unsupported extension should return 400."""
     response = client.post(

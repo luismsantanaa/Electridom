@@ -86,6 +86,33 @@ def test_process_dxf(tmp_path: Path):
     assert result["metadata"]["total_spaces"] >= 1
 
 
+def test_process_image_png(tmp_path: Path):
+    """A PNG plan image should use the image raster pipeline."""
+    from PIL import Image, ImageDraw
+
+    filepath = tmp_path / "plan.png"
+    img = Image.new("RGB", (400, 400), "white")
+    draw = ImageDraw.Draw(img)
+    draw.rectangle([40, 40, 180, 180], outline="black", width=3)
+    img.save(filepath, format="PNG")
+
+    orchestrator = ProcessingOrchestrator()
+    with patch.object(
+        orchestrator,
+        "_measure_and_classify_image",
+        return_value={
+            "file_type": "png",
+            "spaces": [],
+            "metadata": {"total_spaces": 0, "average_confidence": 1.0},
+        },
+    ) as mock_measure:
+        result = orchestrator.process_image(str(filepath))
+
+    assert result["file_type"] == "png"
+    assert result["metadata"]["total_spaces"] == 0
+    mock_measure.assert_called_once()
+
+
 def test_unified_output_format():
     """The orchestrator should return the same top-level structure."""
     orchestrator = ProcessingOrchestrator()

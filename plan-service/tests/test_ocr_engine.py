@@ -78,3 +78,33 @@ def test_extract_text_tesseract_failure():
         result = engine.extract_text(image)
 
     assert result == ""
+
+
+def test_extract_words_maps_coords_back_to_original_scale():
+    """Word boxes from an upscaled OCR pass should map to original pixels."""
+    engine = OcrEngine(language="spa")
+    engine._tesseract_available = True
+    image = np.ones((100, 100, 3), dtype=np.uint8) * 255
+
+    mock_data = {
+        "text": ["SALA", ""],
+        "conf": ["88", "-1"],
+        "left": [40, 0],
+        "top": [20, 0],
+        "width": [80, 0],
+        "height": [40, 0],
+    }
+
+    mock_image = MagicMock()
+    with patch("app.services.pdf.ocr_engine.Image.fromarray", return_value=mock_image):
+        with patch("app.services.pdf.ocr_engine.pytesseract") as mock_tesseract:
+            mock_tesseract.Output.DICT = "dict"
+            mock_tesseract.image_to_data.return_value = mock_data
+            words = engine.extract_words(image, scale_factor=2.0)
+
+    assert len(words) == 1
+    assert words[0].text == "SALA"
+    assert words[0].left == 20  # 40 / 2
+    assert words[0].top == 10  # 20 / 2
+    assert words[0].cx == 40.0  # 20 + 40/2
+    assert words[0].cy == 20.0  # 10 + 20/2

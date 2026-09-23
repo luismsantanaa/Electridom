@@ -74,6 +74,9 @@ def test_process_pdf_full_pipeline(mock_session_factory, mock_storage, tmp_path)
     assert plan.processing_error is None
     assert plan.processing_result is not None
     assert "metadata" in plan.processing_result
+    # Spaces must be persisted for /result (UI reads DetectedSpace rows).
+    session.add_all.assert_called()
+    assert "spaces_detected" in result
 
 
 @patch("app.tasks.process_pdf.storage")
