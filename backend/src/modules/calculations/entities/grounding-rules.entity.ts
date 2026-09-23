@@ -19,7 +19,7 @@ export class GroundingRules extends BaseAuditEntity {
     type: 'decimal',
     precision: 8,
     scale: 3,
-    comment: 'conductor de protección (EGC) en mm²',
+    comment: 'conductor de protecciÃ³n (EGC) en mmÂ²',
   })
   egcMm2: number;
 
@@ -28,7 +28,7 @@ export class GroundingRules extends BaseAuditEntity {
     type: 'decimal',
     precision: 8,
     scale: 3,
-    comment: 'conductor de tierra (GEC) en mm²',
+    comment: 'conductor de tierra (GEC) en mmÂ²',
   })
   gecMm2: number;
 

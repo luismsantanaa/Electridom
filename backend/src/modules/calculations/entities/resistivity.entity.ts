@@ -20,7 +20,7 @@ export class Resistivity extends BaseAuditEntity {
     type: 'decimal',
     precision: 8,
     scale: 3,
-    comment: 'Sección transversal en mm²',
+    comment: 'SecciÃ³n transversal en mmÂ²',
   })
   seccionMm2: number;
 
@@ -29,7 +29,7 @@ export class Resistivity extends BaseAuditEntity {
     type: 'decimal',
     precision: 10,
     scale: 6,
-    comment: 'Resistencia en Ohm por kilómetro',
+    comment: 'Resistencia en Ohm por kilÃ³metro',
   })
   ohmKm: number;
 

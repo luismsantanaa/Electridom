@@ -19,7 +19,7 @@ export class BreakerCurve extends BaseAuditEntity {
 
   @Column({
     type: 'int',
-    comment: 'N˙mero de polos (1=monof·sico, 2=bif·sico, 3=trif·sico)',
+    comment: 'N√∫mero de polos (1=monof√°sico, 2=bif√°sico, 3=trif√°sico)',
   })
   poles: number;
 
@@ -34,7 +34,7 @@ export class BreakerCurve extends BaseAuditEntity {
     name: 'use_case',
     type: 'varchar',
     length: 50,
-    comment: 'Caso de uso tÌpico (iluminacion, tomas generales, etc.)',
+    comment: 'Caso de uso t√≠pico (iluminacion, tomas generales, etc.)',
   })
   useCase: string;
 

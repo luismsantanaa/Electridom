@@ -1,7 +1,7 @@
 import { Entity, Column, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
 import { BaseAuditEntity } from '../../../common/entities/base-audit.entity';
 import { InstallationType } from '../../installation-types/entities/installation-type.entity';
-import { ArtifactType } from '../../artifact-types/entities/artifact-type.entity';
+import type { ArtifactType } from '../../artifact-types/entities/artifact-type.entity';
 
 @Entity('tipos_ambientes')
 export class EnvironmentType extends BaseAuditEntity {
@@ -13,7 +13,7 @@ export class EnvironmentType extends BaseAuditEntity {
   @Column({ length: 255, nullable: true })
   description: string;
 
-  // Relaci�n con InstallationType
+  // Relacion con InstallationType
   @ManyToOne(
     () => InstallationType,
     (installationType) => installationType.environmentTypes,
@@ -21,11 +21,11 @@ export class EnvironmentType extends BaseAuditEntity {
   @JoinColumn({ name: 'installation_type_id' })
   installationType: InstallationType;
 
-  // Relaci�n con ArtifactType
-  @OneToMany(() => ArtifactType, (artifactType) => artifactType.environmentType)
+  // Relacion con ArtifactType (string evita ciclo de import en runtime)
+  @OneToMany('ArtifactType', 'environmentType')
   artifactTypes: ArtifactType[];
 
-  // Los campos de auditor�a ya vienen de BaseAuditEntity:
+  // Los campos de auditoria ya vienen de BaseAuditEntity:
   // - active
   // - creationDate
   // - updateDate

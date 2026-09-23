@@ -37,7 +37,7 @@ export class ProjectVersion extends BaseAuditEntity {
   @Column('json', { default: '[]' })
   outputWarnings: any;
 
-  // Auditoría de rules
+  // AuditorÃ­a de rules
   @Column({ length: 200 })
   rulesSignature: string;
 
@@ -45,7 +45,7 @@ export class ProjectVersion extends BaseAuditEntity {
   @Column({ type: 'varchar', length: 240, nullable: true })
   note?: string;
 
-  // Los campos de auditoría ya vienen de BaseAuditEntity:
+  // Los campos de auditorÃ­a ya vienen de BaseAuditEntity:
   // - active
   // - creationDate
   // - updateDate

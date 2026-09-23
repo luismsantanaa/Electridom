@@ -19,7 +19,7 @@ export class Load extends BaseAuditEntity {
   @JoinColumn({ name: 'tipo_artefacto_id' })
   artifactType: ArtifactType;
 
-  // Los campos de auditoría ya vienen de BaseAuditEntity:
+  // Los campos de auditorÃ­a ya vienen de BaseAuditEntity:
   // - active
   // - creationDate
   // - updateDate

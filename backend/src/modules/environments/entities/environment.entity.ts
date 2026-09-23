@@ -16,7 +16,7 @@ export class Environment extends BaseAuditEntity {
   @JoinColumn({ name: 'tipo_ambiente_id' })
   environmentType: EnvironmentType;
 
-  // Los campos de auditoría ya vienen de BaseAuditEntity:
+  // Los campos de auditorÃ­a ya vienen de BaseAuditEntity:
   // - active
   // - creationDate
   // - updateDate

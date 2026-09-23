@@ -12,14 +12,14 @@ export class InstallationType extends BaseAuditEntity {
   @Column({ length: 255, nullable: true })
   description: string;
 
-  // Relación con EnvironmentType
+  // RelaciÃ³n con EnvironmentType
   @OneToMany(
     () => EnvironmentType,
     (environmentType) => environmentType.installationType,
   )
   environmentTypes: EnvironmentType[];
 
-  // Los campos de auditoría ya vienen de BaseAuditEntity:
+  // Los campos de auditorÃ­a ya vienen de BaseAuditEntity:
   // - active (antes activo)
   // - creationDate (antes fechaCreacion)
   // - updateDate (antes fechaActualizacion)
