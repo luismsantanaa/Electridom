@@ -17,9 +17,10 @@ CalculadoraElectricaRD/
 ├── frontend/                   # React 19 + Vite + TypeScript
 ├── plan-service/               # Python 3.12 + FastAPI
 ├── shared/                     # Código compartido (types, utils, configs)
+├── scripts/                    # Init DB Docker (init-multiple-databases.sh)
 ├── infrastructure/             # Infraestructura y scripts
 │   ├── docker/                 # Docker Compose y configuración
-│   └── scripts/                # Scripts de desarrollo
+│   └── scripts/                # Scripts de desarrollo (start/stop-dev)
 └── docs/                       # Documentación
 ```
 
