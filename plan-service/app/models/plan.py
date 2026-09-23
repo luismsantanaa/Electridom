@@ -11,7 +11,7 @@ from app.core.database import Base
 
 
 class Plan(Base):
-    """Represents an uploaded architectural plan (PDF or DXF)."""
+    """Represents an uploaded architectural plan (PDF, DXF, DWG or PNG)."""
 
     __tablename__ = "plans"
 

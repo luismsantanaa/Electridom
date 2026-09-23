@@ -4,6 +4,7 @@ from collections.abc import AsyncGenerator
 
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy.pool import NullPool
 
 from app.core.config import settings
 
@@ -17,6 +18,23 @@ engine = create_async_engine(
 
 async_session_factory = async_sessionmaker(
     engine,
+    class_=AsyncSession,
+    expire_on_commit=False,
+)
+
+# Celery tasks run each job inside a fresh asyncio.run() event loop. Pooled
+# asyncpg connections are bound to the loop that created them, so reusing the
+# API engine's pool across tasks crashes with "Event loop is closed" /
+# "'NoneType' object has no attribute 'send'". NullPool opens and closes a
+# connection per checkout, keeping every connection on the current loop.
+task_engine = create_async_engine(
+    settings.database_url,
+    echo=settings.database_echo,
+    poolclass=NullPool,
+)
+
+task_session_factory = async_sessionmaker(
+    task_engine,
     class_=AsyncSession,
     expire_on_commit=False,
 )

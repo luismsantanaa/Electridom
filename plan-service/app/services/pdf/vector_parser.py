@@ -10,7 +10,8 @@ from typing import Any
 from shapely import LineString, Point
 
 from app.services.dxf.parser import DxfEntities, LineEntity, TextEntity
-from app.services.dxf.polygon_builder import PolygonBuilder
+from app.services.dxf.polygon_builder import MAX_AREA_M2, PolygonBuilder
+from app.services.pdf.scale_estimator import count_dimension_words
 
 logger = logging.getLogger(__name__)
 
@@ -21,6 +22,22 @@ _POINTS_TO_METERS = 0.000352778
 _MIN_SEGMENT_LENGTH_POINTS = 1.0
 # Flatness tolerance for Bezier subdivision, in PDF points.
 _BEZIER_TOLERANCE_POINTS = 0.5
+# Horizontal gap between pages when laying them out side by side, as a
+# fraction of the page width.
+_PAGE_GAP_RATIO = 0.1
+# Pages with at least this many dimension annotations look like floor plans;
+# cover sheets, budgets, and empty frames carry almost none.
+_MIN_DIMENSION_WORDS_PER_PAGE = 5
+
+
+def page_x_offset(page_index: int, page_width: float) -> float:
+    """X offset that lays PDF pages side by side in one coordinate space.
+
+    All PDF pages share the same origin, so combining multi-page geometry
+    without an offset makes unrelated pages overlap and corrupts containment
+    and classification analysis.
+    """
+    return page_index * page_width * (1.0 + _PAGE_GAP_RATIO)
 
 
 @dataclass
@@ -63,10 +80,39 @@ class PdfVectorParser:
         all_texts: list[TextEntity] = []
 
         try:
-            for page in doc:
+            # Only pages that look like dimensioned floor plans contribute
+            # geometry; cover sheets and schematic-only pages duplicate the
+            # building outline and pollute the result. When no page qualifies
+            # (undimensioned plan), fall back to processing everything.
+            dimension_counts = [count_dimension_words(page) for page in doc]
+            plan_pages = {
+                index
+                for index, count in enumerate(dimension_counts)
+                if count >= _MIN_DIMENSION_WORDS_PER_PAGE
+            }
+            if not plan_pages:
+                plan_pages = set(range(len(dimension_counts)))
+
+            for page_index, page in enumerate(doc):
+                if page_index not in plan_pages:
+                    continue
+                x_offset = page_x_offset(page_index, float(page.rect.width))
                 lines, texts = self._extract_drawings(page)
-                all_lines.extend(lines)
-                all_texts.extend(texts)
+                all_lines.extend(
+                    LineEntity(
+                        start=(line.start[0] + x_offset, line.start[1]),
+                        end=(line.end[0] + x_offset, line.end[1]),
+                    )
+                    for line in lines
+                )
+                all_texts.extend(
+                    TextEntity(
+                        content=text.content,
+                        position=(text.position[0] + x_offset, text.position[1]),
+                        text_type=text.text_type,
+                    )
+                    for text in texts
+                )
         finally:
             doc.close()
 
@@ -79,7 +125,15 @@ class PdfVectorParser:
 
         entities = DxfEntities(lines=all_lines, texts=all_texts)
         builder = PolygonBuilder()
-        polygons = builder.build_polygons(entities, scale=self.scale)
+        # When a real-world scale was calibrated the polygons are in meters and
+        # the residential max-area cap applies. With the default 1.0 the
+        # coordinates stay in PDF points and the cap would be meaningless.
+        calibrated = self.scale != 1.0
+        polygons = builder.build_polygons(
+            entities,
+            scale=self.scale,
+            max_area_m2=MAX_AREA_M2 if calibrated else None,
+        )
         return polygons
 
     def _extract_drawings(

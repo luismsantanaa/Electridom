@@ -14,6 +14,9 @@ logger = logging.getLogger(__name__)
 # Two polygons overlap significantly when their intersection area is more than
 # this fraction of the smaller polygon's area.
 _OVERLAP_THRESHOLD = 0.5
+# When the vector pass already found at least this many spaces, the raster
+# pass (very slow: denoise + OCR at 300 dpi) adds nothing but duplicates.
+_VECTOR_SUFFICIENT_COUNT = 5
 
 
 class PdfMixedParser:
@@ -41,6 +44,13 @@ class PdfMixedParser:
             Combined list of Shapely polygons in meters.
         """
         vector_polygons = self.vector_parser.parse(file_path)
+        if len(vector_polygons) >= _VECTOR_SUFFICIENT_COUNT:
+            logger.info(
+                "Mixed parser: vector pass found %d polygons — skipping raster pass",
+                len(vector_polygons),
+            )
+            return vector_polygons
+
         raster_polygons = self.raster_parser.parse(file_path)
 
         kept_raster: list[Polygon] = []

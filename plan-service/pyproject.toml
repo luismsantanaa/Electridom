@@ -49,9 +49,9 @@ dependencies = [
     "opencv-python-headless>=4.10.0",
     "numpy>=2.1.0",
 
-    # OCR (optional, for raster PDFs)
-    # "pytesseract>=0.3.13",
-    # "easyocr>=1.7.0",
+    # OCR (room labels on raster PNG/PDF plans; requires Tesseract binary)
+    "pytesseract>=0.3.13",
+    "Pillow>=10.0.0",
 
     # Utilities
     "python-dotenv>=1.0.1",

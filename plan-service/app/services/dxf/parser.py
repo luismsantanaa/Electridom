@@ -353,14 +353,58 @@ def _parse_dimension_text(text: str) -> float | None:
         return None
 
 
+def _configure_dwg_converter() -> bool:
+    """Point ezdxf's odafc addon at an installed ODA File Converter.
+
+    Returns True when the converter is available. The default ezdxf config
+    expects a fixed path, but the Windows installer uses a versioned folder
+    (e.g. "ODAFileConverter 27.1.0"), so probe the usual install locations.
+    """
+    import platform
+
+    from ezdxf.addons import odafc
+
+    if odafc.is_installed():
+        return True
+
+    if platform.system() == "Windows":
+        for base in ("C:/Program Files/ODA", "C:/Program Files (x86)/ODA"):
+            candidates = sorted(
+                Path(base).glob("ODAFileConverter*/ODAFileConverter.exe"),
+            )
+            if candidates:
+                ezdxf.options.set(
+                    "odafc-addon",
+                    "win_exec_path",
+                    str(candidates[-1]),
+                )
+                return odafc.is_installed()
+    return False
+
+
+def _read_document(path: Path) -> Any:
+    """Open a CAD file with ezdxf; DWG files go through the ODA converter."""
+    if path.suffix.lower() == ".dwg":
+        if not _configure_dwg_converter():
+            raise RuntimeError(
+                "El formato DWG requiere ODA File Converter instalado. "
+                "Instálalo desde opendesign.com o exporta el plano como DXF.",
+            )
+        from ezdxf.addons import odafc
+
+        logger.info("Converting DWG to DXF via ODA File Converter: %s", path.name)
+        return odafc.readfile(str(path))
+    return ezdxf.readfile(str(path))
+
+
 class DxfParser:
     """Parses DXF files and extracts relevant entities."""
 
     def parse(self, file_path: str) -> DxfEntities:
-        """Extract all relevant entities from a DXF file.
+        """Extract all relevant entities from a DXF or DWG file.
 
         Args:
-            file_path: Path to the DXF file on disk.
+            file_path: Path to the DXF/DWG file on disk.
 
         Returns:
             A DxfEntities container with extracted geometry and metadata.
@@ -369,7 +413,7 @@ class DxfParser:
         if not path.exists():
             raise FileNotFoundError(f"DXF file not found: {file_path}")
 
-        doc = ezdxf.readfile(str(path))
+        doc = _read_document(path)
         msp = doc.modelspace()
 
         entities = DxfEntities(metadata=_build_metadata(doc))

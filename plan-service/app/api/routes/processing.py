@@ -41,9 +41,10 @@ async def process_plan(
     plan.processing_status = "pending"
     plan.processing_error = None
 
+    # DWG uses the DXF pipeline (ODA File Converter → DXF parse).
     task = (
         process_dxf_task.delay(str(plan_id))
-        if plan.file_type == "dxf"
+        if plan.file_type in ("dxf", "dwg")
         else process_pdf_task.delay(str(plan_id))
     )
 

@@ -1,4 +1,4 @@
-"""Processing orchestrator — routes PDF/DXF plans to the correct pipeline."""
+"""Processing orchestrator — routes PDF/DXF/PNG plans to the correct pipeline."""
 
 from __future__ import annotations
 
@@ -17,8 +17,9 @@ from app.services.geometry.measurement import SpaceMeasurement
 from app.services.pdf.mixed_parser import PdfMixedParser
 from app.services.pdf.ocr_engine import OcrEngine
 from app.services.pdf.raster_parser import PdfRasterParser
+from app.services.pdf.scale_estimator import POINTS_TO_METERS, PdfScaleEstimator
 from app.services.pdf.type_detector import PdfType, PdfTypeDetector
-from app.services.pdf.vector_parser import PdfVectorParser
+from app.services.pdf.vector_parser import PdfVectorParser, page_x_offset
 
 logger = logging.getLogger(__name__)
 
@@ -88,8 +89,22 @@ class ProcessingOrchestrator:
         pdf_type = self.type_detector.detect(file_path)
         logger.info("Detected PDF type for %s: %s", path.name, pdf_type.value)
 
-        vector_parser = PdfVectorParser(scale=scale)
-        raster_parser = PdfRasterParser(scale=scale, dpi=300)
+        # Calibrate real-world scale from dimension annotations (cotas) unless
+        # the caller provided an explicit scale.
+        effective_scale = scale
+        if scale == 1.0:
+            estimated = PdfScaleEstimator().estimate(file_path)
+            if estimated:
+                effective_scale = estimated
+
+        vector_parser = PdfVectorParser(scale=effective_scale)
+        # The raster parser converts pixels with (0.0254 / dpi) * scale, which
+        # assumes a 1:1 print. Feed it the ratio that lands on the same
+        # meters-per-point calibration as the vector parser.
+        raster_scale = (
+            effective_scale / POINTS_TO_METERS if effective_scale != scale else scale
+        )
+        raster_parser = PdfRasterParser(scale=raster_scale, dpi=300)
         mixed_parser = PdfMixedParser(vector_parser, raster_parser)
 
         if pdf_type == PdfType.VECTORIAL:
@@ -99,10 +114,10 @@ class ProcessingOrchestrator:
         else:
             polygons = mixed_parser.parse(file_path)
 
-        result = self._measure_and_classify(polygons, file_path, scale)
+        result = self._measure_and_classify(polygons, file_path, effective_scale)
 
         # AI fallback: if average confidence is low, try OpenAI Vision
-        avg_conf = result["metadata"]["average_confidence"]
+        avg_conf = result["metadata"].get("average_confidence", 1.0)
         if avg_conf < 0.5 and pdf_type in (PdfType.RASTER, PdfType.MIXED):
             image_path: str | None = None
             try:
@@ -191,6 +206,105 @@ class ProcessingOrchestrator:
 
         return result
 
+    def process_image(self, file_path: str, scale: float = 1.0) -> dict[str, Any]:
+        """Process a plan image (PNG) and return detected spaces.
+
+        Uses the OpenCV raster pipeline on the native image pixels, then
+        falls back to Vision/YOLOv8 using the original file (no PDF render).
+
+        Args:
+            file_path: Path to the image file on disk.
+            scale: Scale factor applied on top of the assumed pixel DPI.
+
+        Returns:
+            Unified result dictionary with spaces and metadata.
+        """
+        path = Path(file_path)
+        if not path.exists():
+            raise FileNotFoundError(f"Image file not found: {file_path}")
+
+        # Screen/export PNGs rarely embed print DPI; scale is recovered from
+        # room sizes inside parse_image (connected-component segmentation).
+        dpi = 150
+        raster_parser = PdfRasterParser(scale=scale, dpi=dpi)
+        polygons = raster_parser.parse_image(file_path)
+        meters_per_pixel = raster_parser.last_meters_per_pixel
+        texts = self._extract_image_ocr_texts(
+            file_path,
+            meters_per_pixel=meters_per_pixel,
+            scale=scale,
+        )
+        result = self._measure_and_classify_image(polygons, scale, texts)
+        result["metadata"]["meters_per_pixel"] = round(meters_per_pixel, 8)
+        try:
+            image = PdfRasterParser._load_image(file_path)
+            result["metadata"]["image_width_px"] = int(image.shape[1])
+            result["metadata"]["image_height_px"] = int(image.shape[0])
+        except Exception:  # noqa: BLE001
+            pass
+
+        avg_conf = result["metadata"].get("average_confidence", 1.0)
+        # Prefer Vision only when geometry found nothing useful, or when every
+        # space is still unclassified at very low confidence.
+        no_spaces = len(result.get("spaces", [])) == 0
+        if no_spaces or avg_conf < 0.4:
+            try:
+                from app.services.ai.vision_classifier import analyze_with_vision
+
+                logger.info(
+                    "Low confidence (%.2f) on image, trying Vision API fallback",
+                    avg_conf,
+                )
+                vision_spaces = _run_async(
+                    analyze_with_vision(
+                        file_path,
+                        cache_key=str(path.stat().st_mtime),
+                    )
+                )
+                if vision_spaces:
+                    result["spaces"] = vision_spaces
+                    result["metadata"]["ai_fallback_used"] = True
+                    result["metadata"]["ai_fallback_reason"] = (
+                        f"low_confidence:{avg_conf:.2f}"
+                    )
+                    total_area = sum(s["area_m2"] for s in vision_spaces)
+                    classified = sum(
+                        1
+                        for s in vision_spaces
+                        if s["space_type"] and s["space_type"] != "unknown"
+                    )
+                    confs = [s["confidence"] for s in vision_spaces]
+                    result["metadata"].update(
+                        {
+                            "total_spaces": len(vision_spaces),
+                            "total_area_m2": round(total_area, 4),
+                            "classified_spaces": classified,
+                            "unclassified_spaces": len(vision_spaces) - classified,
+                            "average_confidence": round(
+                                sum(confs) / len(confs) if confs else 0.0, 4
+                            ),
+                        },
+                    )
+            except Exception as e:
+                logger.warning("Vision API fallback failed for image: %s", e)
+                result["metadata"]["ai_fallback_used"] = False
+                result["metadata"]["ai_fallback_error"] = str(e)
+
+        if self.yolov8_detector.is_available:
+            try:
+                yolov8_result = self.yolov8_detector.detect(file_path)
+                if yolov8_result:
+                    result["metadata"]["yolov8_detections"] = yolov8_result.to_dict()
+                    logger.info(
+                        "YOLOv8 detected %d spaces in image %s",
+                        len(yolov8_result.spaces),
+                        path.name,
+                    )
+            except Exception as e:
+                logger.warning("YOLOv8 enrichment failed for image: %s", e)
+
+        return result
+
     def process_dxf(self, file_path: str, scale: float = 1.0) -> dict[str, Any]:
         """Process a DXF file and return detected spaces.
 
@@ -237,8 +351,12 @@ class ProcessingOrchestrator:
 
         spaces: list[dict[str, Any]] = []
         for polygon in polygons:
-            dimensions = measurer.calculate(polygon, scale=scale)
+            # Polygons are already scaled to meters by the builder; scaling
+            # again here would square the factor.
+            dimensions = measurer.calculate(polygon, scale=1.0)
             classification = classifier.classify(polygon, texts, scale=scale)
+            if classification["space_type"] == "descartado":
+                continue
             spaces.append(
                 {
                     "name": str(classification["suggested_name"]),
@@ -257,6 +375,82 @@ class ProcessingOrchestrator:
 
         return self._build_result("pdf", spaces, scale)
 
+    def _measure_and_classify_image(
+        self,
+        polygons: list[Any],
+        scale: float,
+        texts: list[Any] | None = None,
+    ) -> dict[str, Any]:
+        """Measure and classify image polygons using OCR labels when available."""
+        measurer = SpaceMeasurement()
+        classifier = SpaceClassifier()
+        label_texts = texts or []
+
+        spaces: list[dict[str, Any]] = []
+        for polygon in polygons:
+            dimensions = measurer.calculate(polygon, scale=1.0)
+            # OCR / polygon coords are already in meters — do not re-scale.
+            classification = classifier.classify(polygon, label_texts, scale=1.0)
+            if classification["space_type"] == "descartado":
+                continue
+            spaces.append(
+                {
+                    "name": str(classification["suggested_name"]),
+                    "space_type": str(classification["space_type"]),
+                    "area_m2": round(dimensions.area_m2, 4),
+                    "perimeter_m": round(dimensions.perimeter_m, 4),
+                    "width_m": round(dimensions.width_m, 4),
+                    "length_m": round(dimensions.length_m, 4),
+                    "vertices": [
+                        {"x": round(x, 6), "y": round(y, 6)} for x, y in dimensions.vertices
+                    ],
+                    "confidence": round(float(cast("Any", classification["confidence"])), 4),
+                    "classification_method": str(classification["method"]),
+                },
+            )
+
+        return self._build_result("png", spaces, scale)
+
+    def _extract_image_ocr_texts(
+        self,
+        file_path: str,
+        meters_per_pixel: float,
+        scale: float = 1.0,
+    ) -> list[Any]:
+        """Run OCR on a plan image and return TextEntity positions in meters."""
+        if not self.ocr_engine.is_available:
+            logger.info("OCR unavailable; image labels will use shape heuristics")
+            return []
+
+        try:
+            image = PdfRasterParser._load_image(file_path)
+        except Exception as exc:  # noqa: BLE001
+            logger.warning("Could not load image for OCR: %s", exc)
+            return []
+
+        words = self.ocr_engine.extract_words(image)
+        if not words:
+            return []
+
+        from app.services.dxf.parser import TextEntity
+
+        factor = meters_per_pixel * scale
+        texts = [
+            TextEntity(
+                content=word.text,
+                position=(word.cx * factor, word.cy * factor),
+                text_type="OCR",
+            )
+            for word in words
+        ]
+        logger.info(
+            "OCR produced %d text entities for %s (mpp=%.6f)",
+            len(texts),
+            Path(file_path).name,
+            meters_per_pixel,
+        )
+        return texts
+
     def _measure_and_classify_dxf(
         self,
         polygons: list[Any],
@@ -270,8 +464,12 @@ class ProcessingOrchestrator:
 
         spaces: list[dict[str, Any]] = []
         for polygon in polygons:
-            dimensions = measurer.calculate(polygon, scale=scale)
+            # Polygons are already scaled to meters by the builder; scaling
+            # again here would square the factor.
+            dimensions = measurer.calculate(polygon, scale=1.0)
             classification = classifier.classify(polygon, texts, scale=scale)
+            if classification["space_type"] == "descartado":
+                continue
             spaces.append(
                 {
                     "name": str(classification["suggested_name"]),
@@ -338,7 +536,10 @@ class ProcessingOrchestrator:
         texts: list[TextEntity] = []
         doc = pymupdf.open(file_path)
         try:
-            for page in doc:
+            for page_index, page in enumerate(doc):
+                # Keep text positions consistent with the page layout used by
+                # the vector parser (pages laid out side by side).
+                x_offset = page_x_offset(page_index, float(page.rect.width))
                 for block in page.get_text("blocks"):
                     if len(block) < 5:
                         continue
@@ -349,7 +550,7 @@ class ProcessingOrchestrator:
                         TextEntity(
                             content=content.strip(),
                             position=(
-                                float((block[0] + block[2]) / 2.0),
+                                float((block[0] + block[2]) / 2.0) + x_offset,
                                 float((block[1] + block[3]) / 2.0),
                             ),
                             text_type="PDF_TEXT",

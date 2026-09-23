@@ -43,6 +43,30 @@ class SpaceClassifier:
         "otro",
     ]
 
+    # Texts typical of title blocks / sheet cartouches, not rooms. A polygon
+    # containing one of these (and no room keyword) is drawing furniture, not
+    # a living space, and must be discarded.
+    _CARTOUCHE_KEYWORDS: tuple[str, ...] = (
+        "propietario",
+        "proyecto",
+        "escala",
+        "lamina",
+        "hoja",
+        "tarjeta",
+        "contenido",
+        "dibujado",
+        "aprobado",
+        "revisado",
+        "arquitectonica",
+        "dimencionado",
+        "dimensionado",
+        "cableado",
+        "sanitarias",
+        "instalaciones",
+        "suplidor",
+        "registro",
+    )
+
     # Maps a normalized keyword to the canonical space type.
     _TEXT_KEYWORDS: dict[str, str] = {
         # Living / dining
@@ -64,12 +88,17 @@ class SpaceClassifier:
         "dormitorio": "dormitorio",
         "dormitorios": "dormitorio",
         "dorm": "dormitorio",
+        # Common OCR typos on architectural plans
+        "dormitforio": "dormitorio",
+        "dormitorioo": "dormitorio",
+        "dormitorio1": "dormitorio",
         "habitacion": "dormitorio",
         "habitaciones": "dormitorio",
         "cuarto": "dormitorio",
         "cuartos": "dormitorio",
         "recamara": "dormitorio",
         "recamaras": "dormitorio",
+        "bedroom": "dormitorio",
         # Hallway
         "pasillo": "pasillo",
         "pasillos": "pasillo",
@@ -82,19 +111,29 @@ class SpaceClassifier:
         # Laundry
         "lavanderia": "lavanderia",
         "laundry": "lavanderia",
-        # Balcony
+        "lavado": "lavanderia",
+        # Balcony / outdoor
         "balcon": "balcon",
         "balcones": "balcon",
+        "terraza": "balcon",
+        # Carport
+        "marquesina": "garage",
+        # Family room
+        "family room": "sala",
+        "family": "sala",
         # Stairs
         "escalera": "escalera",
         "escaleras": "escalera",
         # Office
         "oficina": "oficina",
         "estudio": "oficina",
-        # Storage
+        # Storage / closet
         "deposito": "deposito",
         "bodega": "deposito",
         "almacen": "deposito",
+        "closet": "deposito",
+        "cl": "deposito",  # "C.L" after punctuation strip → "c l" handled below
+        "c l": "deposito",
     }
 
     def classify(
@@ -118,13 +157,20 @@ class SpaceClassifier:
         if text_result:
             return text_result
 
-        # 2. Shape heuristics.
+        # 2. Cartouche detection: title blocks / sheet labels are not rooms.
+        if self._contains_cartouche_text(polygon, texts, scale):
+            return _classification_result("descartado", 0.9, "cartouche", "Tarjeta")
+
+        # 3. Shape heuristics.
         shape_result = self._classify_by_shape(polygon)
         if shape_result:
             return shape_result
 
-        # 3. Fallback.
+        # 4. Fallback.
         return _classification_result("otro", 0.3, "fallback", "Space")
+
+    # Labels often sit near walls / on dimension lines that clip the room mask.
+    _TEXT_MATCH_BUFFER_M = 0.45
 
     def _classify_by_text(
         self,
@@ -133,10 +179,11 @@ class SpaceClassifier:
         scale: float,
     ) -> dict[str, object] | None:
         """Try to classify by a text label contained in the polygon."""
+        search_region = polygon.buffer(self._TEXT_MATCH_BUFFER_M)
         for text in texts:
             position = (text.position[0] * scale, text.position[1] * scale)
             point = Point(position)
-            if not point.within(polygon) and not polygon.contains(point):
+            if not search_region.contains(point) and not point.within(search_region):
                 continue
 
             normalized = self._normalize_text(text.content)
@@ -153,9 +200,21 @@ class SpaceClassifier:
                     text.content.strip() or space_type.capitalize(),
                 )
 
-            # Partial / fuzzy match: keyword is a substring.
+            # Partial / fuzzy match.
+            # - keyword inside OCR text (e.g. "sala principal" → sala)
+            # - truncated OCR inside keyword (e.g. "dormitor" → dormitorio)
+            # Short tokens are ignored to avoid noise like OCR "of" → oficina.
             for keyword, space_type in self._TEXT_KEYWORDS.items():
-                if keyword in normalized or normalized in keyword:
+                if len(keyword) < 3:
+                    continue
+                if keyword in normalized:
+                    return _classification_result(
+                        space_type,
+                        0.85,
+                        "text_match_fuzzy",
+                        text.content.strip() or space_type.capitalize(),
+                    )
+                if len(normalized) >= 4 and normalized in keyword:
                     return _classification_result(
                         space_type,
                         0.85,
@@ -164,6 +223,26 @@ class SpaceClassifier:
                     )
 
         return None
+
+    def _contains_cartouche_text(
+        self,
+        polygon: Polygon,
+        texts: list[TextEntity],
+        scale: float,
+    ) -> bool:
+        """Return True when the polygon holds title-block/cartouche text."""
+        for text in texts:
+            position = (text.position[0] * scale, text.position[1] * scale)
+            point = Point(position)
+            if not point.within(polygon) and not polygon.contains(point):
+                continue
+            normalized = self._normalize_text(text.content)
+            if not normalized:
+                continue
+            for keyword in self._CARTOUCHE_KEYWORDS:
+                if keyword in normalized:
+                    return True
+        return False
 
     def _classify_by_shape(self, polygon: Polygon) -> dict[str, object] | None:
         """Classify using bounding-box ratio and area heuristics."""

@@ -13,7 +13,7 @@ from typing import Any, cast
 from sqlalchemy import delete, select
 
 from app.core.celery_app import celery_app
-from app.core.database import async_session_factory
+from app.core.database import task_session_factory as async_session_factory
 from app.core.storage import storage
 from app.models.detected_space import DetectedSpace
 from app.models.plan import Plan
@@ -87,8 +87,14 @@ async def _process_dxf_async(plan_id: str) -> dict[str, Any]:
             detected_spaces: list[DetectedSpace] = []
 
             for idx, polygon in enumerate(polygons, start=1):
-                dimensions = measurer.calculate(polygon, scale=scale)
+                # Polygons are already scaled to meters by the builder;
+                # scaling again here would square the factor.
+                dimensions = measurer.calculate(polygon, scale=1.0)
                 classification = classifier.classify(polygon, entities.texts, scale=scale)
+
+                # Title blocks / sheet cartouches are not living spaces.
+                if classification["space_type"] == "descartado":
+                    continue
 
                 space = DetectedSpace(
                     id=uuid.uuid4(),

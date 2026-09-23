@@ -83,13 +83,13 @@ async def analyze_with_vision(image_path: str, cache_key: str | None = None) -> 
     """
     global _daily_call_count
 
-    if not OPENAI_API_KEY:
-        raise RuntimeError("OPENAI_API_KEY not configured. Set it in environment.")
-
-    # Check cache
+    # Check cache first — a hit needs no API key nor rate-limit slot.
     if cache_key and cache_key in _daily_cache:
         logger.info("Vision API cache hit for key: %s", cache_key)
         return _daily_cache[cache_key]
+
+    if not OPENAI_API_KEY:
+        raise RuntimeError("OPENAI_API_KEY not configured. Set it in environment.")
 
     # Check rate limit
     if _daily_call_count >= MAX_DAILY_CALLS:

@@ -8,6 +8,7 @@ celery_app = Celery(
     "plan_service",
     broker=settings.celery_broker_url,
     backend=settings.celery_result_backend,
+    include=["app.tasks.process_dxf", "app.tasks.process_pdf"],
 )
 
 celery_app.conf.update(
@@ -29,5 +30,4 @@ celery_app.conf.update(
     result_expires=86400,
 )
 
-# Auto-discover tasks in the tasks module
-celery_app.autodiscover_tasks(["app.tasks"])
+# Tasks are loaded via include= above (autodiscover alone misses package modules)
