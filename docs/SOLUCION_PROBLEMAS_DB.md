@@ -1,55 +1,53 @@
 # 🔧 Solución de Problemas - Base de Datos
 
-## 🚨 Problema: Error de Conexión a MariaDB
+> **Nota (Julio 2026):** El proyecto usa **PostgreSQL 16 + PostGIS**, no MariaDB.
+> Los scripts one-shot de reparación (`fix-database-connection*.ps1`, etc.) fueron eliminados.
+
+## 🚨 Problema: Error de Conexión a PostgreSQL
 
 ### Síntomas
 
-- Error en Adminer: "Host '172.18.0.6' is not allowed to connect to this MariaDB server"
 - API no puede conectarse a la base de datos
+- Adminer / cliente no alcanza `localhost:5432`
 - Contenedores no pueden comunicarse entre sí
 
 ---
 
-## 🛠️ Solución Automática
+## 🛠️ Solución recomendada
 
-### Opción 1: Script de Reparación Completo (Recomendado)
-
-```powershell
-# Ejecutar script de reparación automática completo
-.\scripts\fix-database-connection-v2.ps1
-```
-
-### Opción 2: Solución Rápida (Para problemas simples)
+### 1. Reiniciar stack de infraestructura
 
 ```powershell
-# Ejecutar solución rápida
-.\scripts\quick-fix-db.ps1
+docker compose -f infrastructure/docker/docker-compose.yml down
+docker compose -f infrastructure/docker/docker-compose.yml up -d
+docker compose -f infrastructure/docker/docker-compose.yml ps
 ```
 
-### Opción 3: Solución Simple (Para problemas básicos)
+### 2. Verificar PostgreSQL
 
 ```powershell
-# Ejecutar solución simple
-.\scripts\simple-fix-db.ps1
+docker exec electridom-postgres pg_isready -U electridom -d electridom
+docker exec electridom-postgres psql -U electridom -d electridom -c "\dt"
 ```
 
-### Opción 4: Script Original (Si las anteriores fallan)
+### 3. Reset completo (solo si hay corrupción / migración fallida)
 
 ```powershell
-# Ejecutar script original
-.\scripts\fix-database-connection.ps1
+# CUIDADO: borra datos locales de Postgres
+docker compose -f infrastructure/docker/docker-compose.yml down -v
+docker compose -f infrastructure/docker/docker-compose.yml up -d
+cd backend
+npm run migration:run
+npx ts-node src/database/run-seeds-fresh.ts
 ```
 
-### Verificar Reparación
-
-```powershell
-# Verificar que todo esté funcionando
-.\scripts\test-database-connection.ps1
-```
+El init de DBs múltiples + PostGIS corre en el primer arranque vía `scripts/init-multiple-databases.sh`.
 
 ---
 
-## 🔍 Solución Manual
+## 🔍 Solución Manual (legado MariaDB — histórico)
+
+> Las secciones siguientes describen el stack antiguo (MariaDB) y se conservan solo como referencia histórica.
 
 ### Paso 1: Detener Contenedores
 
@@ -248,8 +246,8 @@ docker-compose build --no-cache
 # 5. Iniciar
 docker-compose up -d
 
-# 6. Verificar
-.\scripts\test-database-connection.ps1
+# 6. Verificar (PostgreSQL actual)
+docker exec electridom-postgres pg_isready -U electridom -d electridom
 ```
 
 ---

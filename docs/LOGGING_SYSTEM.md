@@ -378,12 +378,7 @@ Todos los eventos de seguridad se registran automáticamente:
 
 ## 🧪 Testing
 
-### Script de Pruebas
-
-```bash
-# Ejecutar pruebas del sistema de logging
-node scripts/test-logging-system.js
-```
+Verificar logging con los tests unitarios/e2e del backend (`npm run test:unit` / `npm run test:e2e` en `backend/`). El script ad-hoc `scripts/test-logging-system.js` fue eliminado.
 
 ### Casos de Prueba
 

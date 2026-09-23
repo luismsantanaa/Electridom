@@ -107,30 +107,32 @@ DATABASE_NAME=electridom
 
 ### Iniciar Sistema
 
-```bash
-# Windows PowerShell
-.\scripts\docker-setup.ps1
+```powershell
+# Infraestructura Docker (PostgreSQL, Redis, MinIO, etc.)
+docker compose -f infrastructure/docker/docker-compose.yml up -d
 
-# O manualmente
-docker-compose up -d
+# Backend + frontend + plan-service (Windows)
+.\infrastructure\scripts\start-dev.ps1
 ```
 
 ### Verificar Estado
 
 ```bash
-docker-compose ps
+docker compose -f infrastructure/docker/docker-compose.yml ps
 ```
 
 ### Ver Logs
 
 ```bash
-docker-compose logs -f
+docker compose -f infrastructure/docker/docker-compose.yml logs -f
 ```
 
 ### Detener Sistema
 
-```bash
-docker-compose down
+```powershell
+.\infrastructure\scripts\stop-dev.ps1
+# o solo Docker:
+docker compose -f infrastructure/docker/docker-compose.yml down
 ```
 
 ---
@@ -158,11 +160,10 @@ docker-compose down
 
 **Error de conexión a la base de datos**
 
-- Solución simple: `.\scripts\simple-fix-db.ps1`
-- Solución rápida: `.\scripts\quick-fix-db.ps1`
-- Solución completa: `.\scripts\fix-database-connection-v2.ps1`
-- Verificar: `.\scripts\test-database-connection.ps1`
-- Revisar logs: `docker logs electridom-mariadb`
+- Ver `docs/SOLUCION_PROBLEMAS_DB.md`
+- Reiniciar Postgres: `docker compose -f infrastructure/docker/docker-compose.yml restart postgres`
+- Verificar: `docker exec electridom-postgres pg_isready -U electridom -d electridom`
+- Revisar logs: `docker logs electridom-postgres`
 
 **La IA no responde**
 
