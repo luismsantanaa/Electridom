@@ -19,7 +19,9 @@ export const plansApi = {
     if (projectId) formData.append('project_id', projectId);
 
     const response = await apiClient.post<PlanUploadResponse>('/plans/upload', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
+      // Let the browser/axios set multipart boundary (do NOT force Content-Type)
+      headers: { 'Content-Type': undefined as unknown as string },
+      timeout: 180_000,
       onUploadProgress: (event) => {
         if (!onProgress || !event.total) return;
         onProgress(Math.min(100, Math.round((event.loaded * 100) / event.total)));
@@ -29,7 +31,18 @@ export const plansApi = {
   },
 
   getStatus: async (planId: string): Promise<ProcessingStatusResponse> => {
-    const response = await apiClient.get<ProcessingStatusResponse>(`/plans/${planId}/status`);
+    // Bypass HTTP cache (ETag/304): polling must always read the live body.
+    const response = await apiClient.get<ProcessingStatusResponse>(
+      `/plans/${planId}/status`,
+      {
+        headers: {
+          'Cache-Control': 'no-cache',
+          Pragma: 'no-cache',
+        },
+        // Avoid axios treating a bare 304 as empty data while phase stays "processing"
+        params: { _t: Date.now() },
+      },
+    );
     return response.data;
   },
 
@@ -69,5 +82,13 @@ export const plansApi = {
 
   delete: async (planId: string): Promise<void> => {
     await apiClient.delete(`/plans/${planId}`);
+  },
+
+  /** Download original file as a blob URL (caller must revokeObjectURL). */
+  getDownloadObjectUrl: async (planId: string): Promise<string> => {
+    const response = await apiClient.get<Blob>(`/plans/${planId}/download`, {
+      responseType: 'blob',
+    });
+    return URL.createObjectURL(response.data);
   },
 };

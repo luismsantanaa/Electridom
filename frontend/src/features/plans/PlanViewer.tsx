@@ -10,20 +10,91 @@ import { Card, CardContent } from '@/components/ui/card';
 interface PlanViewerProps {
   spaces: DetectedSpace[];
   backgroundImageUrl?: string;
+  /** Meters per image pixel — places the PNG in the same coords as spaces. */
+  metersPerPixel?: number | null;
+  /** CAD drawings use Y-up (flip); raster PNGs use image Y-down (no flip). */
+  flipY?: boolean;
   onSpaceSelect?: (space: DetectedSpace) => void;
   onSpaceEdit?: (spaceId: string, newVertices: Point[]) => void;
   mode?: 'view' | 'edit';
 }
 
+interface Bounds {
+  minX: number;
+  minY: number;
+  maxX: number;
+  maxY: number;
+}
+
+const FIT_PADDING = 0.95;
+const MIN_ZOOM_ABS = 0.01;
+const MAX_ZOOM_ABS = 200;
+
+function mapY(y: number, flipY: boolean): number {
+  return flipY ? -y : y;
+}
+
+function computeBounds(spaces: DetectedSpace[], flipY: boolean): Bounds | null {
+  let minX = Infinity;
+  let minY = Infinity;
+  let maxX = -Infinity;
+  let maxY = -Infinity;
+  let found = false;
+
+  for (const space of spaces) {
+    if (!space.vertices || space.vertices.length < 3) continue;
+    for (const v of space.vertices) {
+      const y = mapY(v.y, flipY);
+      if (v.x < minX) minX = v.x;
+      if (y < minY) minY = y;
+      if (v.x > maxX) maxX = v.x;
+      if (y > maxY) maxY = y;
+      found = true;
+    }
+  }
+
+  if (!found) return null;
+  if (maxX - minX < 1e-9) {
+    maxX = minX + 1;
+  }
+  if (maxY - minY < 1e-9) {
+    maxY = minY + 1;
+  }
+  return { minX, minY, maxX, maxY };
+}
+
+function buildFitTransform(
+  bounds: Bounds,
+  canvasW: number,
+  canvasH: number,
+): { transform: [number, number, number, number, number, number]; baseZoom: number } {
+  const boundsW = bounds.maxX - bounds.minX;
+  const boundsH = bounds.maxY - bounds.minY;
+  const zoom = Math.min(canvasW / boundsW, canvasH / boundsH) * FIT_PADDING;
+  const contentW = boundsW * zoom;
+  const contentH = boundsH * zoom;
+  const panX = (canvasW - contentW) / 2 - bounds.minX * zoom;
+  const panY = (canvasH - contentH) / 2 - bounds.minY * zoom;
+  return {
+    transform: [zoom, 0, 0, zoom, panX, panY],
+    baseZoom: zoom,
+  };
+}
+
 export default function PlanViewer({
   spaces,
   backgroundImageUrl,
+  metersPerPixel,
+  flipY = true,
   onSpaceSelect,
   onSpaceEdit,
   mode = 'view',
 }: PlanViewerProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fabricRef = useRef<fabric.Canvas | null>(null);
+  const baseZoomRef = useRef(1);
+  const boundsRef = useRef<Bounds | null>(null);
   const [selectedSpace, setSelectedSpace] = useState<DetectedSpace | null>(null);
   const [tooltip, setTooltip] = useState<{
     x: number;
@@ -36,12 +107,36 @@ export default function PlanViewer({
     return SPACE_TYPE_COLORS[spaceType || 'unknown'] || SPACE_TYPE_COLORS.unknown;
   }, []);
 
+  const updateZoomPct = useCallback((absoluteZoom: number) => {
+    const base = baseZoomRef.current || 1;
+    setZoomPct(Math.max(1, Math.round((absoluteZoom / base) * 100)));
+  }, []);
+
+  const applyFitToBounds = useCallback(() => {
+    const canvas = fabricRef.current;
+    const bounds = boundsRef.current;
+    if (!canvas || !bounds) return;
+
+    const { transform, baseZoom } = buildFitTransform(
+      bounds,
+      canvas.getWidth(),
+      canvas.getHeight(),
+    );
+    baseZoomRef.current = baseZoom;
+    canvas.setViewportTransform(transform);
+    updateZoomPct(baseZoom);
+    canvas.renderAll();
+  }, [updateZoomPct]);
+
+  // Init Fabric canvas once
   useEffect(() => {
     if (!canvasRef.current) return;
 
     const canvas = new fabric.Canvas(canvasRef.current, {
       selection: false,
       preserveObjectStacking: true,
+      enableRetinaScaling: true,
+      renderOnAddRemove: false,
     });
 
     fabricRef.current = canvas;
@@ -50,10 +145,13 @@ export default function PlanViewer({
       const delta = (opt.e as WheelEvent).deltaY;
       let zoom = canvas.getZoom();
       zoom *= 0.999 ** delta;
-      if (zoom > 20) zoom = 20;
-      if (zoom < 0.1) zoom = 0.1;
+      const base = baseZoomRef.current || 1;
+      const minZ = Math.max(MIN_ZOOM_ABS, base * 0.1);
+      const maxZ = Math.min(MAX_ZOOM_ABS, base * 20);
+      if (zoom > maxZ) zoom = maxZ;
+      if (zoom < minZ) zoom = minZ;
       canvas.zoomToPoint(new fabric.Point(opt.e.offsetX, opt.e.offsetY), zoom);
-      setZoomPct(Math.round(zoom * 100));
+      updateZoomPct(zoom);
       opt.e.preventDefault();
       opt.e.stopPropagation();
     });
@@ -91,22 +189,81 @@ export default function PlanViewer({
 
     return () => {
       canvas.dispose();
+      fabricRef.current = null;
     };
-  }, [mode]);
+  }, [mode, updateZoomPct]);
+
+  // Responsive canvas size
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const resize = (width: number, height: number) => {
+      const canvas = fabricRef.current;
+      if (!canvas) return;
+      const w = Math.max(320, Math.floor(width));
+      const h = Math.max(240, Math.floor(height));
+      if (canvas.getWidth() === w && canvas.getHeight() === h) return;
+      canvas.setDimensions({ width: w, height: h });
+      applyFitToBounds();
+    };
+
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const { width, height } = entry.contentRect;
+        if (width <= 0 || height <= 0) continue;
+        resize(width, height);
+      }
+    });
+
+    observer.observe(container);
+    resize(container.clientWidth || 800, container.clientHeight || 400);
+
+    return () => observer.disconnect();
+  }, [applyFitToBounds]);
 
   useEffect(() => {
-    if (!fabricRef.current || !backgroundImageUrl) return;
+    if (!fabricRef.current || !backgroundImageUrl) {
+      if (fabricRef.current) {
+        fabricRef.current.backgroundImage = undefined;
+        fabricRef.current.requestRenderAll();
+      }
+      return;
+    }
 
     const canvas = fabricRef.current;
-    fabric.FabricImage.fromURL(backgroundImageUrl).then((img) => {
-      canvas.backgroundImage = img;
-      const scaleX = canvas.getWidth() / (img.width || 1);
-      const scaleY = canvas.getHeight() / (img.height || 1);
-      img.set({ scaleX, scaleY });
-      canvas.renderAll();
-    });
-  }, [backgroundImageUrl]);
+    let cancelled = false;
 
+    fabric.FabricImage.fromURL(backgroundImageUrl).then((img) => {
+      if (cancelled || !fabricRef.current) return;
+      const mpp = metersPerPixel && metersPerPixel > 0 ? metersPerPixel : null;
+      if (mpp) {
+        // Align PNG pixels with space meters (same origin as raster_parser).
+        img.set({
+          left: 0,
+          top: 0,
+          originX: 'left',
+          originY: 'top',
+          scaleX: mpp,
+          scaleY: mpp,
+          objectCaching: false,
+        });
+      } else {
+        const scaleX = canvas.getWidth() / (img.width || 1);
+        const scaleY = canvas.getHeight() / (img.height || 1);
+        img.set({ scaleX, scaleY, objectCaching: false });
+      }
+      canvas.backgroundImage = img;
+      canvas.requestRenderAll();
+      applyFitToBounds();
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [backgroundImageUrl, metersPerPixel, applyFitToBounds]);
+
+  // Draw spaces + fit
   useEffect(() => {
     if (!fabricRef.current) return;
 
@@ -117,15 +274,21 @@ export default function PlanViewer({
       .filter((obj) => (obj as fabric.Polygon & { data?: { isSpace: boolean } }).data?.isSpace)
       .forEach((obj) => canvas.remove(obj));
 
+    boundsRef.current = computeBounds(spaces, flipY);
+
     spaces.forEach((space) => {
       if (!space.vertices || space.vertices.length < 3) return;
 
-      const points = space.vertices.map((v) => new fabric.Point(v.x, v.y));
+      const points = space.vertices.map(
+        (v) => new fabric.Point(v.x, mapY(v.y, flipY)),
+      );
       const polygon = new fabric.Polygon(points, {
         fill: getColor(space.space_type),
         opacity: 0.4,
         stroke: getColor(space.space_type),
-        strokeWidth: 2,
+        strokeWidth: 1.25,
+        strokeUniform: true,
+        objectCaching: false,
         selectable: mode === 'edit',
         hoverCursor: 'pointer',
       });
@@ -137,12 +300,12 @@ export default function PlanViewer({
 
       polygon.on('mouseover', () => {
         polygon.set('opacity', 0.6);
-        canvas.renderAll();
+        canvas.requestRenderAll();
       });
 
       polygon.on('mouseout', () => {
         polygon.set('opacity', 0.4);
-        canvas.renderAll();
+        canvas.requestRenderAll();
         setTooltip(null);
       });
 
@@ -166,10 +329,13 @@ export default function PlanViewer({
           const poly = polygon as fabric.Polygon;
           const newPoints = poly.points;
           if (newPoints && onSpaceEdit) {
-            const newVertices: Point[] = newPoints.map((p) => ({
-              x: p.x + (poly.left || 0),
-              y: p.y + (poly.top || 0),
-            }));
+            const newVertices: Point[] = newPoints.map((p) => {
+              const canvasY = p.y + (poly.top || 0) - (poly.pathOffset?.y || 0);
+              return {
+                x: p.x + (poly.left || 0) - (poly.pathOffset?.x || 0),
+                y: flipY ? -canvasY : canvasY,
+              };
+            });
             onSpaceEdit(space.id, newVertices);
           }
         });
@@ -178,8 +344,8 @@ export default function PlanViewer({
       canvas.add(polygon);
     });
 
-    canvas.renderAll();
-  }, [spaces, mode, getColor, onSpaceSelect, onSpaceEdit]);
+    applyFitToBounds();
+  }, [spaces, mode, flipY, getColor, onSpaceSelect, onSpaceEdit, applyFitToBounds]);
 
   const handleExportPNG = useCallback(() => {
     if (!fabricRef.current) return;
@@ -191,19 +357,20 @@ export default function PlanViewer({
   }, []);
 
   const handleResetZoom = useCallback(() => {
-    if (!fabricRef.current) return;
-    fabricRef.current.setViewportTransform([1, 0, 0, 1, 0, 0]);
-    setZoomPct(100);
-  }, []);
+    applyFitToBounds();
+  }, [applyFitToBounds]);
 
   const handleZoomIn = useCallback(() => {
     if (!fabricRef.current) return;
     const canvas = fabricRef.current;
-    const zoom = Math.min(20, canvas.getZoom() * 1.2);
-    canvas.setZoom(zoom);
-    setZoomPct(Math.round(zoom * 100));
-    canvas.renderAll();
-  }, []);
+    const base = baseZoomRef.current || 1;
+    const maxZ = Math.min(MAX_ZOOM_ABS, base * 20);
+    const zoom = Math.min(maxZ, canvas.getZoom() * 1.2);
+    const center = new fabric.Point(canvas.getWidth() / 2, canvas.getHeight() / 2);
+    canvas.zoomToPoint(center, zoom);
+    updateZoomPct(zoom);
+    canvas.requestRenderAll();
+  }, [updateZoomPct]);
 
   return (
     <Card>
@@ -226,8 +393,11 @@ export default function PlanViewer({
           </Badge>
         </div>
 
-        <div className="relative overflow-hidden rounded-lg border border-border bg-muted">
-          <canvas ref={canvasRef} width={800} height={600} className="w-full" />
+        <div
+          ref={containerRef}
+          className="relative h-[min(70vw,560px)] min-h-[280px] w-full overflow-hidden rounded-lg border border-border bg-muted"
+        >
+          <canvas ref={canvasRef} className="block" />
         </div>
 
         {tooltip && (

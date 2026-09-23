@@ -125,7 +125,7 @@ export default function DashboardPage() {
         <MetricCard
           title="Planos procesados"
           value={processedPlans}
-          tooltip="Planos PDF/DXF subidos y procesados por el sistema"
+          tooltip="Planos PDF/DXF/PNG subidos y procesados por el sistema"
           icon={<FileStack className="size-5" />}
           href="/plans"
           isLoading={metricsLoading}

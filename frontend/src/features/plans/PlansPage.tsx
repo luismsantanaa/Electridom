@@ -58,13 +58,31 @@ export default function PlansPage() {
   const [phase, setPhase] = useState<Phase>('upload');
   const [planId, setPlanId] = useState<string | null>(null);
   const [filename, setFilename] = useState('');
+  const [fileType, setFileType] = useState<string>('');
   const [spaces, setSpaces] = useState<DetectedSpace[]>([]);
+  const [backgroundUrl, setBackgroundUrl] = useState<string | null>(null);
+  const [metersPerPixel, setMetersPerPixel] = useState<number | null>(null);
   const [viewMode, setViewMode] = useState<'viewer' | 'graphics'>('viewer');
   const [graphicsMode, setGraphicsMode] = useState<'treemap' | 'bubble'>('treemap');
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [deleteTarget, setDeleteTarget] = useState<PlanListItem | null>(null);
   const [deleting, setDeleting] = useState(false);
+
+  const loadPlanPreview = useCallback(async (id: string, type: string) => {
+    setBackgroundUrl((prev) => {
+      if (prev) URL.revokeObjectURL(prev);
+      return null;
+    });
+    setMetersPerPixel(null);
+    if (type !== 'png' && type !== 'jpg' && type !== 'jpeg') return;
+    try {
+      const url = await plansApi.getDownloadObjectUrl(id);
+      setBackgroundUrl(url);
+    } catch {
+      // Preview is optional; spaces still render without the raster backdrop.
+    }
+  }, []);
 
   const {
     data: plansData,
@@ -85,12 +103,21 @@ export default function PlansPage() {
   useEffect(() => {
     if (!planId || phase !== 'processing') return;
 
+    let cancelled = false;
+    const startedAt = Date.now();
+    const MAX_WAIT_MS = 10 * 60 * 1000;
+
     const interval = setInterval(async () => {
       try {
         const status = await plansApi.getStatus(planId);
+        if (cancelled || !status?.processing_status) return;
+
         if (status.processing_status === 'completed') {
           const result = await plansApi.getResult(planId);
           setSpaces(result.spaces);
+          setFileType(result.file_type);
+          setMetersPerPixel(result.metadata?.meters_per_pixel ?? null);
+          void loadPlanPreview(planId, result.file_type);
           setPhase('review');
           toast.success(
             `Procesamiento listo: ${result.spaces.length} espacio(s) detectado(s)`,
@@ -104,14 +131,22 @@ export default function PlansPage() {
           setPhase('upload');
           setPlanId(null);
           clearInterval(interval);
+        } else if (Date.now() - startedAt > MAX_WAIT_MS) {
+          toast.error(
+            'El procesamiento está tardando demasiado. Verifica que Celery esté corriendo e intenta reprocesar.',
+          );
+          clearInterval(interval);
         }
       } catch {
         // keep polling
       }
     }, 2000);
 
-    return () => clearInterval(interval);
-  }, [planId, phase, queryClient]);
+    return () => {
+      cancelled = true;
+      clearInterval(interval);
+    };
+  }, [planId, phase, queryClient, loadPlanPreview]);
 
   const handleUploadComplete = useCallback((id: string, name: string) => {
     setPlanId(id);
@@ -124,16 +159,29 @@ export default function PlansPage() {
   }, []);
 
   const handleReset = useCallback(() => {
+    setBackgroundUrl((prev) => {
+      if (prev) URL.revokeObjectURL(prev);
+      return null;
+    });
     setPhase('upload');
     setPlanId(null);
     setFilename('');
+    setFileType('');
+    setMetersPerPixel(null);
     setSpaces([]);
   }, []);
+
+  useEffect(() => {
+    return () => {
+      if (backgroundUrl) URL.revokeObjectURL(backgroundUrl);
+    };
+  }, [backgroundUrl]);
 
   const openPlan = useCallback(async (item: PlanListItem) => {
     if (item.processing_status === 'processing' || item.processing_status === 'pending') {
       setPlanId(item.id);
       setFilename(item.original_filename);
+      setFileType(item.file_type);
       setPhase('processing');
       return;
     }
@@ -145,12 +193,15 @@ export default function PlansPage() {
       const result = await plansApi.getResult(item.id);
       setPlanId(item.id);
       setFilename(item.original_filename);
+      setFileType(result.file_type || item.file_type);
       setSpaces(result.spaces);
+      setMetersPerPixel(result.metadata?.meters_per_pixel ?? null);
+      void loadPlanPreview(item.id, result.file_type || item.file_type);
       setPhase('review');
     } catch {
       toast.error('No se pudo cargar el plano');
     }
-  }, []);
+  }, [loadPlanPreview]);
 
   const confirmDelete = async () => {
     if (!deleteTarget) return;
@@ -176,7 +227,7 @@ export default function PlansPage() {
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-foreground">Planos</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            Sube PDF/DXF y revisa espacios detectados
+            Sube PDF, DXF o PNG y revisa espacios detectados
           </p>
         </div>
         {phase !== 'upload' && (
@@ -416,7 +467,13 @@ export default function PlansPage() {
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
             <div className="lg:col-span-2">
               {viewMode === 'viewer' ? (
-                <PlanViewer spaces={spaces} mode="view" />
+                <PlanViewer
+                  spaces={spaces}
+                  mode="view"
+                  backgroundImageUrl={backgroundUrl ?? undefined}
+                  metersPerPixel={metersPerPixel}
+                  flipY={fileType !== 'png' && fileType !== 'jpg' && fileType !== 'jpeg'}
+                />
               ) : (
                 <SpaceGraphics spaces={spaces} viewMode={graphicsMode} />
               )}
