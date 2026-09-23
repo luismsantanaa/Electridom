@@ -11,8 +11,10 @@ import { PlansGatewayService } from './plans-gateway.service';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         baseURL: configService.get<string>('PLAN_SERVICE_URL', 'http://localhost:8000'),
-        timeout: 30000,
+        timeout: 180_000,
         maxRedirects: 0,
+        maxBodyLength: 70 * 1024 * 1024,
+        maxContentLength: 70 * 1024 * 1024,
       }),
     }),
   ],

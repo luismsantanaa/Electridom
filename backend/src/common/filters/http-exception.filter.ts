@@ -66,6 +66,11 @@ export class HttpExceptionFilter implements ExceptionFilter {
       }
     );
 
+    // Evita ERR_HTTP_HEADERS_SENT cuando la respuesta ya se envió (p.ej. proxy @Res)
+    if (response.headersSent) {
+      return;
+    }
+
     response.status(status).json(errorResponse);
   }
 }
